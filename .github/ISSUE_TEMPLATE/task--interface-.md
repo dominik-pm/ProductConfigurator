@@ -11,21 +11,21 @@ assignees: ''
 ## /[id]
 > to get the configuration options of a specific product (id)
 
-Request Data:
+**Request Data:**
 ```javascript
 {
     
 }
 ```
-Response Data:
+**Response Data:**
 ```javascript
 {
     "name": String,
     "description": String
 }
 ```
-Todo:
+**Todo:**
 - [ ] implement a database query that gets the required product information
 
-Test cases:
+**Test cases:**
 - [ ] test response data
