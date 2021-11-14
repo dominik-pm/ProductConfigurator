@@ -10,7 +10,7 @@ assignees: ''
 # Frontend Product listings
 > list all products on the front page of the website
 
-**Expected Behaviour**
+**Expected Behavior**
 > on the front page of the webinterface, there should be a listing of all available products
 > 
 > only the name, description (TODO: and models/preconfigs) and an image is shown
