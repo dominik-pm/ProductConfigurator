@@ -22,7 +22,7 @@ export const configurationSlice = createSlice({
             }
         },
         loadingStarted: (state) => {
-            console.log('fetching products...')
+            console.log('fetching configuration...')
             state.status = 'loading'
         },
         loadingSucceeded: (state, action) => {
@@ -47,7 +47,7 @@ export const fetchConfiguration = (id) => async (dispatch) => {
 
     fetchId(id)
     .then(res => {
-        dispatch(loadingSucceeded(res.configuration))
+        dispatch(loadingSucceeded(res))
     })
     .catch(error => {
         dispatch(loadingFailed(error))
@@ -55,6 +55,6 @@ export const fetchConfiguration = (id) => async (dispatch) => {
 }
 
 // Action creators are generated for each case reducer function
-export const { loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
+export const { selectOption, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
 
 export default configurationSlice.reducer
