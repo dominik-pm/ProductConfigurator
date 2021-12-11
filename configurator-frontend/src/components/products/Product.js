@@ -15,6 +15,7 @@ export default function Product({product}) {
         const src = require(`../../assets/img/${image}`)
         imageSource = src.default
     } catch (err) {
+        console.log(`image '${image}' no found!`)
         const src = require(`../../assets/img/notfound.jpg`)
         imageSource = src.default
     }

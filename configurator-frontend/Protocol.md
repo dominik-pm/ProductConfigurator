@@ -37,10 +37,12 @@
 ```javascript
 import { configureStore } from '@reduxjs/toolkit'
 import productReducer from './product/productSlice'
+import configurationReducer from './configuration/configurationSlice'
 
 export const store = configureStore({
     reducer: {
-        product: productReducer
+        product: productReducer,
+        configuration: configurationReducer
     }
 })
 ```
@@ -68,9 +70,11 @@ ReactDOM.render(
 - with redux toolkit, you define the state, reducers and actions all in one file
 - easy to read and cleaner code
 
+*Product State*
 > state/product/productSlice.js
 ```javascript
 import { createSlice } from '@reduxjs/toolkit'
+import { fetchAll } from '../../api/productsAPI'
 
 const initialState = {
     products: [],
@@ -83,15 +87,18 @@ export const productSlice = createSlice({
     initialState,
     reducers: {
         loadingStarted: (state) => {
+            console.log('fetching products...')
             state.status = 'loading'
         },
         loadingSucceeded: (state, action) => {
+            console.log('products loaded:', action.payload)
             state.status = 'succeeded'
             state.products = action.payload
         },
         loadingFailed: (state, action) => {
+            console.log('products loading failed:', action.payload)
             state.status = 'failed'
-            state.eroor = action.payload
+            state.error = action.payload
         }
     }
 })
@@ -114,20 +121,91 @@ export const { loadingStarted, loadingSucceeded, loadingFailed } = productSlice.
 export default productSlice.reducer
 ```
 
-**Using the state**
-> App.js
+*Configuration State*
+> state/configuration/configurationSlice.js
 ```javascript
-import { useSelector } from 'react-redux'
+import { createSlice } from '@reduxjs/toolkit'
+import { fetchId } from '../../api/configurationAPI'
 
-function App() {
-    return (
-        <div className="App">
-            <h1>Test</h1>
-        </div>
-    )
+const initialState = {
+    configuration: {},
+    selectedOptions: [],
+    status: 'idle', // | 'loading' | 'succeeded' | 'failed'
+    error: null
 }
 
-export default App
+export const configurationSlice = createSlice({
+    name: 'configuration',
+    initialState,
+    reducers: {
+        selectOption: (state, action) => {
+            if (state.selectedOptions.includes(action.payload)) {
+                // deselect option
+                state.selectedOptions = state.selectedOptions.filter(optionId => optionId !== action.payload)
+            } else {
+                // select option
+                state.selectedOptions.push(action.payload)
+            }
+        },
+        loadingStarted: (state) => {
+            console.log('fetching products...')
+            state.status = 'loading'
+        },
+        loadingSucceeded: (state, action) => {
+            console.log('configuration loaded:', action.payload)
+            state.status = 'succeeded'
+            state.configuration = action.payload
+            state.selectedOptions = action.payload.rules.defaultOptions
+        },
+        loadingFailed: (state, action) => {
+            console.log('configuration loading failed:', action.payload)
+            state.status = 'failed'
+            state.error = action.payload
+            state.configuration = {}
+            state.selectedOptions = []
+        }
+    }
+})
+
+
+export const fetchConfiguration = (id) => async (dispatch) => {
+    dispatch(loadingStarted())
+
+    fetchId(id)
+    .then(res => {
+        dispatch(loadingSucceeded(res.configuration))
+    })
+    .catch(error => {
+        dispatch(loadingFailed(error))
+    })
+}
+
+// Action creators are generated for each case reducer function
+export const { loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
+
+export default configurationSlice.reducer
+```
+
+
+**Using the state**
+> components/product/ProductView.js
+```javascript
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProducts } from '../../state/product/productSlice'
+
+export default function ProductView() {
+    const dispatch = useDispatch()
+
+    const { products, status, error } = useSelector(state => state.product)
+
+    useEffect(() => {
+        if (isEmpty) {
+            console.log('calling to fetch products...')
+            dispatch(fetchProducts())
+        }
+    }, [dispatch, isEmpty])
+    
+}
 ```
 
 ***
@@ -208,6 +286,94 @@ const products = [
 ]
 ```
 
+**Configuration API**
+> api/configurationAPI.js
+```javascript
+export const fetchId = (productId) => {
+    return fetchApiTest(productId)
+}
+
+// A mock api request function to mimic making an async request for data
+const testDelay = 0;
+function fetchApiTest(configId) {
+    return new Promise((resolve, reject) =>
+        setTimeout(() => {
+            
+            const conf = configurations.find(c => c.id === configId)
+
+            if (!conf) {
+                reject('no configuration found')
+            }
+            if (!conf.options || !conf.optionGroups || !conf.optionSections || !conf.rules) {
+                reject('Configuration invalid!')
+            }
+
+            resolve(conf)
+
+        }, testDelay)
+    )
+}
+
+const configurations = [
+    {
+        id: 0,
+        name: 'Car',
+        description: 'its a car, to drive from A to B',
+        image: '1.jpg',
+        options: [
+            {
+                id: 'BLUE',
+                name: 'Blue',
+                description: 'A blue color',
+                image: ''
+            },
+            ...
+        ],
+        optionSections: [
+            {
+                id: 'EXTERIOR',
+                name: 'Exterior',
+                optionGroupIds: [
+                    'COLOR_GROUP'
+                ]
+            },
+            ...
+        ],
+        optionGroups: [
+            {
+                id: 'COLOR_GROUP',
+                name: 'Color',
+                description: 'the exterior color of the car',
+                optionIds: [
+                    'BLUE', 'YELLOW', 'GREEN'
+                ]
+            },
+            ...
+        ],
+        rules: {
+            basePrice: 10000,
+            defaultOptions: ['BLUE', 'DIESEL', 'D150'],
+            replacementGroups: {
+                COLOR_GROUP: [
+                    'BLUE', 'YELLOW', 'GREEN'
+                ],
+                ...
+            },
+            requirements: {
+                D150: ['DIESEL'],
+                ...
+            },
+            incompatibilites: {
+                PANORAMAROOF: ['PETROL'],
+                ...
+            },
+            priceList: {
+                D150: 8000,
+                ...
+            }
+        }
+```
+
 ***
 
 ## Components
@@ -218,3 +384,6 @@ const products = [
 
 **Product**
 - the product component defines how a listed product looks
+
+### Configuration
+

@@ -23,7 +23,7 @@ export const productSlice = createSlice({
         loadingFailed: (state, action) => {
             console.log('products loading failed:', action.payload)
             state.status = 'failed'
-            state.eroor = action.payload
+            state.error = action.payload
         }
     }
 })
