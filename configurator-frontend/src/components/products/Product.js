@@ -1,12 +1,17 @@
 import React from 'react'
 import { ButtonBase, Typography } from '@mui/material'
 import { Box } from '@mui/system'
+import { useNavigate } from 'react-router'
+import './Product.css'
 
 export default function Product({product}) {
+    const navigate = useNavigate()
+
     const {id, name, description, image} = product
     
     function handleClick(id) {
-        console.log(`clicked on ${id}`)
+        console.log(`clicked on: ${name} (id ${id})`)
+        navigate(`/configuration/${id}`)
     }
 
     return (

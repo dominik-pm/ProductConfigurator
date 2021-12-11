@@ -1,6 +1,12 @@
 import React from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import ProductView from './components/products/ProductView'
+import ConfigurationView from './components/configuration/ConfigurationView'
+import {
+    BrowserRouter as Router,
+    Route,
+    Routes
+} from 'react-router-dom'
 
 const theme = createTheme({
 
@@ -10,7 +16,21 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <div className="App">
-                <ProductView></ProductView>
+                <Router>
+                    <Routes>
+
+                        <Route exact path="/" element={
+                            <ProductView></ProductView>
+                        }>
+                        </Route>
+
+                        <Route exact path="/configuration/:id" element={
+                            <ConfigurationView></ConfigurationView>
+                        }>
+                        </Route>
+
+                    </Routes>
+                </Router>
             </div>
         </ThemeProvider>
     )

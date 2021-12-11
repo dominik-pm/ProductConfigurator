@@ -9,6 +9,8 @@
   - the state container for react
 - ``npm install @reduxjs/toolkit``
   - the toolkit to create write redux code more efficiently 
+- ``npm install react-router-dom@6``
+  - react router version 6 for browser paths
 
 **Adding Material UI**
 - ``npm install @mui/material``
@@ -94,6 +96,18 @@ export const productSlice = createSlice({
     }
 })
 
+export const fetchProducts = () => async (dispatch) => {
+    dispatch(loadingStarted())
+
+    fetchAll()
+    .then(res => {
+        dispatch(loadingSucceeded(res.products))
+    })
+    .catch(err => {
+        dispatch(loadingFailed(err))
+    })
+}
+
 // Action creators are generated for each case reducer function
 export const { loadingStarted, loadingSucceeded, loadingFailed } = productSlice.actions
 
@@ -114,6 +128,84 @@ function App() {
 }
 
 export default App
+```
+
+***
+
+## Routing
+create routes in App.js
+> App.js
+```javascript
+function App() {
+    return (
+        <div className="App">
+            <Router>
+                <Routes>
+
+                    <Route exact path="/" element={
+                        <ProductView></ProductView>
+                    }>
+                    </Route>
+
+                    <Route exact path="/configuration/:id" element={
+                        <ConfigurationView></ConfigurationView>
+                    }>
+                    </Route>
+
+                </Routes>
+            </Router>
+        </div>
+    )
+}
+```
+
+navigate to a route
+> components/products/Product.js
+```javascript
+import { useNavigate } from 'react-router'
+
+export default function Product({product}) {
+    const navigate = useNavigate()
+
+    function handleClick(id) {
+        navigate(`/configuration/${id}`)
+    }
+
+}
+```
+
+
+***
+
+## API
+**Products API**
+- contains the needed request to fetch the products from the backend
+> api/productsAPI.js
+```javascript
+export const fetchAll = () => {    
+    return fetchApiTest()
+}
+
+// A mock function to mimic making an async request for data
+function fetchApiTest(amount = products.length) {
+    return new Promise((resolve, reject) =>
+        // setTimeout(() => reject('AUTHENTICATION FAILED'), 500)
+        setTimeout(() => resolve({
+            error: null,
+            products
+        }), 500)
+    )
+}
+
+const products = [
+    {
+        id: 0,
+        name: 'Car',
+        description: 'its a car, what else did you think?',
+        image: '1.jpg'
+    },
+    ...
+]
 ```
 
 ***
