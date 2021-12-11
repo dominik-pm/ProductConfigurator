@@ -8,6 +8,16 @@ export default function Product({product}) {
     const navigate = useNavigate()
 
     const {id, name, description, image} = product
+
+    let imageSource = ''
+
+    try {
+        const src = require(`../../assets/img/${image}`)
+        imageSource = src.default
+    } catch (err) {
+        const src = require(`../../assets/img/notfound.jpg`)
+        imageSource = src.default
+    }
     
     function handleClick(id) {
         console.log(`clicked on: ${name} (id ${id})`)
@@ -19,6 +29,7 @@ export default function Product({product}) {
             <Box>
                 <Typography variant="h2" color="main">{name}</Typography>
                 <Typography>{description}</Typography>
+                <img src={imageSource} alt={`${name}`} />
             </Box>
         </ButtonBase>
     )
