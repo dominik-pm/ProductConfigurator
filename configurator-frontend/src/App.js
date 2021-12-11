@@ -1,10 +1,18 @@
+import React from 'react'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import ProductView from './components/products/ProductView'
 
+const theme = createTheme({
+
+})
 
 function App() {
     return (
-        <div className="App">
-            <h1>Test</h1>
-        </div>
+        <ThemeProvider theme={theme}>
+            <div className="App">
+                <ProductView></ProductView>
+            </div>
+        </ThemeProvider>
     )
 }
 

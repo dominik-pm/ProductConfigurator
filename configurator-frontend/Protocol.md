@@ -27,6 +27,8 @@
 - state
   - contains every component necessary for redux state management
 
+***
+
 ## Redux Setup
 **Create a store.js**
 > state/store.js
@@ -113,3 +115,14 @@ function App() {
 
 export default App
 ```
+
+***
+
+## Components
+### Products
+**ProductView**
+- is the container for all the available products
+- based on the product reducer state ('loading', 'succeeded', 'failed'), it renders different components
+
+**Product**
+- the product component defines how a listed product looks
