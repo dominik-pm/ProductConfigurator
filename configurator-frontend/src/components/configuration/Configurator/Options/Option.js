@@ -19,6 +19,7 @@ function Option({optionId, clickedOption, option, selected, price, selectable, d
             placement="top" 
             TransitionComponent={Zoom}
             arrow
+            enterTouchDelay={200}
         >
             <Box >
 
