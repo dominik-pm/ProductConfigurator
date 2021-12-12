@@ -139,13 +139,14 @@ export const configurationSlice = createSlice({
     initialState,
     reducers: {
         selectOption: (state, action) => {
-            if (state.selectedOptions.includes(action.payload)) {
-                // deselect option
-                state.selectedOptions = state.selectedOptions.filter(optionId => optionId !== action.payload)
-            } else {
-                // select option
+            if (!state.selectedOptions.includes(action.payload)) {
+                // console.log('selecting option', action.payload)
                 state.selectedOptions.push(action.payload)
             }
+        },
+        deselectOption: (state, action) => {
+            // console.log('deselecting option', action.payload)
+            state.selectedOptions = state.selectedOptions.filter(optionId => optionId !== action.payload)
         },
         loadingStarted: (state) => {
             console.log('fetching products...')
@@ -386,4 +387,24 @@ const configurations = [
 - the product component defines how a listed product looks
 
 ### Configuration
+**ConfigurationView**
+- manages the loading of the configuration
+- displays `Configurator` when the configuration has loaded
 
+**Configurator**
+- is the layout of the configurator
+- holds the `Summary`, `OptionsTabs` and a Header
+
+**Summary**
+- displays the current selected options and the total price of the product
+
+**OptionTabs**
+- has the tab panels for the different sections that contain all `OptionGroup`
+
+**OptionGroup**
+- displays the details of the group
+- shows every available `Option`
+
+**Option**
+- shows the details of this option (name, description, price, ...)
+- can be clicked on in order to select the option

@@ -1,42 +1,56 @@
 import React from 'react'
-import { Typography, Box, Button } from '@mui/material'
+import { Typography, Box, Button, Tooltip, Zoom } from '@mui/material'
 import { connect } from 'react-redux'
-import { getIsOptionSelected, getOption, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
-import { selectOption } from '../../../../state/configuration/configurationSlice'
+import { clickedOption } from '../../../../state/configuration/configurationSlice'
 import './Option.css'
+import { getIsOptionSelectable, getIsOptionSelected, getOption, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
 
-function Option({optionId, option, selected, price, selectOption}) {
-    
-    const disabled = false
+function Option({optionId, clickedOption, option, selected, price, selectable, disabledReason}) {
+
+    const disabled = !selectable
 
     function handleClick() {
-        selectOption(option.id)
+        clickedOption(optionId)
     }
     
     return (
-        <Button variant={selected ? "contained" : "outlined"} disabled={disabled} onClick={handleClick}>
-            <Box className="Option">
-                <Typography variant="h4">{option.name}</Typography>
-                <Typography variant="body1">{option.description}</Typography>
-                {price ? 
-                    <Typography variant="body2">Price: {price}€</Typography>
-                    :
-                    <></>
-                }
+        <Tooltip 
+            title={disabled ? disabledReason : ''} 
+            placement="top" 
+            TransitionComponent={Zoom}
+            arrow
+        >
+            <Box >
+
+            <Button style={{width: '100%', height: '100%'}} variant={selected ? "contained" : "outlined"} disabled={disabled} onClick={handleClick}>
+                <Box className="Option">
+                    <Typography variant="h4">{option.name}</Typography>
+                    <Typography variant="body1">{option.description}</Typography>
+                    {price ? 
+                        <Typography variant="body2">Price: {price}€</Typography>
+                        :
+                        <></>
+                    }
+                </Box>
+            </Button>
+
             </Box>
-        </Button>
+        </Tooltip>
     )
 }
 
 const mapStateToProps = (state, ownProps) => {
+    const selectableResult = getIsOptionSelectable(state, ownProps.optionId)
     return {
         option: getOption(state, ownProps.optionId),
         selected: getIsOptionSelected(state, ownProps.optionId),
-        price: getOptionPrice(state, ownProps.optionId)
+        price: getOptionPrice(state, ownProps.optionId),
+        selectable: selectableResult[0],
+        disabledReason: selectableResult[1]
     }
 }
 const mapDispatchToProps = {
-    selectOption
+    clickedOption
 }
 export default connect(
     mapStateToProps,

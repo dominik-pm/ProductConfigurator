@@ -4,7 +4,7 @@ import { Box } from '@mui/system'
 import { Accordion, AccordionSummary, AccordionDetails, Stack, Typography } from '@mui/material'
 import PriceListItem from './PriceListItem'
 import { ExpandMoreOutlined } from '@mui/icons-material'
-import { getBasePrice, getCurrentPrice, getOption, getOptionPrice, getOptions, getSelectedOptions } from '../../../../state/configuration/configurationSelectors'
+import { getCurrentPrice, /*getOption, getOptionPrice, */selectBasePrice, selectOptions, selectSelectedOptions } from '../../../../state/configuration/configurationSelectors'
 
 function Summary({state, basePrice, selectedOptions, currentPrice }) {
 
@@ -37,8 +37,9 @@ function Summary({state, basePrice, selectedOptions, currentPrice }) {
                         {selectedOptions.map((optionId, index) => (
                             <PriceListItem
                                 key={index}
-                                name={getOption(state, optionId).name /*options.find(o => o.id === optionId).name*/}
-                                price={getOptionPrice(state, optionId)}
+                                optionId={optionId}
+                                name={optionId}
+                                price={0}
                             >
                             </PriceListItem>
                         ))}
@@ -54,9 +55,9 @@ function Summary({state, basePrice, selectedOptions, currentPrice }) {
 const mapStateToProps = (state) => {
     return {
         state,
-        options: getOptions(state),
-        basePrice: getBasePrice(state),
-        selectedOptions: getSelectedOptions(state),
+        options: selectOptions(state),
+        basePrice: selectBasePrice(state),
+        selectedOptions: selectSelectedOptions(state),
         currentPrice: getCurrentPrice(state)
     }
 }

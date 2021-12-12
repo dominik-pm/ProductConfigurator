@@ -9,12 +9,13 @@ function fetchApiTest(configId) {
         setTimeout(() => {
 
             const conf = configurations.find(c => c.id === configId)
-
             if (!conf) {
                 reject('no configuration found')
+                return
             }
-            if (!conf.options || !conf.optionGroups || !conf.optionSections || !conf.rules) {
+            else if (!conf.options || !conf.optionGroups || !conf.optionSections || !conf.rules) {
                 reject('Configuration invalid!')
+                return
             }
 
             resolve(conf)
@@ -191,10 +192,13 @@ const configurations = [
                 D150: ['DIESEL'],
                 D250: ['DIESEL'],
                 P220: ['PETROL'],
-                P450: ['PETROL']
+                P450: ['PETROL'],
+                PANORAMASMALL: ['PANORAMAROOF'],
+                PANORAMALARGE: ['PANORAMAROOF']
             },
             incompatibilites: {
-                PANORAMAROOF: ['PETROL']
+                PANORAMAROOF: ['PETROL'],
+                PANORAMASMALL: ['BLUE']
             },
             priceList: {
                 D150: 8000,

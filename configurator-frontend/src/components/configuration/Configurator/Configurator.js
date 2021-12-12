@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
-import { getConfigurationDescription, getConfigurationName } from '../../../state/configuration/configurationSelectors'
+import { selectConfigurationDescription, selectConfigurationName } from '../../../state/configuration/configurationSelectors'
 import Loader from '../../Loader'
 
 import OptionTabs from './OptionTabs'
@@ -24,8 +24,6 @@ optionGroups: [
 */
 
 function Configurator({ configurationName, configurationDescription, isLoading }) {
-
-    console.log('name:', configurationName)
 
     function render() {
 
@@ -60,8 +58,8 @@ function Configurator({ configurationName, configurationDescription, isLoading }
 
 const mapStateToProps = (state) => {
     return {
-        configurationName: getConfigurationName(state),
-        configurationDescription: getConfigurationDescription(state),
+        configurationName: selectConfigurationName(state),
+        configurationDescription: selectConfigurationDescription(state),
     }
 }
 const mapDispatchToProps = {
