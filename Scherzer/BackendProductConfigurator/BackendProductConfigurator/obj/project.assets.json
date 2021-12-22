@@ -230,11 +230,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Schule\\DA\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
+      "projectUniqueName": "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
       "projectName": "BackendProductConfigurator",
-      "projectPath": "D:\\Schule\\DA\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
+      "projectPath": "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
       "packagesPath": "C:\\Users\\Tobias\\.nuget\\packages\\",
-      "outputPath": "D:\\Schule\\DA\\BackendProductConfigurator\\BackendProductConfigurator\\obj\\",
+      "outputPath": "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\BackendProductConfigurator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -255,8 +255,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Schule\\DA\\BackendProductConfigurator\\Model\\Model.csproj": {
-              "projectPath": "D:\\Schule\\DA\\BackendProductConfigurator\\Model\\Model.csproj"
+            "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\Model\\Model.csproj": {
+              "projectPath": "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\Model\\Model.csproj"
             }
           }
         }

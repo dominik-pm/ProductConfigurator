@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "k3I/Dg8khfwgw06k1PV8r3o39atnj/AjrVD3Y5t4MFGjXc3ga1DMERxezOTwY6rnEOupdNsLh3Pzq3U4kPw8rw==",
+  "dgSpecHash": "vtlo3hWlkioLwyoTK8cDyqiIGoJuDRyRP/vE66oY6FepjkGV804R72Z+9jQmcFQCmBMa86bFe4wQTA5wN7btug==",
   "success": true,
-  "projectFilePath": "D:\\Schule\\DA\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
+  "projectFilePath": "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tobias\\.nuget\\packages\\microsoft.extensions.apidescription.server\\3.0.0\\microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
     "C:\\Users\\Tobias\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",

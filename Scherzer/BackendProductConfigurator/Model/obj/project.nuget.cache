@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vyL84MRiBtHV70x5M/vXZHCUcMEoHXIONsKmL16NO0yYr7XTSU971HKfUb+exE9T5XY6cDPMsYRQCk+keMoNHA==",
+  "dgSpecHash": "qQF0uwRABkbUFpmezpwcbeI76sUFVYuEmpjp++PI5/IwjXiSo7g1S7XyDirx84bZFQxhAJCfDO8Oo9S3cj7/mQ==",
   "success": true,
-  "projectFilePath": "D:\\Schule\\DA\\BackendProductConfigurator\\Model\\Model.csproj",
+  "projectFilePath": "D:\\Schule\\DA\\Scherzer\\BackendProductConfigurator\\Model\\Model.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

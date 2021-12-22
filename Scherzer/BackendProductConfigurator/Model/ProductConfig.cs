@@ -2,7 +2,7 @@
 {
     public class ProductConfig : Product
     {
-        public ProductConfig(string id, string name, string description, List<string> images, ProductDependencies productDependencies, List<Option> options, List<OptionGroup> optionGroups, List<OptionSection> optionSections)
+        public ProductConfig(int id, string name, string description, List<string> images, ProductDependencies productDependencies, List<Option> options, List<OptionGroup> optionGroups, List<OptionSection> optionSections)
         {
             Id = id;
             Name = name;

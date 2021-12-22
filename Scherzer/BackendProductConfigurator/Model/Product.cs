@@ -2,12 +2,9 @@
 
 namespace Model
 {
-    public class Product : IIndexable<string>, INameable, IDescribable, IImageable
+    public class Product : ProductSlim, IImageable
     {
-        public virtual string Name { get; set; } = "Abstract Product";
-        public virtual string Description { get; set; } = "Abstract Description";
         public virtual List<string> Images { get; set; } = new List<string> { "Abstract Imagepath1", "Abstract Imagepath 2"};
-        public virtual string Id { get; set; } = "Test Id";
         public List<Option> Options { get; set; }
     }
 }
