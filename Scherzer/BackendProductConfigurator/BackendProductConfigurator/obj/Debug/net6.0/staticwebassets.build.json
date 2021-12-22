@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "qy+oPBgsDVMlws7GfSv78bvMvCWF6ofgZtQ1B7o66tY=",
+  "Source": "BackendProductConfigurator",
+  "BasePath": "_content/BackendProductConfigurator",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
