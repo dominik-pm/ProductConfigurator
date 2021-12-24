@@ -8,9 +8,9 @@ namespace BackendProductConfigurator.Controllers
     [ApiController]
     public abstract class Controllers<T, K> : ControllerBase where T : class
     {
-        List<T> entities;
+        public List<T> entities;
 
-        protected Controllers()
+        public Controllers()
         {
             List<T> values = new List<T>(); ;
             if (typeof(T) == typeof(ProductConfig))
@@ -65,7 +65,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public void Post([FromBody] T value)
         {
-            entities.Add(value);
+            entities.Append(value);
+
         }
 
         // PUT api/<Controller>/5
