@@ -2,11 +2,12 @@ import { Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { translate } from '../../lang'
 import { fetchConfiguration } from '../../state/configuration/configurationSlice'
+import { selectLanguage } from '../../state/language/languageSelectors'
 import Configurator from './Configurator/Configurator'
-import Header from './Configurator/Header'
 
-function ConfigurationView({fetchConfiguration, status, error }) {
+function ConfigurationView({fetchConfiguration, status, error, language }) {
 
     const navigate = useNavigate()
 
@@ -61,7 +62,7 @@ function ConfigurationView({fetchConfiguration, status, error }) {
     function renderApiFailed(errorMessage) {
         return (
             <div>
-                <Typography variant="h2">Failed to load configuration!</Typography>
+                <Typography variant="h2">{translate('failedToLoadConfiguration', language)}</Typography>
                 <Typography vairant="body1">{errorMessage}</Typography>
             </div>
         )
@@ -69,7 +70,6 @@ function ConfigurationView({fetchConfiguration, status, error }) {
 
     return (
         <div>
-            <Header></Header>
             {render()}
         </div>
     )
@@ -78,7 +78,8 @@ function ConfigurationView({fetchConfiguration, status, error }) {
 const mapStateToProps = (state) => {
     return {
         status: state.configuration.status,
-        error: state.configuration.error
+        error: state.configuration.error,
+        language: selectLanguage(state)
     }
 }
 const mapDispatchToProps = {

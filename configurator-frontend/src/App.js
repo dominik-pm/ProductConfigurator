@@ -2,6 +2,7 @@ import React from 'react'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import ProductView from './components/products/ProductView'
 import ConfigurationView from './components/configuration/ConfigurationView'
+import Header from './components/header/Header'
 import {
     BrowserRouter as Router,
     Route,
@@ -9,7 +10,6 @@ import {
 } from 'react-router-dom'
 
 const theme = createTheme({
-
 })
 
 function App() {
@@ -17,6 +17,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <div className="App">
                 <Router>
+                    <Header></Header>
                     <Routes>
 
                         <Route exact path="/" element={

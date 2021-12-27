@@ -135,7 +135,8 @@ const configurations = [
                 description: 'the exterior color of the car',
                 optionIds: [
                     'BLUE', 'YELLOW', 'GREEN'
-                ]
+                ],
+                required: true
             },
             {
                 id: 'MOTORTYPE_GROUP',
@@ -143,7 +144,8 @@ const configurations = [
                 description: 'the motor of you car',
                 optionIds: [
                     'DIESEL', 'PETROL'
-                ]
+                ],
+                required: true
             },
             {
                 id: 'MOTOR_GROUP',
@@ -151,7 +153,8 @@ const configurations = [
                 description: 'how powerful',
                 optionIds: [
                     'D150', 'D250', 'P220', 'P450'
-                ]
+                ],
+                required: true
             },
             {
                 id: 'PANORAMA_GROUP',
@@ -159,7 +162,8 @@ const configurations = [
                 description: 'a glass roof for an open feeling',
                 optionIds: [
                     'PANORAMAROOF'
-                ]
+                ],
+                required: false
             },
             {
                 id: 'PANORAMATYPE_GROUP',
@@ -167,7 +171,8 @@ const configurations = [
                 description: 'size of your panorama roof',
                 optionIds: [
                     'PANORAMASMALL', 'PANORAMALARGE'
-                ]
+                ],
+                required: false
             }
         ],
         rules: {

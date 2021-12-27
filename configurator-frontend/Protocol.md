@@ -42,7 +42,8 @@ import configurationReducer from './configuration/configurationSlice'
 export const store = configureStore({
     reducer: {
         product: productReducer,
-        configuration: configurationReducer
+        configuration: configurationReducer,
+        language: 
     }
 })
 ```
@@ -121,6 +122,36 @@ export const { loadingStarted, loadingSucceeded, loadingFailed } = productSlice.
 export default productSlice.reducer
 ```
 
+*Language State*
+> state/language/languageSlice.js
+```javascript
+import { createSlice } from '@reduxjs/toolkit'
+
+const defaultLang = 'EN'
+const localStorageLang = localStorage.getItem('language')
+
+const initialState = {
+    language: localStorageLang ? localStorageLang : defaultLang,
+    // status: 'idle', // | 'loading' | 'succeeded' | 'failed'
+    error: null
+}
+
+export const languageSlice = createSlice({
+    name: 'language',
+    initialState,
+    reducers: {
+        changedLanguage: (state, action) => {
+            state.language = action.payload
+        }
+    }
+})
+
+export const setLanguage = (lang) => async (dispatch) => {
+    localStorage.setItem('language', lang)
+    dispatch(changedLanguage(lang))
+}
+```
+
 *Configuration State*
 > state/configuration/configurationSlice.js
 ```javascript
@@ -193,11 +224,14 @@ export default configurationSlice.reducer
 ```javascript
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '../../state/product/productSlice'
+import { translate } from '../../lang'
 
 export default function ProductView() {
     const dispatch = useDispatch()
 
     const { products, status, error } = useSelector(state => state.product)
+
+    const { language } = useSelector(state => state.language)
 
     useEffect(() => {
         if (isEmpty) {
@@ -205,6 +239,8 @@ export default function ProductView() {
             dispatch(fetchProducts())
         }
     }, [dispatch, isEmpty])
+
+    // translate('translationKey', language)
     
 }
 ```
@@ -408,3 +444,4 @@ const configurations = [
 **Option**
 - shows the details of this option (name, description, price, ...)
 - can be clicked on in order to select the option
+

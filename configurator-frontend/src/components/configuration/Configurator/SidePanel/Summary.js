@@ -5,15 +5,17 @@ import { Accordion, AccordionSummary, AccordionDetails, Stack, Typography } from
 import PriceListItem from './PriceListItem'
 import { ExpandMoreOutlined } from '@mui/icons-material'
 import { getCurrentPrice, /*getOption, getOptionPrice, */selectBasePrice, selectOptions, selectSelectedOptions } from '../../../../state/configuration/configurationSelectors'
+import { translate } from '../../../../lang'
+import { selectLanguage } from '../../../../state/language/languageSelectors'
 
-function Summary({state, basePrice, selectedOptions, currentPrice }) {
+function Summary({state, basePrice, selectedOptions, currentPrice, language }) {
 
     // const { options, selectedOptions, rules } = useSelector(state => state.configuration)
 
     return (
         <Box>
             <Typography variant="h3">
-                Price: {currentPrice}€
+                {translate('price', language)}: {currentPrice}€
             </Typography>
 
             <Stack spacing={1}>
@@ -24,7 +26,7 @@ function Summary({state, basePrice, selectedOptions, currentPrice }) {
                         aria-controls="panel1a-content"
                         id="panel1a-header"
                     >
-                        <Typography>Price List</Typography>
+                        <Typography>{translate('priceList', language)}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
 
@@ -58,7 +60,8 @@ const mapStateToProps = (state) => {
         options: selectOptions(state),
         basePrice: selectBasePrice(state),
         selectedOptions: selectSelectedOptions(state),
-        currentPrice: getCurrentPrice(state)
+        currentPrice: getCurrentPrice(state),
+        language: selectLanguage(state)
     }
 }
 const mapDispatchToProps = {

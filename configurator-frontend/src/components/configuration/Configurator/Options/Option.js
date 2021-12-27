@@ -4,8 +4,10 @@ import { connect } from 'react-redux'
 import { clickedOption } from '../../../../state/configuration/configurationSlice'
 import './Option.css'
 import { getIsOptionSelectable, getIsOptionSelected, getOption, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
+import { translate } from '../../../../lang'
+import { selectLanguage } from '../../../../state/language/languageSelectors'
 
-function Option({optionId, clickedOption, option, selected, price, selectable, disabledReason}) {
+function Option({ optionId, clickedOption, option, selected, price, selectable, disabledReason, language }) {
 
     const disabled = !selectable
 
@@ -28,7 +30,7 @@ function Option({optionId, clickedOption, option, selected, price, selectable, d
                     <Typography variant="h4">{option.name}</Typography>
                     <Typography variant="body1">{option.description}</Typography>
                     {price ? 
-                        <Typography variant="body2">Price: {price}€</Typography>
+                        <Typography variant="body2">{translate('price', language)}: {price}€</Typography>
                         :
                         <></>
                     }
@@ -47,7 +49,8 @@ const mapStateToProps = (state, ownProps) => {
         selected: getIsOptionSelected(state, ownProps.optionId),
         price: getOptionPrice(state, ownProps.optionId),
         selectable: selectableResult[0],
-        disabledReason: selectableResult[1]
+        disabledReason: selectableResult[1],
+        language: selectLanguage(state)
     }
 }
 const mapDispatchToProps = {
