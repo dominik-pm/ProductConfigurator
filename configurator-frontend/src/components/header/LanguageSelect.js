@@ -8,7 +8,6 @@ import { setLanguage } from '../../state/language/languageSlice'
 function LanguageSelect({ language, setLanguage }) {
 
     function handleChange(event) {
-        console.log('Language select: ' + event.target.value)
         setLanguage(event.target.value)
     }
 

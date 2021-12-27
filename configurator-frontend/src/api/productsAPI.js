@@ -6,7 +6,7 @@ export const fetchAll = () => {
 // A mock function to mimic making an async request for data
 function fetchApiTest(amount = products.length) {
     return new Promise((resolve, reject) =>
-        // setTimeout(() => reject('AUTHENTICATION FAILED'), 500)
+        // setTimeout(() => reject('AUTHENTICATION_FAILED'), 500)
         setTimeout(() => resolve({
             error: null,
             products

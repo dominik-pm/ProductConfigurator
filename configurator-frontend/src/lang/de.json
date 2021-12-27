@@ -1,5 +1,10 @@
 {
     "productConfigurator": "Produkt Konfigurator",
+    
+    "failedToLoadProducts": "Failed to load products!",
+    "loadingProducts": "Loading Products",
+    "noProductsFound": "No products found",
+    
     "configureYour": "Konfiguriere dein",
     "failedToLoadConfiguration": "Laden der Konfiguration fehlgeschlagen!",
     "price": "Preis",

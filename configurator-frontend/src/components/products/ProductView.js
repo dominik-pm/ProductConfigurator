@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react'
 import Product from './Product'
-import { useDispatch, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import { Typography } from '@mui/material'
 import { fetchProducts } from '../../state/product/productSlice'
+import { selectProductError, selectProducts, selectProductStatus } from '../../state/product/productSelector'
+import { selectLanguage } from '../../state/language/languageSelectors'
+import { translate } from '../../lang'
 import './ProductView.css'
 
-export default function ProductView() {
-    const dispatch = useDispatch()
+function ProductView({ products, status, error, fetchProducts, language }) {
 
-    const { products, status, error } = useSelector(state => state.product)
     const isEmpty = products.length === 0 ? true : false
 
     useEffect(() => {
         if (isEmpty) {
             console.log('calling to fetch products...')
-            dispatch(fetchProducts())
+            fetchProducts()
         }
-    }, [dispatch, isEmpty])
+    }, [fetchProducts, isEmpty])
 
     function render() {
         switch (status) {
@@ -33,13 +34,13 @@ export default function ProductView() {
 
     function renderLoadingProducts() {
         return (
-            <Typography variant="h2">Loading Products...</Typography>
+            <Typography variant="h2">{translate('loadingProducts', language)}...</Typography>
         )
     }
 
     function renderEmptyProducts() {
         return (
-            <Typography variant="h2">No products found</Typography>
+            <Typography variant="h2">{translate('noProductsFound', language)}</Typography>
         )
     }
     function renderProducts() {
@@ -57,8 +58,8 @@ export default function ProductView() {
     function renderApiFailed(errorMessage) {
         return (
             <div>
-                <Typography variant="h1">Failed to load products!</Typography>
-                <Typography variant="p">{errorMessage}</Typography>
+                <Typography variant="h1">{translate('failedToLoadProducts', language)}</Typography>
+                <Typography variant="body1">{translate(errorMessage, language)}</Typography>
             </div>
         )
     }
@@ -67,3 +68,17 @@ export default function ProductView() {
         render()
     )
 }
+
+const mapStateToProps = (state) => ({
+    products: selectProducts(state),
+    status: selectProductStatus(state),
+    error: selectProductError(state),
+    language: selectLanguage(state)
+})
+const mapDispatchToProps = {
+    fetchProducts
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ProductView)

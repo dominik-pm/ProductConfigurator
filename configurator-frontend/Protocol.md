@@ -131,9 +131,9 @@ const defaultLang = 'EN'
 const localStorageLang = localStorage.getItem('language')
 
 const initialState = {
-    language: localStorageLang ? localStorageLang : defaultLang,
+    language: localStorageLang ? localStorageLang : defaultLang
     // status: 'idle', // | 'loading' | 'succeeded' | 'failed'
-    error: null
+    // error: null
 }
 
 export const languageSlice = createSlice({
@@ -222,27 +222,90 @@ export default configurationSlice.reducer
 **Using the state**
 > components/product/ProductView.js
 ```javascript
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import Product from './Product'
+import { connect } from 'react-redux'
+import { Typography } from '@mui/material'
 import { fetchProducts } from '../../state/product/productSlice'
+import { selectProductError, selectProducts, selectProductStatus } from '../../state/product/productSelector'
+import { selectLanguage } from '../../state/language/languageSelectors'
 import { translate } from '../../lang'
+import './ProductView.css'
 
-export default function ProductView() {
-    const dispatch = useDispatch()
-
-    const { products, status, error } = useSelector(state => state.product)
-
-    const { language } = useSelector(state => state.language)
+function ProductView({ products, status, error, fetchProducts, language }) {
 
     useEffect(() => {
         if (isEmpty) {
             console.log('calling to fetch products...')
-            dispatch(fetchProducts())
+            fetchProducts() // dont need to dispatch any more (-> mapDispatchToProps)
         }
-    }, [dispatch, isEmpty])
+    }, [fetchProducts, isEmpty])
 
-    // translate('translationKey', language)
+
+    function render() {
+        switch (status) {
+            case 'loading':
+                return renderLoadingProducts()
+            case 'succeeded':
+                return (isEmpty ? renderEmptyProducts() : renderProducts())
+            case 'failed':
+                return renderApiFailed(error)
+            default:
+                return renderLoadingProducts()
+        }
+    }
+
+    function renderLoadingProducts() {
+        return (
+            <Typography variant="h2">{translate('loadingProducts', language)}...</Typography>
+        )
+    }
+
+    function renderEmptyProducts() {
+        return (
+            <Typography variant="h2">{translate('noProductsFound', language)}</Typography>
+        )
+    }
+    function renderProducts() {
+        return (
+            <div className="ProductContainer">
+                {
+                    products.map(product => (
+                        <Product key={product.id} product={product}></Product>
+                    ))
+                }
+            </div>
+        )
+    }
+
+    function renderApiFailed(errorMessage) {
+        return (
+            <div>
+                <Typography variant="h1">{translate('failedToLoadProducts', language)}</Typography>
+                <Typography variant="body1">{translate(errorMessage, language)}</Typography>
+            </div>
+        )
+    }
     
+    return (
+        redner()
+    )
 }
+
+// easier (also more generic) handling with the redux state
+const mapStateToProps = (state) => ({
+    products: selectProducts(state),
+    status: selectProductStatus(state),
+    error: selectProductError(state),
+    language: selectLanguage(state)
+})
+const mapDispatchToProps = {
+    fetchProducts
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ProductView)
 ```
 
 ***

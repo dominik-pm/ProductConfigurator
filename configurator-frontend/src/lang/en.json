@@ -1,5 +1,12 @@
 {
+    "AUTHENTICATION_FAILED": "Authentication Failed",
+
     "productConfigurator": "Product Configurator",
+    
+    "failedToLoadProducts": "Failed to load products!",
+    "loadingProducts": "Loading Products",
+    "noProductsFound": "No products found",
+    
     "configureYour": "Configure your",
     "failedToLoadConfiguration": "Failed to load configuration!",
     "price": "price",

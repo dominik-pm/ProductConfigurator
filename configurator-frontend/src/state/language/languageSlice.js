@@ -4,9 +4,9 @@ export const defaultLang = 'EN'
 const localStorageLang = localStorage.getItem('language')
 
 const initialState = {
-    language: localStorageLang ? localStorageLang : defaultLang,
+    language: localStorageLang ? localStorageLang : defaultLang
     // status: 'idle', // | 'loading' | 'succeeded' | 'failed'
-    error: null
+    // error: null
 }
 
 export const languageSlice = createSlice({
@@ -21,7 +21,6 @@ export const languageSlice = createSlice({
 })
 
 export const setLanguage = (lang) => (dispatch) => {
-    console.log('dispatching language change to: ' + lang)
     localStorage.setItem('language', lang)
     dispatch(changedLanguage(lang))
 }
