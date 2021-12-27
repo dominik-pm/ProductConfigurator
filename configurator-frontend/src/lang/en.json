@@ -1,6 +1,9 @@
 {
     "AUTHENTICATION_FAILED": "Authentication Failed",
 
+    "NO_CONFIGURATION_FOUND": "no configuration found",
+    "CONFIGURATION_INVALID": "configuration invalid",
+
     "productConfigurator": "Product Configurator",
     
     "failedToLoadProducts": "Failed to load products!",

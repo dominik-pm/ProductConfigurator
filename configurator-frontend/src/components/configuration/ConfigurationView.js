@@ -63,7 +63,7 @@ function ConfigurationView({fetchConfiguration, status, error, language }) {
         return (
             <div>
                 <Typography variant="h2">{translate('failedToLoadConfiguration', language)}</Typography>
-                <Typography vairant="body1">{errorMessage}</Typography>
+                <Typography vairant="body1">{translate(errorMessage, language)}</Typography>
             </div>
         )
     }

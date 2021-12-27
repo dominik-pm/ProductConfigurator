@@ -10,11 +10,11 @@ function fetchApiTest(configId) {
 
             const conf = configurations.find(c => c.id === configId)
             if (!conf) {
-                reject('no configuration found')
+                reject('NO_CONFIGURATION_FOUND')
                 return
             }
             else if (!conf.options || !conf.optionGroups || !conf.optionSections || !conf.rules) {
-                reject('Configuration invalid!')
+                reject('CONFIGURATION_INVALID')
                 return
             }
 

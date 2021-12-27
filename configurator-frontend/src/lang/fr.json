@@ -1,5 +1,17 @@
 {
+    "AUTHENTICATION_FAILED": "Échec de l'authentification",
+
+    "NO_CONFIGURATION_FOUND": "no configuration found",
+    "CONFIGURATION_INVALID": "aucune configuration trouvée",
+
     "productConfigurator": "Configurateur de Produit",
     
-    "configureYour": "Configurer votre"
+    "failedToLoadProducts": "Échec du chargement des produits!",
+    "loadingProducts": "Produits de chargement",
+    "noProductsFound": "Aucun produit trouvé",
+    
+    "configureYour": "Configurer votre",
+    "failedToLoadConfiguration": "Échec du chargement de la configuration!",
+    "price": "prix",
+    "priceList": "liste de prix"
 }

@@ -1,6 +1,9 @@
 {
     "productConfigurator": "Produkt Konfigurator",
     
+    "NO_CONFIGURATION_FOUND": "Keine Konfiguration gefunden",
+    "CONFIGURATION_INVALID": "Konfiguration enthält Fehler",
+
     "failedToLoadProducts": "Failed to load products!",
     "loadingProducts": "Loading Products",
     "noProductsFound": "No products found",
