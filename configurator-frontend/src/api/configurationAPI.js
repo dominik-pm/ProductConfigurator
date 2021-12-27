@@ -178,7 +178,7 @@ const configurations = [
         rules: {
             basePrice: 10000,
             // defaultOptions: [],
-            defaultOptions: ['BLUE', 'DIESEL', 'D150'],
+            defaultOptions: ['DIESEL', 'D150'],
             replacementGroups: {
                 COLOR_GROUP: [
                     'BLUE', 'YELLOW', 'GREEN'

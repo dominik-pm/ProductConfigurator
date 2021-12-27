@@ -2,6 +2,7 @@ import { createSelector } from 'reselect'
 
 
 // input selectors:
+const selectGroupId = (state, groupId) =>               groupId
 const selectOptionId = (state, optionId) =>             optionId
 
 const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilites
@@ -99,6 +100,33 @@ export const getIsOptionSelectable = createSelector([getIsOptionRequirementsMet,
     return [true, '']
 })
 // <-- getIsOptionSelectable --
+
+// -- group logic -->
+export const getIsGroupValid = createSelector([selectOptionGroups, selectGroupId, selectSelectedOptions], (groups, groupId, selectedOptions) => {
+    const selectedGroup = groups.find(g => g.id === groupId)
+
+    if (!selectedGroup) {
+        console.log('Can not get is group valid because there is no group with the id: ' + groupId)
+        return [false, `Can not find group id ${groupId}!`]
+    }
+
+    // if the group is not required it is valid (TODO: required because of other non required group)
+    if (!selectedGroup.required) return [true, '']
+
+    let atLeastOneOptionSelected = false
+    selectedGroup.optionIds.forEach(option => {
+        if (selectedOptions.includes(option)) {
+            atLeastOneOptionSelected = true
+        }
+    })
+
+    if (!atLeastOneOptionSelected) {
+        return [false, `At least one option has to be selected!`]
+    }
+
+    return [true, '']
+})
+// <-- group logic --
 
 export const getOptionPrice = createSelector([selectPriceList, selectOptionId], (priceList, id) => {
     // console.log('Option price output')
