@@ -218,6 +218,87 @@ export const { loadingStarted, loadingSucceeded, loadingFailed } = configuration
 export default configurationSlice.reducer
 ```
 
+**Confirmation State**
+> state/confirmation/confirmationSlice.js
+```javascript
+import { createSlice } from '@reduxjs/toolkit'
+import { selectIsConfirmDialogOpen } from './confirmationSelectors'
+
+const initialState = {
+    open: false,
+    message: '',
+    content: {}
+}
+
+export const confirmationSlice = createSlice({
+    name: 'confirmation',
+    initialState,
+    reducers: {
+        show: (state, action) => {
+            // console.log('Opened confirmation dialog: ' + message)
+
+            const { message, content } = action.payload
+
+            state.open = true
+            state.message = message
+            state.content = content
+        },
+        close: (state, action) => {
+            // console.log('Closed confirmation dialog')
+            state.open = false
+            state.message = ''
+            state.content = {}
+        }
+    }
+})
+
+// wrapping actions into class, so that the confirm callback can persist (functions cant be saved into redux state)
+class confirmationDialog {
+    constructor() {
+        this.onConfirm = null
+    }
+
+    open = (message, content, onConfirm) => (dispatch, getState) => {
+        const isOpen = selectIsConfirmDialogOpen(getState())
+        if (isOpen) {
+            console.log('Confirmation Dialog is already open!')
+            return
+        }
+
+        this.onConfirm = onConfirm
+        
+        dispatch(show({message, content}))
+    }
+
+    confirm = () => (dispatch, getState) => {
+        const isOpen = selectIsConfirmDialogOpen(getState())
+        if (!isOpen) {
+            console.log('Confirmation Dialog is closed (can not confirm)!')
+            return
+        }
+    
+        dispatch(close())
+        if (this.onConfirm) {
+            this.onConfirm()
+        } else {
+            console.log('no confirmation callback')
+        }
+        this.onConfirm = null
+    }
+
+    cancel = () => (dispatch) => {
+        dispatch(close())
+        this.onConfirm = null
+    }
+}
+
+export const useConfirmationDialog = new confirmationDialog() 
+
+// Action creators are generated for each case reducer function
+export const { show, close } = confirmationSlice.actions
+
+export default confirmationSlice.reducer
+``` 
 
 **Using the state**
 > components/product/ProductView.js
@@ -508,3 +589,92 @@ const configurations = [
 - shows the details of this option (name, description, price, ...)
 - can be clicked on in order to select the option
 
+### Dialog
+**ConfirmationDialog**
+- can be opened to confirm an action
+- for example the user select item1 that is not compatible with item2, so the user is prompted to confirm to remove item2
+> conponents/dialog/ConfirmationDialog.js
+```javascript
+function ConfirmationOptionSelect({ isOpen, message, cancel, confirm }) {
+    function handleClose() {
+        cancel()
+    }
+
+    function handleConfirm() {
+        confirm()
+    }
+    
+    return (
+        <Dialog
+            open={isOpen}
+            onClose={handleClose}
+            aria-labelledby="responsive-dialog-title"
+        >
+            <DialogTitle id="responsive-dialog-title">
+                confirmation prompt
+            </DialogTitle>
+
+            <DialogContent dividers>
+                 {message}
+            </DialogContent>
+
+            <DialogActions>
+                <Button autoFocus onClick={handleClose}>
+                    cancel
+                </Button>
+                <Button autoFocus onClick={handleConfirm}>
+                    confirm
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
+const mapStateToProps = (state) => ({
+    message: selectConfirmDialogMessage(state),
+    isOpen: selectIsConfirmDialogOpen(state)
+})
+const mapDispatchToProps = {
+    cancel: useConfirmationDialog.cancel,
+    confirm: useConfirmationDialog.confirm
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ConfirmationOptionSelect)
+```
+- calling the dialog:
+```javascript
+import { useConfirmationDialog } from '../../state/confirmationDialog/confirmationSlice'
+
+function Header({ open }) {
+
+    return (
+        <header>
+            <Box>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Button variant="contained" onClick={() => 
+                            open(
+                                'Example Dialog Message',           // dialog message
+                                {},                                 // custom dialog message
+                                () => console.log('confirmed'))}    // callback function to execute after confirmation
+                        >
+                            Open Test Dialog
+                        </Button>
+                    </Toolbar>
+                </AppBar>
+            </Box>
+        </header>
+    )
+}
+
+const mapStateToProps = (state) => ({})
+const mapDispatchToProps = {
+    open: useConfirmationDialog.open
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Header)
+
+```

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppBar, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
 import { ArrowBackIosNew } from '@mui/icons-material'
 import './Header.css'
 import { Box } from '@mui/system'
@@ -8,8 +8,9 @@ import LanguageSelect from './LanguageSelect'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { connect } from 'react-redux'
+import { useConfirmationDialog } from '../../state/confirmationDialog/confirmationSlice'
 
-function Header({ language }) {
+function Header({ language, open }) {
 
     const navigate = useNavigate()
 
@@ -49,6 +50,9 @@ function Header({ language }) {
                             <MenuIcon />
                         </IconButton> */}
                         {getMenuButtons()}
+                        <Button variant="contained" onClick={() => open('Example Message', {}, () => console.log('🤤'))}>
+                            test dialog
+                        </Button>
 
                         <LanguageSelect></LanguageSelect>
                     </Toolbar>
@@ -60,7 +64,9 @@ function Header({ language }) {
 const mapStateToProps = (state) => ({
     language: selectLanguage(state)
 })
-const mapDispatchToProps = {}
+const mapDispatchToProps = {
+    open: useConfirmationDialog.open
+}
 export default connect(
     mapStateToProps,
     mapDispatchToProps

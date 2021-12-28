@@ -1,5 +1,13 @@
 import { createSelector } from 'reselect'
 
+export const GROUP_ERRORS = {
+    atLeastOne: 'groupErrorAtLeastOne' // the name is the key in the language file 
+}
+
+export const OPTION_ERRORS = {
+    requirementsNotMet: 'optionRequirementsNotMet',
+    hasIncompatibilities: 'optionHasIncompatibilities'
+}
 
 // input selectors:
 const selectGroupId = (state, groupId) =>               groupId
@@ -24,6 +32,10 @@ export const getOption = createSelector([selectOptions, selectOptionId], (option
     // console.log('---> ' + id)
     return options.find(o => o.id === id)
 })
+export const getOptionName = createSelector([getOption, selectOptionId], (option, id) => {
+    return option.name
+})
+
 
 export const getIsOptionSelected = createSelector([selectSelectedOptions, selectOptionId], (selectedOptions, id) => {
     // console.log('Is option selected output')
@@ -91,27 +103,29 @@ const getIsOptionRequirementsMet = createSelector([selectSelectedOptions, getOpt
     })
     return [reqMet, requiredOptions]
 })
+// returns null ()
 export const getIsOptionSelectable = createSelector([getIsOptionRequirementsMet, getIsOptionCompatible], (isRequirementsMet, isCompatible) => {
     // console.log('Is option selectable output')
 
-    if (!isRequirementsMet[0])     return [false, isRequirementsMet[1].join(', ') + (isRequirementsMet[1].length > 1 ? ' are ' : ' is ') + 'required!']
-    if (!isCompatible[0])          return [false, 'Not compatible with: ' + isCompatible[1].join(', ')]
+    if (!isRequirementsMet[0])      return [OPTION_ERRORS.requirementsNotMet, isRequirementsMet[1]]//.join(', ') + (isRequirementsMet[1].length > 1 ? ' are ' : ' is ') + 'required!']
+    if (!isCompatible[0])           return [OPTION_ERRORS.hasIncompatibilities, isCompatible[1]]//'Not compatible with: ' + isCompatible[1].join(', ')
 
-    return [true, '']
+    return null
 })
 // <-- getIsOptionSelectable --
 
 // -- group logic -->
+// returns null (no error) or the specific error from 'GROUP_ERRORS'
 export const getIsGroupValid = createSelector([selectOptionGroups, selectGroupId, selectSelectedOptions], (groups, groupId, selectedOptions) => {
     const selectedGroup = groups.find(g => g.id === groupId)
 
     if (!selectedGroup) {
         console.log('Can not get is group valid because there is no group with the id: ' + groupId)
-        return [false, `Can not find group id ${groupId}!`]
+        return null
     }
 
     // if the group is not required it is valid (TODO: required because of other non required group)
-    if (!selectedGroup.required) return [true, '']
+    if (!selectedGroup.required) return null
 
     let atLeastOneOptionSelected = false
     selectedGroup.optionIds.forEach(option => {
@@ -121,10 +135,10 @@ export const getIsGroupValid = createSelector([selectOptionGroups, selectGroupId
     })
 
     if (!atLeastOneOptionSelected) {
-        return [false, `At least one option has to be selected!`]
+        return GROUP_ERRORS.atLeastOne
     }
 
-    return [true, '']
+    return null
 })
 // <-- group logic --
 
@@ -135,7 +149,7 @@ export const getOptionPrice = createSelector([selectPriceList, selectOptionId], 
 
 // the total price of all selected options plus the base price
 export const getCurrentPrice = createSelector([selectSelectedOptions, selectBasePrice, selectPriceList], (selectedOptions, basePrice, priceList) => {
-    console.log('Current Price output')
+    // console.log('Current Price output')
 
     const price = selectedOptions.reduce((total, optionId) => {
         if (priceList[optionId]) {

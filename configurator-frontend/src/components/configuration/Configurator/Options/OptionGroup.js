@@ -9,13 +9,13 @@ import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { translate } from '../../../../lang'
 import { connect } from 'react-redux'
 
-function OptionGroup({group, isValid, invalidReason, language}) {
+function OptionGroup({group, isValid, groupError, language}) {
     const { name, description, optionIds } = group
 
     function renderGroupError() {
         if (!isValid) {
             return (
-                <GroupInvalidError errorMessage={translate(invalidReason, language)}></GroupInvalidError>
+                <GroupInvalidError errorMessage={translate(groupError, language)}></GroupInvalidError>
             )
         } else {
             return
@@ -43,10 +43,12 @@ function OptionGroup({group, isValid, invalidReason, language}) {
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const groupValidResult = getIsGroupValid(state, ownProps.group.id)
+    const groupError = getIsGroupValid(state, ownProps.group.id)
+    const isValid = groupError === null
+
     return {
-        isValid: groupValidResult[0],
-        invalidReason: groupValidResult[1],
+        isValid,
+        groupError,
         language: selectLanguage(state)
     }
 }

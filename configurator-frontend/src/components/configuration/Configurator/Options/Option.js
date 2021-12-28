@@ -3,11 +3,11 @@ import { Typography, Box, Button, Tooltip, Zoom } from '@mui/material'
 import { connect } from 'react-redux'
 import { clickedOption } from '../../../../state/configuration/configurationSlice'
 import './Option.css'
-import { getIsOptionSelectable, getIsOptionSelected, getOption, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
+import { getIsOptionSelectable, getIsOptionSelected, getOption, getOptionName, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 
-function Option({ optionId, clickedOption, option, selected, price, selectable, disabledReason, language }) {
+function Option({ optionId, clickedOption, option, selected, price, selectable, disabledReason, problematicOptions, language }) {
 
     const disabled = !selectable
 
@@ -17,7 +17,7 @@ function Option({ optionId, clickedOption, option, selected, price, selectable, 
     
     return (
         <Tooltip 
-            title={disabled ? disabledReason : ''} 
+            title={disabled ? `${translate(disabledReason, language)}: ${problematicOptions.join(', ')}` : ''} 
             placement="top" 
             TransitionComponent={Zoom}
             arrow
@@ -43,13 +43,24 @@ function Option({ optionId, clickedOption, option, selected, price, selectable, 
 }
 
 const mapStateToProps = (state, ownProps) => {
-    const selectableResult = getIsOptionSelectable(state, ownProps.optionId)
+    const selectableError = getIsOptionSelectable(state, ownProps.optionId)
+    let isSelectable = true
+    let disabledReason = ''
+    let problematicOptions = []
+
+    if (selectableError) {
+        isSelectable = false
+        disabledReason = selectableError[0]
+        problematicOptions = selectableError[1].map(optionId => getOptionName(state, optionId))
+    }
+
     return {
         option: getOption(state, ownProps.optionId),
         selected: getIsOptionSelected(state, ownProps.optionId),
         price: getOptionPrice(state, ownProps.optionId),
-        selectable: selectableResult[0],
-        disabledReason: selectableResult[1],
+        selectable: isSelectable,
+        disabledReason,
+        problematicOptions,
         language: selectLanguage(state)
     }
 }

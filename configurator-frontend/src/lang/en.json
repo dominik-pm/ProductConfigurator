@@ -1,6 +1,11 @@
 {
     "AUTHENTICATION_FAILED": "Authentication Failed",
 
+    "groupErrorAtLeastOne": "At least one option has to be selected!",
+
+    "optionRequirementsNotMet": "Other options are required",
+    "optionHasIncompatibilities": "Not compatible with",
+
     "NO_CONFIGURATION_FOUND": "no configuration found",
     "CONFIGURATION_INVALID": "configuration invalid",
 
@@ -9,9 +14,18 @@
     "failedToLoadProducts": "Failed to load products!",
     "loadingProducts": "Loading Products",
     "noProductsFound": "No products found",
+
+    "confirmationPrompt": "Confirmation Prompt",
+    "cancel": "cancel",
+    "confirm": "confirm",
     
     "configureYour": "Configure your",
     "failedToLoadConfiguration": "Failed to load configuration!",
     "price": "price",
-    "priceList": "price list"
+    "priceList": "price list",
+
+    "youWantToSelect": "You want to select",
+    "youWantToRemove": "You want to remove",
+    "youAlsoNeedToSelect": "You also need to select",
+    "theseOptionsWillBeRemoved": "These options will be removed"
 }

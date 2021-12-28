@@ -1,7 +1,12 @@
 {
     "AUTHENTICATION_FAILED": "Échec de l'authentification",
 
-    "NO_CONFIGURATION_FOUND": "no configuration found",
+    "groupErrorAtLeastOne": "Il faut choisir au moins une option !",
+
+    "optionRequirementsNotMet": "D'autres options sont nécessaires",
+    "optionHasIncompatibilities": "Non compatible avec",
+
+    "NO_CONFIGURATION_FOUND": "aucune configuration trouvée",
     "CONFIGURATION_INVALID": "aucune configuration trouvée",
 
     "productConfigurator": "Configurateur de Produit",
@@ -10,8 +15,17 @@
     "loadingProducts": "Produits de chargement",
     "noProductsFound": "Aucun produit trouvé",
     
+    "confirmationPrompt": "demande de confirmation",
+    "cancel": "annuler",
+    "confirm": "confirmer",
+
     "configureYour": "Configurer votre",
     "failedToLoadConfiguration": "Échec du chargement de la configuration!",
     "price": "prix",
-    "priceList": "liste de prix"
+    "priceList": "liste de prix",
+
+    "youWantToSelect": "Vous voulez sélectionner",
+    "youWantToRemove": "Vous voulez supprimer",
+    "youAlsoNeedToSelect": "Vous devez également sélectionner",
+    "theseOptionsWillBeRemoved": "Ces options seront supprimées"
 }

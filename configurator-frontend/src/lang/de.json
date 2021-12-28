@@ -1,15 +1,31 @@
 {
-    "productConfigurator": "Produkt Konfigurator",
+    "AUTHENTICATION_FAILED": "Authentifizierung Fehlgeschlagen",
     
+    "groupErrorAtLeastOne": "Mindestens eine Option muss ausgewählt werden!",
+
+    "optionRequirementsNotMet": "Andere Optionen sind vorausgesetzt",
+    "optionHasIncompatibilities": "Nicht kompatibel mit",
+
     "NO_CONFIGURATION_FOUND": "Keine Konfiguration gefunden",
     "CONFIGURATION_INVALID": "Konfiguration enthält Fehler",
+
+    "productConfigurator": "Produkt Konfigurator",
 
     "failedToLoadProducts": "Failed to load products!",
     "loadingProducts": "Loading Products",
     "noProductsFound": "No products found",
     
+    "confirmationPrompt": "Überprüfen",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+
     "configureYour": "Konfiguriere dein",
     "failedToLoadConfiguration": "Laden der Konfiguration fehlgeschlagen!",
     "price": "Preis",
-    "priceList": "Preis Liste"
+    "priceList": "Preis Liste",
+
+    "youWantToSelect": "Du möchtest diese Option auswählen",
+    "youWantToRemove": "Du möchtest diese Option entfernen",
+    "youAlsoNeedToSelect": "Dazu benötigst du außerdem",
+    "theseOptionsWillBeRemoved": "Dazu müssen diese Optionen entfernt werden"
 }

@@ -18,37 +18,37 @@ const products = [
     {
         id: 0,
         name: 'Car',
-        description: 'its a car, what else did you think?',
+        description: 'a next generation automobile',
         image: 'Car0.jpg'
     },
     {
         id: 1,
         name: 'Computer',
-        description: 'a computer',
+        description: 'high end computer',
         image: 'Computer0.jpg'
     },
     {
         id: 2,
         name: 'watch',
-        description: 'configure your watches',
+        description: 'entry level watch',
         image: 'Watch0.jpg'
     },
     {
         id: 3,
         name: 'watch',
-        description: 'configure your watches',
+        description: 'entry level watch',
         image: 'Watch0.jpg'
     },
     {
         id: 4,
         name: 'watch',
-        description: 'configure your watches',
+        description: 'entry level watch',
         image: 'Watch0.jpg'
     },
     {
         id: 5,
         name: 'Computer',
-        description: 'a computer',
+        description: 'high end computer',
         image: 'Computer0123.jpg'
     }
 ]

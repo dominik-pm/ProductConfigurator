@@ -28,7 +28,7 @@ const configurations = [
     {
         id: 0,
         name: 'Car',
-        description: 'its a car, to drive from A to B',
+        description: 'automobile',
         image: '1.jpg',
         options: [
             {
@@ -93,14 +93,32 @@ const configurations = [
             },
             {
                 id: 'PANORAMASMALL',
-                name: 'small',
+                name: 'Small Panorama',
                 description: 'a small glass roof',
                 image: ''
             },
             {
                 id: 'PANORAMALARGE',
-                name: 'large',
+                name: 'Large Panorama',
                 description: 'a large glass roof for an amazing open feeling',
+                image: ''
+            },
+            {
+                id: 'HEATED_SEATS',
+                name: 'Heated Seats',
+                description: 'the two seats in the front can be heated',
+                image: ''
+            }, 
+            {
+                id:  'HIGH_QUALITY_SOUND_SYSTEM',
+                name: 'High Quality Sound System',
+                description: 'premium sound system with high res audio',
+                image: ''
+            }, 
+            {
+                id: 'DRIVE_ASSISTENCE',
+                name: 'Drive Assistence',
+                description: 'extra driving assistence including cruise control, adaptive cruise control and a lane keeping assistent',
                 image: ''
             }
 
@@ -126,6 +144,13 @@ const configurations = [
                 optionGroupIds: [
                     'PANORAMA_GROUP', 'PANORAMATYPE_GROUP'
                 ]
+            },
+            {
+                id: 'EXTRAS',
+                name: 'Extras',
+                optionGroupIds: [
+                    'EXTRAS_GROUP'
+                ]
             }
         ],
         optionGroups: [
@@ -141,7 +166,7 @@ const configurations = [
             {
                 id: 'MOTORTYPE_GROUP',
                 name: 'Motor type',
-                description: 'the motor of you car',
+                description: 'type of your motor',
                 optionIds: [
                     'DIESEL', 'PETROL'
                 ],
@@ -150,7 +175,7 @@ const configurations = [
             {
                 id: 'MOTOR_GROUP',
                 name: 'Motor',
-                description: 'how powerful',
+                description: 'specific motor',
                 optionIds: [
                     'D150', 'D250', 'P220', 'P450'
                 ],
@@ -171,6 +196,15 @@ const configurations = [
                 description: 'size of your panorama roof',
                 optionIds: [
                     'PANORAMASMALL', 'PANORAMALARGE'
+                ],
+                required: false
+            },
+            {
+                id: 'EXTRAS_GROUP',
+                name: 'Extras',
+                description: 'Additional Features For Your Car',
+                optionIds: [
+                    'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM', 'DRIVE_ASSISTENCE'
                 ],
                 required: false
             }
@@ -213,7 +247,10 @@ const configurations = [
                 YELLOW: 200,
                 GREEN: 500,
                 PANORAMAROOF: 2000,
-                PANORAMALARGE: 500
+                PANORAMALARGE: 500,
+                HEATED_SEATS: 500, 
+                HIGH_QUALITY_SOUND_SYSTEM: 250,
+                DRIVE_ASSISTENCE: 1500
             }
         }
     }
