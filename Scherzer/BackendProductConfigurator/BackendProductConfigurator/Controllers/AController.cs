@@ -12,25 +12,10 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(AValuesClass.products.Count == 0)
+            if(AValuesClass.Products.Count == 0)
             {
                 AValuesClass.SetValues();
             }
-            List<T> values = new List<T>();
-            if (typeof(T) == typeof(ProductConfig))
-            {
-                values = AValuesClass.productConfig as List<T>;
-            }
-            if (typeof(T) == typeof(Product))
-            {
-                values = AValuesClass.products as List<T>;
-            }
-            if(typeof(T) == typeof(ProductSlim))
-            {
-                values = AValuesClass.productsSlim as List<T>;
-            }
-
-            this.entities = values;
         }
 
 
@@ -73,18 +58,53 @@ namespace BackendProductConfigurator.Controllers
 
     public class configurationController : AController<ProductConfig, int>
     {
+        public configurationController():base()
+        {
+            entities = AValuesClass.ProductConfig as List<ProductConfig>;
+        }
+
+        // GET api/<Controller>/5
+        [HttpGet("{id}")]
+        public override ProductConfig Get(int id)
+        {
+            return entities.Find(entity => (entity as IProductId).ProductId.Equals(id));
+        }
     }
     public class productsController : AController<Product, int>
     {
+        public productsController() : base()
+        {
+            entities = AValuesClass.Products as List<Product>;
+        }
+
+        // POST api/<Controller>
         [HttpPost]
         public override void Post([FromBody] Product value)
         {
-            AValuesClass.products.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird benötigt
+            AValuesClass.Products.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             entities.Append(value);
         }
     }
     public class productsSlimController : AController<ProductSlim, int>
     {
+        public productsSlimController() : base()
+        {
+            entities = AValuesClass.ProductsSlim as List<ProductSlim>;
+        }
+    }
+    public class usersController : AController<User, int>
+    {
+        public usersController() : base()
+        {
+            entities = AValuesClass.Users as List<User>;
+        }
+
+        // POST api/<Controller>
+        [HttpPost]
+        public override void Post([FromBody] User value)
+        {
+            AValuesClass.Users.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            entities.Append(value);
+        }
     }
 }
-//Issue #9 und #10 anschauen
