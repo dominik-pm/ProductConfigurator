@@ -1,18 +1,18 @@
 import React from 'react'
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { selectConfirmDialogContent, selectConfirmDialogMessage, selectIsConfirmDialogOpen } from '../../state/confirmationDialog/confirmationSelectors';
-import { connect } from 'react-redux';
-import { useConfirmationDialog } from '../../state/confirmationDialog/confirmationSlice';
-import { translate } from '../../lang';
-import { selectLanguage } from '../../state/language/languageSelectors';
-import { Grid, Typography } from '@mui/material';
-import OptionListItem from '../configuration/Configurator/Options/OptionListItem';
-import { Box } from '@mui/system';
+import Button from '@mui/material/Button'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
+import { selectConfirmDialogContent, selectConfirmDialogMessage, selectIsConfirmDialogOpen } from '../../state/confirmationDialog/confirmationSelectors'
+import { connect } from 'react-redux'
+import { dialogCancel, dialogConfirm } from '../../state/confirmationDialog/confirmationSlice'
+import { translate } from '../../lang'
+import { selectLanguage } from '../../state/language/languageSelectors'
+import { Grid, Typography } from '@mui/material'
+import OptionListItem from '../configuration/Configurator/Options/OptionListItem'
+import { Box } from '@mui/system'
 
 function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToRemove, selectedOption, deselectedOption, cancel, confirm, language }) {
     
@@ -123,8 +123,11 @@ const mapStateToProps = (state) => ({
     optionsToRemove: selectConfirmDialogContent(state).optionsToRemove
 })
 const mapDispatchToProps = {
-    cancel: useConfirmationDialog.cancel,
-    confirm: useConfirmationDialog.confirm,
+    cancel: dialogCancel,
+    confirm: dialogConfirm,
+
+    // cancel: useConfirmationDialog.cancel,
+    // confirm: useConfirmationDialog.confirm,
 
     // openedDialog: openConfirmDialog,
     // closedDialog: closeConfirmDialog

@@ -1,6 +1,6 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AppBar, Button, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { AppBar, Button, Grid, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
 import { ArrowBackIosNew } from '@mui/icons-material'
 import './Header.css'
 import { Box } from '@mui/system'
@@ -8,19 +8,37 @@ import LanguageSelect from './LanguageSelect'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { connect } from 'react-redux'
-import { useConfirmationDialog } from '../../state/confirmationDialog/confirmationSlice'
+import { dialogOpen } from '../../state/confirmationDialog/confirmationSlice'
+import { resetActiveConfiguration } from '../../state/configuration/configurationSlice'
 
-function Header({ language, open }) {
+const usePathname = () => {
+    const location = useLocation()
+    return location.pathname
+}
+
+function Header({ language, open, resetConfig }) {
 
     const navigate = useNavigate()
 
+    const onConfigurationPage = usePathname().split('/')[1] === 'configuration'
+
     function getMenuButtons() {
         return (
-            <Box sx={{ flexGrow: 1 }}>
+            <Grid container sx={{ flexGrow: 1, gap: 2 }}>
+
                 <IconButton onClick={() => navigate('/')}>
                     <ArrowBackIosNew></ArrowBackIosNew>
                 </IconButton>
-            </Box>
+
+                <Button 
+                    sx={{display: {xs: onConfigurationPage ? 'block' : 'none'}}} 
+                    variant="contained" 
+                    onClick={() => resetConfig()}
+                >
+                    Reset
+                </Button>
+
+            </Grid>
         )
     }
 
@@ -50,9 +68,10 @@ function Header({ language, open }) {
                             <MenuIcon />
                         </IconButton> */}
                         {getMenuButtons()}
-                        <Button variant="contained" onClick={() => open('Example Message', {}, () => console.log('🤤'))}>
+
+                        {/* <Button variant="contained" onClick={() => open('Example Message', {}, () => console.log('confirmed'))}>
                             test dialog
-                        </Button>
+                        </Button> */}
 
                         <LanguageSelect></LanguageSelect>
                     </Toolbar>
@@ -65,7 +84,9 @@ const mapStateToProps = (state) => ({
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {
-    open: useConfirmationDialog.open
+    // open: useConfirmationDialog.open
+    open: dialogOpen,
+    resetConfig: resetActiveConfiguration
 }
 export default connect(
     mapStateToProps,

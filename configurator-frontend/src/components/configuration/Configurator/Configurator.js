@@ -7,7 +7,7 @@ import { selectLanguage } from '../../../state/language/languageSelectors'
 import Loader from '../../Loader'
 
 import OptionTabs from './OptionTabs'
-import Summary from './SidePanel/Summary'
+// import Summary from './SidePanel/Summary'
 
 
 /*
@@ -27,18 +27,22 @@ optionGroups: [
 
 function Configurator({ configurationName, configurationDescription, isLoading, language }) {
 
-    function render() {
+    function renderConfiguratorBody() {
 
         return (
-            <Grid container spacing={2}>
-                <Grid item xs={12} md={3}>
-                    <Summary></Summary>
-                </Grid>
+            // <Grid container spacing={2}>
+            //     <Grid item xs={12} md={3}>
+            //         <Summary></Summary>
+            //     </Grid>
 
-                <Grid item xs={12} md={9}>
-                    <OptionTabs></OptionTabs>
-                </Grid>
+            //     <Grid item xs={12} md={9}>
+            //         <OptionTabs></OptionTabs>
+            //     </Grid>
+            // </Grid>
+            <Grid container>
+                <OptionTabs></OptionTabs>
             </Grid>
+
         )
     }
 
@@ -52,7 +56,7 @@ function Configurator({ configurationName, configurationDescription, isLoading, 
                 isLoading ? 
                 <Loader></Loader>
                  :
-                render()
+                renderConfiguratorBody()
             }
         </div>
     )

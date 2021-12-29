@@ -17,8 +17,11 @@ const selectAllOptionIncompatibilities = state =>       state.configuration.conf
 const selectAllOptionRequirements = state =>            state.configuration.configuration.rules.requirements
 const selectReplacementGroups = state =>                state.configuration.configuration.rules.replacementGroups
 
+export const selectConfigurationId = (state) =>         state.configuration.configuration.id
+
 export const selectBasePrice = state =>                 state.configuration.configuration.rules.basePrice
 export const selectPriceList = state =>                 state.configuration.configuration.rules.priceList
+export const selectDefaultOptions = state =>            state.configuration.configuration.rules.defaultOptions
 export const selectConfigurationName = state =>         state.configuration.configuration.name
 export const selectConfigurationDescription = state =>  state.configuration.configuration.description
 

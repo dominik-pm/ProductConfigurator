@@ -75,13 +75,11 @@ function ConfigurationView({fetchConfiguration, status, error, language }) {
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        status: state.configuration.status,
-        error: state.configuration.error,
-        language: selectLanguage(state)
-    }
-}
+const mapStateToProps = (state) => ({
+    status: state.configuration.status,
+    error: state.configuration.error,
+    language: selectLanguage(state)
+})
 const mapDispatchToProps = {
     fetchConfiguration
 }
