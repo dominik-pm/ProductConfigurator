@@ -23,6 +23,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet]
         public IEnumerable<T> Get()
         {
+            Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
             return entities;
         }
 

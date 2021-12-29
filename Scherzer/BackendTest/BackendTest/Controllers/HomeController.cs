@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using FluentEmail.Smtp;
+using System.Net.Mail;
+using FluentEmail.Core;
+using System.Text;
+using FluentEmail.Razor;
 
 namespace BackendTest.Controllers
 {
@@ -25,7 +30,6 @@ namespace BackendTest.Controllers
         }
         public string Product()
         {
-            //User user = new User() { Age = 18, Email = "jokers@mail.com", Name = "Tobias Scherzer" };
             List<Option> options = new List<Option> { new Option("D150", "Fetter Diesel Motor", new List<string> { "youtube.com" }, "D150") };
             List<string> productImages = new List<string> { "boahnhub.tk" };
             List<OptionGroup> optionGroups = new List<OptionGroup> { new OptionGroup("Color", "The exterior color of the product", "COLOR_GROUP", new List<string> { "RED", "WHITE", "GREEN" }), new OptionGroup("Motor Type", "The motor of your car", "MOTORTYPE_GROUP", new List<string> { "DIESEL", "PETROL", "ELECTRIC" }), new OptionGroup("Motor", "The selected Motor power", "MOTOR_GROUP", new List<string> { "D150", "D200", "D250" }) };
@@ -33,7 +37,36 @@ namespace BackendTest.Controllers
             ProductDependencies productDependencies = new ProductDependencies(50000, new List<string> { "RED", "DIESEL", "D150" }, new List<OptionGroup> { new OptionGroup("Color", "The exterior color of the car", "COLOR_GROUP", new List<string> { "BLUE", "RED", "WHITE" }) }, new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } }, new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } }, new Dictionary<string, int> { { "D150", 1500 } });
             Product product = new Product("0", "Alfa Romeo 159", "A really nice car", productImages, productDependencies, options, optionGroups, optionSections);
             string stringjson = JsonConvert.SerializeObject(product);
-            return stringjson;
+
+            var sender = new SmtpSender(() => new SmtpClient("localhost")
+            {
+                EnableSsl = false, //Zum Testen ausschalten
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                Port = 25
+            }
+            ); //localhost ist der Empfangsserver --> Für Gmail die Adresse von Gmail einfügen
+
+            StringBuilder template = new StringBuilder();
+            template.AppendLine("Sehr geehrte/r Kunde/in,");
+            template.AppendLine("<p>wir haben ihren Kauf des Produkts</p>");
+            template.AppendLine("<h1>@Model.Name</h1>");
+            template.AppendLine("mit folgenden Optionen:<li>");
+            template.AppendLine("@foreach(var option in @Model.Options) { <ul>@option.Name</ul> } ");
+            template.AppendLine("<p></li>erhalten.</p>");
+            template.AppendLine("<h5>MfG, TEST-FUCHS GmbH</h5>");
+
+            Email.DefaultSender = sender;
+            Email.DefaultRenderer = new RazorRenderer();
+
+            var email = Email
+                .From("tobias.scherzer31@gmail.com")
+                .To("tobias.scherzer31@gmail.com")
+                .Subject("Supa")       
+                .UsingTemplate(template.ToString(), product)                                      //Komplette Email
+                //.Body("Supa host as gmocht bro")
+                .Send();
+
+            return "";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
