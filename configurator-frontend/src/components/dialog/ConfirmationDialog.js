@@ -7,7 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { selectConfirmDialogContent, selectConfirmDialogMessage, selectIsConfirmDialogOpen } from '../../state/confirmationDialog/confirmationSelectors'
 import { connect } from 'react-redux'
-import { dialogCancel, dialogConfirm } from '../../state/confirmationDialog/confirmationSlice'
+import { confirmDialogCancel, confirmDialogConfirm } from '../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { Grid, Typography } from '@mui/material'
@@ -124,8 +124,8 @@ const mapStateToProps = (state) => ({
     optionsToRemove: selectConfirmDialogContent(state).optionsToRemove
 })
 const mapDispatchToProps = {
-    cancel: dialogCancel,
-    confirm: dialogConfirm,
+    cancel: confirmDialogCancel,
+    confirm: confirmDialogConfirm,
 
     // cancel: useConfirmationDialog.cancel,
     // confirm: useConfirmationDialog.confirm,

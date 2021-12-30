@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId } from '../../api/configurationAPI'
-import { dialogOpen } from '../confirmationDialog/confirmationSlice'
+import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
 import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultOptions, selectSelectedOptions } from './configurationSelectors'
 
 // const openDialog = useConfirmationDialog.open
@@ -206,7 +206,7 @@ const selectWithDependencies = (id) => (dispatch, getState) => {
     const selectedOptionName = getOptionName(getState(), id)
 
     const confirmMessage = `By selecting ${selectedOptionName} you will deselect ${incompatibleOptionNames.join(', ')}`
-    dispatch(dialogOpen(confirmMessage, {selected: id, deselected: null, optionsToSelect: [], optionsToRemove: deeperOptionsToDeselect}, () => {
+    dispatch(confirmDialogOpen(confirmMessage, {selected: id, deselected: null, optionsToSelect: [], optionsToRemove: deeperOptionsToDeselect}, () => {
         // console.log('Confirmed')
         // select the option and deselect all incompatible options
         dispatch(selectAndDeselectOptions([id], allOptionsToDeselect))
@@ -232,7 +232,7 @@ const deselectWithDependencies = (id) => (dispatch, getState) => {
     const deselectedOptionName = getOptionName(getState(), id)
 
     const confirmMessage = `By deselecting ${deselectedOptionName} you will also deselect ${dependentOptionNames.join(', ')}`
-    dispatch(dialogOpen(confirmMessage, {selected: null, deselected: id, optionsToSelect: [], optionsToRemove: dependentOptions}, () => {
+    dispatch(confirmDialogOpen(confirmMessage, {selected: null, deselected: id, optionsToSelect: [], optionsToRemove: dependentOptions}, () => {
         // console.log('Confirmed')
         // deselect the option and all dependent options
         dispatch(selectAndDeselectOptions(null, [id].concat(dependentOptions)))

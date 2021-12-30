@@ -24,6 +24,11 @@
     "price": "price",
     "priceList": "price list",
 
+    "saveConfiguration": "Save Configuration",
+    "resetConfiguration": "Reset Configuration",
+    "finishConfiguration": "Finish Configuration",
+    "resetConfigurationPrompt": "Do you really want to reset your current configuration?",
+
     "youWantToSelect": "You want to select",
     "youWantToRemove": "You want to remove",
     "youAlsoNeedToSelect": "You also need to select",

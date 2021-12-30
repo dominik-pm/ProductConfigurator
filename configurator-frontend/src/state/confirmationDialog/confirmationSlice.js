@@ -31,7 +31,7 @@ export const confirmationSlice = createSlice({
 
 let onConfirm = null
 
-export const dialogOpen = (message, content, onConfirmCallback) => (dispatch, getState) => {
+export const confirmDialogOpen = (message, content, onConfirmCallback) => (dispatch, getState) => {
     const isOpen = selectIsConfirmDialogOpen(getState())
     if (isOpen) {
         console.log('Confirmation Dialog is already open!')
@@ -43,7 +43,7 @@ export const dialogOpen = (message, content, onConfirmCallback) => (dispatch, ge
     dispatch(show({message, content}))
 }
 
-export const dialogConfirm = () => (dispatch, getState) => {
+export const confirmDialogConfirm = () => (dispatch, getState) => {
     const isOpen = selectIsConfirmDialogOpen(getState())
     if (!isOpen) {
         console.log('Confirmation Dialog is closed (can not confirm)!')
@@ -59,7 +59,7 @@ export const dialogConfirm = () => (dispatch, getState) => {
     onConfirm = null
 }
 
-export const dialogCancel = () => (dispatch) => {
+export const confirmDialogCancel = () => (dispatch) => {
     dispatch(close())
     onConfirm = null
 }

@@ -1,10 +1,11 @@
 import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
-import { Box, Button, Grid, IconButton, Typography } from '@mui/material'
+import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../lang'
 import { selectConfigurationDescription, selectConfigurationName } from '../../../state/configuration/configurationSelectors'
 import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
+import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import Loader from '../../Loader'
 
@@ -27,7 +28,21 @@ optionGroups: [
 
 */
 
-function Configurator({ configurationName, configurationDescription, isLoading, resetConfig, language }) {
+function Configurator({ configurationName, configurationDescription, isLoading, resetConfig, openConfirm, language }) {
+
+    function handleSaveClicked() {
+        console.log('save configuration pressed')
+    }
+
+    function handleResetClicked() {
+        openConfirm(translate('resetConfigurationPrompt', language), {}, () => {
+            resetConfig()
+        })
+    }
+
+    function handleFinishClicked() {
+        console.log('finish configuration pressed')
+    }
 
     function renderConfiguratorBody() {
 
@@ -56,24 +71,33 @@ function Configurator({ configurationName, configurationDescription, isLoading, 
                     <Typography variant="subtitle1">{configurationDescription}</Typography>
                 </Box>
                 <Grid sx={{paddingTop: 2}}>
-                    <IconButton 
-                        variant="contained" 
-                        onClick={() => console.log('save configuration pressed')}
+
+                    <Tooltip title={translate('saveConfiguration', language)}>
+                        <IconButton 
+                            variant="contained" 
+                            onClick={handleSaveClicked}
+                            >
+                            <SaveAs />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title={translate('resetConfiguration', language)}>
+                        <IconButton
+                            variant="contained" 
+                            onClick={handleResetClicked}
                         >
-                        <SaveAs />
-                    </IconButton>
-                    <IconButton
-                        variant="contained" 
-                        onClick={() => resetConfig()}
-                    >
-                        <RestartAlt />
-                    </IconButton>
-                    <IconButton 
-                        variant="contained" 
-                        onClick={() => console.log('finish configuration pressed')}
-                        >
-                        <Done />
-                    </IconButton>
+                            <RestartAlt />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title={translate('finishConfiguration', language)}>
+                        <IconButton 
+                            variant="contained" 
+                            onClick={handleFinishClicked}
+                            >
+                            <Done />
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
             </Grid>
             {
@@ -86,15 +110,14 @@ function Configurator({ configurationName, configurationDescription, isLoading, 
     )
 }
 
-const mapStateToProps = (state) => {
-    return {
-        configurationName: selectConfigurationName(state),
-        configurationDescription: selectConfigurationDescription(state),
-        language: selectLanguage(state)
-    }
-}
+const mapStateToProps = (state) => ({
+    configurationName: selectConfigurationName(state),
+    configurationDescription: selectConfigurationDescription(state),
+    language: selectLanguage(state)
+})
 const mapDispatchToProps = {
-    resetConfig: resetActiveConfiguration
+    resetConfig: resetActiveConfiguration,
+    openConfirm: confirmDialogOpen
 }
 export default connect(
     mapStateToProps,
