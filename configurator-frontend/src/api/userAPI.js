@@ -1,16 +1,33 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 
-export const requestSaveConfiguration = (configurationName, configuration) => {
-    return saveConfigTest(configurationName, configuration)
+export const requestSaveConfiguration = (name, configurationId, selectedOptions) => {
+    return saveConfigTest(name, selectedOptions)
 
     // return new Promise((resolve, reject) => {
-    //     axios.post('/')
+    //     const data = {
+    //         savedName: name,
+    //         selectedOptions: selectedOptions
+    //     }
+    //     axios.post(`/account/configurations/${configurationId}`, data)
     //     .then(res => {
     //         resolve(res.data)
     //     })
     //     .catch(err => {
     //         reject('Could not save configuration!')
+    //     })
+    // })
+}
+export const fetchAllSavedConfigurations = () => {
+    return fetchConfigsTest()
+
+    // return new Promise((resolve, reject) => {
+    //     axios.get(`/account/configurations/`)
+    //     .then(res => {
+    //         resolve(res.data)
+    //     })
+    //     .catch(err => {
+    //         reject('Could not get saved configurations!')
     //     })
     // })
 }
@@ -66,8 +83,22 @@ function loginTest(username, password) {
     })
 }
 
-function saveConfigTest(name, config) {
+function saveConfigTest(name, options) {
     return new Promise((resolve, reject) => {
         resolve('Successfully saved ' + name)
+    })
+}
+function fetchConfigsTest() {
+    return new Promise((resolve, reject) => {
+        const data = [
+            {
+                savedName: "TestConfig",
+                status: "saved", // or "ordered"
+                name: "Car",
+                description: "This is a car",
+                selectedOptions: ['YELLOW']
+            }
+        ]
+        resolve(data)
     })
 }

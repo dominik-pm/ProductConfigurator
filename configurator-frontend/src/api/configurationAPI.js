@@ -2,6 +2,10 @@ export const fetchId = (productId) => {
     return fetchApiTest(productId)
 }
 
+export const postConfiguration = (newConfiguration) => {
+    console.log('Posting a new configuration not implemented')
+}
+
 // A mock api request function to mimic making an async request for data
 const testDelay = 0;
 function fetchApiTest(configId) {

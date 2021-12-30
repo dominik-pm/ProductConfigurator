@@ -2,9 +2,10 @@ import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
+import { postConfiguredProduct } from '../../../api/productsAPI'
 import { requestSaveConfiguration } from '../../../api/userAPI'
 import { translate } from '../../../lang'
-import { selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
+import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
 import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
@@ -30,7 +31,7 @@ optionGroups: [
 
 */
 
-function Configurator({ configurationName, configurationDescription, configurationId, selectedOptions, isLoading, resetConfig, openConfirm, openInputDialog, language }) {
+function Configurator({ configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, sendConfiguration, openConfirm, openInputDialog, language }) {
 
     function handleSaveClicked() {
         const data = {
@@ -62,7 +63,13 @@ function Configurator({ configurationName, configurationDescription, configurati
     }
 
     function handleFinishClicked() {
-        console.log('finish configuration pressed')
+        sendConfiguration(configurationId, selectedOptions, price)
+        .then(res => {
+            console.log(res)
+        })
+        .catch(err => {
+            console.log(err)
+        })
     }
 
     function renderConfiguratorBody() {
@@ -136,10 +143,12 @@ const mapStateToProps = (state) => ({
     configurationDescription: selectConfigurationDescription(state),
     configurationId: selectConfigurationId(state),
     selectedOptions: selectSelectedOptions(state),
+    price: getCurrentPrice(state),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {
     resetConfig: resetActiveConfiguration,
+    sendConfiguration: postConfiguredProduct,
     openConfirm: confirmDialogOpen,
     openInputDialog: inputDialogOpen
 }

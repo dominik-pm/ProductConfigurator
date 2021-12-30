@@ -1,5 +1,25 @@
+import axios from 'axios'
+
 export const fetchAll = () => {    
     return fetchApiTest()
+}
+
+export const postConfiguredProduct = (configurationId, selectedOptions, price) => {
+    return new Promise((resolve, reject) => {
+
+        const data = {
+            options: selectedOptions,
+            price
+        }
+        axios.post(`/products/${configurationId}`, data)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject(err)
+        })
+
+    })
 }
 
 
