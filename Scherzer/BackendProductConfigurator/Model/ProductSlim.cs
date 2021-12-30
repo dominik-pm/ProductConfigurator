@@ -9,8 +9,8 @@ namespace Model
 {
     public class ProductSlim : IIndexable<int>, INameable, IDescribable
     {
-        public int Id { get; set; } = 0;
-        public string Name { get; set; } = "Abstract Product";
-        public string Description { get; set; } = "Abstract Description";
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

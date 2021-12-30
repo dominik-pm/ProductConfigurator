@@ -44,7 +44,6 @@ D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\Microsoft.CodeAna
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\Microsoft.CodeAnalysis.CSharp.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\Microsoft.CodeAnalysis.Razor.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
-D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\Newtonsoft.Json.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\RazorLight.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\cs\Microsoft.CodeAnalysis.resources.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\de\Microsoft.CodeAnalysis.resources.dll
@@ -378,3 +377,12 @@ D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\refs\System.Xml.X
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\refs\System.Xml.XPath.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\refs\System.Xml.XPath.XDocument.dll
 D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\refs\WindowsBase.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\PdfSharp.Charting.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\PdfSharp.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\de\PdfSharp.Charting.resources.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\de\PdfSharp.resources.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+D:\Schule\DA\Scherzer\BackendTest\BackendTest\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BackendProductConfigurator.MediaProducers;
+using BackendProductConfigurator.Validation;
+using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Interfaces;
 
@@ -68,7 +70,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet("{id}")]
         public override ProductConfig Get(int id)
         {
-            return entities.Find(entity => (entity as IProductId).ProductId.Equals(id));
+            return entities.Find(entity => (entity as IConfigId).ConfigId.Equals(id));
         }
     }
     public class productsController : AController<Product, int>
@@ -83,6 +85,20 @@ namespace BackendProductConfigurator.Controllers
         public override void Post([FromBody] Product value)
         {
             AValuesClass.Products.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            new Thread(() =>
+            {
+                EValidationResult validationResult;
+                validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.ProductConfig.Find(config => config.Id == value.ConfigId).OptionGroups);
+                if(validationResult == EValidationResult.ValidationPassed)
+                {
+                    validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.ProductConfig.Find(config => config.Id == value.ConfigId).Dependencies);
+                }
+                EmailProducer.SendEmail(value, validationResult);
+            }).Start();
+            new Thread(() =>
+            {
+                PdfProducer.GeneratePDF(value);
+            }).Start();
             entities.Append(value);
         }
     }

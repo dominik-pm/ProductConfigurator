@@ -2,10 +2,11 @@
 
 namespace Model
 {
-    public class Product : ProductSlim, IImageable
+    public class Product : ProductSlim, IImageable, IConfigId
     {
-        public virtual List<string> Images { get; set; } = new List<string> { "Abstract Imagepath1", "Abstract Imagepath 2"};
-        public List<Option> Options { get; set; }
+        public virtual List<string> Images { get; set; } = new List<string>();
+        public List<Option> Options { get; set; } = new List<Option>();
         public float Price { get; set; }
+        public int ConfigId { get; set; }
     }
 }

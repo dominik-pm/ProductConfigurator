@@ -1,17 +1,35 @@
-﻿using Model;
+﻿using BackendProductConfigurator.MediaProducers;
+using Model;
 
 namespace BackendProductConfigurator.Validation
 {
-    public class ValidationMethods
+    public static class ValidationMethods
     {
-        public bool ValidatePrice (Product product, Dictionary<string, float> priceList)
+        public static EValidationResult ValidatePrice (Product product, ProductDependencies dependencies)
         {
-            float endPrice = 0;
+            float endPrice = dependencies.BasePrice;
             for(int i = 0; i < product.Options.Count; i++)
             {
-                endPrice += priceList[product.Options[i].Id];
+                endPrice += dependencies.PriceList[product.Options[i].Id];
             }
-            return product.Price == endPrice;
+            return (product.Price == endPrice) ? EValidationResult.ValidationPassed : EValidationResult.PriceInvalid;
+        }
+        public static EValidationResult ValidateConfiguration (Product product, List<OptionGroup> optionsGroups)
+        {
+            EValidationResult validationResult = EValidationResult.ValidationPassed;
+            foreach (var group in optionsGroups)
+            {
+                if(group.Required == true)
+                {
+                    validationResult = product.Options.Select(productOption => productOption.Id).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
+                    if (validationResult == EValidationResult.ConfigurationInvalid)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return validationResult;
         }
     }
 }

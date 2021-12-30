@@ -12,15 +12,20 @@ namespace BackendProductConfigurator.Controllers
 
         public static void SetValues()
         {
-            List<Option> options = new List<Option> { new Option("D150", "D150", "Fetter Diesel Motor", new List<string> { "youtube.com" }),
+            List<Option> options = new List<Option> {
+                                                      new Option("D150", "D150", "Fetter Diesel Motor", new List<string> { "youtube.com" }),
                                                       new Option("D200", "D200", "Fetter Diesel Motor", new List<string> { "youtube.com" }),
-                                                      new Option("D250", "D250", "Fetter Diesel Motor", new List<string> { "youtube.com" }) };
+                                                      new Option("D250", "D250", "Fetter Diesel Motor", new List<string> { "youtube.com" }),
+                                                      new Option("RED", "Alfa Rosso", "Red like a cherry", new List<string> { "" }),
+                                                      new Option("GREEN", "Green demon", "Green like the grinch", new List<string> { "" }),
+                                                      new Option("WHITE", "White cloud", "White as a sheet of paper", new List<string> { "" }),
+                                                     };
 
             List<string> productImages = new List<string> { "google.com" };
 
-            List<OptionGroup> optionGroups = new List<OptionGroup> { new OptionGroup("Color", "The exterior color of the product", "COLOR_GROUP", new List<string> { "RED", "WHITE", "GREEN" }),
-                                                                     new OptionGroup("Motor Type", "The motor of your car", "MOTORTYPE_GROUP", new List<string> { "DIESEL", "PETROL", "ELECTRIC" }),
-                                                                     new OptionGroup("Motor", "The selected Motor power", "MOTOR_GROUP", new List<string> { "D150", "D200", "D250" }) };
+            List<OptionGroup> optionGroups = new List<OptionGroup> { new OptionGroup("Color", "The exterior color of the product", "COLOR_GROUP", new List<string> { "RED", "WHITE", "GREEN" }, true),
+                                                                     new OptionGroup("Motor Type", "The motor of your car", "MOTORTYPE_GROUP", new List<string> { "DIESEL", "PETROL", "ELECTRIC" }, false),
+                                                                     new OptionGroup("Motor", "The selected Motor power", "MOTOR_GROUP", new List<string> { "D150", "D200", "D250" }, false) };
 
             List<OptionSection> optionSections = new List<OptionSection> { new OptionSection("Exterior", "EXTERIOR", new List<string> { "COLOR_GROUP" }),
                                                                            new OptionSection("Motor", "MOTOR_SECTION", new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" }) };
@@ -30,7 +35,8 @@ namespace BackendProductConfigurator.Controllers
                                                                               new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
                                                                               new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
                                                                               new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
-                                                                              new Dictionary<string, int> { { "D150", 1500 } });
+                                                                              new Dictionary<string, float> { { "D150", 1500f },
+                                                                                                              { "RED", 250f } });
 
             ProductConfig = new List<ProductConfig> { new ProductConfig(0, "Alfa Romeo 159 Configurator", "Configurable Car", productImages, productDependencies, options, optionGroups, optionSections) };
 
