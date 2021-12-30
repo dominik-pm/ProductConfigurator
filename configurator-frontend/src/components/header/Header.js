@@ -10,33 +10,101 @@ import { selectLanguage } from '../../state/language/languageSelectors'
 import { connect } from 'react-redux'
 import { dialogOpen } from '../../state/confirmationDialog/confirmationSlice'
 import { resetActiveConfiguration } from '../../state/configuration/configurationSlice'
+import { selectIsAuthenticated, selectIsAdmin, selectUsername } from '../../state/user/userSelector'
+import { logout } from '../../state/user/userSlice'
 
 const usePathname = () => {
     const location = useLocation()
     return location.pathname
 }
 
-function Header({ language, open, resetConfig }) {
+function Header({ language,/*open, */ resetConfig, isLoggedIn, isAdmin, username, logout }) {
 
     const navigate = useNavigate()
 
     const onConfigurationPage = usePathname().split('/')[1] === 'configuration'
 
+    const userButtons = (
+        <>
+            <Button 
+                variant="contained" 
+                onClick={() => console.log('save configuration pressed')}
+                >
+                Save Configuration
+            </Button>
+            <Button 
+                variant="contained" 
+                onClick={() => logout()}
+                >
+                Logout
+            </Button>
+            <Button 
+                variant="contained" 
+                onClick={() => console.log('go to account page pressed')}
+                >
+                {username}
+            </Button>
+        </>
+    )
+
+    const adminButtons = (
+        <>
+            <Button
+                variant="outlined"
+                onClick={() => console.log('create configuration pressed')}
+            >
+                Create Configuration
+            </Button>
+        </>
+    )
+
+    const guestButtons = (
+        <>
+            <Button 
+                variant="contained" 
+                onClick={() => console.log('login pressed')}
+                >
+                Login
+            </Button>
+            <Button 
+                variant="contained" 
+                onClick={() => console.log('register pressed')}
+                >
+                Register
+            </Button>
+        </>
+    )
+
     function getMenuButtons() {
         return (
-            <Grid container sx={{ flexGrow: 1, gap: 2 }}>
+            <Grid container sx={{ gap: 2 }}>
 
                 <IconButton onClick={() => navigate('/')}>
                     <ArrowBackIosNew></ArrowBackIosNew>
                 </IconButton>
 
-                <Button 
-                    sx={{display: {xs: onConfigurationPage ? 'block' : 'none'}}} 
-                    variant="contained" 
-                    onClick={() => resetConfig()}
-                >
-                    Reset
-                </Button>
+                <LanguageSelect></LanguageSelect>
+
+                {onConfigurationPage ? 
+                    <Button
+                        // sx={{display: {xs: onConfigurationPage ? 'block' : 'none'}}} 
+                        variant="contained" 
+                        onClick={() => resetConfig()}
+                    >
+                        Reset
+                    </Button>
+                    : ''
+                }
+
+                <Box sx={{flexGrow: 1}}></Box>
+
+                {/* <Button variant="contained" onClick={() => open('Example Message', {}, () => console.log('confirmed'))}>
+                    test dialog
+                </Button> */}
+
+                {isAdmin ? adminButtons : ''}
+
+                {isLoggedIn ? userButtons : guestButtons}
 
             </Grid>
         )
@@ -69,11 +137,6 @@ function Header({ language, open, resetConfig }) {
                         </IconButton> */}
                         {getMenuButtons()}
 
-                        {/* <Button variant="contained" onClick={() => open('Example Message', {}, () => console.log('confirmed'))}>
-                            test dialog
-                        </Button> */}
-
-                        <LanguageSelect></LanguageSelect>
                     </Toolbar>
                 </AppBar>
             </Box>
@@ -81,12 +144,16 @@ function Header({ language, open, resetConfig }) {
     )
 }
 const mapStateToProps = (state) => ({
-    language: selectLanguage(state)
+    language: selectLanguage(state),
+    isLoggedIn: selectIsAuthenticated(state),
+    isAdmin: selectIsAdmin(state),
+    username: selectUsername(state)
 })
 const mapDispatchToProps = {
     // open: useConfirmationDialog.open
     open: dialogOpen,
-    resetConfig: resetActiveConfiguration
+    resetConfig: resetActiveConfiguration,
+    logout: logout
 }
 export default connect(
     mapStateToProps,

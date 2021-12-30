@@ -12,7 +12,7 @@ function LanguageSelect({ language, setLanguage }) {
     }
 
     return (
-        <Box sx={{ m: 1, minWidth: 120 }}>
+        <Box sx={{ minWidth: 120 }}>
             <FormControl variant='standard' fullWidth>
                 <InputLabel id="select-lang-label">Language</InputLabel>
                 <Select

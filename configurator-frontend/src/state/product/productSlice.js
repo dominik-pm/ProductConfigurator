@@ -8,7 +8,7 @@ const initialState = {
 }
 
 export const productSlice = createSlice({
-    name: 'counter',
+    name: 'product',
     initialState,
     reducers: {
         loadingStarted: (state) => {

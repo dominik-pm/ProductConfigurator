@@ -9,6 +9,7 @@ import {
     Routes
 } from 'react-router-dom'
 import ConfirmationOptionSelect from './components/dialog/ConfirmationDialog'
+import InputDialog from './components/dialog/InputDialog'
 
 const theme = createTheme({
 })
@@ -20,6 +21,7 @@ function App() {
                 <Router>
                     <Header></Header>
                     <ConfirmationOptionSelect></ConfirmationOptionSelect>
+                    <InputDialog></InputDialog>
 
                     <Routes>
 

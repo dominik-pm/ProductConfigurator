@@ -90,13 +90,14 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
             <Dialog
                 open={isOpen}
                 onClose={handleClose}
+                scroll="paper"
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
                     {translate('confirmationPrompt', language)}
                 </DialogTitle>
 
-                <DialogContent dividers>
+                <DialogContent dividers={true}>
                         {renderDialogContent()}
                 </DialogContent>
 
