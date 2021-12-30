@@ -1,8 +1,10 @@
-import { Grid, Typography } from '@mui/material'
+import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
+import { Box, Button, Grid, IconButton, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../lang'
 import { selectConfigurationDescription, selectConfigurationName } from '../../../state/configuration/configurationSelectors'
+import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import Loader from '../../Loader'
 
@@ -25,7 +27,7 @@ optionGroups: [
 
 */
 
-function Configurator({ configurationName, configurationDescription, isLoading, language }) {
+function Configurator({ configurationName, configurationDescription, isLoading, resetConfig, language }) {
 
     function renderConfiguratorBody() {
 
@@ -48,10 +50,32 @@ function Configurator({ configurationName, configurationDescription, isLoading, 
 
     return (
         <div>
-            <div>
-                <Typography variant="h1">{translate('configureYour', language)} {configurationName}</Typography>
-                <Typography variant="subtitle1">{configurationDescription}</Typography>
-            </div>
+            <Grid container>
+                <Box sx={{flexGrow: 1}}>
+                    <Typography variant="h2">{translate('configureYour', language)} {configurationName}</Typography>
+                    <Typography variant="subtitle1">{configurationDescription}</Typography>
+                </Box>
+                <Grid sx={{paddingTop: 2}}>
+                    <IconButton 
+                        variant="contained" 
+                        onClick={() => console.log('save configuration pressed')}
+                        >
+                        <SaveAs />
+                    </IconButton>
+                    <IconButton
+                        variant="contained" 
+                        onClick={() => resetConfig()}
+                    >
+                        <RestartAlt />
+                    </IconButton>
+                    <IconButton 
+                        variant="contained" 
+                        onClick={() => console.log('finish configuration pressed')}
+                        >
+                        <Done />
+                    </IconButton>
+                </Grid>
+            </Grid>
             {
                 isLoading ? 
                 <Loader></Loader>
@@ -70,7 +94,7 @@ const mapStateToProps = (state) => {
     }
 }
 const mapDispatchToProps = {
-    
+    resetConfig: resetActiveConfiguration
 }
 export default connect(
     mapStateToProps,

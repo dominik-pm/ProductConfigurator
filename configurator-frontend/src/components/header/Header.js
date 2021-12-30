@@ -1,5 +1,5 @@
 import React from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { AppBar, Button, Grid, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
 import { AccountCircle, ArrowBackIosNew, Logout } from '@mui/icons-material'
 import './Header.css'
@@ -8,33 +8,18 @@ import LanguageSelect from './LanguageSelect'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { connect } from 'react-redux'
-// import { dialogOpen } from '../../state/confirmationDialog/confirmationSlice'
-import { resetActiveConfiguration } from '../../state/configuration/configurationSlice'
 import { selectIsAuthenticated, selectIsAdmin, selectUsername } from '../../state/user/userSelector'
 import { logout } from '../../state/user/userSlice'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import LoginButton from './LoginButton'
 import RegisterButton from './RegisterButton'
 
-const usePathname = () => {
-    const location = useLocation()
-    return location.pathname
-}
-
-function Header({ language, resetConfig, isLoggedIn, isAdmin, username, logout }) {
+function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
     const navigate = useNavigate()
 
-    const onConfigurationPage = usePathname().split('/')[1] === 'configuration'
-
     const userButtons = (
         <>
-            <Button 
-                variant="contained" 
-                onClick={() => console.log('save configuration pressed')}
-                >
-                Save Configuration
-            </Button>
             <Button 
                 variant="contained" 
                 startIcon={<AccountCircle />}
@@ -79,20 +64,9 @@ function Header({ language, resetConfig, isLoggedIn, isAdmin, username, logout }
 
                 <LanguageSelect></LanguageSelect>
 
-                {onConfigurationPage ? 
-                    <Button
-                        // sx={{display: {xs: onConfigurationPage ? 'block' : 'none'}}} 
-                        variant="contained" 
-                        onClick={() => resetConfig()}
-                    >
-                        Reset
-                    </Button>
-                    : ''
-                }
-
                 <Box sx={{flexGrow: 1}}></Box>
 
-                {/* <Button variant="contained" onClick={() => open('Example Message', {}, () => console.log('confirmed'))}>
+                {/* <Button variant="contained" onClick={() => openConfirmDialog('Example Message', {}, () => console.log('confirmed'))}>
                     test dialog
                 </Button> */}
 
@@ -145,7 +119,6 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
-    resetConfig: resetActiveConfiguration,
     logout: logout
 }
 export default connect(

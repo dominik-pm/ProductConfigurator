@@ -132,8 +132,6 @@ const localStorageLang = localStorage.getItem('language')
 
 const initialState = {
     language: localStorageLang ? localStorageLang : defaultLang
-    // status: 'idle', // | 'loading' | 'succeeded' | 'failed'
-    // error: null
 }
 
 export const languageSlice = createSlice({
@@ -218,7 +216,7 @@ export const { loadingStarted, loadingSucceeded, loadingFailed } = configuration
 export default configurationSlice.reducer
 ```
 
-**Confirmation State**
+*Confirmation State*
 > state/confirmation/confirmationSlice.js
 ```javascript
 import { createSlice } from '@reduxjs/toolkit'
@@ -252,53 +250,203 @@ export const confirmationSlice = createSlice({
     }
 })
 
-// wrapping actions into class, so that the confirm callback can persist (functions cant be saved into redux state)
-class confirmationDialog {
-    constructor() {
-        this.onConfirm = null
+let onConfirm = null
+
+export const dialogOpen = (message, content, onConfirmCallback) => (dispatch, getState) => {
+    const isOpen = selectIsConfirmDialogOpen(getState())
+    if (isOpen) {
+        console.log('Confirmation Dialog is already open!')
+        return
     }
 
-    open = (message, content, onConfirm) => (dispatch, getState) => {
-        const isOpen = selectIsConfirmDialogOpen(getState())
-        if (isOpen) {
-            console.log('Confirmation Dialog is already open!')
-            return
-        }
-
-        this.onConfirm = onConfirm
-        
-        dispatch(show({message, content}))
-    }
-
-    confirm = () => (dispatch, getState) => {
-        const isOpen = selectIsConfirmDialogOpen(getState())
-        if (!isOpen) {
-            console.log('Confirmation Dialog is closed (can not confirm)!')
-            return
-        }
+    onConfirm = onConfirmCallback
     
-        dispatch(close())
-        if (this.onConfirm) {
-            this.onConfirm()
-        } else {
-            console.log('no confirmation callback')
-        }
-        this.onConfirm = null
-    }
-
-    cancel = () => (dispatch) => {
-        dispatch(close())
-        this.onConfirm = null
-    }
+    dispatch(show({message, content}))
 }
 
-export const useConfirmationDialog = new confirmationDialog() 
+export const dialogConfirm = () => (dispatch, getState) => {
+    const isOpen = selectIsConfirmDialogOpen(getState())
+    if (!isOpen) {
+        console.log('Confirmation Dialog is closed (can not confirm)!')
+        return
+    }
+
+    dispatch(close())
+    if (onConfirm) {
+        onConfirm()
+    } else {
+        console.log('no confirmation callback')
+    }
+    onConfirm = null
+}
+
+export const dialogCancel = () => (dispatch) => {
+    dispatch(close())
+    onConfirm = null
+}
 
 // Action creators are generated for each case reducer function
 export const { show, close } = confirmationSlice.actions
 
 export default confirmationSlice.reducer
 ``` 
+
+*User State*
+> state/user/userSlice.js
+```javascript
+import { createSlice } from '@reduxjs/toolkit'
+import { requestLogin, requestRegister, setAuthorizationToken } from '../../api/userAPI'
+
+const initialState = {
+    isAuthenticated: false,
+    user: {}
+}
+
+export const userSlice = createSlice({
+    name: 'user',
+    initialState,
+    reducers: {
+        setCurrentUser: (state, action) => {
+            console.log('getting user:', action.payload)
+            state.isAuthenticated = Object.keys(action.payload).length > 0
+            state.user = action.payload
+        }
+    }
+})
+
+export const register = (username, password, email) => async (dispatch) => {
+    requestRegister(username, password, email).then(res => {
+        // display registered notification
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+export const login = (username, password) => async (dispatch) => {
+    
+    requestLogin(username, password).then(res => {
+        const { token, user } = res
+
+        localStorage.setItem('jwtToken', token)
+        setAuthorizationToken(token)
+        dispatch(setCurrentUser(user))
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+export const logout = () => (dispatch) => {
+    localStorage.removeItem('jwtToken')
+    setAuthorizationToken(false)
+    dispatch(setCurrentUser({}))
+}
+
+// Action creators are generated for each case reducer function
+export const { setCurrentUser } = userSlice.actions
+
+export default userSlice.reducer
+```
+
+*Input Dialog State*
+> state/inputDialog/inputDialogSlice.js
+```javascript
+import { createSlice } from '@reduxjs/toolkit'
+import { selectInputDialogData, selectIsInputDialogOpen } from './inputDialogSelectors'
+
+const initialState = {
+    open: false,
+    headerMessage: '',
+    data: {}
+}
+
+export const inputDialogSlice = createSlice({
+    name: 'inputDialog',
+    initialState,
+    reducers: {
+        show: (state, action) => {
+            const { headerMessage, data } = action.payload
+
+            state.headerMessage = headerMessage
+            state.data = data
+            state.open = true
+        },
+        close: (state, action) => {
+            state.open = false
+            state.headerMessage = ''
+            state.data = {}
+        },
+        setData: (state, action) => {
+            state.data = action.payload
+        }
+    }
+})
+
+
+let onConfirm = null
+
+export const inputDialogOpen = (headerMessage, data, onConfirmCallback) => (dispatch, getState) => {
+    const isOpen = selectIsInputDialogOpen(getState())
+    if (isOpen) {
+        console.log('Input Dialog is already open!')
+        return
+    }
+
+    onConfirm = onConfirmCallback
+    
+    dispatch(show({headerMessage, data}))
+}
+export const inputDialogConfirm = () => (dispatch, getState) => {
+    const isOpen = selectIsInputDialogOpen(getState())
+    if (!isOpen) {
+        console.log('Input Dialog is closed (can not confirm)!')
+        return
+    }
+
+    if (onConfirm) {
+        const data = selectInputDialogData(getState())
+        onConfirm(data)
+    } else {
+        console.log('no confirmation callback')
+    }
+    dispatch(close())
+    onConfirm = null
+}
+export const inputDialogCancel = () => (dispatch) => {
+    dispatch(close())
+    onConfirm = null
+}
+export const inputDialogSetData = (data) => (dispatch) => {
+    dispatch(setData(data))
+}
+
+
+// Action creators are generated for each case reducer function
+export const { show, close, setData } = inputDialogSlice.actions
+
+export default inputDialogSlice.reducer
+```
+
+**Creating Selectors**
+- Input Selectors:
+  - input selectors are great to get nested varaibles out of the state (so that the components does not have to know the structure of the state)
+- Output Selectors:
+  - with 'reselect' the selectors can be 'memoized', meaning that 'expensive' calculation are cached and only recalculated if the input parameters change
+- Example:
+> state/configurationSelectors.js
+```javascript
+// input selectors
+const selectOptionId = (state, optionId) =>             optionId
+export const selectOptions = state =>                   state.configuration.configuration.options
+export const selectBasePrice = state =>                 state.configuration.configuration.rules.basePrice
+export const selectDefaultOptions = state =>            state.configuration.configuration.rules.defaultOptions
+
+// output selectors
+export const getOption = createSelector([selectOptions, selectOptionId], (options, id) => {
+    return options.find(o => o.id === id)
+})
+```
 
 **Using the state**
 > components/product/ProductView.js
