@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { requestLogin, setAuthorizationToken } from '../../api/userAPI'
+import { requestLogin, requestRegister, setAuthorizationToken } from '../../api/userAPI'
 
 const initialState = {
     isAuthenticated: false,
@@ -12,11 +12,21 @@ export const userSlice = createSlice({
     reducers: {
         setCurrentUser: (state, action) => {
             console.log('getting user:', action.payload)
-            state.isAuthenticated = !action.payload
+            state.isAuthenticated = Object.keys(action.payload).length > 0
             state.user = action.payload
         }
     }
 })
+
+export const register = (username, password, email) => async (dispatch) => {
+    requestRegister(username, password, email).then(res => {
+        // TODO: display registered notification
+    })
+    .catch(err => {
+        console.log(err)
+        // TODO: display error message
+    })
+}
 
 export const login = (username, password) => async (dispatch) => {
     
@@ -26,9 +36,11 @@ export const login = (username, password) => async (dispatch) => {
         localStorage.setItem('jwtToken', token)
         setAuthorizationToken(token)
         dispatch(setCurrentUser(user))
+        // TODO: display logged in notification
     })
     .catch(err => {
         console.log(err)
+        // TODO: display error message
     })
 }
 

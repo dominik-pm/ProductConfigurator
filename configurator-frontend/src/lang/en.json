@@ -27,5 +27,9 @@
     "youWantToSelect": "You want to select",
     "youWantToRemove": "You want to remove",
     "youAlsoNeedToSelect": "You also need to select",
-    "theseOptionsWillBeRemoved": "These options will be removed"
+    "theseOptionsWillBeRemoved": "These options will be removed",
+
+    "Login": "Login",
+    "Register": "Register",
+    "submit": "submit"
 }

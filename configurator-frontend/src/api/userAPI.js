@@ -1,6 +1,12 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 
+export const requestRegister = (username, email, password) => {
+    return new Promise((resolve, reject) => {
+        reject('Not implemented')
+    })
+}
+
 export const requestLogin = (username, password) => {
     return loginTest(username, password)
 
@@ -26,15 +32,18 @@ export const setAuthorizationToken = (token) => {
 }
 
 
+// A mock function to mimic making an async request for the login
 function loginTest(username, password) {
     return new Promise((resolve, reject) => {
         // reject('INVALID CREDENTIALS)
         setTimeout(() => {
             // user token
-            // const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZW1haWwiOiJ0ZXN0dXNlckB0ZXN0LWZ1Y2hzLmNvbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjE3NDQ5MDIyfQ.qi6WUK7Pct6WjBZfm-J5f8cDmE4M1oagEJaxOHntFSs'
+            let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZW1haWwiOiJ0ZXN0dXNlckB0ZXN0LWZ1Y2hzLmNvbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjE3NDQ5MDIyfQ.qi6WUK7Pct6WjBZfm-J5f8cDmE4M1oagEJaxOHntFSs'
             
             // admin token
-            const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJjb25maWd1cmF0b3ItYWRtaW5AdGVzdC1mdWNocy5jb20iLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjE3NDQ5MDIyfQ.vSJDmhZ5-2lCVDRSXbIFTK3RkFxPDMYZOhYZOzN5gnQ'
+            if (username === 'admin') {
+                token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJjb25maWd1cmF0b3ItYWRtaW5AdGVzdC1mdWNocy5jb20iLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjE3NDQ5MDIyfQ.vSJDmhZ5-2lCVDRSXbIFTK3RkFxPDMYZOhYZOzN5gnQ'
+            }
             
             const user = jwt.decode(token)
 

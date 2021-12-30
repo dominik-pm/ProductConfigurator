@@ -1,24 +1,27 @@
 import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { AppBar, Button, Grid, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
-import { ArrowBackIosNew } from '@mui/icons-material'
+import { AccountCircle, ArrowBackIosNew, Logout } from '@mui/icons-material'
 import './Header.css'
 import { Box } from '@mui/system'
 import LanguageSelect from './LanguageSelect'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { connect } from 'react-redux'
-import { dialogOpen } from '../../state/confirmationDialog/confirmationSlice'
+// import { dialogOpen } from '../../state/confirmationDialog/confirmationSlice'
 import { resetActiveConfiguration } from '../../state/configuration/configurationSlice'
 import { selectIsAuthenticated, selectIsAdmin, selectUsername } from '../../state/user/userSelector'
 import { logout } from '../../state/user/userSlice'
+import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
+import LoginButton from './LoginButton'
+import RegisterButton from './RegisterButton'
 
 const usePathname = () => {
     const location = useLocation()
     return location.pathname
 }
 
-function Header({ language,/*open, */ resetConfig, isLoggedIn, isAdmin, username, logout }) {
+function Header({ language, resetConfig, isLoggedIn, isAdmin, username, logout }) {
 
     const navigate = useNavigate()
 
@@ -34,23 +37,24 @@ function Header({ language,/*open, */ resetConfig, isLoggedIn, isAdmin, username
             </Button>
             <Button 
                 variant="contained" 
-                onClick={() => logout()}
-                >
-                Logout
-            </Button>
-            <Button 
-                variant="contained" 
+                startIcon={<AccountCircle />}
                 onClick={() => console.log('go to account page pressed')}
                 >
                 {username}
             </Button>
+            <IconButton 
+                variant="contained"
+                onClick={() => logout()}
+                >
+                <Logout />
+            </IconButton>
         </>
     )
 
     const adminButtons = (
         <>
             <Button
-                variant="outlined"
+                variant="contained"
                 onClick={() => console.log('create configuration pressed')}
             >
                 Create Configuration
@@ -60,18 +64,8 @@ function Header({ language,/*open, */ resetConfig, isLoggedIn, isAdmin, username
 
     const guestButtons = (
         <>
-            <Button 
-                variant="contained" 
-                onClick={() => console.log('login pressed')}
-                >
-                Login
-            </Button>
-            <Button 
-                variant="contained" 
-                onClick={() => console.log('register pressed')}
-                >
-                Register
-            </Button>
+            <LoginButton></LoginButton>
+            <RegisterButton></RegisterButton>
         </>
     )
 
@@ -150,8 +144,7 @@ const mapStateToProps = (state) => ({
     username: selectUsername(state)
 })
 const mapDispatchToProps = {
-    // open: useConfirmationDialog.open
-    open: dialogOpen,
+    openInputDialog: inputDialogOpen,
     resetConfig: resetActiveConfiguration,
     logout: logout
 }
