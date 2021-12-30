@@ -6,10 +6,9 @@ import { selectInputDialogData, selectInputDialogHeaderMessage, selectIsInputDia
 import { inputDialogCancel, inputDialogConfirm, inputDialogSetData } from '../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../state/language/languageSelectors'
 
-function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInputData, language }) {
+function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInputData, text }) {
     
     const [localData, setLocalData] = useState({...inputData})
-
     useEffect(() => {
         setLocalData({...inputData})
     }, [inputData])
@@ -19,7 +18,7 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
             ...prevData,
             [key]: {
                 ...prevData[key],
-                value
+                value // data[key][value]
             }
         }))
     }
@@ -67,7 +66,7 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {translate(dialogTitle, language)}
+                    {dialogTitle}
                 </DialogTitle>
 
                 <DialogContent dividers={true}>
@@ -76,10 +75,10 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
 
                 <DialogActions>
                     <Button autoFocus onClick={handleClose}>
-                        {translate('cancel', language)}
+                        {text.cancel}
                     </Button>
                     <Button autoFocus onClick={handleConfirm}>
-                        {translate('submit', language)}
+                        {text.submit}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -87,12 +86,18 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
     )
 }
 
-const mapStateToProps = (state) => ({
-    inputData: selectInputDialogData(state),
-    isOpen: selectIsInputDialogOpen(state),
-    dialogTitle: selectInputDialogHeaderMessage(state),
-    language: selectLanguage(state)
-})
+const mapStateToProps = (state, ownProps) => {
+    const language = selectLanguage(state)
+    return {
+        inputData: selectInputDialogData(state),
+        isOpen: selectIsInputDialogOpen(state),
+        dialogTitle: selectInputDialogHeaderMessage(state), // already translated
+        text: { // so that the text is not translated at every render
+            cancel: translate('cancel', language),
+            submit: translate('submit', language),
+        }
+    }
+}
 const mapDispatchToProps = {
     cancel: inputDialogCancel,
     confirm: inputDialogConfirm,

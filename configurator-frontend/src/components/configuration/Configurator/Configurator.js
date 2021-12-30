@@ -2,10 +2,12 @@ import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
+import { requestSaveConfiguration } from '../../../api/userAPI'
 import { translate } from '../../../lang'
-import { selectConfigurationDescription, selectConfigurationName } from '../../../state/configuration/configurationSelectors'
+import { selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
 import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
+import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import Loader from '../../Loader'
 
@@ -28,10 +30,29 @@ optionGroups: [
 
 */
 
-function Configurator({ configurationName, configurationDescription, isLoading, resetConfig, openConfirm, language }) {
+function Configurator({ configurationName, configurationDescription, configurationId, selectedOptions, isLoading, resetConfig, openConfirm, openInputDialog, language }) {
 
     function handleSaveClicked() {
-        console.log('save configuration pressed')
+        const data = {
+            configurationName: {name: translate('configurationName', language), value: '' }
+        }
+        const title = translate('saveConfiguration', language)
+
+        openInputDialog(title, data, () => {
+            const configuration = {
+                configurationId,
+                selectedOptions
+            }
+            requestSaveConfiguration(title, configuration)
+            .then(res => {
+                // TODO: display notification
+                console.log(res)
+            })
+            .catch(err => {
+                // TODO: display notification
+                console.log(err)
+            })
+        })
     }
 
     function handleResetClicked() {
@@ -113,11 +134,14 @@ function Configurator({ configurationName, configurationDescription, isLoading, 
 const mapStateToProps = (state) => ({
     configurationName: selectConfigurationName(state),
     configurationDescription: selectConfigurationDescription(state),
+    configurationId: selectConfigurationId(state),
+    selectedOptions: selectSelectedOptions(state),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {
     resetConfig: resetActiveConfiguration,
-    openConfirm: confirmDialogOpen
+    openConfirm: confirmDialogOpen,
+    openInputDialog: inputDialogOpen
 }
 export default connect(
     mapStateToProps,

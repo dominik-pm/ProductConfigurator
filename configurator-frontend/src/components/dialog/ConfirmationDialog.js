@@ -14,7 +14,7 @@ import { Grid, Typography } from '@mui/material'
 import OptionListItem from '../configuration/Configurator/Options/OptionListItem'
 import { Box } from '@mui/system'
 
-function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToRemove, selectedOption, deselectedOption, cancel, confirm, language }) {
+function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToRemove, selectedOption, deselectedOption, cancel, confirm, text }) {
     
     if (!optionsToSelect) optionsToSelect = []
     if (!optionsToRemove) optionsToRemove = []
@@ -50,9 +50,9 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
             <>
                 <Typography variant="body1">
                     {selectedOption ? 
-                        `${translate('youWantToSelect', language)}: `
+                        `${text.youWantToSelect}: `
                         :
-                        `${translate('youWantToRemove', language)}: `
+                        `${text.youWantToRemove}: `
                     }
 
                 </Typography>
@@ -68,9 +68,9 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
                 <Box>
                     <Typography variant="body1">
                         {selected ? 
-                            `${translate('youAlsoNeedToSelect', language)}: `
+                            `${text.youAlsoNeedToSelect}: `
                             :
-                            `${translate('theseOptionsWillBeRemoved', language)}: `
+                            `${text.theseOptionsWillBeRemoved}: `
                         }
                     </Typography>
                     <Grid container direction="row" justifyContent="center" alignItems="center">
@@ -94,19 +94,19 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
                 aria-labelledby="responsive-dialog-title"
             >
                 <DialogTitle id="responsive-dialog-title">
-                    {translate('confirmationPrompt', language)}
+                    {text.confirmationPrompt}
                 </DialogTitle>
 
                 <DialogContent dividers={true}>
-                        {renderDialogContent()}
+                    {renderDialogContent()}
                 </DialogContent>
 
                 <DialogActions>
                     <Button autoFocus onClick={handleClose}>
-                        {translate('cancel', language)}
+                        {text.cancel}
                     </Button>
                     <Button autoFocus onClick={handleConfirm}>
-                        {translate('confirm', language)}
+                        {text.confirm}
                     </Button>
                 </DialogActions>
             </Dialog>
@@ -114,15 +114,26 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
     )
 }
 
-const mapStateToProps = (state) => ({
-    message: selectConfirmDialogMessage(state),
-    isOpen: selectIsConfirmDialogOpen(state),
-    language: selectLanguage(state),
-    selectedOption: selectConfirmDialogContent(state).selected,
-    deselectedOption: selectConfirmDialogContent(state).deselected,
-    optionsToSelect: selectConfirmDialogContent(state).optionsToSelect,
-    optionsToRemove: selectConfirmDialogContent(state).optionsToRemove
-})
+const mapStateToProps = (state) => {
+    const language = selectLanguage(state)
+    return {
+        message: selectConfirmDialogMessage(state),
+        isOpen: selectIsConfirmDialogOpen(state),
+        selectedOption: selectConfirmDialogContent(state).selected,
+        deselectedOption: selectConfirmDialogContent(state).deselected,
+        optionsToSelect: selectConfirmDialogContent(state).optionsToSelect,
+        optionsToRemove: selectConfirmDialogContent(state).optionsToRemove,
+        text: {
+            cancel: translate('cancel', language),
+            confirm: translate('confirm', language),
+            confirmationPrompt: translate('confirmationPrompt', language),
+            youWantToSelect: translate('youWantToSelect', language),
+            youWantToRemove: translate('youWantToRemove', language),
+            theseOptionsWillBeRemoved: translate('theseOptionsWillBeRemoved', language),
+            youAlsoNeedToSelect: translate('youAlsoNeedToSelect', language)
+        }
+    }
+}
 const mapDispatchToProps = {
     cancel: confirmDialogCancel,
     confirm: confirmDialogConfirm,

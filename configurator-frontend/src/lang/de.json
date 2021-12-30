@@ -24,8 +24,18 @@
     "price": "Preis",
     "priceList": "Preis Liste",
 
+    "saveConfiguration": "Konfiguration Speichern",
+    "configurationName": "Name der Konfiguration",
+    "resetConfiguration": "Konfiguration Zurücksetzen",
+    "finishConfiguration": "Konfiguration Fertigstellen",
+    "resetConfigurationPrompt": "Möchtest du wirklich die Konfiguration zurücksetzen?",
+
     "youWantToSelect": "Du möchtest diese Option auswählen",
     "youWantToRemove": "Du möchtest diese Option entfernen",
     "youAlsoNeedToSelect": "Dazu benötigst du außerdem",
-    "theseOptionsWillBeRemoved": "Dazu müssen diese Optionen entfernt werden"
+    "theseOptionsWillBeRemoved": "Dazu müssen diese Optionen entfernt werden",
+
+    "Login": "Einloggen",
+    "Register": "Registrieren",
+    "submit": "Bestätigen"
 }

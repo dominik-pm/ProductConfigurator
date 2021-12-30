@@ -20,7 +20,7 @@ export const translate = (key, language) => {
     const translation = langData[key]
 
     if (!translation) {
-        console.log(`There is no translation for ${key} in language ${language}!`)
+        // console.log(`There is no translation for ${key} in language ${language}!`)
 
         // if there is a translation in the default  language, at least return that
         if (languages[defaultLang][key]) {

@@ -25,6 +25,7 @@
     "priceList": "price list",
 
     "saveConfiguration": "Save Configuration",
+    "configurationName": "Configuration Name",
     "resetConfiguration": "Reset Configuration",
     "finishConfiguration": "Finish Configuration",
     "resetConfigurationPrompt": "Do you really want to reset your current configuration?",

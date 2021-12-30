@@ -1,6 +1,20 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 
+export const requestSaveConfiguration = (configurationName, configuration) => {
+    return saveConfigTest(configurationName, configuration)
+
+    // return new Promise((resolve, reject) => {
+    //     axios.post('/')
+    //     .then(res => {
+    //         resolve(res.data)
+    //     })
+    //     .catch(err => {
+    //         reject('Could not save configuration!')
+    //     })
+    // })
+}
+
 export const requestRegister = (username, email, password) => {
     return new Promise((resolve, reject) => {
         reject('Not implemented')
@@ -49,5 +63,11 @@ function loginTest(username, password) {
 
             resolve({token, user})
         }, 100)
+    })
+}
+
+function saveConfigTest(name, config) {
+    return new Promise((resolve, reject) => {
+        resolve('Successfully saved ' + name)
     })
 }
