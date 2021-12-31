@@ -2,7 +2,7 @@ import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
-import { postConfiguredProduct } from '../../../api/productsAPI'
+import { postOrderConfiguredProduct } from '../../../api/productsAPI'
 import { requestSaveConfiguration } from '../../../api/userAPI'
 import { translate } from '../../../lang'
 import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
@@ -10,6 +10,7 @@ import { resetActiveConfiguration } from '../../../state/configuration/configura
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
+import { selectIsAuthenticated } from '../../../state/user/userSelector'
 import Loader from '../../Loader'
 
 import OptionTabs from './OptionTabs'
@@ -31,20 +32,24 @@ optionGroups: [
 
 */
 
-function Configurator({ configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, sendConfiguration, openConfirm, openInputDialog, language }) {
+function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, openConfirm, openInputDialog, language }) {
 
     function handleSaveClicked() {
+        if (!isLoggedIn) {
+            console.log('You have to be logged in to save a configuration!')
+            // TODO: display notification
+            return
+        }
+
         const data = {
             configurationName: {name: translate('configurationName', language), value: '' }
         }
         const title = translate('saveConfiguration', language)
 
-        openInputDialog(title, data, () => {
-            const configuration = {
-                configurationId,
-                selectedOptions
-            }
-            requestSaveConfiguration(title, configuration)
+        openInputDialog(title, data, (data) => {
+            const configurationName = data.configurationName.value
+
+            requestSaveConfiguration(configurationId, configurationName, selectedOptions)
             .then(res => {
                 // TODO: display notification
                 console.log(res)
@@ -63,12 +68,28 @@ function Configurator({ configurationName, configurationDescription, configurati
     }
 
     function handleFinishClicked() {
-        sendConfiguration(configurationId, selectedOptions, price)
-        .then(res => {
-            console.log(res)
-        })
-        .catch(err => {
-            console.log(err)
+        if (!isLoggedIn) {
+            console.log('You have to be logged in to finish a configuration!')
+            // TODO: display notification
+            return
+        }
+
+        const data = {
+            configurationName: {name: translate('configurationName', language), value: '' }
+        }
+        const title = translate('finishConfiguration', language)
+        openInputDialog(title, data, (data) => {
+            const configurationName = data.configurationName.value
+
+            postOrderConfiguredProduct(configurationId, configurationName, selectedOptions, price)
+            .then(res => {
+                // TODO: display notification
+                console.log(res)
+            })
+            .catch(err => {
+                // TODO: display notification
+                console.log(err)
+            })
         })
     }
 
@@ -144,11 +165,11 @@ const mapStateToProps = (state) => ({
     configurationId: selectConfigurationId(state),
     selectedOptions: selectSelectedOptions(state),
     price: getCurrentPrice(state),
-    language: selectLanguage(state)
+    language: selectLanguage(state),
+    isLoggedIn: selectIsAuthenticated(state)
 })
 const mapDispatchToProps = {
     resetConfig: resetActiveConfiguration,
-    sendConfiguration: postConfiguredProduct,
     openConfirm: confirmDialogOpen,
     openInputDialog: inputDialogOpen
 }

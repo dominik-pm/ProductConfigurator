@@ -1,4 +1,8 @@
-.Product img {
+/* .Product img {
     max-width: 100%;
     border-radius: 25px;
+} */
+
+.Product:hover {
+    cursor: pointer;
 }

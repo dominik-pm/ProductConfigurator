@@ -28,6 +28,9 @@
   - contains all the ui elements
 - state
   - contains every component necessary for redux state management
+- lang
+  - contains the translate function + the language files
+- 
 
 ***
 
@@ -547,11 +550,20 @@ function App() {
     return (
         <div className="App">
             <Router>
+                <Header></Header>
+                <ConfirmationOptionSelect></ConfirmationOptionSelect>
+                <InputDialog></InputDialog>
+
                 <Routes>
 
                     <Route exact path="/" element={
                         <ProductView></ProductView>
                     }>
+                    </Route>
+
+                    <Route exact path="/account" element={
+                            <ProductView></ProductView>
+                        }>
                     </Route>
 
                     <Route exact path="/configuration/:id" element={
@@ -826,3 +838,46 @@ export default connect(
 )(Header)
 
 ```
+
+**InputDialog**
+- can be opened with a custom data object where an input field for every data object is generated
+- when confirmed, the values of the input fields are written to the values of the returned data object
+- using the dialog:
+```javascript
+import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
+import { login } from '../../state/user/userSlice'
+
+function LoginButton({ openInputDialog, login }) {
+
+    function openLogInDialog() {
+        const data = {
+            username: {name: 'Username', value: ''},
+            password: {name: 'Password', value: '', isPassword: true}
+        }
+        openInputDialog('Login', data, (data) => {
+            login(data.username.value, data.username.password)
+        })
+    }
+
+    return (
+        <Button 
+            variant="contained" 
+            onClick={openLogInDialog}
+            >
+            Login
+        </Button>
+    )
+}
+
+const mapStateToProps = (state) => ({})
+const mapDispatchToProps = {
+    openInputDialog: inputDialogOpen,
+    login: login
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LoginButton)
+```
+
+

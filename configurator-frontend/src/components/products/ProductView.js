@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Product from './Product'
 import { connect } from 'react-redux'
-import { Typography } from '@mui/material'
+import { ImageList, Typography } from '@mui/material'
 import { fetchProducts } from '../../state/product/productSlice'
 import { selectProductError, selectProducts, selectProductStatus } from '../../state/product/productSelector'
 import { selectLanguage } from '../../state/language/languageSelectors'
@@ -45,13 +45,18 @@ function ProductView({ products, status, error, fetchProducts, language }) {
     }
     function renderProducts() {
         return (
-            <div className="ProductContainer">
-                {
-                    products.map(product => (
-                        <Product key={product.id} product={product}></Product>
-                    ))
-                }
-            </div>
+            <ImageList sx={{width: '100%'}}>
+                {products.map(product => (
+                    <Product key={product.id} product={product}></Product>
+                ))}
+            </ImageList>
+            // <div className="ProductContainer">
+            //     {
+            //         products.map(product => (
+            //             <Product key={product.id} product={product}></Product>
+            //         ))
+            //     }
+            // </div>
         )
     }
 

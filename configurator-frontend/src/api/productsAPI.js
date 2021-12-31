@@ -4,10 +4,11 @@ export const fetchAll = () => {
     return fetchApiTest()
 }
 
-export const postConfiguredProduct = (configurationId, selectedOptions, price) => {
+export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price) => {
     return new Promise((resolve, reject) => {
 
         const data = {
+            configurationName: name,
             options: selectedOptions,
             price
         }

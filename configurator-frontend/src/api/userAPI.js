@@ -1,7 +1,7 @@
 import axios from 'axios'
 import jwt from 'jsonwebtoken'
 
-export const requestSaveConfiguration = (name, configurationId, selectedOptions) => {
+export const requestSaveConfiguration = (configurationId, name, selectedOptions) => {
     return saveConfigTest(name, selectedOptions)
 
     // return new Promise((resolve, reject) => {
@@ -18,7 +18,7 @@ export const requestSaveConfiguration = (name, configurationId, selectedOptions)
     //     })
     // })
 }
-export const fetchAllSavedConfigurations = () => {
+export const fetchSavedConfigurations = () => {
     return fetchConfigsTest()
 
     // return new Promise((resolve, reject) => {
@@ -28,6 +28,19 @@ export const fetchAllSavedConfigurations = () => {
     //     })
     //     .catch(err => {
     //         reject('Could not get saved configurations!')
+    //     })
+    // })
+}
+export const fetchAllOrderedConfigurations = () => {
+    return fetchOrderedConfigsTest()
+
+    // return new Promise((resolve, reject) => {
+    //     axios.get(`/account/allorderedconfigurations/`)
+    //     .then(res => {
+    //         resolve(res.data)
+    //     })
+    //     .catch(err => {
+    //         reject('Could not get all ordered configurations!')
     //     })
     // })
 }
@@ -79,7 +92,7 @@ function loginTest(username, password) {
             const user = jwt.decode(token)
 
             resolve({token, user})
-        }, 100)
+        }, 250)
     })
 }
 
@@ -94,9 +107,46 @@ function fetchConfigsTest() {
             {
                 savedName: "TestConfig",
                 status: "saved", // or "ordered"
+                date: new Date().toISOString(),
+                id: 0,
                 name: "Car",
                 description: "This is a car",
-                selectedOptions: ['YELLOW']
+                options: ['YELLOW']
+            },
+            {
+                savedName: "TestConfig2",
+                status: "saved",
+                date: new Date().toISOString(),
+                id: 0,
+                name: "Car",
+                description: "This is a car",
+                options: ['BLUE', 'DIESEL', 'D150']
+            },
+            {
+                savedName: "TestOrderedConfig",
+                status: "ordered",
+                date: new Date().toISOString(),
+                id: 0,
+                name: "Car",
+                description: "This is a car",
+                options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
+            }
+        ]
+        resolve(data)
+    })
+}
+function fetchOrderedConfigsTest() {
+    return new Promise((resolve, reject) => {
+        const data = [
+            {
+                savedName: "TestOrderedConfig",
+                userName: "User1",
+                userEmail: "user1@email.com",
+                date: new Date().toISOString(),
+                productId: 0,
+                name: "Car",
+                description: "This is a car",
+                options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
             }
         ]
         resolve(data)
