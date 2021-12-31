@@ -130,6 +130,15 @@ function fetchConfigsTest() {
                 name: "Car",
                 description: "This is a car",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
+            },
+            {
+                savedName: "TestOrderedConfig2",
+                status: "ordered",
+                date: new Date().toISOString(),
+                id: 0,
+                name: "Car",
+                description: "This is a car",
+                options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
             }
         ]
         resolve(data)
@@ -140,13 +149,24 @@ function fetchOrderedConfigsTest() {
         const data = [
             {
                 savedName: "TestOrderedConfig",
-                userName: "User1",
-                userEmail: "user1@email.com",
+                userName: "admin",
+                userEmail: "configurator-admin@test-fuchs.com",
                 date: new Date().toISOString(),
-                productId: 0,
+                id: 0,
                 name: "Car",
                 description: "This is a car",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
+            },
+            {
+                savedName: "TestOrderedConfig2",
+                userName: "admin",
+                userEmail: "configurator-admin@test-fuchs.com",
+                status: "ordered",
+                date: new Date().toISOString(),
+                id: 0,
+                name: "Car",
+                description: "This is a car",
+                options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
             }
         ]
         resolve(data)

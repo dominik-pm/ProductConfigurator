@@ -28,15 +28,15 @@ export const userSlice = createSlice({
             }
         },
         setSavedConfigurations: (state, action) => {
-            console.log('setting saved configurations:', action.payload)
+            // console.log('setting saved configurations:', action.payload)
             state.savedConfigurations = action.payload
         },
         setOrderedConfigurations: (state, action) => {
-            console.log('setting ordered configurations:', action.payload)
+            // console.log('setting ordered configurations:', action.payload)
             state.orderedConfigurations = action.payload
         },
         setAllOrderedConfigurations: (state, action) => {
-            console.log('setting all ordered configurations:', action.payload)
+            // console.log('setting all ordered configurations:', action.payload)
             state.allOrderedConfigurations = action.payload
         }
     }

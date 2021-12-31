@@ -26,6 +26,10 @@ export const configurationSlice = createSlice({
             // console.log('deselecting option', action.payload)
             state.selectedOptions = state.selectedOptions.filter(optionId => optionId !== action.payload)
         },
+        setSelectedOptions: (state, action) => {
+            console.log('setting selected options')
+            state.selectedOptions = action.payload
+        },
         reset: (state, action) => {
             console.log('reset active configuration')
             state.selectedOptions = action.payload
@@ -54,6 +58,18 @@ export const configurationSlice = createSlice({
         // })
     }
 })
+
+export const fetchConfiguration = (id) => async (dispatch) => {
+    dispatch(loadingStarted())
+
+    fetchId(id)
+    .then(res => {
+        dispatch(loadingSucceeded(res))
+    })
+    .catch(error => {
+        dispatch(loadingFailed(error))
+    })
+}
 
 // save the currently active configuration to the local storage
 export const saveActiveConfiguration = () => (dispatch, getState) => {
@@ -281,20 +297,7 @@ const getDependenciesDeselect = (state, id) => {
     return [...dependentOptions, ...subDependentOptions]
 }
 
-
-export const fetchConfiguration = (id) => async (dispatch) => {
-    dispatch(loadingStarted())
-
-    fetchId(id)
-    .then(res => {
-        dispatch(loadingSucceeded(res))
-    })
-    .catch(error => {
-        dispatch(loadingFailed(error))
-    })
-}
-
 // Action creators are generated for each case reducer function
-export const { selectOption, deselectOption, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
+export const { selectOption, deselectOption, setSelectedOptions, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
 
 export default configurationSlice.reducer

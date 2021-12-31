@@ -19,13 +19,6 @@ function AccountView({ username, email, isLoggedIn, isAdmin, getSavedConfigurati
 
     // every time the logged in state changes -> reload the saved configurations
     useEffect(() => {
-        loadSavedConfigurationData()
-        
-        // -> disable warning that there is a missing dependency for the function 'loadSavedConfigurationData'
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLoggedIn])
-
-    function loadSavedConfigurationData() {
         if (isLoggedIn) {
             getSavedConfigurations()
         }
@@ -33,8 +26,9 @@ function AccountView({ username, email, isLoggedIn, isAdmin, getSavedConfigurati
         if (isAdmin) {
             getAllOrderedConfigurations()
         }
-    }
+    }, [isLoggedIn, isAdmin, getSavedConfigurations, getAllOrderedConfigurations])
 
+    
     function renderUserActions() {
         return (
             <Box>

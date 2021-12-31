@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Box } from '@mui/system'
-import { Stack, Typography } from '@mui/material'
+import { Accordion, AccordionSummary, AccordionDetails, Stack, Typography } from '@mui/material'
 import PriceListItem from './PriceListItem'
+import { ExpandMoreOutlined } from '@mui/icons-material'
 import { getCurrentPrice, selectBasePrice, selectConfigurationId, selectConfigurationStatus, selectOptions } from '../../../../state/configuration/configurationSelectors'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { fetchConfiguration, setSelectedOptions } from '../../../../state/configuration/configurationSlice'
 
-function Summary({ configurationId, selectedOptions, status, loadedConfigurationId, basePrice, currentPrice, fetchConfiguration, setSelectedOptions, language }) {
+function SummaryAccordion({ configurationId, selectedOptions, status, loadedConfigurationId, basePrice, currentPrice, fetchConfiguration, setSelectedOptions, language }) {
 
     useEffect(() => {
         // if the selectedoptions or the loaded configuration changes, set the selected options again
@@ -34,22 +35,36 @@ function Summary({ configurationId, selectedOptions, status, loadedConfiguration
                 </Typography>
 
                 <Stack spacing={1}>
-                    <Typography>{translate('priceList', language)}</Typography>
-                    <PriceListItem
-                        name='Base Price'
-                        price={basePrice}
-                    >
-                    </PriceListItem>
-
-                    {selectedOptions.map((optionId, index) => (
-                        <PriceListItem
-                            key={index}
-                            optionId={optionId}
-                            name={optionId}
-                            price={0}
+                    
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreOutlined />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
                         >
-                        </PriceListItem>
-                    ))}
+                            <Typography>{translate('priceList', language)}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+
+                            <PriceListItem
+                                name='Base Price'
+                                price={basePrice}
+                            >
+                            </PriceListItem>
+
+                            {selectedOptions.map((optionId, index) => (
+                                <PriceListItem
+                                    key={index}
+                                    optionId={optionId}
+                                    name={optionId}
+                                    price={0}
+                                >
+                                </PriceListItem>
+                            ))}
+
+                        </AccordionDetails>
+                    </Accordion>
+
                 </Stack>
             </Box>
         )
@@ -77,4 +92,4 @@ const mapDispatchToProps = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Summary)
+)(SummaryAccordion)

@@ -25,17 +25,15 @@ function ConfigurationView({fetchConfiguration, status, error, language }) {
 
     // console.log('loading configuration for product id:', productId)
 
-    if ((!productId && productId !== 0)) {
-        console.log('invalid id')
-        navigate('/')
-    }
-
     useEffect(() => {
         if (productId || productId === 0) {
             // console.log('calling to fetch configuration')
             fetchConfiguration(productId)
+        } else {
+            console.log('invalid id')
+            navigate('/')
         }
-    }, [fetchConfiguration, productId])
+    }, [navigate, fetchConfiguration, productId])
 
 
     function render() {
