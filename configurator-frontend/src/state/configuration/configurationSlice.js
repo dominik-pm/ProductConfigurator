@@ -55,17 +55,14 @@ export const configurationSlice = createSlice({
     }
 })
 
-// get the selected options for the specific configuration (id) from the storage
-const loadSelectedOptionsFromStorage = (id) => {
-    const configuration = loadConfigurationsFromStorage().find(config => config.id === id)
-    if (!configuration) return null
-
-    if (!configuration.options) return null
-
-    return configuration.options
+// save the currently active configuration to the local storage
+export const saveActiveConfiguration = () => (dispatch, getState) => {
+    const id = selectConfigurationId(getState())
+    const options = selectSelectedOptions(getState())
+    saveConfigurationToStorage(id, options)
 }
 // save the configuration data (id, options) to the local storage (or append to existing configurations)
-const saveConfigurationToStorage = (id, options) => {
+export const saveConfigurationToStorage = (id, options) => {
     let configurations = loadConfigurationsFromStorage()
 
     let newConfiguration = configurations.find(c => c.id === id)
@@ -86,6 +83,16 @@ const saveConfigurationToStorage = (id, options) => {
     } catch {
         console.log('Can not save the configuration to the local storage!')
     }
+}
+
+// get the selected options for the specific configuration (id) from the storage
+const loadSelectedOptionsFromStorage = (id) => {
+    const configuration = loadConfigurationsFromStorage().find(config => config.id === id)
+    if (!configuration) return null
+
+    if (!configuration.options) return null
+
+    return configuration.options
 }
 const loadConfigurationsFromStorage = () => {
     let configurations = []
@@ -110,11 +117,7 @@ export const resetActiveConfiguration = () => (dispatch, getState) => {
     }
 }
 
-export const saveActiveConfiguration = () => (dispatch, getState) => {
-    const id = selectConfigurationId(getState())
-    const options = selectSelectedOptions(getState())
-    saveConfigurationToStorage(id, options)
-}
+
 
 // handle the click on an option
 export const clickedOption = (id) => (dispatch, getState) => {
