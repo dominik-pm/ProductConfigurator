@@ -4,11 +4,11 @@ namespace BackendProductConfigurator.Controllers
 {
     public abstract class AValuesClass
     {
-        public static List<ProductConfig> ProductConfig { get; set; } = new List<ProductConfig>();
-        public static List<Product> Products { get; set; } = new List<Product>();
+        public static List<Configurator> Configurators { get; set; } = new List<Configurator>();
+        public static List<ConfiguredProduct> ConfiguredProducts { get; set; } = new List<ConfiguredProduct>();
         public static List<ProductSlim> ProductsSlim { get; set; } = new List<ProductSlim>();
-
-        public static List<User> Users { get; set; } = new List<User>();
+        public static List<ProductSave> SavedProducts { get; set; } = new List<ProductSave>();
+        public static List<Account> Accounts { get; set; } = new List<Account>();
 
         public static void SetValues()
         {
@@ -19,6 +19,7 @@ namespace BackendProductConfigurator.Controllers
                                                       new Option("RED", "Alfa Rosso", "Red like a cherry", new List<string> { "" }),
                                                       new Option("GREEN", "Green demon", "Green like the grinch", new List<string> { "" }),
                                                       new Option("WHITE", "White cloud", "White as a sheet of paper", new List<string> { "" }),
+                                                      new Option("PROOF", "Panorama roof", "Very big panorama roof", new List<string> { "" }),
                                                      };
 
             List<string> productImages = new List<string> { "google.com" };
@@ -36,39 +37,37 @@ namespace BackendProductConfigurator.Controllers
                                                                               new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
                                                                               new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
                                                                               new Dictionary<string, float> { { "D150", 1500f },
-                                                                                                              { "RED", 250f } });
+                                                                                                              { "RED", 250f },
+                                                                                                              { "PROOF", 250f} });
 
-            ProductConfig = new List<ProductConfig> { new ProductConfig(0, "Alfa Romeo 159 Configurator", "Configurable Car", productImages, productDependencies, options, optionGroups, optionSections) };
+            Configurators = new List<Configurator> { new Configurator(0, "Alfa Romeo 159 Configurator", "Configurable Car", productImages, productDependencies, options, optionGroups, optionSections) };
 
             List<Option> optionsList = new List<Option> { new Option("Option1", "Erste Option", "Ka Ahnung wos des duat", new List<string> { "Zehner.net", "Cool.com" }) };
 
-            Product p1 = new Product() { 
-                Id = 0,
-                Name = "Fetter Benz",
-                Description = "Laut und groß",
-                Images = new List<string> { "Zehner.net", "Cool.com" },
+            ConfiguredProduct p1 = new ConfiguredProduct()
+            { 
+                ConfiguratorId = 0,
+                ConfigurationName = "Fetter Benz",
                 Options = optionsList,
                 Price=4.2f };
 
-            Product p2 = new Product() {
-                Id = 1,
-                Name = "Eleganter Alfa Romeo",
-                Description = "Stylisch und erweckt",
-                Images = new List<string> { "Zehner.net", "Cool.com" },
+            ConfiguredProduct p2 = new ConfiguredProduct()
+            {
+                ConfiguratorId = 0,
+                ConfigurationName = "Eleganter Alfa Romeo",
                 Options = optionsList,
                 Price = 9.65f };
 
-            Product p3 = new Product() {
-                Id = 2,
-                Name = "Fetterer Benz",
-                Description = "Umso lauter und größer",
-                Images = new List<string> { "Zehner.net", "Cool.com" },
+            ConfiguredProduct p3 = new ConfiguredProduct()
+            {
+                ConfiguratorId = 0,
+                ConfigurationName = "Fetterer Benz",
                 Options = optionsList,
                 Price = 0.8f };
 
-            Products = new List<Product> { p1, p2, p3 };
+            ConfiguredProducts = new List<ConfiguredProduct> { p1, p2, p3 };
 
-            ProductSlim ps1 = new ProductSlim() {
+            ProductSlim ps1 = new ProductSlim() { //Hier Images hinzufügen, ProductSave anschauen, usw... CLEAN UP
                 Id = 0,
                 Name = "Fetter Benz",
                 Description = "Laut und groß" };
@@ -85,22 +84,49 @@ namespace BackendProductConfigurator.Controllers
 
             ProductsSlim = new List<ProductSlim> { ps1, ps2, ps3 };
 
-            User u1 = new User() {
+            Account acc1 = new Account() {
                 Id = 1,
                 Name = "TEST-FUCHS GmbH",
                 Email = "huh@what.com" };
 
-            User u2 = new User() {
+            Account acc2 = new Account() {
                 Id = 2,
                 Name = "HTL Krems",
                 Email = "huh@what.com" };
 
-            User u3 = new User() {
+            Account acc3 = new Account() {
                 Id = 3,
                 Name = "AVIA Station Gmünd",
                 Email = "huh@what.com" };
 
-            Users = new List<User> { u1, u2, u3 };
+            Accounts = new List<Account> { acc1, acc2, acc3 };
+
+            ProductSave psave1 = new ProductSave() { 
+                Description = "Saved product",
+                Id = 6,
+                Name = "Alfa 147",
+                Options = options,
+                SavedName = "Scherzermobil",
+                Status = EStatus.Saved.ToString() };
+            ProductSave psave2 = new ProductSave()
+            {
+                Description = "Saved product",
+                Id = 7,
+                Name = "Alfa 156",
+                Options = options,
+                SavedName = "Pömmermobil",
+                Status = EStatus.Saved.ToString()
+            };
+            ProductSave psave3 = new ProductSave()
+            {
+                Description = "Saved product",
+                Id = 8,
+                Name = "Alfa 166",
+                Options = options,
+                SavedName = "Leutgeb Toyota",
+                Status = EStatus.Saved.ToString()
+            };
+            SavedProducts = new List<ProductSave> { psave1, psave2, psave3 };
         }
     }
 }

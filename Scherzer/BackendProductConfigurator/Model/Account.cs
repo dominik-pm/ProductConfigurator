@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class User : IIndexable<int>
+    public class Account : IIndexable<int>
     {
         public int Id { get; set; }
         public string Name { get; set; }

@@ -1,5 +1,6 @@
 ﻿using Model;
 using PdfSharp.Drawing;
+using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
 
 namespace BackendProductConfigurator.MediaProducers
@@ -10,32 +11,50 @@ namespace BackendProductConfigurator.MediaProducers
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
-        public static void GeneratePDF(Product product)
+        public static void GeneratePDF(ConfiguredProduct product)
         {
             InitiatePdfProducer();
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
             XGraphics gfx = XGraphics.FromPdfPage(page); //Holt sich seitenspezifische Details für die Zeichenmethoden
-
+            XTextFormatter tf = new XTextFormatter(gfx); //Um Text besser zu formatieren
+            
             XFont font = new XFont("Century Gothic", 14);
             XFont headerFont = new XFont("Century Gothic", 40);
             XFont smallDetailFont = new XFont("Century Gothic", 11);
 
-            gfx.DrawString($"Produkt #{product.Id}",
+            tf.Alignment = XParagraphAlignment.Center;
+            tf.DrawString($"{product.ConfigurationName}",
                            headerFont,
                            XBrushes.Black,
-                           new XPoint(200, 70));
+                           new XRect(0, 20, page.Width, 40));
 
-            gfx.DrawString($"{product.Name}",
+            tf.DrawString($"Produkt #{product.ConfiguratorId}",
                            font,
                            XBrushes.DarkGray,
-                           new XPoint(230, 90));
+                           new XRect(0, 70, page.Width, 20));
 
             gfx.DrawLine(new XPen(XColor.FromArgb(0,0,0)),
-                         new XPoint(page.Width * 0.2, 120),
-                         new XPoint(page.Width - page.Width * 0.2, 120));
+                         new XPoint(page.Width * 0.2, 100),
+                         new XPoint(page.Width - page.Width * 0.2, 100));
 
-            document.Save($"./product{product.Id}.pdf");
+            tf.Alignment = XParagraphAlignment.Left;
+            tf.DrawString($"Ausgewählte Optionen:",
+                           font,
+                           XBrushes.Black,
+                           new XRect(page.Width * 0.2, 110, page.Width * 0.6, 20));
+
+            int yPosition = 140;
+            foreach(Option option in product.Options)
+            {
+                tf.DrawString($"- {option.Name}",
+                           font,
+                           XBrushes.Black,
+                           new XRect(page.Width * 0.24, yPosition, page.Width * 0.6, 20));
+                yPosition += 30;
+            }
+
+            document.Save($"./product{product.ConfiguratorId}.pdf");
         }
     }
 }

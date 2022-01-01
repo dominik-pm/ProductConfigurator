@@ -5,7 +5,7 @@ namespace BackendProductConfigurator.Validation
 {
     public static class ValidationMethods
     {
-        public static EValidationResult ValidatePrice (Product product, ProductDependencies dependencies)
+        public static EValidationResult ValidatePrice (ConfiguredProduct product, ProductDependencies dependencies)
         {
             float endPrice = dependencies.BasePrice;
             for(int i = 0; i < product.Options.Count; i++)
@@ -14,7 +14,7 @@ namespace BackendProductConfigurator.Validation
             }
             return (product.Price == endPrice) ? EValidationResult.ValidationPassed : EValidationResult.PriceInvalid;
         }
-        public static EValidationResult ValidateConfiguration (Product product, List<OptionGroup> optionsGroups)
+        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, List<OptionGroup> optionsGroups)
         {
             EValidationResult validationResult = EValidationResult.ValidationPassed;
             foreach (var group in optionsGroups)

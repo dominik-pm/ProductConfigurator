@@ -59,7 +59,7 @@ namespace BackendProductConfigurator.MediaProducers
             Email.DefaultRenderer = new RazorRenderer();
         }
 
-        public static void SendEmail(Product product, EValidationResult validationResult)
+        public static void SendEmail(ConfiguredProduct product, EValidationResult validationResult)
         {
             InitiateSender();
             InitiateRendering(validationResult);

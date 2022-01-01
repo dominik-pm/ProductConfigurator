@@ -14,7 +14,7 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(AValuesClass.Products.Count == 0)
+            if(AValuesClass.ConfiguredProducts.Count == 0)
             {
                 AValuesClass.SetValues();
             }
@@ -23,7 +23,7 @@ namespace BackendProductConfigurator.Controllers
 
         // GET: api/<Controller>
         [HttpGet]
-        public IEnumerable<T> Get()
+        public virtual IEnumerable<T> Get()
         {
             Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
             return entities;
@@ -59,39 +59,49 @@ namespace BackendProductConfigurator.Controllers
         }
     }
 
-    public class configurationController : AController<ProductConfig, int>
+    public class configurationController : AController<Configurator, int>
     {
+        private List<ProductSlim> productSlims = new List<ProductSlim>();
         public configurationController():base()
         {
-            entities = AValuesClass.ProductConfig as List<ProductConfig>;
+            entities = AValuesClass.Configurators;
+            productSlims = AValuesClass.ProductsSlim;
+        }
+
+        // GET: api/<Controller>
+        [HttpGet]
+        public List<ProductSlim> Get()
+        {
+            Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
+            return productSlims;
         }
 
         // GET api/<Controller>/5
         [HttpGet("{id}")]
-        public override ProductConfig Get(int id)
+        public override Configurator Get(int id)
         {
-            return entities.Find(entity => (entity as IConfigId).ConfigId.Equals(id));
+            return entities.Find(entity => (entity as IConfigId).ConfiguratorId.Equals(id));
         }
     }
-    public class productsController : AController<Product, int>
+    public class productsController : AController<ConfiguredProduct, int>
     {
         public productsController() : base()
         {
-            entities = AValuesClass.Products as List<Product>;
+            entities = AValuesClass.ConfiguredProducts;
         }
 
         // POST api/<Controller>
         [HttpPost]
-        public override void Post([FromBody] Product value)
+        public override void Post([FromBody] ConfiguredProduct value)
         {
-            AValuesClass.Products.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            AValuesClass.ConfiguredProducts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             new Thread(() =>
             {
                 EValidationResult validationResult;
-                validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.ProductConfig.Find(config => config.Id == value.ConfigId).OptionGroups);
+                validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.Id == value.ConfiguratorId).OptionGroups);
                 if(validationResult == EValidationResult.ValidationPassed)
                 {
-                    validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.ProductConfig.Find(config => config.Id == value.ConfigId).Dependencies);
+                    validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.Id == value.ConfiguratorId).Dependencies);
                 }
                 EmailProducer.SendEmail(value, validationResult);
             }).Start();
@@ -99,28 +109,46 @@ namespace BackendProductConfigurator.Controllers
             {
                 PdfProducer.GeneratePDF(value);
             }).Start();
+            entities.Append(value); //later here without configuratorId => new { ... }
+        }
+    }
+    public class accountController : AController<Account, int>
+    {
+        public accountController() : base()
+        {
+            entities = AValuesClass.Accounts;
+        }
+
+        // POST /account
+        [HttpPost]
+        public override void Post([FromBody] Account value)
+        {
+            AValuesClass.Accounts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             entities.Append(value);
         }
     }
-    public class productsSlimController : AController<ProductSlim, int>
+    public class savedConfigsController : AController<ProductSave, int>
     {
-        public productsSlimController() : base()
+        public savedConfigsController() : base()
         {
-            entities = AValuesClass.ProductsSlim as List<ProductSlim>;
-        }
-    }
-    public class usersController : AController<User, int>
-    {
-        public usersController() : base()
-        {
-            entities = AValuesClass.Users as List<User>;
+            entities = AValuesClass.SavedProducts;
         }
 
-        // POST api/<Controller>
-        [HttpPost]
-        public override void Post([FromBody] User value)
+        // GET: /account/configuration
+        [Route("/account/configuration")]
+        [HttpGet]
+        public override List<ProductSave> Get()
         {
-            AValuesClass.Users.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
+            return entities;
+        }
+
+        // POST: /account/configuration
+        [Route("/account/configuration")]
+        [HttpPost]
+        public void Post([FromBody] ProductSaveSlim value)
+        {
+            AValuesClass.SavedProducts.Add(new ProductSave(value)); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             entities.Append(value);
         }
     }
