@@ -1,15 +1,13 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import { Box, Grid, IconButton, Typography } from '@mui/material'
 import { Edit, Preview } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { saveConfigurationToStorage } from '../../state/configuration/configurationSlice'
 import Summary from '../configuration/Configurator/SidePanel/Summary'
+import { confirmDialogOpen } from '../../state/confirmationDialog/confirmationSlice'
 
-function ConfigurationList({ configurations, isOrdered = false, isAdminView = false }) {
-
-    const [summaryConfigId, setSummaryConfigId] = useState(null)
-    const [summarySelectedOptions, setSummarySelectedOptions] = useState(null)
+function ConfigurationList({ configurations, openConfirm, isOrdered = false, isAdminView = false }) {
 
     const navigate = useNavigate()
 
@@ -19,13 +17,14 @@ function ConfigurationList({ configurations, isOrdered = false, isAdminView = fa
     }
 
     function handleShowSummaryClicked(id, options) {
-        setSummarySelectedOptions(options)
-        setSummaryConfigId(id)
+        openConfirm('', {}, <Summary configurationId={id} selectedOptions={options}></Summary>, () => {
+
+        })
     }
 
     return (
         <Box>
-            <Grid container>
+            <Grid container justifyContent="center">
                 {configurations.map((config, index) => {
                     return (
                         <Box key={index} margin={2}>
@@ -52,10 +51,6 @@ function ConfigurationList({ configurations, isOrdered = false, isAdminView = fa
                     )
                 })}
             </Grid>
-
-            {summaryConfigId !== null ? 
-            <Summary configurationId={summaryConfigId} selectedOptions={summarySelectedOptions}></Summary>
-            : ''}
         </Box>
     )
 }
@@ -64,7 +59,7 @@ const mapStateToProps = (state) => ({
     
 })
 const mapDispatchToProps = {
-    
+    openConfirm: confirmDialogOpen
 }
 export default connect(
     mapStateToProps, 

@@ -66,7 +66,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
                 <Box sx={{flexGrow: 1}}></Box>
 
-                {/* <Button variant="contained" onClick={() => openConfirmDialog('Example Message', {}, () => console.log('confirmed'))}>
+                {/* <Button variant="contained" onClick={() => openConfirmDialog('Example Message', {}, null, () => console.log('confirmed'))}>
                     test dialog
                 </Button> */}
 

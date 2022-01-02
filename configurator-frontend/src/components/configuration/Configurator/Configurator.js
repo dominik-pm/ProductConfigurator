@@ -2,6 +2,7 @@ import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { postOrderConfiguredProduct } from '../../../api/productsAPI'
 import { requestSaveConfiguration } from '../../../api/userAPI'
 import { translate } from '../../../lang'
@@ -11,9 +12,11 @@ import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmatio
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAuthenticated } from '../../../state/user/userSelector'
+import { openLogInDialog } from '../../header/LoginButton'
 import Loader from '../../Loader'
 
 import OptionTabs from './OptionTabs'
+import Summary from './SidePanel/Summary'
 // import Summary from './SidePanel/Summary'
 
 
@@ -32,12 +35,13 @@ optionGroups: [
 
 */
 
-function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, openConfirm, openInputDialog, language }) {
+function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, language }) {
+
+    const navigate = useNavigate()
 
     function handleSaveClicked() {
         if (!isLoggedIn) {
-            console.log('You have to be logged in to save a configuration!')
-            // TODO: display notification
+            openLogInDialog()
             return
         }
 
@@ -62,18 +66,24 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
     }
 
     function handleResetClicked() {
-        openConfirm(translate('resetConfigurationPrompt', language), {}, () => {
+        openConfirm(translate('resetConfigurationPrompt', language), {}, null, () => {
             resetConfig()
         })
     }
 
     function handleFinishClicked() {
         if (!isLoggedIn) {
-            console.log('You have to be logged in to finish a configuration!')
-            // TODO: display notification
+            openLogInDialog()
             return
         }
 
+        // confirm dialog that shows the summary
+        openConfirm('', {}, <Summary configurationId={configurationId} selectedOptions={selectedOptions}></Summary>, () => {
+            // when confirmed -> prompt with configuration name and then send the request to order the configuration
+            promptOrderConfiguration()
+        })
+    }
+    function promptOrderConfiguration() {
         const data = {
             configurationName: {name: translate('configurationName', language), value: '' }
         }
@@ -85,13 +95,16 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
             .then(res => {
                 // TODO: display notification
                 console.log(res)
+                navigate('/account/ordered')
             })
             .catch(err => {
                 // TODO: display notification
                 console.log(err)
+                navigate('/account/ordered')
             })
         })
     }
+
 
     function renderConfiguratorBody() {
 
@@ -171,7 +184,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
     resetConfig: resetActiveConfiguration,
     openConfirm: confirmDialogOpen,
-    openInputDialog: inputDialogOpen
+    openInputDialog: inputDialogOpen,
+    openLogInDialog: openLogInDialog
 }
 export default connect(
     mapStateToProps,
