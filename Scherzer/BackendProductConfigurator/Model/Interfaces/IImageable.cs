@@ -2,6 +2,6 @@
 {
     public interface IImageable
     {
-        List<String> Images { get; set; }
+        List<string> Images { get; set; }
     }
 }

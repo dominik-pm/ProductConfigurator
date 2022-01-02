@@ -24,9 +24,9 @@ namespace BackendProductConfigurator.Controllers
 
             List<string> productImages = new List<string> { "google.com" };
 
-            List<OptionGroup> optionGroups = new List<OptionGroup> { new OptionGroup("Color", "The exterior color of the product", "COLOR_GROUP", new List<string> { "RED", "WHITE", "GREEN" }, true),
-                                                                     new OptionGroup("Motor Type", "The motor of your car", "MOTORTYPE_GROUP", new List<string> { "DIESEL", "PETROL", "ELECTRIC" }, false),
-                                                                     new OptionGroup("Motor", "The selected Motor power", "MOTOR_GROUP", new List<string> { "D150", "D200", "D250" }, false) };
+            List<OptionGroup> optionGroups = new List<OptionGroup> { new OptionGroup() { Id = "COLOR_GROUP", Name = "Color", Description = "What color you want", OptionIds = new List<string>(){ "RED", "WHITE", "GREEN"}, Required = true },
+                                                                     new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "A motor fuel type", Description = "What motor fuel", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = true },
+                                                                     new OptionGroup() { Id = "MOTOR_GROUP", Name = "A motor power", Description = "The motor power", OptionIds = new List<string>(){ "D150", "D200", "D250"}, Required = true } };
 
             List<OptionSection> optionSections = new List<OptionSection> { new OptionSection("Exterior", "EXTERIOR", new List<string> { "COLOR_GROUP" }),
                                                                            new OptionSection("Motor", "MOTOR_SECTION", new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" }) };
@@ -40,7 +40,7 @@ namespace BackendProductConfigurator.Controllers
                                                                                                               { "RED", 250f },
                                                                                                               { "PROOF", 250f} });
 
-            Configurators = new List<Configurator> { new Configurator(0, "Alfa Romeo 159 Configurator", "Configurable Car", productImages, productDependencies, options, optionGroups, optionSections) };
+            Configurators.Add(new Configurator() { Id = 0, Name = "Neuer Konfigurator", Description = "Sehr cool", Images = productImages, Dependencies = productDependencies, OptionGroups = optionGroups, Options = options, OptionSections = optionSections});
 
             List<Option> optionsList = new List<Option> { new Option("Option1", "Erste Option", "Ka Ahnung wos des duat", new List<string> { "Zehner.net", "Cool.com" }) };
 
@@ -70,17 +70,22 @@ namespace BackendProductConfigurator.Controllers
             ProductSlim ps1 = new ProductSlim() { //Hier Images hinzufügen, ProductSave anschauen, usw... CLEAN UP
                 Id = 0,
                 Name = "Fetter Benz",
-                Description = "Laut und groß" };
+                Description = "Laut und groß",
+                Images = productImages};
 
             ProductSlim ps2 = new ProductSlim() {
                 Id = 1,
                 Name = "Eleganter Alfa Romeo",
-                Description = "Stylisch und erweckt" };
+                Description = "Stylisch und erweckt",
+                Images = productImages
+            };
 
             ProductSlim ps3 = new ProductSlim() {
                 Id = 2,
                 Name = "Fetterer Benz",
-                Description = "Umso lauter und größer" };
+                Description = "Umso lauter und größer",
+                Images = productImages
+            };
 
             ProductsSlim = new List<ProductSlim> { ps1, ps2, ps3 };
 

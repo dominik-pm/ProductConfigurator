@@ -2,6 +2,6 @@
 {
     public interface IDescribable
     {
-        String Description { get; set; }
+        string Description { get; set; }
     }
 }

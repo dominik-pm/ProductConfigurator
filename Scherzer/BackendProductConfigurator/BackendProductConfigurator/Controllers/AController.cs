@@ -40,7 +40,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public virtual void Post([FromBody] T value)
         {
-            entities.Append(value);
+            entities.Add(value);
         }
 
         // PUT api/<Controller>/5
@@ -61,40 +61,52 @@ namespace BackendProductConfigurator.Controllers
 
     public class configurationController : AController<Configurator, int>
     {
-        private List<ProductSlim> productSlims = new List<ProductSlim>();
-        public configurationController():base()
+        public configurationController() : base()
         {
             entities = AValuesClass.Configurators;
-            productSlims = AValuesClass.ProductsSlim;
-        }
-
-        // GET: api/<Controller>
-        [HttpGet]
-        public List<ProductSlim> Get()
-        {
-            Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
-            return productSlims;
-        }
-
-        // GET api/<Controller>/5
-        [HttpGet("{id}")]
-        public override Configurator Get(int id)
-        {
-            return entities.Find(entity => (entity as IConfigId).ConfiguratorId.Equals(id));
-        }
-    }
-    public class productsController : AController<ConfiguredProduct, int>
-    {
-        public productsController() : base()
-        {
-            entities = AValuesClass.ConfiguredProducts;
         }
 
         // POST api/<Controller>
         [HttpPost]
+        public override void Post([FromBody] Configurator value)
+        {
+            entities.Add(value);
+            AValuesClass.Configurators.Add(value);
+            AValuesClass.ProductsSlim.Add(value);
+        }
+    }
+    public class productsController : AController<ProductSlim, int>
+    {
+        public productsController() : base()
+        {
+            entities = AValuesClass.ProductsSlim;
+        }
+        
+        // GET: /products
+        [HttpGet]
+        public override IEnumerable<ProductSlim> Get()
+        {
+            Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
+            return entities;
+        }
+
+        [Route("/redacted")]
+        [HttpPost]
+        public override void Post([FromBody] ProductSlim value) { } //Um das API für eine andere Methode frei zu machen führt diese Methoden ins nichts
+    }
+    public class configuredProductsController : AController<ConfiguredProduct, int>
+    {
+        public configuredProductsController() : base()
+        {
+            entities = AValuesClass.ConfiguredProducts;
+        }
+
+        // POST: /products
+        [Route("/products")]
+        [HttpPost]
         public override void Post([FromBody] ConfiguredProduct value)
         {
-            AValuesClass.ConfiguredProducts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            //AValuesClass.ConfiguredProducts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             new Thread(() =>
             {
                 EValidationResult validationResult;
@@ -109,7 +121,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 PdfProducer.GeneratePDF(value);
             }).Start();
-            entities.Append(value); //later here without configuratorId => new { ... }
+            entities.Add(value); //later here without configuratorId => new { ... }
         }
     }
     public class accountController : AController<Account, int>
@@ -123,8 +135,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] Account value)
         {
-            AValuesClass.Accounts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
-            entities.Append(value);
+            //AValuesClass.Accounts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            entities.Add(value);
         }
     }
     public class savedConfigsController : AController<ProductSave, int>
@@ -148,8 +160,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public void Post([FromBody] ProductSaveSlim value)
         {
-            AValuesClass.SavedProducts.Add(new ProductSave(value)); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
-            entities.Append(value);
+            //AValuesClass.SavedProducts.Add(new ProductSave(value)); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            entities.Add(new ProductSave(value));
         }
     }
 }

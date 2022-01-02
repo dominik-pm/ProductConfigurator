@@ -2,6 +2,6 @@
 {
     public interface INameable
     {
-        String Name { get; set; }
+        string Name { get; set; }
     }
 }
