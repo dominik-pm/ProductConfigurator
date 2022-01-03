@@ -11,7 +11,7 @@ namespace BackendProductConfigurator.MediaProducers
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
-        public static void GeneratePDF(ConfiguredProduct product)
+        public static void GeneratePDF(ConfiguredProduct product, int configId)
         {
             InitiatePdfProducer();
             PdfDocument document = new PdfDocument();
@@ -29,7 +29,7 @@ namespace BackendProductConfigurator.MediaProducers
                            XBrushes.Black,
                            new XRect(0, 20, page.Width, 40));
 
-            tf.DrawString($"Produkt #{product.ConfiguratorId}",
+            tf.DrawString($"Konfigurator #{configId}",
                            font,
                            XBrushes.DarkGray,
                            new XRect(0, 70, page.Width, 20));
@@ -54,7 +54,8 @@ namespace BackendProductConfigurator.MediaProducers
                 yPosition += 30;
             }
 
-            document.Save($"./product{product.ConfiguratorId}.pdf");
+            DateTime dateTime = DateTime.Now;
+            document.Save($"./Product{dateTime.Year}{dateTime.Month}{dateTime.Day}_{dateTime.Hour}{dateTime.Minute}{dateTime.Second}{dateTime.Millisecond}.pdf");
         }
     }
 }

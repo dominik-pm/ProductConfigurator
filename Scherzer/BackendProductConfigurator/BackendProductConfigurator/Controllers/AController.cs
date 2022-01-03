@@ -16,7 +16,7 @@ namespace BackendProductConfigurator.Controllers
         {
             if(AValuesClass.ConfiguredProducts.Count == 0)
             {
-                AValuesClass.SetValues();
+                AValuesClass.SetStaticValues();
             }
         }
 
@@ -33,7 +33,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet("{id}")]
         public virtual T Get(K id)
         {
-            return entities.Find(entity => (entity as IIndexable<K>).Id.Equals(id));
+            return entities.Find(entity => (entity as IIndexable<K>).ConfigId.Equals(id));
         }
 
         // POST api/<Controller>
@@ -55,7 +55,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete("{id}")]
         public virtual void Delete(K id)
         {
-            entities.Remove(entities.Find(entity => (entity as IIndexable<K>).Id.Equals(id)));
+            entities.Remove(entities.Find(entity => (entity as IIndexable<K>).ConfigId.Equals(id)));
         }
     }
 
@@ -75,7 +75,7 @@ namespace BackendProductConfigurator.Controllers
             AValuesClass.ProductsSlim.Add(value);
         }
     }
-    public class productsController : AController<ProductSlim, int>
+    public partial class productsController : AController<ConfiguratorSlim, int>
     {
         public productsController() : base()
         {
@@ -84,17 +84,13 @@ namespace BackendProductConfigurator.Controllers
         
         // GET: /products
         [HttpGet]
-        public override IEnumerable<ProductSlim> Get()
+        public override IEnumerable<ConfiguratorSlim> Get()
         {
             Response.Headers["Content-language"] = Request.Headers.ContentLanguage; //nach richtiger Sprache abgleichen
             return entities;
         }
-
-        [Route("/redacted")]
-        [HttpPost]
-        public override void Post([FromBody] ProductSlim value) { } //Um das API für eine andere Methode frei zu machen führt diese Methoden ins nichts
     }
-    public class configuredProductsController : AController<ConfiguredProduct, int>
+    public partial class configuredProductsController : AController<ConfiguredProduct, int>
     {
         public configuredProductsController() : base()
         {
@@ -102,24 +98,24 @@ namespace BackendProductConfigurator.Controllers
         }
 
         // POST: /products
-        [Route("/products")]
+        [Route("/products/{configId}")]
         [HttpPost]
-        public override void Post([FromBody] ConfiguredProduct value)
+        public void Post([FromBody] ConfiguredProduct value, int configId)
         {
             //AValuesClass.ConfiguredProducts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             new Thread(() =>
             {
                 EValidationResult validationResult;
-                validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.Id == value.ConfiguratorId).OptionGroups);
-                if(validationResult == EValidationResult.ValidationPassed)
+                validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).OptionGroups);
+                if (validationResult == EValidationResult.ValidationPassed)
                 {
-                    validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.Id == value.ConfiguratorId).Dependencies);
+                    validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Dependencies);
                 }
                 EmailProducer.SendEmail(value, validationResult);
             }).Start();
             new Thread(() =>
             {
-                PdfProducer.GeneratePDF(value);
+                PdfProducer.GeneratePDF(value, configId);
             }).Start();
             entities.Add(value); //later here without configuratorId => new { ... }
         }
@@ -156,12 +152,34 @@ namespace BackendProductConfigurator.Controllers
         }
 
         // POST: /account/configuration
-        [Route("/account/configuration")]
+        [Route("/account/configuration/{configId}")]
         [HttpPost]
-        public void Post([FromBody] ProductSaveSlim value)
+        public void Post([FromBody] ProductSaveSlim value, int configId)
         {
+            string description, name;
+            description = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Description;
+            name = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Name;
             //AValuesClass.SavedProducts.Add(new ProductSave(value)); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
-            entities.Add(new ProductSave(value));
+            entities.Add(new ProductSave() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString() });
         }
     }
+
+    #region RedactedAPIs
+
+    //Um APIs für eine andere Methoden frei zu machen führen diese Methoden ins nichts
+
+    public partial class configuredProductsController : AController<ConfiguredProduct, int>
+    {
+        [Route("/redactedConfiguredProducts")]
+        [HttpPost]
+        public override void Post([FromBody] ConfiguredProduct value) { }
+    }
+        public partial class productsController : AController<ConfiguratorSlim, int>
+    {
+        [Route("/redactedProducts")]
+        [HttpPost]
+        public override void Post([FromBody] ConfiguratorSlim value) { }
+    }
+
+    #endregion
 }

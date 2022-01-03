@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ProductSlim : IIndexable<int>, INameable, IDescribable, IImageable
+    public class ConfiguratorSlim : IConfigId, INameable, IDescribable, IImageable
     {
-        public int Id { get; set; }
+        public int ConfigId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public List<string> Images { get; set; }

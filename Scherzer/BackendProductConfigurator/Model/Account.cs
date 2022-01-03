@@ -9,7 +9,7 @@ namespace Model
 {
     public class Account : IIndexable<int>
     {
-        public int Id { get; set; }
+        public int ConfigId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
     }

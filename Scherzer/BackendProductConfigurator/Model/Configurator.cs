@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    public class Configurator : ProductSlim
+    public class Configurator : ConfiguratorSlim
     {
         public List<Option> Options { get; set; }
         public ProductDependencies Dependencies { get; set; }

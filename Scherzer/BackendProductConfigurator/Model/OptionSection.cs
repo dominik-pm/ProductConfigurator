@@ -7,11 +7,11 @@ namespace Model
         public OptionSection(string name, string id, List<string> optionGroupIds)
         {
             Name = name;
-            Id = id;
+            ConfigId = id;
             OptionGroupIds = optionGroupIds;
         }
         public string Name { get; set; }
-        public string Id { get; set; }
+        public string ConfigId { get; set; }
         public List<string> OptionGroupIds { get; set; } = new List<string>();
     }
 }

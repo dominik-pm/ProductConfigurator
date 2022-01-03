@@ -2,18 +2,16 @@
 
 namespace Model
 {
-    public class Option : IIndexable<string>, INameable, IDescribable, IImageable
+    public class Option : IIndexable<string>, INameable, IDescribable
     {
-        public Option(string id, string name, string description, List<string> images)
+        public Option(string id, string name, string description)
         {
-            Id = id;
+            ConfigId = id;
             Name = name;
             Description = description;
-            Images = images;
         }
-        public string Id { get; set; }
+        public string ConfigId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<string> Images { get; set; }
     }
 }

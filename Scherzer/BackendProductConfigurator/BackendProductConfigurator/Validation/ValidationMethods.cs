@@ -10,7 +10,7 @@ namespace BackendProductConfigurator.Validation
             float endPrice = dependencies.BasePrice;
             for(int i = 0; i < product.Options.Count; i++)
             {
-                endPrice += dependencies.PriceList[product.Options[i].Id];
+                endPrice += dependencies.PriceList[product.Options[i].ConfigId];
             }
             return (product.Price == endPrice) ? EValidationResult.ValidationPassed : EValidationResult.PriceInvalid;
         }
@@ -21,7 +21,7 @@ namespace BackendProductConfigurator.Validation
             {
                 if(group.Required == true)
                 {
-                    validationResult = product.Options.Select(productOption => productOption.Id).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
+                    validationResult = product.Options.Select(productOption => productOption.ConfigId).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
                     if (validationResult == EValidationResult.ConfigurationInvalid)
                     {
                         break;

@@ -7,20 +7,12 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ProductSave : ProductSaveSlim, INameable, IIndexable<int>, IDescribable
+    public class ProductSave : ProductSaveSlim, INameable, IDescribable, IConfigId
     {
-        public ProductSave(ProductSaveSlim pslim)
-        {
-            base.SavedName = pslim.SavedName;
-            base.Options = pslim.Options;
-            this.Name = "";
-            this.Description = "";
-            this.Status = EStatus.Ordered.ToString();
-        }
-        public ProductSave() { }
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Status { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+        public int ConfigId { get; set; }
     }
 }

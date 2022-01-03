@@ -4,7 +4,7 @@ namespace Model
 {
     public class OptionGroup : IIndexable<string>, INameable, IDescribable
     {
-        public string Id { get; set; }
+        public string ConfigId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public List<string> OptionIds { get; set; } = new List<string>();
