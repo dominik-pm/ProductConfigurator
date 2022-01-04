@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "UIuD3yqcfjUiGPeTJDZWL+vnNYQw7APvJNQJsd6GJ4Q=",
+  "Source": "DatabaseServiceProductConfigurator",
+  "BasePath": "_content/DatabaseServiceProductConfigurator",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
