@@ -79,16 +79,16 @@ VALUES ('MULTI_SELECT'),
        ('SINGLE_SELECT'),
        ('PARENT');
 
-INSERT IGNORE INTO option_fields (id, type)
-VALUES (1, 'SINGLE_SELECT'), -- Color
-       (2, 'SINGLE_SELECT'), -- Motor Type
-       (3, 'SINGLE_SELECT'), -- Motor Group
-       (4, 'SINGLE_SELECT'), -- Panorama Group
-       (5, 'SINGLE_SELECT'), -- Panoramatype Group
+INSERT IGNORE INTO option_fields (id, type, required)
+VALUES (1, 'SINGLE_SELECT', 1), -- Color
+       (2, 'SINGLE_SELECT', 1), -- Motor Type
+       (3, 'SINGLE_SELECT', 1), -- Motor Group
+       (4, 'SINGLE_SELECT', 0), -- Panorama Group
+       (5, 'SINGLE_SELECT', 1), -- Panoramatype Group
 
-       (6, 'PARENT'),        -- Exterior
-       (7, 'PARENT'),        -- Motor Section
-       (8, 'PARENT'); -- Panorama Section
+       (6, 'PARENT', 0),        -- Exterior
+       (7, 'PARENT', 0),        -- Motor Section
+       (8, 'PARENT', 0); -- Panorama Section
 
 INSERT IGNORE INTO products_has_option_fields (option_fields, product_number, dependency_type)
 VALUES (1, 'BLUE', 'CHILD'),          -- Color

@@ -945,11 +945,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\basti\\Dropbox\\5chit\\DA\\Service\\DatabaseService\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
+      "projectUniqueName": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
       "projectName": "DatabaseServiceProductConfigurator",
-      "projectPath": "C:\\Users\\basti\\Dropbox\\5chit\\DA\\Service\\DatabaseService\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
+      "projectPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
       "packagesPath": "C:\\Users\\basti\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\basti\\Dropbox\\5chit\\DA\\Service\\DatabaseService\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator\\obj\\",
+      "outputPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\basti\\AppData\\Roaming\\NuGet\\NuGet.Config",
