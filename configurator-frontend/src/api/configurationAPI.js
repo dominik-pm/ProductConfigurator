@@ -201,7 +201,7 @@ const configurations = [
                 optionIds: [
                     'PANORAMASMALL', 'PANORAMALARGE'
                 ],
-                required: false
+                required: true
             },
             {
                 id: 'EXTRAS_GROUP',
@@ -221,15 +221,19 @@ const configurations = [
                 COLOR_GROUP: [
                     'BLUE', 'YELLOW', 'GREEN'
                 ],
-                MOTOR_GROUP: [
+                MOTORTYPE_GROUP: [
                     'DIESEL', 'PETROL'
                 ],
-                MOTORTYPE_GROUP: [
+                MOTOR_GROUP: [
                     'D150', 'D250', 'P220', 'P450'
                 ],
                 PANORAMATYPE_GROUP: [
                     'PANORAMASMALL', 'PANORAMALARGE'
                 ]
+            },
+            groupRequirements: {
+                PANORAMATYPE_GROUP: ['PANORAMA_GROUP'],
+                MOTOR_GROUP: ['MOTORTYPE_GROUP']
             },
             requirements: {
                 D150: ['DIESEL'],

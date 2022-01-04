@@ -225,7 +225,7 @@ const selectWithDependencies = (id) => (dispatch, getState) => {
     const selectedOptionName = getOptionName(getState(), id)
 
     const confirmMessage = `By selecting ${selectedOptionName} you will deselect ${incompatibleOptionNames.join(', ')}`
-    dispatch(confirmDialogOpen(confirmMessage, {selected: id, deselected: null, optionsToSelect: [], optionsToRemove: deeperOptionsToDeselect}, () => {
+    dispatch(confirmDialogOpen(confirmMessage, {selected: id, deselected: null, optionsToSelect: [], optionsToRemove: deeperOptionsToDeselect}, null, () => {
         // console.log('Confirmed')
         // select the option and deselect all incompatible options
         dispatch(selectAndDeselectOptions([id], allOptionsToDeselect))
@@ -251,7 +251,7 @@ const deselectWithDependencies = (id) => (dispatch, getState) => {
     const deselectedOptionName = getOptionName(getState(), id)
 
     const confirmMessage = `By deselecting ${deselectedOptionName} you will also deselect ${dependentOptionNames.join(', ')}`
-    dispatch(confirmDialogOpen(confirmMessage, {selected: null, deselected: id, optionsToSelect: [], optionsToRemove: dependentOptions}, () => {
+    dispatch(confirmDialogOpen(confirmMessage, {selected: null, deselected: id, optionsToSelect: [], optionsToRemove: dependentOptions}, null, () => {
         // console.log('Confirmed')
         // deselect the option and all dependent options
         dispatch(selectAndDeselectOptions(null, [id].concat(dependentOptions)))

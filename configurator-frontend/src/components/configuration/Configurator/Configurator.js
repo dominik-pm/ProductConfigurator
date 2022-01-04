@@ -132,8 +132,8 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                     <Typography variant="h2">{translate('configureYour', language)} {configurationName}</Typography>
                     <Typography variant="subtitle1">{configurationDescription}</Typography>
                 </Box>
-                <Grid sx={{paddingTop: 2}}>
 
+                <Grid sx={{paddingTop: 2}}>
                     <Tooltip title={translate('saveConfiguration', language)}>
                         <IconButton 
                             variant="contained" 

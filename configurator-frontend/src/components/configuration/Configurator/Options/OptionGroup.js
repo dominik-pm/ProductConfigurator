@@ -25,7 +25,7 @@ function OptionGroup({group, isValid, groupError, language}) {
     return (
         <Box className="OptionGroup" marginBottom={1} padding={1}>
             <Box className="OptionGroupTitle" display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
-                <Typography variant="h2">
+                <Typography variant="h3">
                     {name}
                 </Typography>
                 {renderGroupError()}

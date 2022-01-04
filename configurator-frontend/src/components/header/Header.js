@@ -56,7 +56,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
     function getMenuButtons() {
         return (
-            <Grid container sx={{ gap: 2 }}>
+            <Grid container sx={{ gap: 2 }} >
 
                 <IconButton onClick={() => navigate('/')}>
                     <ArrowBackIosNew></ArrowBackIosNew>

@@ -17,6 +17,8 @@ const selectAllOptionIncompatibilities = state =>       state.configuration.conf
 const selectAllOptionRequirements = state =>            state.configuration.configuration.rules.requirements
 const selectReplacementGroups = state =>                state.configuration.configuration.rules.replacementGroups
 
+const selectAllGroupRequirements = state =>             state.configuration.configuration.rules.groupRequirements
+
 export const selectConfigurationStatus = state =>       state.configuration.status
 
 export const selectConfigurationId = (state) =>         state.configuration.configuration.id
@@ -120,25 +122,48 @@ export const getIsOptionSelectable = createSelector([getIsOptionRequirementsMet,
 // <-- getIsOptionSelectable --
 
 // -- group logic -->
-// returns null (no error) or the specific error from 'GROUP_ERRORS'
-export const getIsGroupValid = createSelector([selectOptionGroups, selectGroupId, selectSelectedOptions], (groups, groupId, selectedOptions) => {
+const getGroupRequirements = createSelector([selectAllGroupRequirements, selectGroupId], (allRequirements, groupId) => {
+    const groupRequirements = allRequirements[groupId]
+    if (!groupRequirements) return []
+    return groupRequirements
+})
+const getGroup = createSelector([selectOptionGroups, selectGroupId], (groups, groupId) => {
     const selectedGroup = groups.find(g => g.id === groupId)
-
     if (!selectedGroup) {
-        console.log('Can not get is group valid because there is no group with the id: ' + groupId)
+        console.log('Can not get is group valid because there is no group with the id')
         return null
     }
+    return selectedGroup
+})
+// returns null (no error) or the specific error from 'GROUP_ERRORS'
+export const getIsGroupValid = createSelector([getGroup, getGroupRequirements, selectOptionGroups, selectSelectedOptions], (selectedGroup, requirements, groups, selectedOptions) => {
 
     // if the group is not required it is valid (TODO: required because of other non required group)
     if (!selectedGroup.required) return null
 
+    // if the group is required, but one of the required groups is not yet selected, it is also valid
+    const requiredGroups = groups.filter(g => requirements.includes(g.id))
+    let requirementsMet = true
+    requiredGroups.forEach(requirement => {
+        let groupSelected = false
+        requirement.optionIds.forEach(option => {
+            if (selectedOptions.includes(option)) {
+                groupSelected = true
+            }
+        })
+        // if just one group that is required for this group has not selected any options -> the requirements are not met
+        if (!groupSelected) requirementsMet = false
+    })
+    // the requirements are not yet selected -> this group is valid (cant select if the requirement is not selected)
+    if (!requirementsMet) return null
+
+    // the group is required and there is no option selected -> error at least has to be selected
     let atLeastOneOptionSelected = false
     selectedGroup.optionIds.forEach(option => {
         if (selectedOptions.includes(option)) {
             atLeastOneOptionSelected = true
         }
     })
-
     if (!atLeastOneOptionSelected) {
         return GROUP_ERRORS.atLeastOne
     }

@@ -881,3 +881,15 @@ export default connect(
 ```
 
 
+## Configurator Logic
+**Groups**
+- a group can be a replacement group
+  - only one option in this group can be selected
+- a group can be required
+  - at least one option in this group has to be selected, or the configuration is invalid
+- a group can have other group requirements
+  - this group can only be selected if each required group is select as well
+  - if this group is required but the required group (from the group requirements) is not required
+    - the configuration is valid if none of the two groups are selected or both (if the required group is selected -> this group also has to be selected because it is required)
+  - if both groups are required
+    - the configuration is only in a valid state if both are selected (the required parent group is first selected then the group itself)
