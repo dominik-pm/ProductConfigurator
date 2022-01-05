@@ -8,9 +8,23 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         private static product_configuratorContext context = new product_configuratorContext();
 
-        public static List<Product> GetBuyableProducts() => context.Products
-            .Where(p => p.Buyable.Equals(true))
-            .ToList();
+        public static List<object> GetBuyableProducts(string lang) {
+            return (
+                from p in context.Products
+                where p.Buyable == true
+                let infos = LanguageService.GetProductWithLanguage(p.ProductNumber, lang)
+                select new {
+                    productNumber = p.ProductNumber,
+                    price = p.Price,
+                    Pictures = p.Pictures.Select(pic => pic.Url),
+                    category = p.Category,
+                    infos = new {
+                        name = infos.Name,
+                        description = infos.Description
+                    }
+                }
+            ).ToList<object>();
+        }
 
         //GetWithOptions and the right language
         public static object? GetWithOption( string productNumber, string lang ) {

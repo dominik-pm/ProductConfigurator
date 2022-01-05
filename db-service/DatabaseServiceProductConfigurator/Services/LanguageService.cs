@@ -12,5 +12,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             .Where(ohs => ohs.OptionFieldId.Equals(id) && ohs.Language.Equals(language))
             .FirstOrDefault();
 
+        public static List<string> GetAllLanguages () => context.ELanguages.Select(l => l.Language).ToList();
+
     }
 }

@@ -1,15 +1,22 @@
 ﻿using DatabaseServiceProductConfigurator.Models;
+using DatabaseServiceProductConfigurator.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatabaseServiceProductConfigurator.Controllers {
     [Route("db/[controller]")]
     [ApiController]
-    public class LanguageController : AController<ELanguage, string> {
+    public class LanguageController : ControllerBase {
 
         static product_configuratorContext context = new product_configuratorContext();
 
-        public LanguageController() : base (context) { }
+        [HttpGet]
+        public IActionResult get() {
+            List<string> list = LanguageService.GetAllLanguages();
+            if ( list.Count == 0 )
+                return NoContent();
+            return Ok(list);
+        }
 
     }
 }

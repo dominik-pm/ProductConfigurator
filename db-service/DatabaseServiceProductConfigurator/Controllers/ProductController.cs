@@ -14,7 +14,9 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
         [HttpGet("GetBuyableProducts")]
         public IActionResult GetBuyableProducts() {
-            List<Product> products = ProductService.GetBuyableProducts();
+            Request.Headers.TryGetValue("Accept-Language", out var lang);
+
+            List<object> products = ProductService.GetBuyableProducts(lang);
 
             if ( products.Count == 0 )
                 return NoContent();

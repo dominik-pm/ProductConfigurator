@@ -6,7 +6,11 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         static product_configuratorContext context = new product_configuratorContext();
 
-        public static List<Booking> GetBookingsByCustomer( int customerID ) => context.Bookings.Where(b => b.Customer == customerID).ToList();
+        public static List<object> GetBookingsByCustomer( int customerID ) => context.Bookings.Where(b => b.Customer == customerID).Select(b => new {
+            id = b.Id,
+            customer = b.Customer,
+            config = b.ConfigId
+        }).ToList<object>();
 
         public static object? GetById( int id, string lang ) => context.Bookings
             .Where(b => b.Id.Equals(id))

@@ -23,9 +23,9 @@ namespace DatabaseServiceProductConfigurator.Controllers {
                 return Ok(toReturn);
         }
 
-        [HttpGet("getBookingsByCustomer/{customerID}")]
+        [HttpGet("getByCustomer/{customerID}")]
         public ActionResult GetBookingsByCustomer(int customerID) {
-            List<Booking> bookings = BookingService.GetBookingsByCustomer(customerID);
+            List<object> bookings = BookingService.GetBookingsByCustomer(customerID);
             if ( bookings.Count == 0 )
                 return NoContent();
             return Ok(bookings);
