@@ -1,6 +1,12 @@
 ﻿using DatabaseServiceProductConfigurator.Models;
 
 namespace DatabaseServiceProductConfigurator.Services {
+
+    public struct InfoStruct {
+        public string Name { get; set; }
+        public string Description { get; set; }
+    }
+
     public static class LanguageService {
 
         static product_configuratorContext context = new product_configuratorContext();

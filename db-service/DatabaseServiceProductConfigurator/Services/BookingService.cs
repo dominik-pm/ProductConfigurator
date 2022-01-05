@@ -2,6 +2,14 @@
 using Microsoft.EntityFrameworkCore;
 
 namespace DatabaseServiceProductConfigurator.Services {
+
+    public struct BookingStruct {
+        public int id { get; set; }
+        public int customer { get; set; }
+        public int configId { get; set; }
+        public ConfigStruct? config { get; set; }
+    }
+
     public class BookingService {
 
         static product_configuratorContext context = new product_configuratorContext();
@@ -12,13 +20,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             config = b.ConfigId
         }).ToList<object>();
 
-        public static object? GetById( int id, string lang ) => context.Bookings
+        public static BookingStruct? GetById( int id, string lang ) => context.Bookings
             .Where(b => b.Id.Equals(id))
-            .Select(b => new {
-                Id = b.Id,
-                Customer = b.Customer,
-                ConfigId = b.ConfigId,
-                Config = ConfigurationService.GetById(b.ConfigId, lang)
+            .Select(b => new BookingStruct {
+                id = b.Id,
+                customer = b.Customer,
+                configId = b.ConfigId,
+                config = ConfigurationService.GetById(b.ConfigId, lang)
             })
             .FirstOrDefault();
 

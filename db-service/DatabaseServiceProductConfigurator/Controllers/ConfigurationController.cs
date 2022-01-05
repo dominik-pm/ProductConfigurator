@@ -17,7 +17,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         public override IActionResult Get( int id ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
 
-            object? toReturn = ConfigurationService.GetById(id, lang);
+            ConfigStruct? toReturn = ConfigurationService.GetById(id, lang);
             if ( toReturn == null )
                 return NotFound();
             else

@@ -113,7 +113,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             ).ToList();
         }
 
-        public static object? GetById( int id, string lang ) {
+        public static ConfigStruct? GetById( int id, string lang ) {
             return getConfigs(lang).Where(c => c.id.Equals(id)).FirstOrDefault();
         }
 
