@@ -14,7 +14,9 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
         [HttpGet("{id}")]
         public override IActionResult Get( int id ) {
-            Booking? toReturn = BookingService.GetById(id);
+            Request.Headers.TryGetValue("Accept-Language", out var lang);
+
+            object? toReturn = BookingService.GetById(id, lang);
             if ( toReturn == null )
                 return NotFound();
             else

@@ -15,12 +15,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                 requirements = (
                     from pof in context.ProductsHasProducts
                     where pof.BaseProduct == productNumber && pof.DependencyType == "REQUIRED"
-                    select new { pof.BaseProduct, pof.OptionProduct }
+                    select pof.OptionProduct
                 ).ToList(),
                 incompatibilites = (
                     from pof in context.ProductsHasProducts
                     where pof.BaseProduct == productNumber && pof.DependencyType == "EXCLUDING"
-                    select new { pof.BaseProduct, pof.OptionProduct }
+                    select pof.OptionProduct
                 ).ToList()
             };
         }
@@ -28,19 +28,19 @@ namespace DatabaseServiceProductConfigurator.Services {
         public static object GetByOptionField( int id ) {
             return new {
                 replacementGroups = (
-                      from pof in context.ProductsHasOptionFields
-                      where pof.OptionFields == id && pof.OptionFieldsNavigation.Type == "SINGLE_SELECT" && pof.DependencyType == "CHILD"
-                      select pof.ProductNumber
+                      from pof in context.OptionFieldsHasOptionFields
+                      where pof.Base == id && pof.DependencyType == "CHILD" && pof.OptionFieldNavigation.Type == "SINGLE_SELECT"
+                      select pof.OptionField
                 ).ToList(),
                 requirements = (
                     from pof in context.OptionFieldsHasOptionFields
                     where pof.Base == id && pof.DependencyType == "REQUIRED"
-                    select new { pof.Base, pof.OptionField }
+                    select pof.OptionField
                 ).ToList(),
                 incompatibilites = (
                     from pof in context.OptionFieldsHasOptionFields
                     where pof.Base == id && pof.DependencyType == "EXCLUDING"
-                    select new { pof.Base, pof.OptionField }
+                    select pof.OptionField
                 ).ToList()
             };
         }

@@ -14,6 +14,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 select new {
                     id = of.OptionFieldsNavigation.Id,
                     type = of.OptionFieldsNavigation.Type,
+                    required = of.OptionFieldsNavigation.Required,
                     infos = (
                         from ohl in context.OptionFieldHasLanguages
                         where ohl.Language == lang && ohl.OptionFieldId == of.OptionFieldsNavigation.Id
@@ -53,6 +54,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 select new {
                     id = of.OptionFieldNavigation.Id,
                     type = of.OptionFieldNavigation.Type,
+                    required = of.OptionFieldNavigation.Required,
                     infos = (
                         from ohl in context.OptionFieldHasLanguages
                         where ohl.Language == lang && ohl.OptionFieldId == of.OptionFieldNavigation.Id

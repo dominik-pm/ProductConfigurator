@@ -31,7 +31,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                             pl.Description
                         }
                       ).FirstOrDefault(),
-                      fields = OptionFieldService.GetByProductNumber(productNumber, lang)
+                      fields = OptionFieldService.GetByProductNumber(productNumber, lang),
+                      rules = RuleService.GetByProductNumber(productNumber)
                   }
                 ).FirstOrDefault();
         }

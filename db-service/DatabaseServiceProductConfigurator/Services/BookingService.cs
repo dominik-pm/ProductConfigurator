@@ -8,13 +8,13 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         public static List<Booking> GetBookingsByCustomer( int customerID ) => context.Bookings.Where(b => b.Customer == customerID).ToList();
 
-        public static Booking? GetById( int id ) => context.Bookings
+        public static object? GetById( int id, string lang ) => context.Bookings
             .Where(b => b.Id.Equals(id))
-            .Select(b => new Booking {
+            .Select(b => new {
                 Id = b.Id,
                 Customer = b.Customer,
                 ConfigId = b.ConfigId,
-                Config = ConfigurationService.GetById(b.ConfigId)
+                Config = ConfigurationService.GetById(b.ConfigId, lang)
             })
             .FirstOrDefault();
 
