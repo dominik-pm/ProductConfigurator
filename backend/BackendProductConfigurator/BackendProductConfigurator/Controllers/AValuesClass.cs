@@ -59,7 +59,7 @@ namespace BackendProductConfigurator.Controllers
 
             ProductDependencies productDependencies = new ProductDependencies
             (
-                50000,
+                50000f,
                 new List<string> { "RED", "DIESEL", "D150" },
                 new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
                 new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
