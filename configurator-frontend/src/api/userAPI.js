@@ -22,7 +22,10 @@ export const requestDeleteSavedConfiguration = (configurationId, name) => {
     return new Promise((resolve, reject) => {
         reject('Not implemented!')
 
-        // axios.delete(`/account/configurations/`)
+        // const data = {
+        //     savedName: name
+        // }
+        // axios.delete(`/account/configurations/${configurationId}`, data)
         // .then(res => {
         //     resolve(res.data)
         // })

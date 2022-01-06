@@ -1,11 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Box, Grid, IconButton, Typography } from '@mui/material'
-import { Edit, Preview } from '@mui/icons-material'
+import { Delete, Edit, Preview } from '@mui/icons-material'
 import { useNavigate } from 'react-router-dom'
 import { saveConfigurationToStorage } from '../../state/configuration/configurationSlice'
 import Summary from '../configuration/Configurator/SidePanel/Summary'
 import { confirmDialogOpen } from '../../state/confirmationDialog/confirmationSlice'
+import { requestDeleteSavedConfiguration } from '../../api/userAPI'
 
 function ConfigurationList({ configurations, openConfirm, isOrdered = false, isAdminView = false }) {
 
@@ -14,6 +15,17 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
     function handleEditClick(id, options) {
         navigate(`/configuration/${id}`)
         saveConfigurationToStorage(id, options)
+    }
+
+    function handleDeleteClicked(id, name) {
+        requestDeleteSavedConfiguration(id, name)
+        .then(res => {
+            // refresh
+            navigate(`/account/saved`)
+        })
+        .catch(err => {
+            console.log('error while trying to delete saved configuration:', err)
+        })
     }
 
     function handleShowSummaryClicked(id, options) {
@@ -33,6 +45,11 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
                                 <IconButton onClick={() => handleEditClick(config.id, config.options)}>
                                     <Edit></Edit>
                                 </IconButton>
+                                {!isOrdered ? 
+                                <IconButton onClick={() => handleDeleteClicked(config.id, config.savedName)}>
+                                    <Delete></Delete>
+                                </IconButton>
+                                : ''}
                                 {isOrdered ?
                                 <IconButton onClick={() => handleShowSummaryClicked(config.id, config.options)}>
                                     <Preview></Preview>
