@@ -2,6 +2,7 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { connect } from 'react-redux'
+import { languageNames } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { setLanguage } from '../../state/language/languageSlice'
 
@@ -22,9 +23,9 @@ function LanguageSelect({ language, setLanguage }) {
                     label="Lang"
                     onChange={handleChange}
                     >
-                    <MenuItem value={'EN'}>English</MenuItem>
-                    <MenuItem value={'DE'}>Deutsch</MenuItem>
-                    <MenuItem value={'FR'}>Français</MenuItem>
+                    <MenuItem value={languageNames.EN}>English</MenuItem>
+                    <MenuItem value={languageNames.DE}>Deutsch</MenuItem>
+                    <MenuItem value={languageNames.FR}>Français</MenuItem>
                 </Select>
             </FormControl>
         </Box>

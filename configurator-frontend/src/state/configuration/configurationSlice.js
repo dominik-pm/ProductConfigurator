@@ -26,6 +26,10 @@ export const configurationSlice = createSlice({
             // console.log('deselecting option', action.payload)
             state.selectedOptions = state.selectedOptions.filter(optionId => optionId !== action.payload)
         },
+        setSelectedOptions: (state, action) => {
+            console.log('setting selected options')
+            state.selectedOptions = action.payload
+        },
         reset: (state, action) => {
             console.log('reset active configuration')
             state.selectedOptions = action.payload
@@ -55,17 +59,26 @@ export const configurationSlice = createSlice({
     }
 })
 
-// get the selected options for the specific configuration (id) from the storage
-const loadSelectedOptionsFromStorage = (id) => {
-    const configuration = loadConfigurationsFromStorage().find(config => config.id === id)
-    if (!configuration) return null
+export const fetchConfiguration = (id) => async (dispatch) => {
+    dispatch(loadingStarted())
 
-    if (!configuration.options) return null
+    fetchId(id)
+    .then(res => {
+        dispatch(loadingSucceeded(res))
+    })
+    .catch(error => {
+        dispatch(loadingFailed(error))
+    })
+}
 
-    return configuration.options
+// save the currently active configuration to the local storage
+export const saveActiveConfiguration = () => (dispatch, getState) => {
+    const id = selectConfigurationId(getState())
+    const options = selectSelectedOptions(getState())
+    saveConfigurationToStorage(id, options)
 }
 // save the configuration data (id, options) to the local storage (or append to existing configurations)
-const saveConfigurationToStorage = (id, options) => {
+export const saveConfigurationToStorage = (id, options) => {
     let configurations = loadConfigurationsFromStorage()
 
     let newConfiguration = configurations.find(c => c.id === id)
@@ -86,6 +99,16 @@ const saveConfigurationToStorage = (id, options) => {
     } catch {
         console.log('Can not save the configuration to the local storage!')
     }
+}
+
+// get the selected options for the specific configuration (id) from the storage
+const loadSelectedOptionsFromStorage = (id) => {
+    const configuration = loadConfigurationsFromStorage().find(config => config.id === id)
+    if (!configuration) return null
+
+    if (!configuration.options) return null
+
+    return configuration.options
 }
 const loadConfigurationsFromStorage = () => {
     let configurations = []
@@ -110,11 +133,7 @@ export const resetActiveConfiguration = () => (dispatch, getState) => {
     }
 }
 
-export const saveActiveConfiguration = () => (dispatch, getState) => {
-    const id = selectConfigurationId(getState())
-    const options = selectSelectedOptions(getState())
-    saveConfigurationToStorage(id, options)
-}
+
 
 // handle the click on an option
 export const clickedOption = (id) => (dispatch, getState) => {
@@ -206,7 +225,7 @@ const selectWithDependencies = (id) => (dispatch, getState) => {
     const selectedOptionName = getOptionName(getState(), id)
 
     const confirmMessage = `By selecting ${selectedOptionName} you will deselect ${incompatibleOptionNames.join(', ')}`
-    dispatch(confirmDialogOpen(confirmMessage, {selected: id, deselected: null, optionsToSelect: [], optionsToRemove: deeperOptionsToDeselect}, () => {
+    dispatch(confirmDialogOpen(confirmMessage, {selected: id, deselected: null, optionsToSelect: [], optionsToRemove: deeperOptionsToDeselect}, null, () => {
         // console.log('Confirmed')
         // select the option and deselect all incompatible options
         dispatch(selectAndDeselectOptions([id], allOptionsToDeselect))
@@ -232,7 +251,7 @@ const deselectWithDependencies = (id) => (dispatch, getState) => {
     const deselectedOptionName = getOptionName(getState(), id)
 
     const confirmMessage = `By deselecting ${deselectedOptionName} you will also deselect ${dependentOptionNames.join(', ')}`
-    dispatch(confirmDialogOpen(confirmMessage, {selected: null, deselected: id, optionsToSelect: [], optionsToRemove: dependentOptions}, () => {
+    dispatch(confirmDialogOpen(confirmMessage, {selected: null, deselected: id, optionsToSelect: [], optionsToRemove: dependentOptions}, null, () => {
         // console.log('Confirmed')
         // deselect the option and all dependent options
         dispatch(selectAndDeselectOptions(null, [id].concat(dependentOptions)))
@@ -278,20 +297,7 @@ const getDependenciesDeselect = (state, id) => {
     return [...dependentOptions, ...subDependentOptions]
 }
 
-
-export const fetchConfiguration = (id) => async (dispatch) => {
-    dispatch(loadingStarted())
-
-    fetchId(id)
-    .then(res => {
-        dispatch(loadingSucceeded(res))
-    })
-    .catch(error => {
-        dispatch(loadingFailed(error))
-    })
-}
-
 // Action creators are generated for each case reducer function
-export const { selectOption, deselectOption, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
+export const { selectOption, deselectOption, setSelectedOptions, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
 
 export default configurationSlice.reducer

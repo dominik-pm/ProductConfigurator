@@ -4,7 +4,7 @@ import { selectIsConfirmDialogOpen } from './confirmationSelectors'
 const initialState = {
     open: false,
     message: '',
-    content: {}
+    data: {}
 }
 
 export const confirmationSlice = createSlice({
@@ -12,26 +12,27 @@ export const confirmationSlice = createSlice({
     initialState,
     reducers: {
         show: (state, action) => {
-            const { message, content } = action.payload
+            const { message, data } = action.payload
 
             // console.log('Opened confirmation dialog: ' + message)
             state.open = true
             state.message = message
-            state.content = content
+            state.data = data
         },
         close: (state, action) => {
             // console.log('Closed confirmation dialog')
             state.open = false
             state.message = ''
-            state.content = {}
+            state.data = {}
         }
     }
 })
 
 
 let onConfirm = null
+let bodyContent = null
 
-export const confirmDialogOpen = (message, content, onConfirmCallback) => (dispatch, getState) => {
+export const confirmDialogOpen = (message, data, body, onConfirmCallback) => (dispatch, getState) => {
     const isOpen = selectIsConfirmDialogOpen(getState())
     if (isOpen) {
         console.log('Confirmation Dialog is already open!')
@@ -39,8 +40,9 @@ export const confirmDialogOpen = (message, content, onConfirmCallback) => (dispa
     }
 
     onConfirm = onConfirmCallback
+    bodyContent = body
     
-    dispatch(show({message, content}))
+    dispatch(show({message, data}))
 }
 
 export const confirmDialogConfirm = () => (dispatch, getState) => {
@@ -57,12 +59,16 @@ export const confirmDialogConfirm = () => (dispatch, getState) => {
         console.log('no confirmation callback')
     }
     onConfirm = null
+    bodyContent = null
 }
 
 export const confirmDialogCancel = () => (dispatch) => {
     dispatch(close())
     onConfirm = null
+    bodyContent = null
 }
+
+export const confirmDialogGetBody = () => bodyContent
 
 // class confirmationDialog {
 //     constructor() {

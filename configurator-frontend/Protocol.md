@@ -28,6 +28,9 @@
   - contains all the ui elements
 - state
   - contains every component necessary for redux state management
+- lang
+  - contains the translate function + the language files
+- 
 
 ***
 
@@ -46,6 +49,17 @@ export const store = configureStore({
         language: 
     }
 })
+
+const authToken = localStorage.jwtToken
+if (authToken) {
+    setAuthorizationToken(authToken)
+    store.dispatch(setCurrentUser(jwt.decode(authToken)))
+}
+
+const localStorageLang = localStorage.language
+if (localStorageLang) {
+    store.dispatch(setLanguage(localStorageLang))
+}
 ```
 
 **Provide the store globally**
@@ -126,12 +140,11 @@ export default productSlice.reducer
 > state/language/languageSlice.js
 ```javascript
 import { createSlice } from '@reduxjs/toolkit'
-
-const defaultLang = 'EN'
-const localStorageLang = localStorage.getItem('language')
+import { setAcceptLanguage } from '../../api/general'
+import { defaultLang, languageNames } from '../../lang'
 
 const initialState = {
-    language: localStorageLang ? localStorageLang : defaultLang
+    language: defaultLang
 }
 
 export const languageSlice = createSlice({
@@ -145,9 +158,19 @@ export const languageSlice = createSlice({
 })
 
 export const setLanguage = (lang) => async (dispatch) => {
+    if (!Object.values(languageNames).includes(lang)) {
+        lang = defaultLang
+    }
+    
     localStorage.setItem('language', lang)
+    setAcceptLanguage(lang)
     dispatch(changedLanguage(lang))
 }
+
+// Action creators are generated for each case reducer function
+export const { changedLanguage } = languageSlice.actions
+
+export default languageSlice.reducer
 ```
 
 *Configuration State*
@@ -299,7 +322,10 @@ import { requestLogin, requestRegister, setAuthorizationToken } from '../../api/
 
 const initialState = {
     isAuthenticated: false,
-    user: {}
+    user: {},
+    savedConfigurations: [],
+    orderedConfigurations: [],
+    allOrderedConfigurations: []
 }
 
 export const userSlice = createSlice({
@@ -307,24 +333,58 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setCurrentUser: (state, action) => {
-            console.log('getting user:', action.payload)
-            state.isAuthenticated = Object.keys(action.payload).length > 0
             state.user = action.payload
+            
+            if (Object.keys(action.payload).length > 0) {
+                // user set
+                state.isAuthenticated = Object.keys(action.payload).length > 0
+            } else {
+                // user removed
+                state.isAuthenticated = false
+                state.savedConfigurations = []
+                state.orderedConfigurations = []
+                state.allOrderedConfigurations = []
+            }
+        },
+        setSavedConfigurations: (state, action) => {
+            state.savedConfigurations = action.payload
+        },
+        setOrderedConfigurations: (state, action) => {
+            state.orderedConfigurations = action.payload
+        },
+        setAllOrderedConfigurations: (state, action) => {
+            state.allOrderedConfigurations = action.payload
         }
     }
 })
+
+export const getSavedConfigurations = () => async (dispatch) => {
+    fetchSavedConfigurations()
+    .then(configurations => {
+        let saved = configurations.filter(config => config.status === 'saved')
+        let ordered = configurations.filter(config => config.status === 'ordered')
+
+        if (saved.length > 0) dispatch(setSavedConfigurations(saved))
+        if (ordered.length > 0) dispatch(setOrderedConfigurations(ordered))
+    })
+    .catch(err => { console.log(err) })
+}
+export const getAllOrderedConfigurations= () => async (dispatch) => {
+    fetchAllOrderedConfigurations()
+    .then(configurations => {
+        dispatch(setAllOrderedConfigurations(configurations))
+    })
+    .catch(err => { console.log(err) })
+}
 
 export const register = (username, password, email) => async (dispatch) => {
     requestRegister(username, password, email).then(res => {
         // display registered notification
     })
-    .catch(err => {
-        console.log(err)
-    })
+    .catch(err => { console.log(err) })
 }
 
 export const login = (username, password) => async (dispatch) => {
-    
     requestLogin(username, password).then(res => {
         const { token, user } = res
 
@@ -332,9 +392,7 @@ export const login = (username, password) => async (dispatch) => {
         setAuthorizationToken(token)
         dispatch(setCurrentUser(user))
     })
-    .catch(err => {
-        console.log(err)
-    })
+    .catch(err => { console.log(err) })
 }
 
 export const logout = () => (dispatch) => {
@@ -344,7 +402,7 @@ export const logout = () => (dispatch) => {
 }
 
 // Action creators are generated for each case reducer function
-export const { setCurrentUser } = userSlice.actions
+export const { setCurrentUser, setSavedConfigurations, setOrderedConfigurations, setAllOrderedConfigurations } = userSlice.actions
 
 export default userSlice.reducer
 ```
@@ -547,11 +605,20 @@ function App() {
     return (
         <div className="App">
             <Router>
+                <Header></Header>
+                <ConfirmationOptionSelect></ConfirmationOptionSelect>
+                <InputDialog></InputDialog>
+
                 <Routes>
 
                     <Route exact path="/" element={
                         <ProductView></ProductView>
                     }>
+                    </Route>
+
+                    <Route exact path="/account" element={
+                            <ProductView></ProductView>
+                        }>
                     </Route>
 
                     <Route exact path="/configuration/:id" element={
@@ -705,6 +772,72 @@ const configurations = [
 
 ***
 
+## Multi Language
+- translation files (json files with translation keys and values for the translation of the specific language)
+> lang/en.json
+```json
+{
+    "cancel": "cancel",
+    "confirm": "confirm",
+    "configureYour": "Configure your",
+    "price": "price",
+    "saveConfiguration": "Save Configuration",
+    "configurationName": "Configuration Name",
+    "resetConfiguration": "Reset Configuration",
+    "finishConfiguration": "Order Configuration",
+    "resetConfigurationPrompt": "Do you really want to reset your current configuration?",
+    "Login": "Login",
+    "Register": "Register",
+    "submit": "submit"
+}
+```
+
+- translation script (to translate from a key to a given language)
+> lang/index.js
+```javascript
+import en from './en.json'
+import de from './de.json'
+import fr from './fr.json'
+
+export const languageNames = {
+    EN: 'en',
+    DE: 'de',
+    FR: 'fr'
+}
+export const defaultLang = languageNames.EN
+
+const languages = {
+    'en': en,
+    'de': de,
+    'fr': fr
+}
+
+export const translate = (key, language) => {
+    let langData = languages[language]
+
+    if (!langData) {
+        console.log(`Trying to translate ${key} to a language that doesn't exist: '${language}'`)
+        return
+    }
+
+    const translation = langData[key]
+
+    if (!translation) {
+        // if there is a translation in the default language, at least return that
+        if (languages[defaultLang][key]) {
+            return languages[defaultLang][key]
+        }
+
+        // there is no translation for this key (not even in the default language) -> just return the key
+        return key
+    }
+
+    return translation
+}
+```
+
+***
+
 ## Components
 ### Products
 **ProductView**
@@ -826,3 +959,58 @@ export default connect(
 )(Header)
 
 ```
+
+**InputDialog**
+- can be opened with a custom data object where an input field for every data object is generated
+- when confirmed, the values of the input fields are written to the values of the returned data object
+- using the dialog:
+```javascript
+import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
+import { login } from '../../state/user/userSlice'
+
+function LoginButton({ openInputDialog, login }) {
+
+    function openLogInDialog() {
+        const data = {
+            username: {name: 'Username', value: ''},
+            password: {name: 'Password', value: '', isPassword: true}
+        }
+        openInputDialog('Login', data, (data) => {
+            login(data.username.value, data.username.password)
+        })
+    }
+
+    return (
+        <Button 
+            variant="contained" 
+            onClick={openLogInDialog}
+            >
+            Login
+        </Button>
+    )
+}
+
+const mapStateToProps = (state) => ({})
+const mapDispatchToProps = {
+    openInputDialog: inputDialogOpen,
+    login: login
+}
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(LoginButton)
+```
+
+
+## Configurator Logic
+**Groups**
+- a group can be a replacement group
+  - only one option in this group can be selected
+- a group can be required
+  - at least one option in this group has to be selected, or the configuration is invalid
+- a group can have other group requirements
+  - this group can only be selected if each required group is select as well
+  - if this group is required but the required group (from the group requirements) is not required
+    - the configuration is valid if none of the two groups are selected or both (if the required group is selected -> this group also has to be selected because it is required)
+  - if both groups are required
+    - the configuration is only in a valid state if both are selected (the required parent group is first selected then the group itself)

@@ -22,12 +22,13 @@
     "configureYour": "Konfiguriere dein",
     "failedToLoadConfiguration": "Laden der Konfiguration fehlgeschlagen!",
     "price": "Preis",
+    "basePrice": "Grundpreis",
     "priceList": "Preis Liste",
 
     "saveConfiguration": "Konfiguration Speichern",
     "configurationName": "Name der Konfiguration",
     "resetConfiguration": "Konfiguration Zurücksetzen",
-    "finishConfiguration": "Konfiguration Fertigstellen",
+    "finishConfiguration": "Konfiguration Bestellen",
     "resetConfigurationPrompt": "Möchtest du wirklich die Konfiguration zurücksetzen?",
 
     "youWantToSelect": "Du möchtest diese Option auswählen",

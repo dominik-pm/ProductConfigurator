@@ -5,16 +5,16 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { selectConfirmDialogContent, selectConfirmDialogMessage, selectIsConfirmDialogOpen } from '../../state/confirmationDialog/confirmationSelectors'
+import { selectConfirmDialogData, selectConfirmDialogMessage, selectIsConfirmDialogOpen } from '../../state/confirmationDialog/confirmationSelectors'
 import { connect } from 'react-redux'
-import { confirmDialogCancel, confirmDialogConfirm } from '../../state/confirmationDialog/confirmationSlice'
+import { confirmDialogCancel, confirmDialogConfirm, confirmDialogGetBody } from '../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { Grid, Typography } from '@mui/material'
 import OptionListItem from '../configuration/Configurator/Options/OptionListItem'
 import { Box } from '@mui/system'
 
-function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToRemove, selectedOption, deselectedOption, cancel, confirm, text }) {
+function ConfirmationOptionSelect({ isOpen, message, content, optionsToSelect, optionsToRemove, selectedOption, deselectedOption, cancel, confirm, text }) {
     
     if (!optionsToSelect) optionsToSelect = []
     if (!optionsToRemove) optionsToRemove = []
@@ -40,9 +40,12 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
             )
         }
         return (
-            <DialogContentText>
-                {message}
-            </DialogContentText>
+            <>
+                <DialogContentText>
+                    {message}
+                </DialogContentText>
+                {content}
+            </>
         )
     }
     function renderDialogContentHeader() {
@@ -86,43 +89,43 @@ function ConfirmationOptionSelect({ isOpen, message, optionsToSelect, optionsToR
 
 
     return (
-        <div>
-            <Dialog
-                open={isOpen}
-                onClose={handleClose}
-                scroll="paper"
-                aria-labelledby="responsive-dialog-title"
-            >
-                <DialogTitle id="responsive-dialog-title">
-                    {text.confirmationPrompt}
-                </DialogTitle>
+        <Dialog
+            open={isOpen}
+            onClose={handleClose}
+            scroll="paper"
+            aria-labelledby="responsive-dialog-title"
+            fullWidth={true}
+        >
+            <DialogTitle id="responsive-dialog-title">
+                {text.confirmationPrompt}
+            </DialogTitle>
 
-                <DialogContent dividers={true}>
-                    {renderDialogContent()}
-                </DialogContent>
+            <DialogContent dividers={true}>
+                {renderDialogContent()}
+            </DialogContent>
 
-                <DialogActions>
-                    <Button autoFocus onClick={handleClose}>
-                        {text.cancel}
-                    </Button>
-                    <Button autoFocus onClick={handleConfirm}>
-                        {text.confirm}
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+            <DialogActions>
+                <Button autoFocus onClick={handleClose}>
+                    {text.cancel}
+                </Button>
+                <Button autoFocus onClick={handleConfirm}>
+                    {text.confirm}
+                </Button>
+            </DialogActions>
+        </Dialog>
     )
 }
 
 const mapStateToProps = (state) => {
     const language = selectLanguage(state)
     return {
+        content: confirmDialogGetBody(),
         message: selectConfirmDialogMessage(state),
         isOpen: selectIsConfirmDialogOpen(state),
-        selectedOption: selectConfirmDialogContent(state).selected,
-        deselectedOption: selectConfirmDialogContent(state).deselected,
-        optionsToSelect: selectConfirmDialogContent(state).optionsToSelect,
-        optionsToRemove: selectConfirmDialogContent(state).optionsToRemove,
+        selectedOption: selectConfirmDialogData(state).selected,
+        deselectedOption: selectConfirmDialogData(state).deselected,
+        optionsToSelect: selectConfirmDialogData(state).optionsToSelect,
+        optionsToRemove: selectConfirmDialogData(state).optionsToRemove,
         text: {
             cancel: translate('cancel', language),
             confirm: translate('confirm', language),

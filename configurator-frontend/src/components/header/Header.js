@@ -8,7 +8,7 @@ import LanguageSelect from './LanguageSelect'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { connect } from 'react-redux'
-import { selectIsAuthenticated, selectIsAdmin, selectUsername } from '../../state/user/userSelector'
+import { selectIsAuthenticated, selectIsAdmin, selectUserName } from '../../state/user/userSelector'
 import { logout } from '../../state/user/userSlice'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import LoginButton from './LoginButton'
@@ -23,7 +23,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
             <Button 
                 variant="contained" 
                 startIcon={<AccountCircle />}
-                onClick={() => console.log('go to account page pressed')}
+                onClick={() => navigate('/account')}
                 >
                 {username}
             </Button>
@@ -56,7 +56,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
     function getMenuButtons() {
         return (
-            <Grid container sx={{ gap: 2 }}>
+            <Grid container sx={{ gap: 2 }} >
 
                 <IconButton onClick={() => navigate('/')}>
                     <ArrowBackIosNew></ArrowBackIosNew>
@@ -66,7 +66,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
                 <Box sx={{flexGrow: 1}}></Box>
 
-                {/* <Button variant="contained" onClick={() => openConfirmDialog('Example Message', {}, () => console.log('confirmed'))}>
+                {/* <Button variant="contained" onClick={() => openConfirmDialog('Example Message', {}, null, () => console.log('confirmed'))}>
                     test dialog
                 </Button> */}
 
@@ -115,7 +115,7 @@ const mapStateToProps = (state) => ({
     language: selectLanguage(state),
     isLoggedIn: selectIsAuthenticated(state),
     isAdmin: selectIsAdmin(state),
-    username: selectUsername(state)
+    username: selectUserName(state)
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,

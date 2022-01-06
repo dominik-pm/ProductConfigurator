@@ -4,22 +4,23 @@ import { connect } from 'react-redux'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import { login } from '../../state/user/userSlice'
 
-function LoginButton({ openInputDialog, login }) {
-
-    function openLogInDialog() {
-        const data = {
-            username: {name: 'Username', value: ''},
-            password: {name: 'Password', value: '', isPassword: true}
-        }
-        openInputDialog('Login', data, (data) => {
-            login(data.username.value, data.username.password)
-        })
+export const openLogInDialog = () => (dispatch) => {
+    const data = {
+        username: {name: 'Username', value: ''},
+        password: {name: 'Password', value: '', isPassword: true}
     }
+    dispatch(inputDialogOpen('Login', data, (data) => {
+        dispatch(login(data.username.value, data.username.password))
+    }))
+}
+
+function LoginButton({ openLogin }) {
+
 
     return (
         <Button 
             variant="contained" 
-            onClick={openLogInDialog}
+            onClick={openLogin}
             >
             Login
         </Button>
@@ -30,8 +31,7 @@ const mapStateToProps = (state) => ({
     
 })
 const mapDispatchToProps = {
-    openInputDialog: inputDialogOpen,
-    login: login
+    openLogin: openLogInDialog
 }
 export default connect(
     mapStateToProps,

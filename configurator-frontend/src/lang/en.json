@@ -22,12 +22,13 @@
     "configureYour": "Configure your",
     "failedToLoadConfiguration": "Failed to load configuration!",
     "price": "price",
+    "basePrice": "Base Price",
     "priceList": "price list",
 
     "saveConfiguration": "Save Configuration",
     "configurationName": "Configuration Name",
     "resetConfiguration": "Reset Configuration",
-    "finishConfiguration": "Finish Configuration",
+    "finishConfiguration": "Order Configuration",
     "resetConfigurationPrompt": "Do you really want to reset your current configuration?",
 
     "youWantToSelect": "You want to select",

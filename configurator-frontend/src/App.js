@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom'
 import ConfirmationOptionSelect from './components/dialog/ConfirmationDialog'
 import InputDialog from './components/dialog/InputDialog'
+import AccountView from './components/account/AccountView'
 
 const theme = createTheme({
 })
@@ -29,6 +30,9 @@ function App() {
                             <ProductView></ProductView>
                         }>
                         </Route>
+
+                        <Route exact path="/account/:tab" element={<AccountView></AccountView>}></Route>
+                        <Route exact path="/account" element={<AccountView></AccountView>}></Route>
 
                         <Route exact path="/configuration/:id" element={
                             <ConfigurationView></ConfigurationView>

@@ -15,7 +15,7 @@ function PriceListItem({state, optionId, name, price}) {
     }
     
     return (
-        <Typography variant="body1">
+        <Typography variant="body2">
             {name}{price ? `: ${price}€` : ''}
         </Typography>
     )
