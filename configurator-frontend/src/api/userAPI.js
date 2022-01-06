@@ -1,4 +1,4 @@
-import axios from 'axios'
+// import axios from 'axios'
 import jwt from 'jsonwebtoken'
 
 export const requestSaveConfiguration = (configurationId, name, selectedOptions) => {
@@ -17,6 +17,19 @@ export const requestSaveConfiguration = (configurationId, name, selectedOptions)
     //         reject('Could not save configuration!')
     //     })
     // })
+}
+export const requestDeleteSavedConfiguration = (configurationId, name) => {
+    return new Promise((resolve, reject) => {
+        reject('Not implemented!')
+
+        // axios.delete(`/account/configurations/`)
+        // .then(res => {
+        //     resolve(res.data)
+        // })
+        // .catch(err => {
+        //     reject('Could not get saved configurations!')
+        // })
+    })
 }
 export const fetchSavedConfigurations = () => {
     return fetchConfigsTest()
@@ -65,14 +78,6 @@ export const requestLogin = (username, password) => {
     //         reject('Invalid Credentials')
     //     })
     // })
-}
-
-export const setAuthorizationToken = (token) => {
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-    } else {
-        delete axios.defaults.headers.common['Authorization']
-    }
 }
 
 

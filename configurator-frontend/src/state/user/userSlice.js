@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchAllOrderedConfigurations, fetchSavedConfigurations, requestLogin, requestRegister, setAuthorizationToken } from '../../api/userAPI'
+import { setAuthorizationToken } from '../../api/general'
+import { fetchAllOrderedConfigurations, fetchSavedConfigurations, requestLogin, requestRegister } from '../../api/userAPI'
 
 const initialState = {
     isAuthenticated: false,

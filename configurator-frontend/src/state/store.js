@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import productReducer from './product/productSlice'
 import configurationReducer from './configuration/configurationSlice'
-import languageReducer from './language/languageSlice'
+import languageReducer, { setLanguage } from './language/languageSlice'
 import confirmationReducer from './confirmationDialog/confirmationSlice'
 import userReducer, { setCurrentUser } from './user/userSlice'
 import inputDialogReducer from './inputDialog/inputDialogSlice'
-import { setAuthorizationToken } from '../api/userAPI'
 import jwt from 'jsonwebtoken'
+import { setAuthorizationToken } from '../api/general'
 
 export const store = configureStore({
     reducer: {
@@ -23,4 +23,10 @@ const authToken = localStorage.jwtToken
 if (authToken) {
     setAuthorizationToken(authToken)
     store.dispatch(setCurrentUser(jwt.decode(authToken)))
+}
+
+const localStorageLang = localStorage.language
+if (localStorageLang) {
+    console.log('storage lang:', localStorageLang)
+    store.dispatch(setLanguage(localStorageLang))
 }
