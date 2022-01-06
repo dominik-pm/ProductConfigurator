@@ -49,8 +49,8 @@ export const getSavedConfigurations = () => async (dispatch) => {
         let saved = configurations.filter(config => config.status === 'saved')
         let ordered = configurations.filter(config => config.status === 'ordered')
 
-        dispatch(setSavedConfigurations(saved))
-        dispatch(setOrderedConfigurations(ordered))
+        if (saved.length > 0) dispatch(setSavedConfigurations(saved))
+        if (ordered.length > 0) dispatch(setOrderedConfigurations(ordered))
     })
     .catch(err => {
         console.log(err)

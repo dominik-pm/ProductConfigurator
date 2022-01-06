@@ -19,12 +19,14 @@ export const store = configureStore({
     }
 })
 
+// set user if there is a user token saved to the local storage
 const authToken = localStorage.jwtToken
 if (authToken) {
     setAuthorizationToken(authToken)
     store.dispatch(setCurrentUser(jwt.decode(authToken)))
 }
 
+// set language if there is a language saved to the local storage
 const localStorageLang = localStorage.language
 if (localStorageLang) {
     console.log('storage lang:', localStorageLang)
