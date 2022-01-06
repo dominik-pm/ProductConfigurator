@@ -16,6 +16,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet("{id}")]
         public override IActionResult Get( int id ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = LanguageService.HandleLanguageInput(lang);
 
             ConfigStruct? toReturn = ConfigurationService.GetById(id, lang);
             if ( toReturn == null )
@@ -27,6 +28,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet("getByCustomer/{customerId}")]
         public IActionResult GetByCustomer( int? customerId ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = LanguageService.HandleLanguageInput(lang);
 
             List<ConfigStruct> configurations = ConfigurationService.GetConfigurationsByCustomer(customerId, lang);
             if(configurations.Count() == 0)
@@ -37,6 +39,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet("getByProduct/{productNumber}")]
         public IActionResult getbyProduct( string productNumber) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = LanguageService.HandleLanguageInput(lang);
 
             List<ConfigStruct> configurations = ConfigurationService.GetByProductNumber(productNumber, lang);
             if ( configurations.Count() == 0 )

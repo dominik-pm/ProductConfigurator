@@ -15,6 +15,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet("GetBuyableProducts")]
         public IActionResult GetBuyableProducts() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = LanguageService.HandleLanguageInput(lang);
 
             List<object> products = ProductService.GetBuyableProducts(lang);
 
@@ -27,6 +28,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet("{id}")]
         public override IActionResult Get(string id) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
+            lang = LanguageService.HandleLanguageInput(lang);
 
             object? product = ProductService.GetWithOption(id, lang);
             if ( product == null )

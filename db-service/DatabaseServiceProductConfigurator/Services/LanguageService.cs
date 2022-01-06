@@ -20,5 +20,15 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         public static List<string> GetAllLanguages () => context.ELanguages.Select(l => l.Language).ToList();
 
+        public static string HandleLanguageInput(string input) {
+            string[] dbLangs = GetAllLanguages().ToArray();
+
+            string country = input.Split('-')[0];
+            if ( dbLangs.Contains(country) )
+                return country;
+
+            return "en";
+        }
+
     }
 }

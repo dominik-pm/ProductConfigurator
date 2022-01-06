@@ -1,5 +1,6 @@
 ﻿using DatabaseServiceProductConfigurator.Models;
 using Microsoft.EntityFrameworkCore;
+using Model;
 
 namespace DatabaseServiceProductConfigurator.Services {
 

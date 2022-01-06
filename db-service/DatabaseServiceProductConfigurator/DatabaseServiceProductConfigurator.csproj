@@ -20,4 +20,14 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BackendServiceModel\Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Model">
+      <HintPath>lib\Model.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

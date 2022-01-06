@@ -347,6 +347,16 @@
         "build": {
           "buildTransitive/netcoreapp3.1/_._": {}
         }
+      },
+      "Model/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/Model.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Model.dll": {}
+        }
       }
     }
   },
@@ -928,6 +938,11 @@
         "system.runtime.compilerservices.unsafe.nuspec",
         "useSharedDesignerContext.txt"
       ]
+    },
+    "Model/1.0.0": {
+      "type": "project",
+      "path": "../BackendServiceModel/Model.csproj",
+      "msbuildProject": "../BackendServiceModel/Model.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -935,6 +950,7 @@
       "Microsoft.EntityFrameworkCore >= 6.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 6.0.0",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.0",
+      "Model >= 1.0.0",
       "Pomelo.EntityFrameworkCore.MySql >= 6.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
@@ -965,7 +981,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj": {
+              "projectPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

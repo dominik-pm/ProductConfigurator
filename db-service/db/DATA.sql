@@ -22,37 +22,37 @@ VALUES ('Golf', 10000, 'CAR', 1),
        ('PETROL', 0, 'ENGINE', 0);
 
 INSERT IGNORE INTO e_languages (language)
-VALUES ('ENGLISH'),
-       ('GERMAN');
+VALUES ('en'),
+       ('de');
 
 INSERT IGNORE INTO product_has_language (product_number, language, name, description)
-VALUES ('Golf', 'ENGLISH', 'Golf', 'its a car, to drive from A to B'),
-       ('Blue', 'ENGLISH', 'Blue', 'The color blue!'),
-       ('YELLOW', 'ENGLISH', 'Yellow', 'The color yellow!'),
-       ('GREEN', 'ENGLISH', 'Green', 'The color green!'),
-       ('D150', 'ENGLISH', '150PS Diesel', 'A Motor!'),
-       ('D250', 'ENGLISH', '250PS Diesel', 'A Motor!'),
-       ('P220', 'ENGLISH', '220PS Petrol', 'A Motor!'),
-       ('P450', 'ENGLISH', '450PS Petrol', 'A Motor!'),
-       ('PANORAMASMALL', 'ENGLISH', 'Small Roof', 'a small glass roof'),
-       ('PANORAMALARGE', 'ENGLISH', 'Big Roof', 'a large glass roof for an amazing open feeling'),
-       ('DIESEL', 'ENGLISH', 'Diesel Motor', 'A Diesel Motor'),
-       ('PETROL', 'ENGLISH', 'Petrol Motor', 'A Petrol Motor'),
-       ('PANORAMAROOF', 'ENGLISH', 'Panorama Roof', 'a glass roof'),
+VALUES ('Golf', 'en', 'Golf', 'its a car, to drive from A to B'),
+       ('Blue', 'en', 'Blue', 'The color blue!'),
+       ('YELLOW', 'en', 'Yellow', 'The color yellow!'),
+       ('GREEN', 'en', 'Green', 'The color green!'),
+       ('D150', 'en', '150PS Diesel', 'A Motor!'),
+       ('D250', 'en', '250PS Diesel', 'A Motor!'),
+       ('P220', 'en', '220PS Petrol', 'A Motor!'),
+       ('P450', 'en', '450PS Petrol', 'A Motor!'),
+       ('PANORAMASMALL', 'en', 'Small Roof', 'a small glass roof'),
+       ('PANORAMALARGE', 'en', 'Big Roof', 'a large glass roof for an amazing open feeling'),
+       ('DIESEL', 'en', 'Diesel Motor', 'A Diesel Motor'),
+       ('PETROL', 'en', 'Petrol Motor', 'A Petrol Motor'),
+       ('PANORAMAROOF', 'en', 'Panorama Roof', 'a glass roof'),
 
-       ('Golf', 'GERMAN', 'Golf', 'es ist ein auto zum von A nach B fahren'),
-       ('Blue', 'GERMAN', 'Blau', 'Die Farbe blau!'),
-       ('YELLOW', 'GERMAN', 'Gelb', 'Die Farbe gelb!'),
-       ('GREEN', 'GERMAN', 'Grün', 'Die Farbe grün!'),
-       ('D150', 'GERMAN', '150PS Diesel', 'Ein Motor!'),
-       ('D250', 'GERMAN', '250PS Diesel', 'Ein Motor!'),
-       ('P220', 'GERMAN', '220PS Petrol', 'Ein Motor!'),
-       ('P450', 'GERMAN', '450PS Petrol', 'Ein Motor!'),
-       ('PANORAMASMALL', 'GERMAN', 'kleines Dach', 'ein kleines Glasfenster'),
-       ('PANORAMALARGE', 'GERMAN', 'Großes Dach', 'ein großes Glasfenster'),
-       ('DIESEL', 'GERMAN', 'Diesel Motor', 'Ein Diesel Motor'),
-       ('PETROL', 'GERMAN', 'Benzin Motor', 'Ein Benzin Motor'),
-       ('PANORAMAROOF', 'GERMAN', 'Panoramadach', 'ein Glasdach');
+       ('Golf', 'de', 'Golf', 'es ist ein auto zum von A nach B fahren'),
+       ('Blue', 'de', 'Blau', 'Die Farbe blau!'),
+       ('YELLOW', 'de', 'Gelb', 'Die Farbe gelb!'),
+       ('GREEN', 'de', 'Grün', 'Die Farbe grün!'),
+       ('D150', 'de', '150PS Diesel', 'Ein Motor!'),
+       ('D250', 'de', '250PS Diesel', 'Ein Motor!'),
+       ('P220', 'de', '220PS Petrol', 'Ein Motor!'),
+       ('P450', 'de', '450PS Petrol', 'Ein Motor!'),
+       ('PANORAMASMALL', 'de', 'kleines Dach', 'ein kleines Glasfenster'),
+       ('PANORAMALARGE', 'de', 'Großes Dach', 'ein großes Glasfenster'),
+       ('DIESEL', 'de', 'Diesel Motor', 'Ein Diesel Motor'),
+       ('PETROL', 'de', 'Benzin Motor', 'Ein Benzin Motor'),
+       ('PANORAMAROOF', 'de', 'Panoramadach', 'ein Glasdach');
 
 INSERT IGNORE INTO pictures (product_number, url)
 VALUES ('Golf', 'https://cdn.motor1.com/images/mgl/G6VbA/s1/vw-golf-r-2021.jpg');
@@ -65,9 +65,9 @@ VALUES ('PARENT'),
        ('COMPATIBLE');
 
 INSERT IGNORE INTO products_has_products (base_product, dependency_type, option_product)
-VALUES ('D150', 'REQUIRED', 'DIESEl'),
+VALUES ('D150', 'REQUIRED', 'DIESEL'),
        ('D250', 'REQUIRED', 'DIESEL'),
-       ('P220', 'REQUIRED', 'PETROl'),
+       ('P220', 'REQUIRED', 'PETROL'),
        ('P450', 'REQUIRED', 'PETROL'),
        ('PANORAMASMALL', 'REQUIRED', 'PANORAMAROOF'),
        ('PANORAMALARGE', 'REQUIRED', 'PANORAMAROOF'),
@@ -110,23 +110,23 @@ VALUES (1, 'BLUE', 'CHILD'),          -- Color
        (8, 'Golf', 'PARENT');
 
 INSERT IGNORE INTO option_field_has_language (option_field_id, language, name, description)
-VALUES (1, 'ENGLISH', 'Color', 'the exterior color of the car'),
-       (2, 'ENGLISH', 'Motor Type', 'the motor of your car'),
-       (3, 'ENGLISH', 'Motor', 'how powerful'),
-       (4, 'ENGLISH', 'Panoramic Roof', 'a glass roof for an open feeling'),
-       (5, 'ENGLISH', 'Panoramic Roof type', 'size of your panorama roof'),
-       (6, 'ENGLISH', 'EXTERIOR', 'exterior'),
-       (7, 'ENGLISH', 'MOTOR_SECTION', 'Motor'),
-       (8, 'ENGLISH', 'PANORAMA_SECTION', 'Panorama'),
+VALUES (1, 'en', 'Color', 'the exterior color of the car'),
+       (2, 'en', 'Motor Type', 'the motor of your car'),
+       (3, 'en', 'Motor', 'how powerful'),
+       (4, 'en', 'Panoramic Roof', 'a glass roof for an open feeling'),
+       (5, 'en', 'Panoramic Roof type', 'size of your panorama roof'),
+       (6, 'en', 'EXTERIOR', 'exterior'),
+       (7, 'en', 'MOTOR_SECTION', 'Motor'),
+       (8, 'en', 'PANORAMA_SECTION', 'Panorama'),
 
-       (1, 'GERMAN', 'Farbe', 'die Außenfarbe des Autos'),
-       (2, 'GERMAN', 'Motor Typ', 'der Motor des Autos'),
-       (3, 'GERMAN', 'Motor', 'wie stark'),
-       (4, 'GERMAN', 'Panorama Dach', 'ein Glasdach für ein offenes Gefühl'),
-       (5, 'GERMAN', 'Panorama Dach Typ', 'Größe des Glasdaches'),
-       (6, 'GERMAN', 'EXTERIOR', 'exterior'),
-       (7, 'GERMAN', 'MOTOR_BEREICH', 'Motor'),
-       (8, 'GERMAN', 'PANORAMA_BEREICH', 'Panorama');
+       (1, 'de', 'Farbe', 'die Außenfarbe des Autos'),
+       (2, 'de', 'Motor Typ', 'der Motor des Autos'),
+       (3, 'de', 'Motor', 'wie stark'),
+       (4, 'de', 'Panorama Dach', 'ein Glasdach für ein offenes Gefühl'),
+       (5, 'de', 'Panorama Dach Typ', 'Größe des Glasdaches'),
+       (6, 'de', 'EXTERIOR', 'exterior'),
+       (7, 'de', 'MOTOR_BEREICH', 'Motor'),
+       (8, 'de', 'PANORAMA_BEREICH', 'Panorama');
 
 INSERT IGNORE INTO option_fields_has_option_fields (base, option_field, dependency_type)
 VALUES (6, 1, 'CHILD'),
