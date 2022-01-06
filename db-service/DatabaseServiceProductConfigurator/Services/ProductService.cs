@@ -11,24 +11,31 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region Backend
 
-        public static List<Configurator> getAllConfigurators( string lang ) {
+        private static IQueryable<Configurator> getConfigurators( string lang ) {
             return (
                 from p in context.Products
                 let depen = new ProductDependencies(p.Price)
+                let infos = LanguageService.GetProductWithLanguage(p.ProductNumber, lang)
                 select new Configurator {
-                    ConfigId = 0,
-                    Name = LanguageService.GetProductWithLanguage(p.ProductNumber, lang).Name,
-                    Description = LanguageService.GetProductWithLanguage(p.ProductNumber, lang).Description,
+                    ConfigId = p.ProductNumber,
+                    Name = infos == null ? "" : infos.Name,
+                    Description = infos == null ? "" : infos.Description,
                     Images = ( from pic in context.Pictures where pic.ProductNumber == p.ProductNumber select pic.Url ).ToList(),
                     Options = GetOptionsByProductNumber(p.ProductNumber, lang),
                     OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang),
                     OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang),
                     Dependencies = depen,
                 }
-            ).ToList();
+            );
         }
 
+        public static List<Configurator> getAllConfigurators (string lang) => getConfigurators(lang).ToList();
+
+        public static Configurator? GetConfiguratorByProductNumber (string productNumber, string lang) => getConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
+
         private static List<OptionSection> GetOptionSectionByProductNumber( string productNumber, string lang ) {
+            product_configuratorContext localContext = new product_configuratorContext();
+
             List<OptionSection> sections = new List<OptionSection>();
 
             List<OptionField> rawFields = new List<OptionField>();
@@ -36,7 +43,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             rawFields.AddRange(
                 (
-                    from of in context.ProductsHasOptionFields
+                    from of in localContext.ProductsHasOptionFields
                     where of.ProductNumber == productNumber && of.DependencyType == "PARENT"
                     select of.OptionFieldsNavigation
                 )
@@ -48,11 +55,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                 cookedCount = cookedFields.Count();
                 rawCount = rawFields.Count();
 
+                List<OptionField> toAdd = new List<OptionField> ();
                 foreach ( var field in rawFields ) {
                     if ( field.Type == "PARENT" ) {
-                        rawFields.AddRange(
+                        toAdd.AddRange(
                             (
-                                from ofo in context.OptionFieldsHasOptionFields
+                                from ofo in localContext.OptionFieldsHasOptionFields
                                 where field.Id == ofo.Base && rawFields.Select(r => r.Id).Contains(ofo.OptionField)
                                 select ofo.OptionFieldNavigation
                             ).ToList()
@@ -61,12 +69,13 @@ namespace DatabaseServiceProductConfigurator.Services {
                             cookedFields.Add(field);
                         }
                     }
-                } 
+                }
+                rawFields.AddRange(toAdd);
             } while ( cookedCount != cookedFields.Count() && rawCount != rawFields.Count() );
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
-                    from ofo in context.OptionFieldsHasOptionFields
+                    from ofo in localContext.OptionFieldsHasOptionFields
                     where ofo.Base == field.Id && ofo.DependencyType == "CHILD"
                     select ofo.OptionField.ToString()
                 ).ToList();
@@ -86,6 +95,8 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         private static List<OptionGroup> GetOptionGroupsByProductNumber( string productNumber, string lang ) {
+            product_configuratorContext localContext = new product_configuratorContext();
+
             List<OptionGroup> optionGroups = new List<OptionGroup>();
 
             List<OptionField> rawFields = new List<OptionField>();
@@ -93,7 +104,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             rawFields.AddRange(
                 (
-                    from of in context.ProductsHasOptionFields
+                    from of in localContext.ProductsHasOptionFields
                     where of.ProductNumber == productNumber && of.DependencyType == "PARENT"
                     select of.OptionFieldsNavigation
                 )
@@ -105,11 +116,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                 cookedCount = cookedFields.Count();
                 rawCount = rawFields.Count();
 
+                List<OptionField> toAdd = new List<OptionField> ();
                 foreach ( var field in rawFields ) {
                     if ( field.Type == "PARENT" ) {
-                        rawFields.AddRange(
+                        toAdd.AddRange(
                             (
-                                from ofo in context.OptionFieldsHasOptionFields
+                                from ofo in localContext.OptionFieldsHasOptionFields
                                 where field.Id == ofo.Base && rawFields.Select(r => r.Id).Contains(ofo.OptionField)
                                 select ofo.OptionFieldNavigation
                             ).ToList()
@@ -121,11 +133,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                         }
                     }
                 }
+                rawFields.AddRange(toAdd);
             } while ( cookedCount != cookedFields.Count() && rawCount != rawFields.Count() );
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
-                    from pof in context.ProductsHasOptionFields
+                    from pof in localContext.ProductsHasOptionFields
                     where pof.OptionFields == field.Id && pof.DependencyType == "CHILD"
                     let infos = LanguageService.GetProductWithLanguage(pof.ProductNumber, lang)
                     select pof.ProductNumber
@@ -148,10 +161,12 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         private static List<Option> GetOptionsByProductNumber( string productNumber, string lang ) {
+            product_configuratorContext localContext = new product_configuratorContext();
+
             List<Option> options = new List<Option>();
 
             List<OptionField> fields = (
-                from pof in context.ProductsHasOptionFields
+                from pof in localContext.ProductsHasOptionFields
                 where pof.ProductNumber == productNumber && pof.DependencyType == "PARENT"
                 select pof.OptionFieldsNavigation
             ).ToList();
@@ -159,15 +174,17 @@ namespace DatabaseServiceProductConfigurator.Services {
             int currentCount = 0;
             do {
                 currentCount = fields.Count();
+                List<OptionField> toAdd = new List<OptionField>();
                 foreach ( var item in fields ) {
-                    fields.AddRange(
+                    toAdd.AddRange(
                         (
-                            from of in context.OptionFieldsHasOptionFields
+                            from of in localContext.OptionFieldsHasOptionFields
                             where of.Base == item.Id && !fields.Select(p => p.Id).Contains(of.OptionField)
                             select of.OptionFieldNavigation
                         ).ToList()
                     );
                 }
+                fields.AddRange(toAdd);
             } while ( currentCount != fields.Count() );
 
 
@@ -176,7 +193,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             foreach ( var item in fields ) {
                 options.AddRange(
                     (
-                        from opt in context.ProductsHasOptionFields
+                        from opt in localContext.ProductsHasOptionFields
                         where opt.OptionFields == item.Id && opt.DependencyType == "CHILD"
                         let infos = LanguageService.GetProductWithLanguage(productNumber, lang)
                         select new Option(

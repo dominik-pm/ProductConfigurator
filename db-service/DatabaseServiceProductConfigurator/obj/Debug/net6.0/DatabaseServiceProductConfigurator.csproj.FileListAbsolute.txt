@@ -66,3 +66,5 @@ F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Debug\net6.0\ref\DatabaseServiceProductConfigurator.dll
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Debug\net6.0\DatabaseServiceProductConfigurator.pdb
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Debug\net6.0\DatabaseServiceProductConfigurator.genruntimeconfig.cache
+F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Debug\net6.0\Model.dll
+F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Debug\net6.0\Model.pdb
