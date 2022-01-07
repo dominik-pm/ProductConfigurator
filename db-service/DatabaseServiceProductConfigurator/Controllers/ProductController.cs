@@ -3,6 +3,8 @@ using DatabaseServiceProductConfigurator.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace DatabaseServiceProductConfigurator.Controllers {
     [Route("db/[controller]")]
@@ -44,6 +46,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             object? product = ProductService.GetConfiguratorByProductNumber(id, lang);
             if ( product == null )
                 return NotFound();
+
             return Ok(product);
         }
     }

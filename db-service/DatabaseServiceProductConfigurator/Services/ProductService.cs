@@ -11,8 +11,8 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region Backend
 
-        private static IQueryable<Configurator> getConfigurators( string lang ) {
-            return (
+        private static List<Configurator> getConfigurators( string lang ) {
+            List<Configurator> temp = (
                 from p in context.Products
                 let depen = new ProductDependencies(p.Price)
                 let infos = LanguageService.GetProductWithLanguage(p.ProductNumber, lang)
@@ -26,10 +26,18 @@ namespace DatabaseServiceProductConfigurator.Services {
                     OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang),
                     Dependencies = depen,
                 }
-            );
+            ).ToList();
+
+            foreach ( var item in temp ) {
+                item.Options.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
+                item.OptionGroups.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
+                item.OptionSections.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
+            }
+
+            return temp;
         }
 
-        public static List<Configurator> getAllConfigurators (string lang) => getConfigurators(lang).ToList();
+        public static List<Configurator> getAllConfigurators (string lang) => getConfigurators(lang).Where(c => (from p in context.Products where p.ProductNumber == c.ConfigId select p.Buyable).FirstOrDefault()).ToList();
 
         public static Configurator? GetConfiguratorByProductNumber (string productNumber, string lang) => getConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
 
@@ -61,7 +69,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         toAdd.AddRange(
                             (
                                 from ofo in localContext.OptionFieldsHasOptionFields
-                                where field.Id == ofo.Base && rawFields.Select(r => r.Id).Contains(ofo.OptionField)
+                                where field.Id == ofo.Base && !rawFields.Select(r => r.Id).Contains(ofo.OptionField)
                                 select ofo.OptionFieldNavigation
                             ).ToList()
                         );
@@ -71,7 +79,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 }
                 rawFields.AddRange(toAdd);
-            } while ( cookedCount != cookedFields.Count() && rawCount != rawFields.Count() );
+            } while ( cookedCount != cookedFields.Count() || rawCount != rawFields.Count() );
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
@@ -122,7 +130,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         toAdd.AddRange(
                             (
                                 from ofo in localContext.OptionFieldsHasOptionFields
-                                where field.Id == ofo.Base && rawFields.Select(r => r.Id).Contains(ofo.OptionField)
+                                where field.Id == ofo.Base && !rawFields.Select(r => r.Id).Contains(ofo.OptionField)
                                 select ofo.OptionFieldNavigation
                             ).ToList()
                         );
@@ -134,7 +142,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 }
                 rawFields.AddRange(toAdd);
-            } while ( cookedCount != cookedFields.Count() && rawCount != rawFields.Count() );
+            } while ( cookedCount != cookedFields.Count() || rawCount != rawFields.Count() );
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (

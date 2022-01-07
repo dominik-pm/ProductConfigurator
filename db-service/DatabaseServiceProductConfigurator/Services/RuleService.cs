@@ -9,7 +9,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region Backend
 
-        public static void ExtendProductDependencies(ProductDependencies dependencies, string productNumber ) {
+        public static ProductDependencies ExtendProductDependencies( this ProductDependencies dependencies, string productNumber ) {
 
             List<string> ReplacementGroups = (
                     from pof in context.ProductsHasOptionFields
@@ -38,9 +38,11 @@ namespace DatabaseServiceProductConfigurator.Services {
             float? price = ( from pof in context.Products where pof.ProductNumber == productNumber select pof.Price ).FirstOrDefault();
             if(price != null)
                 dependencies.PriceList.Add(productNumber, (float)price);
+
+            return dependencies;
         }
 
-        public static void ExtendProductDependencies( ProductDependencies dependencies, int id ) {
+        public static ProductDependencies ExtendProductDependencies( this ProductDependencies dependencies, int id ) {
             string toSave = id.ToString();
 
             List<string> ReplacementGroups = (
@@ -66,6 +68,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 ).ToList();
             if ( Incompabilities.Count > 0 )
                 dependencies.Incompabilities.Add(toSave, Incompabilities);
+
+            return dependencies;
         }
 
         #endregion

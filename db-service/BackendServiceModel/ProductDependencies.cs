@@ -2,8 +2,7 @@
 {
     public class ProductDependencies
     {
-        public ProductDependencies(float basePrice, List<string> defaultOptions, Dictionary<string, List<string>> replacementGroups, Dictionary<string, List<string>> requirements, Dictionary<string, List<string>> incompabilities, Dictionary<string, List<string>> groupRequirements, Dictionary<string, float> priceList)
-        {
+        public ProductDependencies( float basePrice, List<string> defaultOptions, Dictionary<string, List<string>> replacementGroups, Dictionary<string, List<string>> requirements, Dictionary<string, List<string>> incompabilities, Dictionary<string, List<string>> groupRequirements, Dictionary<string, float> priceList ) {
             BasePrice = basePrice;
             DefaultOptions = defaultOptions;
             ReplacementGroups = replacementGroups;

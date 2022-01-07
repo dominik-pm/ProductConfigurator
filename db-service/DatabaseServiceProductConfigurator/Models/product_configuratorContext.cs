@@ -448,6 +448,7 @@ namespace DatabaseServiceProductConfigurator.Models {
             });
 
             OnModelCreatingPartial(modelBuilder);
+            MyThings(modelBuilder);
         }
 
         private void MyThings( ModelBuilder modelBuilder ) {
