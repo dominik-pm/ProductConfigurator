@@ -49,5 +49,20 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             return Ok(product);
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Configurator config) {
+            Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
+            lang = LanguageService.HandleLanguageInput(lang);
+
+            try {
+                ProductService.SaveConfigurator(config, lang);
+            }
+            catch ( Exception ex ) {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+            return Accepted();
+        }
     }
 }

@@ -216,6 +216,172 @@ namespace DatabaseServiceProductConfigurator.Services {
             return options;
         }
 
+        public static void SaveConfigurator(Configurator config, string lang) {
+
+            // MAIN PRODUCT
+            context.Products.Add(
+                new Product {
+                    ProductNumber = config.ConfigId,
+                    Price = config.Dependencies.BasePrice,
+                    Category = "",
+                    Buyable = false
+                }
+            );
+
+            // OPTION PRODUCTS
+            foreach (var item in config.Options ) {
+                context.Products.Add(
+                    new Product {
+                        ProductNumber = item.Id,
+                        Price = config.Dependencies.PriceList[item.Id],
+                        Category = "",
+                        Buyable = false
+                    }
+                );
+            }
+
+            // REQUIREMENTS
+            foreach (var item in config.Dependencies.Requirements ) {
+                foreach(var reqitem in item.Value ) {
+                    context.ProductsHasProducts.Add(
+                        new ProductsHasProduct {
+                            BaseProduct = item.Key,
+                            OptionProduct = reqitem,
+                            DependencyType = "REQUIRED"
+                        }
+                    );
+                }
+            }
+
+            // INCOMPABILITIES
+            foreach ( var item in config.Dependencies.Incompabilities ) {
+                foreach ( var reqitem in item.Value ) {
+                    context.ProductsHasProducts.Add(
+                        new ProductsHasProduct {
+                            BaseProduct = item.Key,
+                            OptionProduct = reqitem,
+                            DependencyType = "EXCLUDING"
+                        }
+                    );
+                }
+            }
+
+            // OPTION SECTIONS
+            List<OptionField> temp = new List<OptionField>();
+
+            foreach ( var item in config.OptionSections ) {
+                OptionField tempSave = new OptionField {
+                    Id = item.Id,
+                    Type = "PARENT",
+                    Required = false
+                };
+                temp.Add( tempSave );
+                context.OptionFields.Add(tempSave);
+            }
+
+            // OPTION GROUPS
+            List<int> SingleSelect = new List<int>();
+            foreach( var item in config.Dependencies.ReplacementGroups ) {
+                foreach(var item2 in item.Value ) {
+                    SingleSelect.Add(Convert.ToInt32(item2));
+                }
+            }
+
+            foreach ( var item in config.OptionGroups ) {
+                OptionField tempSave = new OptionField {
+                    Id = item.Id,
+                    Type = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT",
+                    Required = false
+                };
+                temp.Add(tempSave);
+                context.OptionFields.Add(tempSave);
+            }
+
+            // OPTIONFIELD HAS OPTIONFIELD
+            foreach(var item in config.OptionSections ) {
+                foreach ( var field in item.OptionGroupIds ) {
+                    context.OptionFieldsHasOptionFields.Add(
+                        new OptionFieldsHasOptionField {
+                            Base = item.Id,
+                            OptionField = Convert.ToInt32(field),
+                            DependencyType = "CHILD"
+                        }    
+                    );
+                }
+            }
+
+            // OPTIONFIELD HAS PRODUCT
+            foreach ( var item in config.OptionGroups ) {
+                foreach (var field in item.OptionIds ) {
+                    context.ProductsHasOptionFields.Add(
+                        new ProductsHasOptionField {
+                            ProductNumber = field,
+                            OptionFields = item.Id,
+                            DependencyType = "CHILD"
+                        }
+                    );
+                }
+            }
+
+            // PRODUCT HAS OPTIONFIELD
+            foreach ( var item in config.OptionSections ) {
+                context.ProductsHasOptionFields.Add(
+                    new ProductsHasOptionField {
+                        ProductNumber = config.ConfigId,
+                        OptionFields = item.Id,
+                        DependencyType = "PARENT"
+                    }
+                );
+            }
+
+            //IMAGES
+            foreach (var item in config.Images ) {
+                context.Pictures.Add(
+                    new Picture {
+                        ProductNumber = config.ConfigId,
+                        Url = item
+                    }
+                );
+            }
+
+            //LANGUAGE FOR PRODUCTS
+            foreach(var item in config.Options ) {
+                context.ProductHasLanguages.Add(
+                    new ProductHasLanguage {
+                        ProductNumber = config.ConfigId,
+                        Language = lang,
+                        Name = item.Name,
+                        Description = item.Description
+                    }
+                );
+            }
+
+            //LANGUAGE FOR OPTIONFIELDS
+            foreach(var item in config.OptionGroups ) {
+                context.OptionFieldHasLanguages.Add(
+                    new OptionFieldHasLanguage {
+                        OptionFieldId = item.Id,
+                        Language = lang,
+                        Name = item.Name,
+                        Description = item.Description
+                    }    
+                );
+            }
+
+            foreach ( var item in config.OptionSections ) {
+                context.OptionFieldHasLanguages.Add(
+                    new OptionFieldHasLanguage {
+                        OptionFieldId = item.Id,
+                        Language = lang,
+                        Name = item.Name,
+                        Description = ""
+                    }
+                );
+            }
+
+            context.SaveChanges();
+        }
+
         #endregion
 
         #region DB
