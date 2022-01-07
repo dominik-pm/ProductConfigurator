@@ -38,5 +38,9 @@
 
     "Login": "Login",
     "Register": "Register",
-    "submit": "submit"
+    "submit": "submit",
+
+    "savedConfiguration": "Saved configuration",
+    "successOrderedConfiguration": "Successfully ordered the configuration",
+    "passwordDontMatch": "Passwords do not match"
 }

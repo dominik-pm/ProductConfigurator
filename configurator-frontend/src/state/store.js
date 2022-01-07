@@ -5,6 +5,7 @@ import languageReducer, { setLanguage } from './language/languageSlice'
 import confirmationReducer from './confirmationDialog/confirmationSlice'
 import userReducer, { setCurrentUser } from './user/userSlice'
 import inputDialogReducer from './inputDialog/inputDialogSlice'
+import alertReducer from './alert/alertSlice'
 import jwt from 'jsonwebtoken'
 import { setAuthorizationToken } from '../api/general'
 
@@ -15,7 +16,8 @@ export const store = configureStore({
         language: languageReducer,
         confirmation: confirmationReducer,
         user: userReducer,
-        inputDialog: inputDialogReducer
+        inputDialog: inputDialogReducer,
+        alert: alertReducer
     }
 })
 

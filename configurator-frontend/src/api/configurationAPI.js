@@ -125,7 +125,6 @@ const configurations = [
                 description: 'extra driving assistence including cruise control, adaptive cruise control and a lane keeping assistent',
                 image: ''
             }
-
         ],
         optionSections: [
             {

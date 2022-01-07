@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { postOrderConfiguredProduct } from '../../../api/productsAPI'
 import { requestSaveConfiguration } from '../../../api/userAPI'
 import { translate } from '../../../lang'
+import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
 import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
 import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
@@ -35,7 +36,7 @@ optionGroups: [
 
 */
 
-function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, language }) {
+function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
 
     const navigate = useNavigate()
 
@@ -55,11 +56,11 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 
             requestSaveConfiguration(configurationId, configurationName, selectedOptions)
             .then(res => {
-                // TODO: display notification
+                openAlert(`${translate('savedConfiguration', language)}: ${configurationName}!`, alertTypes.SUCCESS)
                 console.log(res)
             })
             .catch(err => {
-                // TODO: display notification
+                openAlert(`Error: ${err}`, alertTypes.ERROR)
                 console.log(err)
             })
         })
@@ -93,14 +94,13 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 
             postOrderConfiguredProduct(configurationId, configurationName, selectedOptions, price)
             .then(res => {
-                // TODO: display notification
+                openAlert(`${translate('successOrderedConfiguration', language)}!`, alertTypes.SUCCESS)
                 console.log(res)
                 navigate('/account/ordered')
             })
             .catch(err => {
-                // TODO: display notification
+                openAlert(`Error: ${err}`, alertTypes.ERROR)
                 console.log(err)
-                navigate('/account/ordered')
             })
         })
     }
@@ -185,7 +185,8 @@ const mapDispatchToProps = {
     resetConfig: resetActiveConfiguration,
     openConfirm: confirmDialogOpen,
     openInputDialog: inputDialogOpen,
-    openLogInDialog: openLogInDialog
+    openLogInDialog: openLogInDialog,
+    openAlert: openAlert
 }
 export default connect(
     mapStateToProps,

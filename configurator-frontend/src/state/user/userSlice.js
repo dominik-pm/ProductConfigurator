@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { setAuthorizationToken } from '../../api/general'
 import { fetchAllOrderedConfigurations, fetchSavedConfigurations, requestLogin, requestRegister } from '../../api/userAPI'
+import { alertTypes, openAlert } from '../alert/alertSlice'
 
 const initialState = {
     isAuthenticated: false,
@@ -54,7 +55,7 @@ export const getSavedConfigurations = () => async (dispatch) => {
     })
     .catch(err => {
         console.log(err)
-        // TODO: display error message
+        dispatch(openAlert(err, alertTypes.ERROR))
     })
 }
 export const getAllOrderedConfigurations= () => async (dispatch) => {
@@ -64,17 +65,16 @@ export const getAllOrderedConfigurations= () => async (dispatch) => {
     })
     .catch(err => {
         console.log(err)
-        // TODO: display error message
+        dispatch(openAlert(err, alertTypes.ERROR))
     })
 }
 
 export const register = (username, password, email) => async (dispatch) => {
     requestRegister(username, password, email).then(res => {
-        // TODO: display registered notification
+        dispatch(openAlert('Registered!', alertTypes.SUCCESS))
     })
     .catch(err => {
-        console.log(err)
-        // TODO: display error message
+        dispatch(openAlert(err, alertTypes.ERROR))
     })
 }
 
@@ -86,11 +86,10 @@ export const login = (username, password) => async (dispatch) => {
         localStorage.setItem('jwtToken', token)
         setAuthorizationToken(token)
         dispatch(setCurrentUser(user))
-        // TODO: display logged in notification
+        dispatch(openAlert('Logged In!', alertTypes.SUCCESS))
     })
     .catch(err => {
-        console.log(err)
-        // TODO: display error message
+        dispatch(openAlert(err, alertTypes.ERROR))
     })
 }
 

@@ -18,6 +18,9 @@
 - ``npm install @emotion/styled``
 - ``npm install @mui/icons-material``
 
+**SweetAlert2 - Alerts**
+- ``npm install sweetalert2``
+
 
 ## Folder structure
 - api
@@ -484,6 +487,11 @@ export const inputDialogSetData = (data) => (dispatch) => {
 export const { show, close, setData } = inputDialogSlice.actions
 
 export default inputDialogSlice.reducer
+```
+
+*Alert State*
+```javascript
+
 ```
 
 **Creating Selectors**

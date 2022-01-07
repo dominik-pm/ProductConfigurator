@@ -3,8 +3,11 @@ import { Button } from '@mui/material'
 import { connect } from 'react-redux'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import { register } from '../../state/user/userSlice'
+import { alertTypes, openAlert } from '../../state/alert/alertSlice'
+import { translate } from '../../lang'
+import { selectLanguage } from '../../state/language/languageSelectors'
 
-function LoginButton({ openInputDialog, register }) {
+function RegisterButton({ openInputDialog, register, openAlert, language }) {
 
     function openRegisterDialog() {
         const data = {
@@ -15,8 +18,7 @@ function LoginButton({ openInputDialog, register }) {
         }
         openInputDialog('Register', data, (data) => {
             if (data.confirmPassword.value !== data.password.value) {
-                console.log('Passwords do not math!')
-                // TODO: display notification that password do not match
+                openAlert(`${translate('passwordDontMatch', language)}!`, alertTypes.ERROR)
                 return
             }
             register(data.username.value, data.email.value, data.username.password)
@@ -34,13 +36,14 @@ function LoginButton({ openInputDialog, register }) {
 }
 
 const mapStateToProps = (state) => ({
-    
+    language: selectLanguage(state)
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
-    register: register
+    register: register,
+    openAlert: openAlert
 }
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(LoginButton)
+)(RegisterButton)

@@ -11,8 +11,10 @@ import {
 import ConfirmationOptionSelect from './components/dialog/ConfirmationDialog'
 import InputDialog from './components/dialog/InputDialog'
 import AccountView from './components/account/AccountView'
+import GenericAlert from './components/alert/GenericAlert'
 
 const theme = createTheme({
+    
 })
 
 function App() {
@@ -23,6 +25,7 @@ function App() {
                     <Header></Header>
                     <ConfirmationOptionSelect></ConfirmationOptionSelect>
                     <InputDialog></InputDialog>
+                    <GenericAlert></GenericAlert>
 
                     <Routes>
 

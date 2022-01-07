@@ -138,7 +138,7 @@ const getGroup = createSelector([selectOptionGroups, selectGroupId], (groups, gr
 // returns null (no error) or the specific error from 'GROUP_ERRORS'
 export const getIsGroupValid = createSelector([getGroup, getGroupRequirements, selectOptionGroups, selectSelectedOptions], (selectedGroup, requirements, groups, selectedOptions) => {
 
-    // if the group is not required it is valid (TODO: required because of other non required group)
+    // if the group is not required it is valid
     if (!selectedGroup.required) return null
 
     // if the group is required, but one of the required groups is not yet selected, it is also valid

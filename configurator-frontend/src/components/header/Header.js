@@ -13,8 +13,9 @@ import { logout } from '../../state/user/userSlice'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import LoginButton from './LoginButton'
 import RegisterButton from './RegisterButton'
+import { alertTypes, openAlert } from '../../state/alert/alertSlice'
 
-function Header({ language, isLoggedIn, isAdmin, username, logout }) {
+function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) {
 
     const navigate = useNavigate()
 
@@ -40,7 +41,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
         <>
             <Button
                 variant="contained"
-                onClick={() => console.log('create configuration pressed')}
+                onClick={handleCreateConfigPressed}
             >
                 Create Configuration
             </Button>
@@ -53,6 +54,10 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
             <RegisterButton></RegisterButton>
         </>
     )
+
+    function handleCreateConfigPressed() {
+        openAlert('Not implemented', alertTypes.WARNING)
+    }
 
     function getMenuButtons() {
         return (
@@ -119,7 +124,8 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
-    logout: logout
+    logout: logout,
+    openAlert
 }
 export default connect(
     mapStateToProps,
