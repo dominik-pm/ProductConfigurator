@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppBar, Button, Grid, /*Button, */IconButton, Toolbar, Typography } from '@mui/material'
+import { AppBar, Button, Grid, /*Button, */IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
 import { AccountCircle, ArrowBackIosNew, Logout } from '@mui/icons-material'
 import './Header.css'
 import { Box } from '@mui/system'
@@ -28,12 +28,14 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
                 >
                 {username}
             </Button>
-            <IconButton 
-                variant="contained"
-                onClick={() => logout()}
-                >
-                <Logout />
-            </IconButton>
+            <Tooltip title={translate('logout', language)}>
+                <IconButton 
+                    variant="contained"
+                    onClick={() => logout()}
+                    >
+                        <Logout />
+                </IconButton>
+            </Tooltip>
         </>
     )
 
@@ -43,7 +45,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
                 variant="contained"
                 onClick={handleCreateConfigPressed}
             >
-                Create Configuration
+                {translate('createConfiguration', language)}
             </Button>
         </>
     )

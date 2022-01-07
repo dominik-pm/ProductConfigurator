@@ -2,6 +2,8 @@ import { Box, Tab, Tabs } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
+import { translate } from '../../lang'
+import { selectLanguage } from '../../state/language/languageSelectors'
 import { selectAllOrderedConfigurations, selectIsAdmin, selectOrderedConfigurations, selectSavedConfigurations } from '../../state/user/userSelector'
 import ConfigurationList from './ConfigurationList'
 
@@ -31,7 +33,7 @@ const tabNames = [
     {name: 'allordered', value: 2, forAdmin: true}
 ]
 
-function ConfigurationTabs({ isAdmin, savedConfigurations, orderedConfigurations, allOrderedConfigurations }) {
+function ConfigurationTabs({ isAdmin, savedConfigurations, orderedConfigurations, allOrderedConfigurations, language }) {
 
     const navigate = useNavigate()
     const { tab } = useParams()
@@ -73,9 +75,9 @@ function ConfigurationTabs({ isAdmin, savedConfigurations, orderedConfigurations
     return (
         <Box width="100%">
             <Tabs value={value} onChange={handleChange} aria-label="configurationstabs">
-                <Tab label="Saved Configurations" {...tabProps(0)} />
-                <Tab label="Ordered Configurations" {...tabProps(1)} />
-                {isAdmin ? <Tab label="All Ordered Configurations" {...tabProps(2)} /> : ''}
+                <Tab label={translate('savedConfigurations', language)} {...tabProps(0)} />
+                <Tab label={translate('orderedConfigurations', language)} {...tabProps(1)} />
+                {isAdmin ? <Tab label={translate('allOrderedConfigurations', language)} {...tabProps(2)} /> : ''}
             </Tabs>
             <TabPanel value={value} path={tabNames[0].name} index={0}>
                 <ConfigurationList configurations={savedConfigurations}></ConfigurationList>
@@ -97,7 +99,8 @@ const mapStateToProps = (state) => ({
     isAdmin: selectIsAdmin(state),
     savedConfigurations: selectSavedConfigurations(state),
     orderedConfigurations: selectOrderedConfigurations(state),
-    allOrderedConfigurations: selectAllOrderedConfigurations(state)
+    allOrderedConfigurations: selectAllOrderedConfigurations(state),
+    language: selectLanguage(state)
 })
 const mapDispatchToProps = {
     

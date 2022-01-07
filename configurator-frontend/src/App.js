@@ -12,6 +12,7 @@ import ConfirmationOptionSelect from './components/dialog/ConfirmationDialog'
 import InputDialog from './components/dialog/InputDialog'
 import AccountView from './components/account/AccountView'
 import GenericAlert from './components/alert/GenericAlert'
+import { Typography } from '@mui/material'
 
 const theme = createTheme({
     
@@ -39,6 +40,11 @@ function App() {
 
                         <Route exact path="/configuration/:id" element={
                             <ConfigurationView></ConfigurationView>
+                        }>
+                        </Route>
+
+                        <Route path="*" element={
+                            <Typography variant="h2">Not Found!</Typography>
                         }>
                         </Route>
 

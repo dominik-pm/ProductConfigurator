@@ -3,6 +3,8 @@ import { Button } from '@mui/material'
 import { connect } from 'react-redux'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import { login } from '../../state/user/userSlice'
+import { translate } from '../../lang'
+import { selectLanguage } from '../../state/language/languageSelectors'
 
 export const openLogInDialog = () => (dispatch) => {
     const data = {
@@ -14,7 +16,7 @@ export const openLogInDialog = () => (dispatch) => {
     }))
 }
 
-function LoginButton({ openLogin }) {
+function LoginButton({ openLogin, language }) {
 
 
     return (
@@ -22,13 +24,13 @@ function LoginButton({ openLogin }) {
             variant="contained" 
             onClick={openLogin}
             >
-            Login
+            {translate('login', language)}
         </Button>
     )
 }
 
 const mapStateToProps = (state) => ({
-    
+    language: selectLanguage(state)
 })
 const mapDispatchToProps = {
     openLogin: openLogInDialog

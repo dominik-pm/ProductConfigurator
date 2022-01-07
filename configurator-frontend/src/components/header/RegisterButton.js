@@ -30,7 +30,7 @@ function RegisterButton({ openInputDialog, register, openAlert, language }) {
             variant="contained" 
             onClick={openRegisterDialog}
             >
-            Register
+            {translate('register', language)}
         </Button>
     )
 }

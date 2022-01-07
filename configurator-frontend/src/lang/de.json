@@ -36,7 +36,18 @@
     "youAlsoNeedToSelect": "Dazu benötigst du außerdem",
     "theseOptionsWillBeRemoved": "Dazu müssen diese Optionen entfernt werden",
 
-    "Login": "Einloggen",
-    "Register": "Registrieren",
-    "submit": "Bestätigen"
+    "login": "Einloggen",
+    "logout": "Ausloggen",
+    "register": "Registrieren",
+    "submit": "Bestätigen",
+
+    "savedConfiguration": "Konfiguration gespeichert",
+    "successOrderedConfiguration": "Individuelle Konfiguration wurde bestellt",
+    "passwordDontMatch": "Passwörter sind unterschiedlich",
+    "successfullyRemoved": "Erfolgreich gelöscht",
+
+    "savedConfigurations": "Gespeicherte Konfigurationen",
+    "orderedConfigurations": "Bestellte Konfigurationen",
+    "allOrderedConfigurations": "Alle bestellten Konfigurationen",
+    "createConfiguration": "Konfiguration erstellen"
 }
