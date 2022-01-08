@@ -88,7 +88,7 @@ VALUES ('1', 'SINGLE_SELECT', 1), -- Color
 
        ('6', 'PARENT', 0),        -- Exterior
        ('7', 'PARENT', 0),        -- Motor Section
-       ('8', 'PARENT', 0); -- Panorama Section
+       ('8', 'PARENT', 0);        -- Panorama Section
 
 INSERT IGNORE INTO products_has_option_fields (option_fields, product_number, dependency_type)
 VALUES ('1', 'BLUE', 'CHILD'),          -- Color
@@ -133,7 +133,9 @@ VALUES ('6', '1', 'CHILD'),
        ('7', '2', 'CHILD'),
        ('7', '3', 'CHILD'),
        ('8', '4', 'CHILD'),
-       ('8', '5', 'CHILD');
+       ('8', '5', 'CHILD'),
+       ('5', '4', 'REQUIRED');
+
 
 INSERT IGNORE INTO configurations (id, product_number)
 VALUES (1, 'Golf'),

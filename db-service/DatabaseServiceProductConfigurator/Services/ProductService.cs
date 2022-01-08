@@ -14,7 +14,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         private static List<Configurator> getConfigurators( string lang ) {
             List<Configurator> temp = (
                 from p in context.Products
-                let depen = new ProductDependencies(p.Price)
+                let depen = new ProductDependencies { BasePrice = p.Price }
                 let infos = LanguageService.GetProductWithLanguage(p.ProductNumber, lang)
                 select new Configurator {
                     ConfigId = p.ProductNumber,
@@ -30,8 +30,8 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             foreach ( var item in temp ) {
                 item.Options.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
-                item.OptionGroups.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
-                item.OptionSections.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
+                item.OptionGroups.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependenciesByOptionField(o.Id));
+                item.OptionSections.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependenciesByOptionField(o.Id));
             }
 
             return temp;
@@ -204,11 +204,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                         from opt in localContext.ProductsHasOptionFields
                         where opt.OptionFields == item.Id && opt.DependencyType == "CHILD"
                         let infos = LanguageService.GetProductWithLanguage(productNumber, lang)
-                        select new Option(
-                            opt.ProductNumber,
-                            infos.Name,
-                            infos.Description
-                        )
+                        select new Option { 
+                            Id = opt.ProductNumber,
+                            Name = infos.Name,
+                            Description = infos.Description
+                        }
                     )
                 );
             }
@@ -227,7 +227,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     ProductNumber = config.ConfigId,
                     Price = config.Dependencies.BasePrice,
                     Category = "",
-                    Buyable = false
+                    Buyable = true
                 }
             );
 
@@ -285,10 +285,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             // OPTION GROUPS
-            List<int> SingleSelect = new List<int>();
+            List<string> SingleSelect = new List<string>();
             foreach( var item in config.Dependencies.ReplacementGroups ) {
                 foreach(var item2 in item.Value ) {
-                    SingleSelect.Add(Convert.ToInt32(item2));
+                    SingleSelect.Add(item2);
                 }
             }
 
@@ -296,7 +296,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 OptionField tempSave = new OptionField {
                     Id = item.Id,
                     Type = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT",
-                    Required = false
+                    Required = item.Required
                 };
                 temp.Add(tempSave);
                 context.OptionFields.Add(tempSave);
@@ -444,7 +444,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 ).FirstOrDefault();
         }
 
-        public static List<object> GetByOptionField( int id, string lang ) {
+        public static List<object> GetByOptionField( string id, string lang ) {
 
             return (
                 from pof in context.ProductsHasOptionFields

@@ -36,13 +36,13 @@ namespace DatabaseServiceProductConfigurator.Services {
                 dependencies.Incompabilities.Add(productNumber, Incompabilities);
 
             float? price = ( from pof in context.Products where pof.ProductNumber == productNumber select pof.Price ).FirstOrDefault();
-            if(price != null)
+            if(price != null && price != 0)
                 dependencies.PriceList.Add(productNumber, (float)price);
 
             return dependencies;
         }
 
-        public static ProductDependencies ExtendProductDependencies( this ProductDependencies dependencies, int id ) {
+        public static ProductDependencies ExtendProductDependenciesByOptionField( this ProductDependencies dependencies, string id ) {
             string toSave = id.ToString();
 
             List<string> ReplacementGroups = (
@@ -59,7 +59,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     select pof.OptionField.ToString()
                 ).ToList();
             if ( Requirements.Count > 0 )
-                dependencies.Requirements.Add(toSave, Requirements);
+                dependencies.GroupRequirements.Add(toSave, Requirements);
 
             List<string> Incompabilities = (
                     from pof in context.OptionFieldsHasOptionFields
@@ -95,7 +95,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             };
         }
 
-        public static object GetByOptionField( int id ) {
+        public static object GetByOptionField( string id ) {
             return new {
                 replacementGroups = (
                       from pof in context.OptionFieldsHasOptionFields
