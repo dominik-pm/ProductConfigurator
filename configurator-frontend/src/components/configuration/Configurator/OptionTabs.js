@@ -46,12 +46,20 @@ export default function OptionTabs() {
         return (
             <Box sx={{ width: '100%' }}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="sectiontabs">
+                    <Tabs 
+                        value={value} 
+                        scrollButtons="auto"
+                        allowScrollButtonsMobile
+                        variant="scrollable" 
+                        onChange={handleChange} 
+                        aria-label="sectiontabs"
+                    >
                         {/* <Tab label="Item One" {...a11yProps(0)} />
                         <Tab label="Item Two" {...a11yProps(1)} />
                         <Tab label="Item Three" {...a11yProps(2)} /> */}
+
                         {configuration.optionSections.map((section, index) => (
-                            <Tab key={section.id} label={section.name} {...a11yProps(index)} />
+                            <Tab key={section.id} label={section.name} wrapped {...a11yProps(index)} />
                         ))}
                     </Tabs>
                 </Box>

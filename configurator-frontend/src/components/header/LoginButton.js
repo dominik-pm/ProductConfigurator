@@ -16,11 +16,12 @@ export const openLogInDialog = () => (dispatch) => {
     }))
 }
 
-function LoginButton({ openLogin, language }) {
+function LoginButton({ openLogin, language, size = 'small' }) {
 
 
     return (
-        <Button 
+        <Button
+            size={size}
             variant="contained" 
             onClick={openLogin}
             >

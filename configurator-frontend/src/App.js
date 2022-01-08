@@ -1,5 +1,5 @@
 import React from 'react'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import ProductView from './components/products/ProductView'
 import ConfigurationView from './components/configuration/ConfigurationView'
 import Header from './components/header/Header'
@@ -12,16 +12,13 @@ import ConfirmationOptionSelect from './components/dialog/ConfirmationDialog'
 import InputDialog from './components/dialog/InputDialog'
 import AccountView from './components/account/AccountView'
 import GenericAlert from './components/alert/GenericAlert'
-import { Typography } from '@mui/material'
-
-const theme = createTheme({
-    
-})
+import { Container, Typography } from '@mui/material'
+import theme from './Theme'
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <div className="App">
+            <Container sx={{padding: 0}} maxWidth="xl" className="App">
                 <Router>
                     <Header></Header>
                     <ConfirmationOptionSelect></ConfirmationOptionSelect>
@@ -50,7 +47,7 @@ function App() {
 
                     </Routes>
                 </Router>
-            </div>
+            </Container>
         </ThemeProvider>
     )
 }

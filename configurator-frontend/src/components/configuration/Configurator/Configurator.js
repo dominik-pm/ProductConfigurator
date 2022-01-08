@@ -127,13 +127,13 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 
     return (
         <div>
-            <Grid container>
+            <Grid container justifyContent="flex-end">
                 <Box sx={{flexGrow: 1}}>
                     <Typography variant="h2">{translate('configureYour', language)} {configurationName}</Typography>
                     <Typography variant="subtitle1">{configurationDescription}</Typography>
                 </Box>
 
-                <Grid sx={{paddingTop: 2}}>
+                <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
                     <Tooltip title={translate('saveConfiguration', language)}>
                         <IconButton 
                             variant="contained" 

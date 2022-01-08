@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { AppBar, Button, Grid, /*Button, */IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
-import { AccountCircle, ArrowBackIosNew, Logout } from '@mui/icons-material'
-import './Header.css'
+import { /*Accordion, AccordionDetails, AccordionSummary,*/ AppBar, Button, Drawer, Grid, /*Button, */IconButton, Toolbar, Tooltip, Typography } from '@mui/material'
+import { AccountCircle, /*ArrowBackIosNew, ExpandMoreOutlined,*/ Home, Logout, Menu } from '@mui/icons-material'
 import { Box } from '@mui/system'
 import LanguageSelect from './LanguageSelect'
 import { translate } from '../../lang'
@@ -19,21 +18,43 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
 
     const navigate = useNavigate()
 
+    const [drawerOpen, setDrawerOpen] = useState(false)
+
+    const [mobileView, setMobileView] = useState(false)
+    useEffect(() => {
+        const setResponsiveness = () => {
+            return window.innerWidth < 900
+                ? setMobileView(true)
+                : setMobileView(false)
+        }
+
+        setResponsiveness();
+        window.addEventListener('resize', () => setResponsiveness())
+
+        return () => {
+            window.removeEventListener('resize', () => setResponsiveness())
+        }
+    }, [])
+
     const userButtons = (
         <>
-            <Button 
-                variant="contained" 
+            <Button
+                size="large"
+                variant="contained"
                 startIcon={<AccountCircle />}
                 onClick={() => navigate('/account')}
-                >
-                {username}
+            >
+                <Typography variant="body1" sx={{maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                    {username}
+                </Typography>
             </Button>
             <Tooltip title={translate('logout', language)}>
-                <IconButton 
+                <IconButton
+                    size="large"
                     variant="contained"
                     onClick={() => logout()}
-                    >
-                        <Logout />
+                >
+                    <Logout />
                 </IconButton>
             </Tooltip>
         </>
@@ -42,6 +63,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
     const adminButtons = (
         <>
             <Button
+                size="large"
                 variant="contained"
                 onClick={handleCreateConfigPressed}
             >
@@ -52,8 +74,16 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
 
     const guestButtons = (
         <>
-            <LoginButton></LoginButton>
-            <RegisterButton></RegisterButton>
+            <LoginButton size="large"></LoginButton>
+            <RegisterButton size="large"></RegisterButton>
+        </>
+    )
+
+    const homeButton = (
+        <>
+            <IconButton onClick={() => navigate('/')}>
+                <Home sx={{color: 'white'}} />
+            </IconButton>
         </>
     )
 
@@ -63,15 +93,11 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
 
     function getMenuButtons() {
         return (
-            <Grid container sx={{ gap: 2 }} >
+            // <Grid container sx={{ gap: 2 }} >
+            <>
+                {/* <LanguageSelect></LanguageSelect> */}
 
-                <IconButton onClick={() => navigate('/')}>
-                    <ArrowBackIosNew></ArrowBackIosNew>
-                </IconButton>
-
-                <LanguageSelect></LanguageSelect>
-
-                <Box sx={{flexGrow: 1}}></Box>
+                {/* <Box sx={{ flexGrow: 1 }}></Box> */}
 
                 {/* <Button variant="contained" onClick={() => openConfirmDialog('Example Message', {}, null, () => console.log('confirmed'))}>
                     test dialog
@@ -81,39 +107,168 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
 
                 {isLoggedIn ? userButtons : guestButtons}
 
-            </Grid>
+            </>
+            // </Grid>
         )
     }
 
-    return (
-        <header>
-            {/* <AppBar>
-                <Toolbar className='header-container'>
-                    {getMenuButtons()}
-                    <div className="lang-select">
-                        langselect
-                    </div>
-                </Toolbar>
-            </AppBar> */}
-            <Box sx={{ flexGrow: 1 }}>
-                <Typography align='center' marginBottom={1} variant='h1'>
-                    {translate('productConfigurator', language)}
-                </Typography>
-                <AppBar position="static">
-                    <Toolbar>
-                        {/* <IconButton
+    function handleToggleDrawer(on) {
+        setDrawerOpen(on)
+    }
+
+    function mobileToolbar() {
+        // const drawerBleeding = 56
+
+        return (
+            // <SwipeableDrawer
+            //     anchor="top"
+            //     open={drawerOpen}
+            //     // onClose={handleToggleDrawer(false)}
+            //     // onOpen={handleToggleDrawer(true)}
+            //     swipeAreaWidth={drawerBleeding}
+            //     disableSwipeToOpen={false}
+            //     ModalProps={{
+            //         keepMounted: true,
+            //     }}
+            // >
+            //     <Box
+            //         sx={{
+            //             position: 'absolute',
+            //             top: -drawerBleeding,
+            //             borderTopLeftRadius: 8,
+            //             borderTopRightRadius: 8,
+            //             visibility: 'visible',
+            //             right: 0,
+            //             left: 0,
+            //         }}
+            //     >
+            //         <Menu fontSize="large" />
+            //         <Typography sx={{ p: 2, color: 'text.secondary' }}>Open Menu</Typography>
+            //     </Box>
+            //     <Box
+            //         sx={{
+            //             px: 2,
+            //             pb: 2,
+            //             height: '100%',
+            //             overflow: 'auto',
+            //         }}
+            //     >
+
+            //     <Box sx={{ flexGrow: 1 }}></Box>
+
+            //     <IconButton onClick={() => navigate('/')}>
+            //         <ArrowBackIosNew></ArrowBackIosNew>
+            //     </IconButton>
+
+            //     <LanguageSelect></LanguageSelect>
+            //     </Box>
+            // </SwipeableDrawer>
+
+            <AppBar position="static">
+                <Toolbar>
+
+                    <Grid container direction="row">
+
+                        <IconButton
                             size="large"
                             edge="start"
                             color="inherit"
                             aria-label="menu"
                             sx={{ mr: 2 }}
-                        >
-                            <MenuIcon />
-                        </IconButton> */}
-                        {getMenuButtons()}
+                            onClick={() => handleToggleDrawer(true)}
+                            >
+                            <Menu fontSize="large" />
+                        </IconButton>
 
-                    </Toolbar>
-                </AppBar>
+                        {homeButton}
+                        
+                        <Box sx={{ flexGrow: 1 }}></Box>
+                        
+                        <LanguageSelect></LanguageSelect>
+                    
+                    </Grid>
+
+                    <Drawer
+                        anchor="top"
+                        open={drawerOpen}
+                        onClose={() => handleToggleDrawer(false)}
+                    >
+                        <Grid container direction="column" padding={5} gap={2}>
+
+                            {getMenuButtons()}
+
+                        </Grid>
+                    </Drawer>
+
+                </Toolbar>
+            </AppBar>
+
+            // <Accordion expanded={drawerOpen}>
+            //     <AccordionSummary
+            //         expandIcon={<ExpandMoreOutlined />}
+            //         aria-controls="panel1a-content"
+            //         id="panel1a-header"
+            //         onClick={() => handleToggleDrawer(!drawerOpen)}
+            //     >
+
+            //         <IconButton
+            //             size="large"
+            //             edge="start"
+            //             color="inherit"
+            //             aria-label="menu"
+            //             sx={{ mr: 2 }}
+            //             onClick={() => handleToggleDrawer(!drawerOpen)}
+            //         >
+            //             <Menu fontSize="large" />
+            //         </IconButton>
+
+            //         {/* <Box sx={{ flexGrow: 1 }}></Box>
+                    
+            //         <IconButton onClick={() => navigate('/')}>
+            //             <ArrowBackIosNew></ArrowBackIosNew>
+            //         </IconButton> */}
+
+
+            //     </AccordionSummary>
+            //     <AccordionDetails>
+
+            //         <Grid container direction="column" gap={2} alignItems="center">
+            //             <LanguageSelect></LanguageSelect>
+
+            //             {isAdmin ? adminButtons : ''}
+
+            //             {isLoggedIn ? userButtons : guestButtons}
+            //         </Grid>
+
+            //     </AccordionDetails>
+            // </Accordion >
+        )
+    }
+
+    function desktopToolbar() {
+        return (
+            <AppBar position="static">
+                <Toolbar variant="regular">
+                    {homeButton}
+
+                    <Box sx={{ flexGrow: 1 }}></Box>
+
+                    <Grid container justifyContent="flex-end" gap={2}>
+                        {getMenuButtons()}
+                    </Grid>
+                </Toolbar>
+            </AppBar>
+        )
+    }
+
+    return (
+        <header>
+            <Box sx={{ flexGrow: 1 }}>
+                <Typography align='center' marginBottom={1} variant='h1'>
+                    {translate('productConfigurator', language)}
+                </Typography>
+
+                {mobileView ? mobileToolbar() : desktopToolbar()}
             </Box>
         </header>
     )

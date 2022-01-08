@@ -1,7 +1,6 @@
 import React from 'react'
 import { ImageListItem, ImageListItemBar } from '@mui/material'
 import { useNavigate } from 'react-router'
-import './Product.css'
 
 export default function Product({product}) {
     const navigate = useNavigate()
@@ -33,8 +32,9 @@ export default function Product({product}) {
         //     </Box>
         // </ButtonBase>
 
-        <ImageListItem key={imageSource} className="Product" onClick={() => handleClick(id)}>
+        <ImageListItem key={imageSource} sx={{width: '100%', ':hover': {cursor: 'pointer'}}} onClick={() => handleClick(id)}>
         <img
+            width="100%"
             src={`${imageSource}?w=248&fit=crop&auto=format`}
             srcSet={`${imageSource}?w=248&fit=crop&auto=format&dpr=2 2x`}
             alt={name}
@@ -43,14 +43,6 @@ export default function Product({product}) {
         <ImageListItemBar
             title={name}
             subtitle={description}
-            // actionIcon={
-            // <IconButton
-            //     sx={{ color: 'rgba(255, 255, 255, 0.54)' }}
-            //     aria-label={`info about ${item.title}`}
-            // >
-            //     <InfoIcon />
-            // </IconButton>
-            // }
         />
         </ImageListItem>
     )

@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
 import Product from './Product'
 import { connect } from 'react-redux'
-import { ImageList, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { fetchProducts } from '../../state/product/productSlice'
 import { selectProductError, selectProducts, selectProductStatus } from '../../state/product/productSelector'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { translate } from '../../lang'
-import './ProductView.css'
 
 function ProductView({ products, status, error, fetchProducts, language }) {
 
@@ -45,11 +44,15 @@ function ProductView({ products, status, error, fetchProducts, language }) {
     }
     function renderProducts() {
         return (
-            <ImageList sx={{width: '100%'}}>
+            <Grid container columns={12} spacing={2} sx={{paddingTop: 2, marginRight: 4}}>
+            {/* <ImageList width='100%> */}
                 {products.map(product => (
-                    <Product key={product.id} product={product}></Product>
+                    <Grid item sm={12} md={6} lg={4} xl={3} width="100%" key={product.id}>
+                        <Product product={product}></Product>
+                    </Grid>
                 ))}
-            </ImageList>
+            {/* </ImageList> */}
+            </Grid>
             // <div className="ProductContainer">
             //     {
             //         products.map(product => (

@@ -28,6 +28,13 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
     }
 
     function handleConfirm() {
+        // check if every field has an input
+        let valid = true
+        for (const key in localData) {
+            if (!localData[key].value) valid = false
+        }
+        if (!valid) return
+
         setInputData(localData)
         confirm()
     }
@@ -40,15 +47,16 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
             <form>
                 {Object.keys(inputData).map((key, index) => (
                     <TextField
-                    key={index}
-                    autoFocus
-                    autoComplete={inputData[key].isPassword ? "current-password" : "text"}
-                    margin="dense"
-                    label={inputData[key].name}
-                    type={inputData[key].isEmail ? 'email' : inputData[key].isPassword ? 'password' : 'text'}
+                        key={index}
+                        autoFocus
+                        autoComplete={inputData[key].isPassword ? "current-password" : "text"}
+                        margin="dense"
+                        label={inputData[key].name}
+                        type={inputData[key].isEmail ? 'email' : inputData[key].isPassword ? 'password' : 'text'}
                         fullWidth
                         variant="standard"
                         value={localData[key].value}
+                        error={!localData[key].value}
                         onChange={(event) => valuesChanged(key, event.target.value)}
                     />
 

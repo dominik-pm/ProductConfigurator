@@ -74,7 +74,14 @@ function ConfigurationTabs({ isAdmin, savedConfigurations, orderedConfigurations
 
     return (
         <Box width="100%">
-            <Tabs value={value} onChange={handleChange} aria-label="configurationstabs">
+            <Tabs 
+                scrollButtons="auto"
+                variant="scrollable" 
+                allowScrollButtonsMobile
+                value={value}
+                onChange={handleChange} 
+                aria-label="configurationstabs"
+            >
                 <Tab label={translate('savedConfigurations', language)} {...tabProps(0)} />
                 <Tab label={translate('orderedConfigurations', language)} {...tabProps(1)} />
                 {isAdmin ? <Tab label={translate('allOrderedConfigurations', language)} {...tabProps(2)} /> : ''}
