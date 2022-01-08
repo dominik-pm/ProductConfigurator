@@ -2,49 +2,25 @@
 using DatabaseServiceProductConfigurator.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Model;
 
 namespace DatabaseServiceProductConfigurator.Controllers {
     [Route("db/[controller]")]
     [ApiController]
-    public class ConfigurationController : AController<Configuration, int> {
+    public class ConfigurationController : ControllerBase {
 
         static product_configuratorContext context = new product_configuratorContext();
 
-        public ConfigurationController() : base(context) { }
-
-        // GET by ID
-        [HttpGet("{id}")]
-        public override IActionResult Get( int id ) {
+        [HttpGet]
+        public IActionResult Get() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = LanguageService.HandleLanguageInput(lang);
 
-            ConfigStruct? toReturn = ConfigurationService.GetById(id, lang);
-            if ( toReturn == null )
-                return NotFound();
-            else
-                return Ok(toReturn);
-        }
+            List<ConfiguredProduct> toReturn = ConfigurationService.GetConfiguredProducts(lang);
 
-        [HttpGet("getByCustomer/{customerId}")]
-        public IActionResult GetByCustomer( int? customerId ) {
-            Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
-
-            List<ConfigStruct> configurations = ConfigurationService.GetConfigurationsByCustomer(customerId, lang);
-            if(configurations.Count() == 0)
+            if ( !toReturn.Any() )
                 return NoContent();
-            return Ok(configurations);
-        }
-
-        [HttpGet("getByProduct/{productNumber}")]
-        public IActionResult getbyProduct( string productNumber) {
-            Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
-
-            List<ConfigStruct> configurations = ConfigurationService.GetByProductNumber(productNumber, lang);
-            if ( configurations.Count() == 0 )
-                return NoContent();
-            return Ok(configurations);
+            return Ok(toReturn);
         }
 
     }

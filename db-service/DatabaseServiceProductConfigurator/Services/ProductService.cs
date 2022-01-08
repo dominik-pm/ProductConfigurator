@@ -308,7 +308,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     context.OptionFieldsHasOptionFields.Add(
                         new OptionFieldsHasOptionField {
                             Base = item.Id,
-                            OptionField = Convert.ToInt32(field),
+                            OptionField = field,
                             DependencyType = "CHILD"
                         }    
                     );

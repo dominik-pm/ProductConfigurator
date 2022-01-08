@@ -34,7 +34,6 @@ namespace DatabaseServiceProductConfigurator.Models {
                 optionsBuilder.UseMySql("server=localhost;database=product_configurator;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
             }
         }
-
         protected override void OnModelCreating( ModelBuilder modelBuilder ) {
             modelBuilder.UseCollation("utf8_general_ci")
                 .HasCharSet("utf8");
@@ -129,7 +128,7 @@ namespace DatabaseServiceProductConfigurator.Models {
 
                             j.IndexerProperty<int>("ConfigId").HasColumnName("config_id");
 
-                            j.IndexerProperty<int>("OptionFieldId").HasColumnName("option_field_id");
+                            j.IndexerProperty<string>("OptionFieldId").HasColumnName("option_field_id");
 
                             j.IndexerProperty<string>("ProductNumber").HasColumnName("product_number");
                         });
@@ -457,6 +456,7 @@ namespace DatabaseServiceProductConfigurator.Models {
             modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.ProductNumberNavigation).AutoInclude();
             modelBuilder.Entity<OptionField>().Navigation(e => e.OptionFieldHasLanguages).AutoInclude();
             modelBuilder.Entity<Product>().Navigation(e => e.Pictures).AutoInclude();
+            modelBuilder.Entity<ConfigurationHasOptionField>().Navigation(e => e.ProductNumbers).AutoInclude();
         }
 
         partial void OnModelCreatingPartial( ModelBuilder modelBuilder );

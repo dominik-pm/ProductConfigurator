@@ -10,6 +10,9 @@ namespace Model
             Name = name;
             Description = description;
         }
+
+        public Option() { }
+
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

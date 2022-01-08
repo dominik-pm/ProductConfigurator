@@ -5,8 +5,8 @@ namespace DatabaseServiceProductConfigurator.Models
 {
     public partial class OptionFieldsHasOptionField
     {
-        public int Base { get; set; }
-        public int OptionField { get; set; }
+        public string Base { get; set; } = null!;
+        public string OptionField { get; set; } = null!;
         public string DependencyType { get; set; } = null!;
 
         public virtual OptionField BaseNavigation { get; set; } = null!;
