@@ -623,16 +623,6 @@
           "lib/netcoreapp2.1/_._": {}
         }
       },
-      "DBAccess/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "compile": {
-          "bin/placeholder/DBAccess.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DBAccess.dll": {}
-        }
-      },
       "Model/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -1784,11 +1774,6 @@
         "version.txt"
       ]
     },
-    "DBAccess/1.0.0": {
-      "type": "project",
-      "path": "../DBAccess/DBAccess.csproj",
-      "msbuildProject": "../DBAccess/DBAccess.csproj"
-    },
     "Model/1.0.0": {
       "type": "project",
       "path": "../Model/Model.csproj",
@@ -1797,7 +1782,6 @@
   },
   "projectFileDependencyGroups": {
     "net6.0": [
-      "DBAccess >= 1.0.0",
       "FluentEmail.Razor >= 3.0.0",
       "FluentEmail.Smtp >= 3.0.0",
       "Model >= 1.0.0",
@@ -1840,9 +1824,6 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\DBAccess\\DBAccess.csproj": {
-              "projectPath": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\DBAccess\\DBAccess.csproj"
-            },
             "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\Model\\Model.csproj": {
               "projectPath": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\Model\\Model.csproj"
             }

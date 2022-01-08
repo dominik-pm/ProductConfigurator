@@ -34,7 +34,7 @@ namespace BackendProductConfigurator.Controllers
         public virtual T Get(K id)
         {
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities.Find(entity => (entity as IIndexable<K>).Id.Equals(id));
+            return entities.Find(entity => (entity as IIndexable).Id.Equals(id));
         }
 
         // POST api/<Controller>
@@ -56,11 +56,11 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete("{id}")]
         public virtual void Delete(K id)
         {
-            entities.Remove(entities.Find(entity => (entity as IIndexable<K>).Id.Equals(id)));
+            entities.Remove(entities.Find(entity => (entity as IIndexable).Id.Equals(id)));
         }
     }
 
-    public class configurationController : AController<Configurator, int>
+    public class configurationController : AController<Configurator, string>
     {
         public configurationController() : base()
         {
@@ -80,7 +80,7 @@ namespace BackendProductConfigurator.Controllers
             AddConfigurator(value);
         }
     }
-    public partial class productsController : AController<ConfiguratorSlim, int>
+    public partial class productsController : AController<ConfiguratorSlim, string>
     {
         public productsController() : base()
         {
@@ -95,7 +95,7 @@ namespace BackendProductConfigurator.Controllers
             return entities;
         }
     }
-    public partial class configuredProductsController : AController<ConfiguredProduct, int>
+    public partial class configuredProductsController : AController<ConfiguredProduct, string>
     {
         public configuredProductsController() : base()
         {
@@ -105,7 +105,7 @@ namespace BackendProductConfigurator.Controllers
         // POST: /products
         [Route("/products/{configId}")]
         [HttpPost]
-        public void Post([FromBody] ConfiguredProduct value, int configId)
+        public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             //AValuesClass.ConfiguredProducts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             new Thread(() =>
@@ -167,12 +167,11 @@ namespace BackendProductConfigurator.Controllers
         // POST: /account/configuration
         [Route("/account/configuration/{configId}")]
         [HttpPost]
-        public void Post([FromBody] ProductSaveSlim value, int configId)
+        public void Post([FromBody] ProductSaveSlim value, string configId)
         {
             string description, name;
             description = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Description;
             name = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Name;
-            //AValuesClass.SavedProducts.Add(new ProductSave(value)); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
             entities.Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
         }
 
@@ -188,13 +187,13 @@ namespace BackendProductConfigurator.Controllers
 
     //Um APIs für eine andere Methoden frei zu machen führen diese Methoden ins nichts
 
-    public partial class configuredProductsController : AController<ConfiguredProduct, int>
+    public partial class configuredProductsController : AController<ConfiguredProduct, string>
     {
         [Route("/redactedConfiguredProducts")]
         [HttpPost]
         public override void Post([FromBody] ConfiguredProduct value) { }
     }
-    public partial class productsController : AController<ConfiguratorSlim, int>
+    public partial class productsController : AController<ConfiguratorSlim, string>
     {
         [Route("/redactedProducts")]
         [HttpPost]

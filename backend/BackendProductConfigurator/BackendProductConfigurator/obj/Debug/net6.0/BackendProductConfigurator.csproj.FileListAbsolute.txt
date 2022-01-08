@@ -754,9 +754,7 @@ D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\D
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
-D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\DBAccess.dll
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\Model.dll
-D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\DBAccess.pdb
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\Model.pdb
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\Debug\net6.0\staticwebassets.build.json
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\Debug\net6.0\staticwebassets.development.json
