@@ -1,7 +1,11 @@
-﻿namespace Model
+﻿using System.Text.Json.Serialization;
+
+namespace Model
 {
     public class ProductDependencies
     {
+
+        [JsonConstructorAttribute]
         public ProductDependencies(float basePrice, List<string> defaultOptions, Dictionary<string, List<string>> replacementGroups, Dictionary<string, List<string>> requirements, Dictionary<string, List<string>> incompabilities, Dictionary<string, float> priceList)
         {
             BasePrice = basePrice;

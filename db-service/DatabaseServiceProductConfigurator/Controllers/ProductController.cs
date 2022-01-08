@@ -39,7 +39,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(string id) {
+        public IActionResult Get( string id ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
             lang = LanguageService.HandleLanguageInput(lang);
 
@@ -51,17 +51,13 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Configurator config) {
+        public IActionResult Post( [FromBody] Configurator config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
             lang = LanguageService.HandleLanguageInput(lang);
 
-            try {
-                ProductService.SaveConfigurator(config, lang);
-            }
-            catch ( Exception ex ) {
-                Console.WriteLine(ex.Message);
+            bool worked = ProductService.SaveConfigurator(config, lang);
+            if ( !worked )
                 return BadRequest();
-            }
             return Accepted();
         }
     }

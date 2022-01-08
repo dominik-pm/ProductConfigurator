@@ -216,7 +216,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             return options;
         }
 
-        public static void SaveConfigurator(Configurator config, string lang) {
+        public static bool SaveConfigurator(Configurator config, string lang) {
+            bool worked = true;
+
+            try {
 
             // MAIN PRODUCT
             context.Products.Add(
@@ -230,10 +233,12 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // OPTION PRODUCTS
             foreach (var item in config.Options ) {
+                bool priceAvailable = config.Dependencies.PriceList.TryGetValue(item.Id, out float price);
+
                 context.Products.Add(
                     new Product {
                         ProductNumber = item.Id,
-                        Price = config.Dependencies.PriceList[item.Id],
+                        Price = priceAvailable ? price : 0,
                         Category = "",
                         Buyable = false
                     }
@@ -380,6 +385,16 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             context.SaveChanges();
+
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex.Message);
+                context.Dispose();
+                worked = false;
+            }
+
+            return worked;
+
         }
 
         #endregion
