@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 
-import OptionGroup from './Options/OptionGroup'
 import PropTypes from 'prop-types'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
-import { useSelector } from 'react-redux'
+import { IconButton, Typography } from '@mui/material'
+import { Add } from '@mui/icons-material'
+import { connect } from 'react-redux'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -39,16 +40,15 @@ function a11yProps(index) {
     }
 }
 
-export default function OptionTabs() {
-
-    const {configuration} = useSelector(state => state.configuration)
+function SectionTabs({configuration}) {
 
     const [value, setValue] = useState(0)
 
     const handleChange = (event, newValue) => {
         setValue(newValue)
     }
-    
+
+
     return (
         <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -60,33 +60,44 @@ export default function OptionTabs() {
                     onChange={handleChange} 
                     aria-label="sectiontabs"
                 >
-                    {/* <Tab label="Item One" {...a11yProps(0)} />
+                    <Tab label="Item One" {...a11yProps(0)} />
                     <Tab label="Item Two" {...a11yProps(1)} />
-                    <Tab label="Item Three" {...a11yProps(2)} /> */}
+                    <Tab label="Item Three" {...a11yProps(2)} />
 
-                    {configuration.optionSections.map((section, index) => (
+                    {/* {configuration.optionSections.map((section, index) => (
                         <Tab key={section.id} label={section.name} wrapped {...a11yProps(index)} />
-                    ))}
+                    ))} */}
+
+                    <IconButton onClick={() => console.log('ADD')}>
+                        <Add />
+                    </IconButton>
                 </Tabs>
             </Box>
-            {configuration.optionSections.map((section, index) => (
+            {/* {configuration.optionSections.map((section, index) => (
                 <TabPanel key={section.id} value={value} index={index}>
-                    {configuration.optionGroups
-                        .filter(group => section.optionGroupIds.includes(group.id))
-                        .map((group, index) => (
-                            <OptionGroup key={group.id} group={group}></OptionGroup>
-                        ))}
+                    
                 </TabPanel>
-            ))}
-            {/* <TabPanel value={value} index={0}>
-                Item One 111
+            ))} */}
+            <TabPanel value={value} index={0}>
+                <Typography variant="body1">Item One 1</Typography>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                <Typography variant="body1">Item Two</Typography>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Item Three
-            </TabPanel> */}
+                <Typography variant="body1">Item Three</Typography>
+            </TabPanel>
         </Box>
     )
 }
+
+const mapStateToProps = (state) => ({
+    
+})
+const mapDispatchToProps = {
+    
+}
+export default connect(
+    mapStateToProps, 
+    mapDispatchToProps
+)(SectionTabs)

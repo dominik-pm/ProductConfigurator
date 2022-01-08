@@ -12,9 +12,8 @@ import { logout } from '../../state/user/userSlice'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import LoginButton from './LoginButton'
 import RegisterButton from './RegisterButton'
-import { alertTypes, openAlert } from '../../state/alert/alertSlice'
 
-function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) {
+function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
     const navigate = useNavigate()
 
@@ -44,7 +43,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
                 startIcon={<AccountCircle />}
                 onClick={() => navigate('/account')}
             >
-                <Typography variant="body1" sx={{maxWidth: '250px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
+                <Typography variant="body1" sx={{maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                     {username}
                 </Typography>
             </Button>
@@ -88,7 +87,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
     )
 
     function handleCreateConfigPressed() {
-        openAlert('Not implemented', alertTypes.WARNING)
+        navigate('/create')
     }
 
     function getMenuButtons() {
@@ -249,12 +248,16 @@ function Header({ language, isLoggedIn, isAdmin, username, logout, openAlert }) 
         return (
             <AppBar position="static">
                 <Toolbar variant="regular">
-                    {homeButton}
+                    <Grid justifyContent="flex-end" container gap={2}>
+                        {homeButton}
 
-                    <Box sx={{ flexGrow: 1 }}></Box>
+                        <LanguageSelect></LanguageSelect>
 
-                    <Grid container justifyContent="flex-end" gap={2}>
-                        {getMenuButtons()}
+                        <Box sx={{ flexGrow: 1 }}></Box>
+
+                        {/* <Grid container justifyContent="flex-end" gap={2}> */}
+                            {getMenuButtons()}
+                        {/* </Grid> */}
                     </Grid>
                 </Toolbar>
             </AppBar>
@@ -281,8 +284,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
-    logout: logout,
-    openAlert
+    logout: logout
 }
 export default connect(
     mapStateToProps,

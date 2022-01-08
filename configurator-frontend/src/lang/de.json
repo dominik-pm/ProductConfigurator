@@ -49,5 +49,7 @@
     "savedConfigurations": "Gespeicherte Konfigurationen",
     "orderedConfigurations": "Bestellte Konfigurationen",
     "allOrderedConfigurations": "Alle bestellten Konfigurationen",
-    "createConfiguration": "Konfiguration erstellen"
+    "createConfiguration": "Konfiguration erstellen",
+
+    "finishCreation": "Neue Konfiguration Fertigstellen"
 }

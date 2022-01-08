@@ -49,5 +49,7 @@
     "savedConfigurations": "Saved Configurations",
     "orderedConfigurations": "Ordered Configurations",
     "allOrderedConfigurations": "All Ordered Configurations",
-    "createConfiguration": "Create Configuration"
+    "createConfiguration": "Create Configuration",
+
+    "finishCreation": "Finish New Configuration"
 }

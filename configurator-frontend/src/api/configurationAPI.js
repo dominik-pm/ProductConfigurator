@@ -1,9 +1,29 @@
 export const fetchId = (productId) => {
     return fetchApiTest(productId)
+
+    // axios.get(`/configuration/${productId}`)
+    // .then(res => {
+    //     resolve(res.data)
+    // })
+    // .catch(err => {
+    //     reject(err)
+    // })
 }
 
 export const postConfiguration = (newConfiguration) => {
-    console.log('Posting a new configuration not implemented')
+    return new Promise((resolve, reject) => {
+        reject('Posting a new configuration not implemented')
+
+        // const data = {
+        // }
+        // axios.post(`/configuration/${configurationId}`, data)
+        // .then(res => {
+        //     resolve(res.data)
+        // })
+        // .catch(err => {
+        //     reject(err)
+        // })
+    })
 }
 
 // A mock api request function to mimic making an async request for data
