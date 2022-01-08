@@ -10,6 +10,13 @@ namespace BackendProductConfigurator.Controllers
         public static List<ProductSaveExtended> SavedProducts { get; set; } = new List<ProductSaveExtended>();
         public static List<Account> Accounts { get; set; } = new List<Account>();
 
+        private static string serverAddress = "https://localhost:7109";
+        private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
+        {
+            {typeof(ConfiguredProduct), "/booking"},
+            {typeof(Configurator), "/configuration" }
+        };
+
         public static void SetValues(EValueMode valueMode)
         {
             switch(valueMode)
@@ -22,10 +29,13 @@ namespace BackendProductConfigurator.Controllers
                     break;
             }
         }
+        public static void PostValue<T>(T value) where T : class
+        {
+            ADBAccess<T>.PostValue(serverAddress, typeApis[typeof(ConfiguredProduct)], value);
+        }
         public static void SetDBValues()
         {
-            string serverAddress = "https://localhost:7109";
-            Configurators = ADBAccess<Configurator>.GetValues(serverAddress, "/db/configurations").Result;
+            Configurators = ADBAccess<Configurator>.GetValues(serverAddress, "/db/configuration").Result;
             SavedProducts = ADBAccess<ProductSaveExtended>.GetValues(serverAddress, "/db/account/configurations").Result;
         }
 
@@ -214,5 +224,5 @@ namespace BackendProductConfigurator.Controllers
             SavedProducts = new List<ProductSaveExtended> { psave1, psave2, psave3 };
         }
     }
-    public enum EValueMode { TestValues, DatabaseValues}
+    public enum EValueMode { TestValues, DatabaseValues }
 }

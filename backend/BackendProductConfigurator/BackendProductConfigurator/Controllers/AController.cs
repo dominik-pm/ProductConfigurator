@@ -122,7 +122,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 PdfProducer.GeneratePDF(value, configId);
             }).Start();
-            entities.Add(value); //later here without configuratorId => new { ... }
+            entities.Add(value);
         }
     }
     public class accountController : AController<Account, int>
