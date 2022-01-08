@@ -1,5 +1,4 @@
 ﻿using Model;
-using ADBAccess;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -33,16 +32,38 @@ namespace BackendProductConfigurator.Controllers
         public static void SetStaticValues()
         {
             List<Option> options = new List<Option> {
-                                                      new Option("D150", "D150", "Fetter Diesel Motor"),
-                                                      new Option("D200", "D200", "Fetter Diesel Motor"),
-                                                      new Option("D250", "D250", "Fetter Diesel Motor"),
-                                                      new Option("RED", "Alfa Rosso", "Red like a cherry"),
-                                                      new Option("GREEN", "Green demon", "Green like the grinch"),
-                                                      new Option("WHITE", "White cloud", "White as a sheet of paper"),
-                                                      new Option("PROOF", "Panorama roof", "Very big panorama roof"),
-                                                     };
+                                                      new Option()
+                                                      {
+                                                          Id = "D150",
+                                                          Name = "D150",
+                                                          Description = "Fetter Diesel Motor"
+                                                      },
+                                                      new Option()
+                                                      {
+                                                          Id = "D200",
+                                                          Name = "D200",
+                                                          Description = "Fetter Diesel Motor"
+                                                      },
+                                                      new Option()
+                                                      {
+                                                          Id = "D250",
+                                                          Name = "D250",
+                                                          Description = "Fetter Diesel Motor"
+                                                      },
+                                                      new Option()
+                                                      {
+                                                          Id = "RED",
+                                                          Name = "Alfa Rosso",
+                                                          Description = "Red like a cherry"
+                                                      },
+                                                      new Option()
+                                                      {
+                                                          Id = "GREEN",
+                                                          Name = "Green demon",
+                                                          Description = "Green like the grinch"
+                                                      }};
 
-            List<string> productImages = new List<string> { "google.com" };
+            List<string> productImages = new List<string> { "./Alfa_159_grey.jpg" };
 
             List<OptionGroup> optionGroups = new List<OptionGroup>
             {
@@ -57,22 +78,22 @@ namespace BackendProductConfigurator.Controllers
                 new OptionSection("Motor", "MOTOR_SECTION", new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" })
             };
 
-            ProductDependencies productDependencies = new ProductDependencies
-            (
-                50000f,
-                new List<string> { "RED", "DIESEL", "D150" },
-                new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
-                new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
-                new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
-                new Dictionary<string, List<string>> { { "PANORAMATYPE_GROUP", new List<string> { "PANORAMAROOF" } } },
-                new Dictionary<string, float> { { "D150", 1500f },
+            ProductDependencies productDependencies = new ProductDependencies()
+            {
+                BasePrice = 50000f,
+                DefaultOptions = new List<string> { "RED", "DIESEL", "D150" },
+                ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
+                Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
+                Incompabilities = new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
+                GroupRequirements = new Dictionary<string, List<string>> { { "PANORAMATYPE_GROUP", new List<string> { "PANORAMAROOF" } } },
+                PriceList = new Dictionary<string, float> { { "D150", 1500f },
                                                 { "RED", 250f },
                                                 { "PROOF", 250f} }
-            );
+            };
 
             Configurators.Add(new Configurator()
             {
-                ConfigId = 0,
+                ConfigId = "Alfa",
                 Name = "Neuer Konfigurator",
                 Description = "Sehr cool",
                 Images = productImages,
@@ -84,7 +105,12 @@ namespace BackendProductConfigurator.Controllers
 
             List<Option> optionsList = new List<Option>
             {
-                new Option("Option1", "Erste Option", "Ka Ahnung wos des duat")
+                new Option()
+                {
+                    Id = "Option1",
+                    Name = "Erste Option",
+                    Description = "Ka Ahnung wos des duat"
+                }
             };
 
             ConfiguredProduct p1 = new ConfiguredProduct()
@@ -112,14 +138,14 @@ namespace BackendProductConfigurator.Controllers
 
             ConfiguratorSlim ps1 = new ConfiguratorSlim()
             {
-                ConfigId = 0,
+                ConfigId = "BENZ1",
                 Name = "Fetter Benz",
                 Description = "Laut und groß",
                 Images = productImages
             };
 
             ConfiguratorSlim ps2 = new ConfiguratorSlim() {
-                ConfigId = 1,
+                ConfigId = "ALFA1",
                 Name = "Eleganter Alfa Romeo",
                 Description = "Stylisch und erweckt",
                 Images = productImages
@@ -127,7 +153,7 @@ namespace BackendProductConfigurator.Controllers
 
             ConfiguratorSlim ps3 = new ConfiguratorSlim()
             {
-                ConfigId = 2,
+                ConfigId = "BENZ2",
                 Name = "Fetterer Benz",
                 Description = "Umso lauter und größer",
                 Images = productImages
@@ -163,7 +189,7 @@ namespace BackendProductConfigurator.Controllers
                 SavedName = "Scherzermobil",
                 Status = EStatus.Saved.ToString(),
                 User = acc1,
-                ConfigId = 0
+                ConfigId = "ALFA1"
             };
             ProductSaveExtended psave2 = new ProductSaveExtended()
             {
@@ -173,7 +199,7 @@ namespace BackendProductConfigurator.Controllers
                 SavedName = "Pömmermobil",
                 Status = EStatus.Saved.ToString(),
                 User = acc2,
-                ConfigId = 1
+                ConfigId = "ALFA"
             };
             ProductSaveExtended psave3 = new ProductSaveExtended()
             {
@@ -183,7 +209,7 @@ namespace BackendProductConfigurator.Controllers
                 SavedName = "Leutgeb Toyota",
                 Status = EStatus.Saved.ToString(),
                 User = acc3,
-                ConfigId = 2
+                ConfigId = "BENZ1"
             };
             SavedProducts = new List<ProductSaveExtended> { psave1, psave2, psave3 };
         }

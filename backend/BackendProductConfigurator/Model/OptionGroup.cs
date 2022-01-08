@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    public class OptionGroup : IIndexable<string>, INameable, IDescribable
+    public class OptionGroup : IIndexable, INameable, IDescribable
     {
         public string Id { get; set; }
         public string Name { get; set; }
