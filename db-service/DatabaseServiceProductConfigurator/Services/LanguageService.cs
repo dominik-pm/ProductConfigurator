@@ -14,16 +14,22 @@ namespace DatabaseServiceProductConfigurator.Services {
         public static ProductHasLanguage? GetProductWithLanguage( string productNumber, string language ) => context.ProductHasLanguages
             .Where(phs => phs.ProductNumber.Equals(productNumber) && phs.Language.Equals(language))
             .FirstOrDefault();
-        public static OptionFieldHasLanguage? GetOptionsfieldWithLanguage( int id, string language ) => context.OptionFieldHasLanguages
+        public static OptionFieldHasLanguage? GetOptionsfieldWithLanguage( string id, string language ) => context.OptionFieldHasLanguages
             .Where(ohs => ohs.OptionFieldId.Equals(id) && ohs.Language.Equals(language))
             .FirstOrDefault();
 
         public static List<string> GetAllLanguages () => context.ELanguages.Select(l => l.Language).ToList();
 
         public static string HandleLanguageInput(string input) {
-            string[] dbLangs = GetAllLanguages().ToArray();
+            if ( input == null )
+                return "en";
 
-            string country = input.Split('-')[0];
+            string[] dbLangs = GetAllLanguages().ToArray();
+            string country = input;
+
+            if(input.Contains('-'))
+                country = input.Split('-')[0];
+
             if ( dbLangs.Contains(country) )
                 return country;
 

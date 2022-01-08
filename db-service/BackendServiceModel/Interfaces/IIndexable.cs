@@ -1,7 +1,7 @@
 ﻿namespace Model.Interfaces
 {
-    public interface IIndexable<T>
+    public interface IIndexable
     {
-        T Id { get; set; }
+        string Id { get; set; }
     }
 }

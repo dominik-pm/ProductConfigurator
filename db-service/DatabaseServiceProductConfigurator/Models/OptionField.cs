@@ -12,7 +12,7 @@ namespace DatabaseServiceProductConfigurator.Models {
             ProductsHasOptionFields = new HashSet<ProductsHasOptionField>();
         }
 
-        public int Id { get; set; }
+        public string Id { get; set; } = null!;
         public string Type { get; set; } = null!;
         public bool Required { get; set; }
 
