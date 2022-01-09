@@ -16,7 +16,7 @@ namespace BackendProductConfigurator.Controllers
         {
             if(AValuesClass.Configurators.Count == 0)
             {
-                AValuesClass.SetValues(EValueMode.TestValues);
+                AValuesClass.SetValues();
             }
         }
 
@@ -42,6 +42,7 @@ namespace BackendProductConfigurator.Controllers
         public virtual void Post([FromBody] T value)
         {
             entities.Add(value);
+            AValuesClass.PostValue<T>(value);
         }
 
         // PUT api/<Controller>/5
@@ -73,11 +74,20 @@ namespace BackendProductConfigurator.Controllers
             AValuesClass.ConfiguratorsSlim.Add(value);
         }
 
+        // GET api/<Controller>/5
+        [HttpGet("{id}")]
+        public override Configurator Get(string id)
+        {
+            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
+            return entities.Find(entity => entity.ConfigId.Equals(id));
+        }
+
         // POST api/<Controller>
         [HttpPost]
         public override void Post([FromBody] Configurator value)
         {
             AddConfigurator(value);
+            AValuesClass.PostValue<Configurator>(value);
         }
     }
     public partial class productsController : AController<ConfiguratorSlim, string>
@@ -107,22 +117,23 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
-            //AValuesClass.ConfiguredProducts.Add(value); //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            EValidationResult validationResult;
+            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).OptionGroups);
+            if (validationResult == EValidationResult.ValidationPassed)
+            {
+                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Dependencies);
+            }
             new Thread(() =>
             {
-                EValidationResult validationResult;
-                validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).OptionGroups);
-                if (validationResult == EValidationResult.ValidationPassed)
-                {
-                    validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Dependencies);
-                }
                 EmailProducer.SendEmail(value, validationResult);
             }).Start();
             new Thread(() =>
             {
-                PdfProducer.GeneratePDF(value, configId);
+                if(validationResult == EValidationResult.ValidationPassed)
+                    PdfProducer.GeneratePDF(value, configId);
             }).Start();
             entities.Add(value);
+            AValuesClass.PostValue<ConfiguredProduct>(value);
         }
     }
     public class accountController : AController<Account, int>
@@ -136,7 +147,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] Account value)
         {
-            entities.Add(value);  //Controller wird bei jeder Anfrage neu instanziert --> Externe Klasse mit statischen Listen wird vorerst benötigt
+            entities.Add(value);
+            AValuesClass.PostValue<Account>(value);
         }
     }
     public partial class savedConfigsController : AController<ProductSaveExtended, string>

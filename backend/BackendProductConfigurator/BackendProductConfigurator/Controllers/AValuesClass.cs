@@ -10,16 +10,18 @@ namespace BackendProductConfigurator.Controllers
         public static List<ProductSaveExtended> SavedProducts { get; set; } = new List<ProductSaveExtended>();
         public static List<Account> Accounts { get; set; } = new List<Account>();
 
+        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
         private static string serverAddress = "https://localhost:7109";
+
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
-            {typeof(ConfiguredProduct), "/booking"},
-            {typeof(Configurator), "/configuration" }
+            {typeof(ConfiguredProduct), "/db/configuration"},
+            {typeof(Configurator), "/db/product" }
         };
 
-        public static void SetValues(EValueMode valueMode)
+        public static void SetValues()
         {
-            switch(valueMode)
+            switch(ValueMode)
             {
                 case EValueMode.TestValues:
                     SetStaticValues();
@@ -31,12 +33,13 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void PostValue<T>(T value) where T : class
         {
-            ADBAccess<T>.PostValue(serverAddress, typeApis[typeof(ConfiguredProduct)], value);
+            if(ValueMode == EValueMode.DatabaseValues)
+                ADBAccess<T>.PostValue(serverAddress, typeApis[typeof(ConfiguredProduct)], value);
         }
         public static void SetDBValues()
         {
-            Configurators = ADBAccess<Configurator>.GetValues(serverAddress, "/db/configuration").Result;
-            SavedProducts = ADBAccess<ProductSaveExtended>.GetValues(serverAddress, "/db/account/configurations").Result;
+            Configurators = ADBAccess<Configurator>.GetValues(serverAddress, typeApis[typeof(Configurator)]).Result;
+            //SavedProducts = ADBAccess<ProductSaveExtended>.GetValues(serverAddress, "/db/account/configurations").Result;
         }
 
         public static void SetStaticValues()
@@ -98,7 +101,7 @@ namespace BackendProductConfigurator.Controllers
                 GroupRequirements = new Dictionary<string, List<string>> { { "PANORAMATYPE_GROUP", new List<string> { "PANORAMAROOF" } } },
                 PriceList = new Dictionary<string, float> { { "D150", 1500f },
                                                 { "RED", 250f },
-                                                { "PROOF", 250f} }
+                                                { "DIESEL", 150f} }
             };
 
             Configurators.Add(new Configurator()

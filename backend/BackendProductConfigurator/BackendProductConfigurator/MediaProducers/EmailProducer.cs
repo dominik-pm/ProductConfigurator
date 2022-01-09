@@ -28,7 +28,7 @@ namespace BackendProductConfigurator.MediaProducers
             {
                 case EValidationResult.ValidationPassed:
                     template.AppendLine("<p>wir haben ihre Bestellung des Produkts</p>");
-                    template.AppendLine("<h1>@Model.Name</h1>");
+                    template.AppendLine("<h1>@Model.ConfigurationName</h1>");
                     template.AppendLine("mit folgenden Optionen:<ul>");
                     template.AppendLine("@foreach(var option in @Model.Options) { <li>@option.Name</li> } ");
                     template.AppendLine("<p></ul>erhalten.</p>");
