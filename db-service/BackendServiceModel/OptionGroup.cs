@@ -2,9 +2,9 @@
 
 namespace Model
 {
-    public class OptionGroup : IIndexable<int>, INameable, IDescribable
+    public class OptionGroup : IIndexable, INameable, IDescribable
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public List<string> OptionIds { get; set; } = new List<string>();

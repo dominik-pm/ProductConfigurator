@@ -2,6 +2,6 @@
 {
     public interface IConfigId
     {
-        public int ConfigId { get; set; }
+        public string ConfigId { get; set; }
     }
 }

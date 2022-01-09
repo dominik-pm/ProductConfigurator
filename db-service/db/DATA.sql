@@ -80,60 +80,62 @@ VALUES ('MULTI_SELECT'),
        ('PARENT');
 
 INSERT IGNORE INTO option_fields (id, type, required)
-VALUES (1, 'SINGLE_SELECT', 1), -- Color
-       (2, 'SINGLE_SELECT', 1), -- Motor Type
-       (3, 'SINGLE_SELECT', 1), -- Motor Group
-       (4, 'SINGLE_SELECT', 0), -- Panorama Group
-       (5, 'SINGLE_SELECT', 1), -- Panoramatype Group
+VALUES ('1', 'SINGLE_SELECT', 1), -- Color
+       ('2', 'SINGLE_SELECT', 1), -- Motor Type
+       ('3', 'SINGLE_SELECT', 1), -- Motor Group
+       ('4', 'SINGLE_SELECT', 0), -- Panorama Group
+       ('5', 'SINGLE_SELECT', 1), -- Panoramatype Group
 
-       (6, 'PARENT', 0),        -- Exterior
-       (7, 'PARENT', 0),        -- Motor Section
-       (8, 'PARENT', 0); -- Panorama Section
+       ('6', 'PARENT', 0),        -- Exterior
+       ('7', 'PARENT', 0),        -- Motor Section
+       ('8', 'PARENT', 0);        -- Panorama Section
 
 INSERT IGNORE INTO products_has_option_fields (option_fields, product_number, dependency_type)
-VALUES (1, 'BLUE', 'CHILD'),          -- Color
-       (1, 'YELLOW', 'CHILD'),
-       (1, 'GREEN', 'CHILD'),
-       (2, 'DIESEL', 'CHILD'),        -- Motor Type
-       (2, 'PETROL', 'CHILD'),
-       (3, 'D150', 'CHILD'),          -- Motor Group
-       (3, 'D250', 'CHILD'),
-       (3, 'P220', 'CHILD'),
-       (3, 'P450', 'CHILD'),
-       (4, 'PANORAMAROOF', 'CHILD'),  -- Panorama Group
-       (5, 'PANORAMASMALL', 'CHILD'), -- Panorama Type
-       (5, 'PANORAMALARGE', 'CHILD'),
+VALUES ('1', 'BLUE', 'CHILD'),          -- Color
+       ('1', 'YELLOW', 'CHILD'),
+       ('1', 'GREEN', 'CHILD'),
+       ('2', 'DIESEL', 'CHILD'),        -- Motor Type
+       ('2', 'PETROL', 'CHILD'),
+       ('3', 'D150', 'CHILD'),          -- Motor Group
+       ('3', 'D250', 'CHILD'),
+       ('3', 'P220', 'CHILD'),
+       ('3', 'P450', 'CHILD'),
+       ('4', 'PANORAMAROOF', 'CHILD'),  -- Panorama Group
+       ('5', 'PANORAMASMALL', 'CHILD'), -- Panorama Type
+       ('5', 'PANORAMALARGE', 'CHILD'),
 
        -- The option-fields for a car
-       (6, 'Golf', 'PARENT'),
-       (7, 'Golf', 'PARENT'),
-       (8, 'Golf', 'PARENT');
+       ('6', 'Golf', 'PARENT'),
+       ('7', 'Golf', 'PARENT'),
+       ('8', 'Golf', 'PARENT');
 
 INSERT IGNORE INTO option_field_has_language (option_field_id, language, name, description)
-VALUES (1, 'en', 'Color', 'the exterior color of the car'),
-       (2, 'en', 'Motor Type', 'the motor of your car'),
-       (3, 'en', 'Motor', 'how powerful'),
-       (4, 'en', 'Panoramic Roof', 'a glass roof for an open feeling'),
-       (5, 'en', 'Panoramic Roof type', 'size of your panorama roof'),
-       (6, 'en', 'EXTERIOR', 'exterior'),
-       (7, 'en', 'MOTOR_SECTION', 'Motor'),
-       (8, 'en', 'PANORAMA_SECTION', 'Panorama'),
+VALUES ('1', 'en', 'Color', 'the exterior color of the car'),
+       ('2', 'en', 'Motor Type', 'the motor of your car'),
+       ('3', 'en', 'Motor', 'how powerful'),
+       ('4', 'en', 'Panoramic Roof', 'a glass roof for an open feeling'),
+       ('5', 'en', 'Panoramic Roof type', 'size of your panorama roof'),
+       ('6', 'en', 'EXTERIOR', 'exterior'),
+       ('7', 'en', 'MOTOR_SECTION', 'Motor'),
+       ('8', 'en', 'PANORAMA_SECTION', 'Panorama'),
 
-       (1, 'de', 'Farbe', 'die Außenfarbe des Autos'),
-       (2, 'de', 'Motor Typ', 'der Motor des Autos'),
-       (3, 'de', 'Motor', 'wie stark'),
-       (4, 'de', 'Panorama Dach', 'ein Glasdach für ein offenes Gefühl'),
-       (5, 'de', 'Panorama Dach Typ', 'Größe des Glasdaches'),
-       (6, 'de', 'EXTERIOR', 'exterior'),
-       (7, 'de', 'MOTOR_BEREICH', 'Motor'),
-       (8, 'de', 'PANORAMA_BEREICH', 'Panorama');
+       ('1', 'de', 'Farbe', 'die Außenfarbe des Autos'),
+       ('2', 'de', 'Motor Typ', 'der Motor des Autos'),
+       ('3', 'de', 'Motor', 'wie stark'),
+       ('4', 'de', 'Panorama Dach', 'ein Glasdach für ein offenes Gefühl'),
+       ('5', 'de', 'Panorama Dach Typ', 'Größe des Glasdaches'),
+       ('6', 'de', 'EXTERIOR', 'exterior'),
+       ('7', 'de', 'MOTOR_BEREICH', 'Motor'),
+       ('8', 'de', 'PANORAMA_BEREICH', 'Panorama');
 
 INSERT IGNORE INTO option_fields_has_option_fields (base, option_field, dependency_type)
-VALUES (6, 1, 'CHILD'),
-       (7, 2, 'CHILD'),
-       (7, 3, 'CHILD'),
-       (8, 4, 'CHILD'),
-       (8, 5, 'CHILD');
+VALUES ('6', '1', 'CHILD'),
+       ('7', '2', 'CHILD'),
+       ('7', '3', 'CHILD'),
+       ('8', '4', 'CHILD'),
+       ('8', '5', 'CHILD'),
+       ('5', '4', 'REQUIRED');
+
 
 INSERT IGNORE INTO configurations (id, product_number)
 VALUES (1, 'Golf'),
@@ -145,33 +147,33 @@ VALUES (1, 1),
        (1, 2);
 
 INSERT IGNORE INTO configuration_has_option_fields (config_id, option_field_id, parent_config_id, parent_option_field_id)
-VALUES (1, 6, null, null),
-       (1, 7, null, null),
-       (1, 8, null, null),
+VALUES (1, '6', null, null),
+       (1, '7', null, null),
+       (1, '8', null, null),
 
-       (1, 1, 1, 6),
-       (1, 2, 1, 7),
-       (1, 3, 1, 7),
-       (1, 4, 1, 8),
-       (1, 5, 1, 8),
+       (1, '1', 1, '6'),
+       (1, '2', 1, '7'),
+       (1, '3', 1, '7'),
+       (1, '4', 1, '8'),
+       (1, '5', 1, '8'),
        --
-       (2, 6, null, null),
-       (2, 7, null, null),
-       (2, 8, null, null),
+       (2, '6', null, null),
+       (2, '7', null, null),
+       (2, '8', null, null),
 
-       (2, 1, 2, 6),
-       (2, 2, 2, 7),
-       (2, 3, 2, 7),
-       (2, 4, 2, 8),
-       (2, 5, 2, 8);
+       (2, '1', 2, '6'),
+       (2, '2', 2, '7'),
+       (2, '3', 2, '7'),
+       (2, '4', 2, '8'),
+       (2, '5', 2, '8');
 
 INSERT IGNORE INTO configuration_has_selected_options (config_id, option_field_id, product_number)
-VALUES (1, 1, 'BLUE'),
-       (1, 2, 'PETROL'),
-       (1, 3, 'P220'),
+VALUES (1, '1', 'BLUE'),
+       (1, '2', 'PETROL'),
+       (1, '3', 'P220'),
 
-       (2, 1, 'GREEN'),
-       (2, 2, 'DIESEL'),
-       (2, 3, 'D250'),
-       (2, 4, 'PANORAMAROOF'),
-       (2, 5, 'PANORAMALARGE');
+       (2, '1', 'GREEN'),
+       (2, '2', 'DIESEL'),
+       (2, '3', 'D250'),
+       (2, '4', 'PANORAMAROOF'),
+       (2, '5', 'PANORAMALARGE');

@@ -5,7 +5,7 @@ using System.Dynamic;
 namespace DatabaseServiceProductConfigurator.Services {
 
     public struct OptionFieldStruct {
-        public int id { get; set; }
+        public string id { get; set; }
         public string type { get; set; }
         public bool required { get; set; }
         public InfoStruct infos { get; set; }
@@ -48,7 +48,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             return rawData;
         }
 
-        public static List<OptionFieldStruct> GetChildren( int id, string lang ) {
+        public static List<OptionFieldStruct> GetChildren( string id, string lang ) {
             List<OptionFieldStruct> rawData = (
                 from of in context.OptionFieldsHasOptionFields
                 where of.BaseNavigation.Id == id && of.DependencyType == "CHILD"

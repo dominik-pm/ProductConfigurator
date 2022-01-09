@@ -13,11 +13,11 @@ namespace DatabaseServiceProductConfigurator.Models
         }
 
         public int ConfigId { get; set; }
-        public int OptionFieldId { get; set; }
+        public string OptionFieldId { get; set; } = null!;
         [JsonIgnore]
         public int? ParentConfigId { get; set; }
         [JsonIgnore]
-        public int? ParentOptionFieldId { get; set; }
+        public string? ParentOptionFieldId { get; set; }
 
         [JsonIgnore]
         public virtual Configuration Config { get; set; } = null!;
