@@ -53,11 +53,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             ).ToList();
         }
 
+        public static ConfiguredProduct? GetConfiguredProductById( string id ) => GetConfiguredProducts(id).FirstOrDefault();
+
         private static ConfiguredProductStruct GetOptionsByConfigId( int configId, string lang ) {
             product_configuratorContext localContext = new product_configuratorContext();
 
             List<ConfigurationHasOptionField> fields = new List<ConfigurationHasOptionField>();
-            foreach (var item in (
+            foreach ( var item in (
                 from op in localContext.Configurations
                 where op.Id == configId
                 select op.ConfigurationHasOptionFields
@@ -68,9 +70,9 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Option> toReturn = new List<Option>();
             float price = 0;
 
-            foreach(var item in fields ) {
+            foreach ( var item in fields ) {
 
-                foreach (var el in item.ProductNumbers ) {
+                foreach ( var el in item.ProductNumbers ) {
                     price += el.Price;
 
                     ProductHasLanguage? infos = LanguageService.GetProductWithLanguage(el.ProductNumber, lang);
@@ -85,6 +87,43 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             return new ConfiguredProductStruct(price, toReturn);
+        }
+
+        public static bool SaveConfiguredProduct( ConfiguredProduct toSave ) {
+            bool worked = true;
+
+            try {
+                Configuration added = context.Configurations.Add(
+                    new Configuration {
+                        ProductNumber = toSave.ConfigurationName,
+                        Customer = null
+                    }
+                ).Entity;
+
+                List<string> products = ( from p in context.Products where toSave.Options.Select(c => c.Id).Contains(p.ProductNumber) select p.ProductNumber ).ToList();
+
+                List<ConfigurationHasOptionField> fields = (
+                    from of in context.OptionFields
+                    join pof in context.ProductsHasOptionFields on of.Id equals pof.OptionFields
+                    where products.Contains(pof.ProductNumber)
+                    select new ConfigurationHasOptionField {
+                        ConfigId = added.Id,
+                        OptionFieldId = of.Id,
+                        ProductNumbers = ( from pof1 in context.ProductsHasOptionFields where pof1.OptionFields == of.Id && products.Contains(pof.ProductNumber) select pof1.ProductNumberNavigation ).ToList()
+                    }
+                ).ToList();
+
+                context.ConfigurationHasOptionFields.AddRange(fields);
+                context.SaveChanges();
+            }
+            catch ( Exception ex ) {
+                Console.WriteLine(ex.Message);
+                context.Dispose();
+                worked = false;
+            }
+
+            return worked;
+
         }
 
         #endregion

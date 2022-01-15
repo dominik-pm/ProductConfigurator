@@ -1,9 +1,12 @@
 ﻿using DatabaseServiceProductConfigurator.Models;
 using DatabaseServiceProductConfigurator.Services;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatabaseServiceProductConfigurator.Controllers {
+
+    [EnableCors()]
     [Route("db/[controller]")]
     [ApiController]
     public class LanguageController : ControllerBase {

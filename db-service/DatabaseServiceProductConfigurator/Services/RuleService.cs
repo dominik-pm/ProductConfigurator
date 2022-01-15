@@ -9,7 +9,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region Backend
 
-        public static ProductDependencies ExtendProductDependencies( this ProductDependencies dependencies, string productNumber ) {
+        public static Rules ExtendProductDependencies( this Rules dependencies, string productNumber ) {
 
             List<string> ReplacementGroups = (
                     from pof in context.ProductsHasOptionFields
@@ -33,7 +33,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     select pof.OptionProduct
                 ).ToList();
             if( Incompabilities.Count > 0 )
-                dependencies.Incompabilities.Add(productNumber, Incompabilities);
+                dependencies.Incompatibilities.Add(productNumber, Incompabilities);
 
             float? price = ( from pof in context.Products where pof.ProductNumber == productNumber select pof.Price ).FirstOrDefault();
             if(price != null && price != 0)
@@ -42,13 +42,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             return dependencies;
         }
 
-        public static ProductDependencies ExtendProductDependenciesByOptionField( this ProductDependencies dependencies, string id ) {
+        public static Rules ExtendProductDependenciesByOptionField( this Rules dependencies, string id ) {
             string toSave = id.ToString();
 
             List<string> ReplacementGroups = (
-                      from pof in context.OptionFieldsHasOptionFields
-                      where pof.Base == id && pof.DependencyType == "CHILD" && pof.OptionFieldNavigation.Type == "SINGLE_SELECT"
-                      select pof.OptionField.ToString()
+                      from pof in context.ProductsHasOptionFields
+                      where pof.OptionFields == id && pof.DependencyType == "CHILD" && pof.OptionFieldsNavigation.Type == "SINGLE_SELECT"
+                      select pof.ProductNumber
                 ).ToList();
             if ( ReplacementGroups.Count > 0 )
                 dependencies.ReplacementGroups.Add(toSave, ReplacementGroups);
@@ -67,7 +67,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     select pof.OptionField.ToString()
                 ).ToList();
             if ( Incompabilities.Count > 0 )
-                dependencies.Incompabilities.Add(toSave, Incompabilities);
+                dependencies.Incompatibilities.Add(toSave, Incompabilities);
 
             return dependencies;
         }

@@ -14,7 +14,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         private static List<Configurator> getConfigurators( string lang ) {
             List<Configurator> temp = (
                 from p in context.Products
-                let depen = new ProductDependencies { BasePrice = p.Price }
+                let depen = new Rules { BasePrice = p.Price }
                 let infos = LanguageService.GetProductWithLanguage(p.ProductNumber, lang)
                 select new Configurator {
                     ConfigId = p.ProductNumber,
@@ -24,14 +24,14 @@ namespace DatabaseServiceProductConfigurator.Services {
                     Options = GetOptionsByProductNumber(p.ProductNumber, lang),
                     OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang),
                     OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang),
-                    Dependencies = depen,
+                    Rules = depen,
                 }
             ).ToList();
 
             foreach ( var item in temp ) {
-                item.Options.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependencies(o.Id));
-                item.OptionGroups.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependenciesByOptionField(o.Id));
-                item.OptionSections.ForEach(o => item.Dependencies = item.Dependencies.ExtendProductDependenciesByOptionField(o.Id));
+                item.Options.ForEach(o => item.Rules = item.Rules.ExtendProductDependencies(o.Id));
+                item.OptionGroups.ForEach(o => item.Rules = item.Rules.ExtendProductDependenciesByOptionField(o.Id));
+                item.OptionSections.ForEach(o => item.Rules = item.Rules.ExtendProductDependenciesByOptionField(o.Id));
             }
 
             return temp;
@@ -203,7 +203,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     (
                         from opt in localContext.ProductsHasOptionFields
                         where opt.OptionFields == item.Id && opt.DependencyType == "CHILD"
-                        let infos = LanguageService.GetProductWithLanguage(productNumber, lang)
+                        let infos = LanguageService.GetProductWithLanguage(opt.ProductNumber, lang)
                         select new Option { 
                             Id = opt.ProductNumber,
                             Name = infos.Name,
@@ -225,7 +225,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             context.Products.Add(
                 new Product {
                     ProductNumber = config.ConfigId,
-                    Price = config.Dependencies.BasePrice,
+                    Price = config.Rules.BasePrice,
                     Category = "",
                     Buyable = true
                 }
@@ -233,7 +233,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // OPTION PRODUCTS
             foreach (var item in config.Options ) {
-                bool priceAvailable = config.Dependencies.PriceList.TryGetValue(item.Id, out float price);
+                bool priceAvailable = config.Rules.PriceList.TryGetValue(item.Id, out float price);
 
                 context.Products.Add(
                     new Product {
@@ -246,7 +246,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             // REQUIREMENTS
-            foreach (var item in config.Dependencies.Requirements ) {
+            foreach (var item in config.Rules.Requirements ) {
                 foreach(var reqitem in item.Value ) {
                     context.ProductsHasProducts.Add(
                         new ProductsHasProduct {
@@ -259,7 +259,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             // INCOMPABILITIES
-            foreach ( var item in config.Dependencies.Incompabilities ) {
+            foreach ( var item in config.Rules.Incompatibilities ) {
                 foreach ( var reqitem in item.Value ) {
                     context.ProductsHasProducts.Add(
                         new ProductsHasProduct {
@@ -286,7 +286,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // OPTION GROUPS
             List<string> SingleSelect = new List<string>();
-            foreach( var item in config.Dependencies.ReplacementGroups ) {
+            foreach( var item in config.Rules.ReplacementGroups ) {
                 foreach(var item2 in item.Value ) {
                     SingleSelect.Add(item2);
                 }
