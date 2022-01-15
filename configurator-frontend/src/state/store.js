@@ -6,6 +6,7 @@ import confirmationReducer from './confirmationDialog/confirmationSlice'
 import userReducer, { setCurrentUser } from './user/userSlice'
 import inputDialogReducer from './inputDialog/inputDialogSlice'
 import alertReducer from './alert/alertSlice'
+import builderReducer from './configurationBuilder/builderSlice'
 import jwt from 'jsonwebtoken'
 import { setAuthorizationToken } from '../api/general'
 
@@ -17,7 +18,8 @@ export const store = configureStore({
         confirmation: confirmationReducer,
         user: userReducer,
         inputDialog: inputDialogReducer,
-        alert: alertReducer
+        alert: alertReducer,
+        builder: builderReducer
     }
 })
 

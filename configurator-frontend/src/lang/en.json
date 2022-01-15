@@ -51,5 +51,7 @@
     "allOrderedConfigurations": "All Ordered Configurations",
     "createConfiguration": "Create Configuration",
 
-    "finishCreation": "Finish New Configuration"
+    "finishBuild": "Finish New Configuration",
+    "resetBuild": "Reset",
+    "resetBuildConfirmation": "Do you really want to reset this configuration?"
 }

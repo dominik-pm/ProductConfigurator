@@ -94,7 +94,7 @@ function ConfirmationOptionSelect({ isOpen, message, content, optionsToSelect, o
             onClose={handleClose}
             scroll="paper"
             aria-labelledby="responsive-dialog-title"
-            fullWidth={true}
+            fullWidth
         >
             <DialogTitle id="responsive-dialog-title">
                 {text.confirmationPrompt}

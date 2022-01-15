@@ -51,5 +51,5 @@
     "allOrderedConfigurations": "Alle bestellten Konfigurationen",
     "createConfiguration": "Konfiguration erstellen",
 
-    "finishCreation": "Neue Konfiguration Fertigstellen"
+    "finishBuild": "Neue Konfiguration Fertigstellen"
 }

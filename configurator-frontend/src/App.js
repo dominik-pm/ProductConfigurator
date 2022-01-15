@@ -12,7 +12,7 @@ import InputDialog from './components/dialog/InputDialog'
 import GenericAlert from './components/alert/GenericAlert'
 import ProductView from './components/products/ProductView'
 import AccountView from './components/account/AccountView'
-import CreateConfigurationView from './components/configuration/Creator/CreateConfigurationView'
+import CreateConfigurationView from './components/configuration/Builder/CreateConfigurationView'
 import ConfigurationView from './components/configuration/Configurator/ConfigurationView'
 import theme from './Theme'
 

@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material'
+import { Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../lang'
@@ -31,12 +31,49 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
         // check if every field has an input
         let valid = true
         for (const key in localData) {
-            if (!localData[key].value) valid = false
+            if (!localData[key].value && !localData[key].isCheckBox) valid = false
         }
         if (!valid) return
 
         setInputData(localData)
         confirm()
+    }
+
+    function renderInputField(inputdata, key, index) {
+        const data = inputdata[key]
+
+        if (data.isCheckBox) {
+            return (
+                <FormControlLabel
+                    label={data.name}
+                    labelPlacement="start"
+                    control={
+                        <Checkbox 
+                            key={index}
+                            checked={localData[key].value}
+                            onChange={(event) => {
+                                valuesChanged(key, !localData[key].value)
+                            }}
+                        />
+                    }
+                />
+            )
+        }
+        return (
+            <TextField
+                key={index}
+                autoFocus
+                autoComplete={inputData[key].isPassword ? "current-password" : "text"}
+                margin="dense"
+                label={inputData[key].name}
+                type={inputData[key].isEmail ? 'email' : inputData[key].isPassword ? 'password' : 'text'}
+                fullWidth
+                variant="standard"
+                value={localData[key].value}
+                error={!localData[key].value}
+                onChange={(event) => valuesChanged(key, event.target.value)}
+            />
+        )
     }
 
     function renderDialogContent() {
@@ -45,22 +82,9 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
 
         return (
             <form>
-                {Object.keys(inputData).map((key, index) => (
-                    <TextField
-                        key={index}
-                        autoFocus
-                        autoComplete={inputData[key].isPassword ? "current-password" : "text"}
-                        margin="dense"
-                        label={inputData[key].name}
-                        type={inputData[key].isEmail ? 'email' : inputData[key].isPassword ? 'password' : 'text'}
-                        fullWidth
-                        variant="standard"
-                        value={localData[key].value}
-                        error={!localData[key].value}
-                        onChange={(event) => valuesChanged(key, event.target.value)}
-                    />
-
-                 ))}
+                {Object.keys(inputData).map((key, index) => {
+                    return renderInputField(inputData, key, index)
+                })}
             </form>
         )
     }
