@@ -13,7 +13,7 @@ export const OPTION_ERRORS = {
 const selectGroupId = (state, groupId) =>               groupId
 const selectOptionId = (state, optionId) =>             optionId
 
-const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilites
+const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilities
 const selectAllOptionRequirements = state =>            state.configuration.configuration.rules.requirements
 const selectReplacementGroups = state =>                state.configuration.configuration.rules.replacementGroups
 
@@ -21,7 +21,7 @@ const selectAllGroupRequirements = state =>             state.configuration.conf
 
 export const selectConfigurationStatus = state =>       state.configuration.status
 
-export const selectConfigurationId = (state) =>         state.configuration.configuration.id
+export const selectConfigurationId = (state) =>         state.configuration.configuration.configId
 
 export const selectBasePrice = state =>                 state.configuration.configuration.rules?.basePrice || 0
 export const selectPriceList = state =>                 state.configuration.configuration.rules?.priceList || []
@@ -64,20 +64,20 @@ export const getOptionReplacementGroup = createSelector([selectReplacementGroups
 })
 
 // -- getIsOptionSelectable -->
-const getOptionIncompatibilities = createSelector([selectAllOptionIncompatibilities, selectOptionId], (incompatibilites, optionId) => {
+const getOptionIncompatibilities = createSelector([selectAllOptionIncompatibilities, selectOptionId], (incompatibilities, optionId) => {
     // console.log('Option Incompatitbilities output')
-    return incompatibilites[optionId]
+    return incompatibilities[optionId]
 })
-const getIsOptionCompatible = createSelector([selectSelectedOptions, getOptionIncompatibilities], (selectedOptions, incompatibilites) => {
+const getIsOptionCompatible = createSelector([selectSelectedOptions, getOptionIncompatibilities], (selectedOptions, incompatibilities) => {
     // returns an array:
     //  -> 1. index: if the option is compatible or not
     //  -> 2. index: options that are incompatible
 
-    if (!incompatibilites) return [true, null]
+    if (!incompatibilities) return [true, null]
 
     let compatible = true
     let incompatibleOptions = []
-    incompatibilites.forEach(incompatibility => {
+    incompatibilities.forEach(incompatibility => {
         // if there is an incompatibility in the selected options, the option is not compatible
         if (selectedOptions.includes(incompatibility)) {
             compatible = false
@@ -207,9 +207,9 @@ export const getDependentOptionsDeselect = createSelector(
 // the options that cant be used if this option selected
 export const getDependentOptionsSelect = createSelector(
     [selectSelectedOptions, selectOptionId, selectAllOptionIncompatibilities], 
-    (selectedOptions, selectedOptionId, incompatibilites) => {
+    (selectedOptions, selectedOptionId, incompatibilities) => {
 
-    let dependencies = dependenciesFromDependencyLists(selectedOptionId, incompatibilites)
+    let dependencies = dependenciesFromDependencyLists(selectedOptionId, incompatibilities)
     
     // only get the dependencies from the selected options
     dependencies = dependencies.filter(d => selectedOptions.includes(d))

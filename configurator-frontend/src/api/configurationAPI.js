@@ -1,13 +1,20 @@
-export const fetchId = (productId) => {
-    return fetchApiTest(productId)
+import axios from 'axios'
 
-    // axios.get(`/configuration/${productId}`)
-    // .then(res => {
-    //     resolve(res.data)
-    // })
-    // .catch(err => {
-    //     reject(err)
-    // })
+const baseURL = `https://sqrt3.ddns.net:7187`
+
+export const fetchId = (productId) => {
+    // return fetchApiTest(productId)
+
+    return new Promise((resolve, reject) => {
+        // axios.get(`/configuration/${productId}`)
+        axios.get(`${baseURL}/configuration/Golf`)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject(err)
+        })
+    })
 }
 
 export const postConfiguration = (newConfiguration) => {
@@ -50,7 +57,7 @@ function fetchApiTest(configId) {
 
 const configurations = [
     {
-        id: 0,
+        configId: 0,
         name: 'Car',
         description: 'automobile',
         image: '1.jpg',
@@ -262,7 +269,7 @@ const configurations = [
                 PANORAMASMALL: ['PANORAMAROOF'],
                 PANORAMALARGE: ['PANORAMAROOF']
             },
-            incompatibilites: {
+            incompatibilities: {
                 PANORAMAROOF: ['PETROL'],
                 PANORAMASMALL: ['BLUE']
             },
