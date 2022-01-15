@@ -24,7 +24,6 @@ D:\Schule\DA\Scherzer\BackendProductConfigurator\Model\bin\Debug\net6.0\ref\Mode
 D:\Schule\DA\Scherzer\BackendProductConfigurator\Model\bin\Debug\net6.0\Model.pdb
 D:\Schule\DA\backend\BackendProductConfigurator\Model\bin\Debug\net6.0\Model.deps.json
 D:\Schule\DA\backend\BackendProductConfigurator\Model\bin\Debug\net6.0\Model.dll
-D:\Schule\DA\backend\BackendProductConfigurator\Model\bin\Debug\net6.0\ref\Model.dll
 D:\Schule\DA\backend\BackendProductConfigurator\Model\bin\Debug\net6.0\Model.pdb
 D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.csproj.AssemblyReference.cache
 D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.GeneratedMSBuildEditorConfig.editorconfig
@@ -34,3 +33,4 @@ D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.csp
 D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.dll
 D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\ref\Model.dll
 D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.pdb
+D:\Schule\DA\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\refint\Model.dll

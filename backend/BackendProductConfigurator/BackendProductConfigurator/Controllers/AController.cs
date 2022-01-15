@@ -3,6 +3,7 @@ using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Interfaces;
+using System.Net;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -18,6 +19,11 @@ namespace BackendProductConfigurator.Controllers
             {
                 AValuesClass.SetValues();
             }
+            HttpClientHandler clientHandler = new HttpClientHandler();
+            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
+
+            // Pass the handler to httpclient(from you are calling api)
+            HttpClient client = new HttpClient(clientHandler);
         }
 
 
@@ -121,7 +127,7 @@ namespace BackendProductConfigurator.Controllers
             validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).OptionGroups);
             if (validationResult == EValidationResult.ValidationPassed)
             {
-                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Dependencies);
+                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Rules);
             }
             new Thread(() =>
             {
