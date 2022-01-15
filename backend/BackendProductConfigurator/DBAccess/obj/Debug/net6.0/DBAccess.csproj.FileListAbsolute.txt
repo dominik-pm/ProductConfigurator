@@ -1,0 +1,12 @@
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\bin\Debug\net6.0\DBAccess.deps.json
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\bin\Debug\net6.0\DBAccess.dll
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\bin\Debug\net6.0\ref\DBAccess.dll
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\bin\Debug\net6.0\DBAccess.pdb
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.csproj.AssemblyReference.cache
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.GeneratedMSBuildEditorConfig.editorconfig
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.AssemblyInfoInputs.cache
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.AssemblyInfo.cs
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.csproj.CoreCompileInputs.cache
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.dll
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\ref\DBAccess.dll
+D:\Schule\DA\Scherzer\BackendProductConfigurator\DBAccess\obj\Debug\net6.0\DBAccess.pdb

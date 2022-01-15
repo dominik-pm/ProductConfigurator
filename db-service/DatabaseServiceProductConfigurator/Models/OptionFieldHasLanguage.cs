@@ -6,7 +6,7 @@ namespace DatabaseServiceProductConfigurator.Models
 {
     public partial class OptionFieldHasLanguage
     {
-        public int OptionFieldId { get; set; }
+        public string OptionFieldId { get; set; } = null!;
         public string Language { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string Description { get; set; } = null!;

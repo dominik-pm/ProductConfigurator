@@ -7,7 +7,7 @@ namespace DatabaseServiceProductConfigurator.Models
     public partial class ProductsHasOptionField
     {
         public string ProductNumber { get; set; } = null!;
-        public int OptionFields { get; set; }
+        public string OptionFields { get; set; } = null!;
         public string DependencyType { get; set; } = null!;
 
         [JsonIgnore]
