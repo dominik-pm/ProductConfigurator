@@ -1,5 +1,3 @@
-//using DatabaseServiceProductConfigurator.Models;
-
 using DatabaseServiceProductConfigurator.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +15,12 @@ builder.Services.AddCors(options => {
         }
     );
 });
+
+// Connection String
+
+//builder.Services.AddDbContext<product_configuratorContext>(options => {
+//    options.UseMySql(builder.Configuration.GetConnectionString("default"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+//});
 
 // Add services to the container.
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace DatabaseServiceProductConfigurator.Models {
     public partial class product_configuratorContext : DbContext {
@@ -31,7 +32,8 @@ namespace DatabaseServiceProductConfigurator.Models {
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder ) {
             if ( !optionsBuilder.IsConfigured ) {
-                optionsBuilder.UseMySql("server=localhost;database=product_configurator;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+                //optionsBuilder.UseMySql("server=localhost;database=product_configurator;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+
             }
         }
         protected override void OnModelCreating( ModelBuilder modelBuilder ) {

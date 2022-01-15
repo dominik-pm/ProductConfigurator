@@ -16,18 +16,18 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
         static product_configuratorContext context = new product_configuratorContext();
 
-        [HttpGet("GetBuyableProduct")]
-        public IActionResult GetBuyableProducts() {
-            Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
+        //[HttpGet("GetBuyableProduct")]
+        //public IActionResult GetBuyableProducts() {
+        //    Request.Headers.TryGetValue("Accept-Language", out var lang);
+        //    lang = LanguageService.HandleLanguageInput(lang);
 
-            List<object> products = ProductService.GetBuyableProducts(lang);
+        //    List<object> products = ProductService.GetBuyableProducts(lang);
 
-            if ( products.Count == 0 )
-                return NoContent();
+        //    if ( products.Count == 0 )
+        //        return NoContent();
 
-            return Ok(products);
-        }
+        //    return Ok(products);
+        //}
 
         [HttpGet]
         public IActionResult GetAllProducts() {
