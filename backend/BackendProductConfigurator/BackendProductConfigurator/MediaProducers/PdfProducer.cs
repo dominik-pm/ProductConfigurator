@@ -50,7 +50,7 @@ namespace BackendProductConfigurator.MediaProducers
 
             yPosition += smallSpacing;
 
-            PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Basispreis:", configurator.Dependencies.BasePrice);
+            PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Basispreis:", configurator.Rules.BasePrice);
 
             yPosition += smallSpacing;
 
@@ -67,7 +67,7 @@ namespace BackendProductConfigurator.MediaProducers
             yPosition += smallSpacing;
             foreach(Option option in product.Options)
             {
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option.Name}", configurator.Dependencies.PriceList[option.Id]);
+                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option.Name}", configurator.Rules.PriceList[option.Id]);
                 yPosition += smallSpacing;
             }
 

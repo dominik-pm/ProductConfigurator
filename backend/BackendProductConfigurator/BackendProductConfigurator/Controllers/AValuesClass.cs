@@ -10,8 +10,8 @@ namespace BackendProductConfigurator.Controllers
         public static List<ProductSaveExtended> SavedProducts { get; set; } = new List<ProductSaveExtended>();
         public static List<Account> Accounts { get; set; } = new List<Account>();
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
-        private static string serverAddress = "https://localhost:7109";
+        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
+        private static string serverAddress = "http://andifined.ddns.net:5129";
 
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
@@ -91,13 +91,13 @@ namespace BackendProductConfigurator.Controllers
                 new OptionSection("Motor", "MOTOR_SECTION", new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" })
             };
 
-            ProductDependencies productDependencies = new ProductDependencies()
+            Rules productDependencies = new Rules()
             {
                 BasePrice = 50000f,
                 DefaultOptions = new List<string> { "RED", "DIESEL", "D150" },
                 ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
                 Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
-                Incompabilities = new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
+                Incompatibilities = new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
                 GroupRequirements = new Dictionary<string, List<string>> { { "PANORAMATYPE_GROUP", new List<string> { "PANORAMAROOF" } } },
                 PriceList = new Dictionary<string, float> { { "D150", 1500f },
                                                 { "RED", 250f },
@@ -110,7 +110,7 @@ namespace BackendProductConfigurator.Controllers
                 Name = "Neuer Konfigurator",
                 Description = "Sehr cool",
                 Images = productImages,
-                Dependencies = productDependencies,
+                Rules = productDependencies,
                 OptionGroups = optionGroups,
                 Options = options,
                 OptionSections = optionSections}

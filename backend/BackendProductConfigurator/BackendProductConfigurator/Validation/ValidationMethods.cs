@@ -5,7 +5,7 @@ namespace BackendProductConfigurator.Validation
 {
     public static class ValidationMethods
     {
-        public static EValidationResult ValidatePrice (ConfiguredProduct product, ProductDependencies dependencies)
+        public static EValidationResult ValidatePrice (ConfiguredProduct product, Rules dependencies)
         {
             float endPrice = dependencies.BasePrice;
             for(int i = 0; i < product.Options.Count; i++)
