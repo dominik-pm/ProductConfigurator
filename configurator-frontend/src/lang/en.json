@@ -36,11 +36,22 @@
     "youAlsoNeedToSelect": "You also need to select",
     "theseOptionsWillBeRemoved": "These options will be removed",
 
-    "Login": "Login",
-    "Register": "Register",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
     "submit": "submit",
 
     "savedConfiguration": "Saved configuration",
     "successOrderedConfiguration": "Successfully ordered the configuration",
-    "passwordDontMatch": "Passwords do not match"
+    "passwordDontMatch": "Passwords do not match",
+    "successfullyRemoved": "Successfully removed",
+
+    "savedConfigurations": "Saved Configurations",
+    "orderedConfigurations": "Ordered Configurations",
+    "allOrderedConfigurations": "All Ordered Configurations",
+    "createConfiguration": "Create Configuration",
+
+    "finishBuild": "Finish New Configuration",
+    "resetBuild": "Reset",
+    "resetBuildConfirmation": "Do you really want to reset this configuration?"
 }

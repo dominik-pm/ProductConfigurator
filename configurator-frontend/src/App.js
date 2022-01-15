@@ -1,26 +1,25 @@
 import React from 'react'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
-import ProductView from './components/products/ProductView'
-import ConfigurationView from './components/configuration/ConfigurationView'
-import Header from './components/header/Header'
 import {
     BrowserRouter as Router,
     Route,
     Routes
 } from 'react-router-dom'
+import { ThemeProvider } from '@mui/material/styles'
+import { Container, Typography } from '@mui/material'
+import Header from './components/header/Header'
 import ConfirmationOptionSelect from './components/dialog/ConfirmationDialog'
 import InputDialog from './components/dialog/InputDialog'
-import AccountView from './components/account/AccountView'
 import GenericAlert from './components/alert/GenericAlert'
-
-const theme = createTheme({
-    
-})
+import ProductView from './components/products/ProductView'
+import AccountView from './components/account/AccountView'
+import CreateConfigurationView from './components/configuration/Builder/CreateConfigurationView'
+import ConfigurationView from './components/configuration/Configurator/ConfigurationView'
+import theme from './Theme'
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <div className="App">
+            <Container sx={{padding: 0}} maxWidth="xl" className="App">
                 <Router>
                     <Header></Header>
                     <ConfirmationOptionSelect></ConfirmationOptionSelect>
@@ -42,9 +41,19 @@ function App() {
                         }>
                         </Route>
 
+                        <Route exact path="/create" element={
+                            <CreateConfigurationView></CreateConfigurationView>
+                        }>
+                        </Route>
+
+                        <Route path="*" element={
+                            <Typography variant="h2">Not Found!</Typography>
+                        }>
+                        </Route>
+
                     </Routes>
                 </Router>
-            </div>
+            </Container>
         </ThemeProvider>
     )
 }

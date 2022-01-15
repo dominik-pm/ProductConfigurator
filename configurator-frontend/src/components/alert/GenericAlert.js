@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 
 function GenericAlert({ isOpen, alert, close }) {
 
+    // Alert settings
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -22,15 +23,15 @@ function GenericAlert({ isOpen, alert, close }) {
     })
 
     const renderAlert = () => {
-        if (!isOpen) {
-            return 
-        }
-        if (alert) {
-            Toast.fire({
-                icon: alert.type,
-                title: alert.message
-            })
-        }
+        // dont fire an alert, if the alert is not open, there is no alert data or the alert is already visible
+        if (!isOpen)            return
+        if (!alert)             return
+        if (Toast.isVisible())  return
+
+        Toast.fire({
+            icon: alert.type,
+            title: alert.message
+        })
     }
 
     return (

@@ -31,6 +31,11 @@ export const alertSlice = createSlice({
         },
         closeAlert: (state) => {
             state.alerts.shift()
+
+            // set the status to closed, when all alerts are gone
+            if (state.alerts.length === 0) {
+                state.status = alertStatus.CLOSED
+            }
         }
     }
 })

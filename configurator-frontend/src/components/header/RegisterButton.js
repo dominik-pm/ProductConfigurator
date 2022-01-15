@@ -7,7 +7,7 @@ import { alertTypes, openAlert } from '../../state/alert/alertSlice'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
 
-function RegisterButton({ openInputDialog, register, openAlert, language }) {
+function RegisterButton({ openInputDialog, register, openAlert, language, size = 'small' }) {
 
     function openRegisterDialog() {
         const data = {
@@ -26,11 +26,12 @@ function RegisterButton({ openInputDialog, register, openAlert, language }) {
     }
 
     return (
-        <Button 
+        <Button
+            size={size}
             variant="contained" 
             onClick={openRegisterDialog}
             >
-            Register
+            {translate('register', language)}
         </Button>
     )
 }
