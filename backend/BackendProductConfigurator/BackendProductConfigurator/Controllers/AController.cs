@@ -11,28 +11,23 @@ namespace BackendProductConfigurator.Controllers
     [ApiController]
     public abstract class AController<T, K> : ControllerBase where T : class
     {
-        public List<T> entities;
+        public Dictionary<string, List<T>> entities;
 
         public AController()
         {
-            if(AValuesClass.Configurators.Count == 0)
+            if(AValuesClass.Configurators["de-DE"].Count == 0)
             {
                 AValuesClass.SetValues();
             }
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-
-            // Pass the handler to httpclient(from you are calling api)
-            HttpClient client = new HttpClient(clientHandler);
         }
 
 
         // GET: api/<Controller>
         [HttpGet]
-        public virtual IEnumerable<T> Get()
+        public virtual List<T> Get()
         {
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities;
+            Response.Headers["Accept-Language"] = Request.Headers.AcceptLanguage; //Richtige Sprache holen
+            return entities[GetAccLang(Request)];
         }
 
         // GET api/<Controller>/5
@@ -40,14 +35,14 @@ namespace BackendProductConfigurator.Controllers
         public virtual T Get(K id)
         {
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities.Find(entity => (entity as IIndexable).Id.Equals(id));
+            return entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id));
         }
-
+        
         // POST api/<Controller>
         [HttpPost]
         public virtual void Post([FromBody] T value)
         {
-            entities.Add(value);
+            entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<T>(value);
         }
 
@@ -63,7 +58,12 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete("{id}")]
         public virtual void Delete(K id)
         {
-            entities.Remove(entities.Find(entity => (entity as IIndexable).Id.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id)));
+        }
+
+        public static string GetAccLang(HttpRequest request)
+        {
+            return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{');
         }
     }
 
@@ -76,8 +76,8 @@ namespace BackendProductConfigurator.Controllers
 
         private void AddConfigurator(Configurator value)
         {
-            entities.Add(value);
-            AValuesClass.ConfiguratorsSlim.Add(value);
+            entities[GetAccLang(Request)].Add(value);
+            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Add(value);
         }
 
         // GET api/<Controller>/5
@@ -85,7 +85,7 @@ namespace BackendProductConfigurator.Controllers
         public override Configurator Get(string id)
         {
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities.Find(entity => entity.ConfigId.Equals(id));
+            return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
         }
 
         // POST api/<Controller>
@@ -105,10 +105,10 @@ namespace BackendProductConfigurator.Controllers
         
         // GET: /products
         [HttpGet]
-        public override IEnumerable<ConfiguratorSlim> Get()
+        public override List<ConfiguratorSlim> Get()
         {
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities;
+            return entities[GetAccLang(Request)];
         }
     }
     public partial class configuredProductsController : AController<ConfiguredProduct, string>
@@ -124,10 +124,10 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             EValidationResult validationResult;
-            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).OptionGroups);
+            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).OptionGroups);
             if (validationResult == EValidationResult.ValidationPassed)
             {
-                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Rules);
+                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).Rules);
             }
             new Thread(() =>
             {
@@ -136,9 +136,9 @@ namespace BackendProductConfigurator.Controllers
             new Thread(() =>
             {
                 if(validationResult == EValidationResult.ValidationPassed)
-                    PdfProducer.GeneratePDF(value, configId);
+                    PdfProducer.GeneratePDF(value, configId, Request);
             }).Start();
-            entities.Add(value);
+            entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<ConfiguredProduct>(value);
         }
     }
@@ -153,7 +153,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] Account value)
         {
-            entities.Add(value);
+            entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<Account>(value);
         }
     }
@@ -170,7 +170,7 @@ namespace BackendProductConfigurator.Controllers
         public override List<ProductSaveExtended> Get()
         {
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities;
+            return entities[GetAccLang(Request)];
         }
 
         // GET: /account/configuration
@@ -188,16 +188,16 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ProductSaveSlim value, string configId)
         {
             string description, name;
-            description = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Description;
-            name = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Name;
-            entities.Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
+            description = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Description;
+            name = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Name;
+            entities[GetAccLang(Request)].Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
         }
 
         // DELETE api/<Controller>/5
         [HttpDelete("{id}")]
         public override void Delete(string id)
         {
-            entities.Remove(entities.Find(entity => entity.SavedName.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
         }
     }
 

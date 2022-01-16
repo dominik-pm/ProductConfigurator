@@ -4,13 +4,13 @@ namespace BackendProductConfigurator.Controllers
 {
     public abstract class AValuesClass
     {
-        public static List<Configurator> Configurators { get; set; } = new List<Configurator>();
-        public static List<ConfiguratorSlim> ConfiguratorsSlim { get; set; } = new List<ConfiguratorSlim>();
-        public static List<ConfiguredProduct> ConfiguredProducts { get; set; } = new List<ConfiguredProduct>();
-        public static List<ProductSaveExtended> SavedProducts { get; set; } = new List<ProductSaveExtended>();
-        public static List<Account> Accounts { get; set; } = new List<Account>();
+        public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de-DE", new List<Configurator>() } };
+        public static Dictionary<string, List<ConfiguratorSlim>> ConfiguratorsSlim { get; set; } = new Dictionary<string, List<ConfiguratorSlim>>() { { "de-DE", new List<ConfiguratorSlim>() } };
+        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de-DE", new List<ConfiguredProduct>() } };
+        public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de-DE", new List<ProductSaveExtended>() } };
+        public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de-DE", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
+        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
         private static string serverAddress = "http://andifined.ddns.net:5129";
 
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
@@ -34,11 +34,13 @@ namespace BackendProductConfigurator.Controllers
         public static void PostValue<T>(T value) where T : class
         {
             if(ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PostValue(serverAddress, typeApis[typeof(ConfiguredProduct)], value);
+                ADBAccess<T>.PostValue("de-DE", serverAddress, typeApis[typeof(ConfiguredProduct)], value);
         }
         public static void SetDBValues()
         {
-            Configurators = ADBAccess<Configurator>.GetValues(serverAddress, typeApis[typeof(Configurator)]).Result;
+            //Bach Sprache suchen
+
+            Configurators["de-DE"] = ADBAccess<Configurator>.GetValues("de-DE", serverAddress, typeApis[typeof(Configurator)]).Result;
             //SavedProducts = ADBAccess<ProductSaveExtended>.GetValues(serverAddress, "/db/account/configurations").Result;
         }
 
@@ -104,7 +106,7 @@ namespace BackendProductConfigurator.Controllers
                                                 { "DIESEL", 150f} }
             };
 
-            Configurators.Add(new Configurator()
+            Configurators["de-DE"].Add(new Configurator()
             {
                 ConfigId = "Alfa",
                 Name = "Neuer Konfigurator",
@@ -147,7 +149,7 @@ namespace BackendProductConfigurator.Controllers
                 Price = 0.8f
             };
 
-            ConfiguredProducts = new List<ConfiguredProduct> { p1, p2, p3 };
+            ConfiguredProducts["de-DE"] = new List<ConfiguredProduct> { p1, p2, p3 };
 
             ConfiguratorSlim ps1 = new ConfiguratorSlim()
             {
@@ -172,7 +174,7 @@ namespace BackendProductConfigurator.Controllers
                 Images = productImages
             };
 
-            ConfiguratorsSlim = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
+            ConfiguratorsSlim["de-DE"] = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
 
             Account acc1 = new Account()
             {
@@ -192,7 +194,7 @@ namespace BackendProductConfigurator.Controllers
                 UserEmail = "huh@what.com"
             };
 
-            Accounts = new List<Account> { acc1, acc2, acc3 };
+            Accounts["de-DE"] = new List<Account> { acc1, acc2, acc3 };
 
             ProductSaveExtended psave1 = new ProductSaveExtended()
             { 
@@ -224,7 +226,7 @@ namespace BackendProductConfigurator.Controllers
                 User = acc3,
                 ConfigId = "BENZ1"
             };
-            SavedProducts = new List<ProductSaveExtended> { psave1, psave2, psave3 };
+            SavedProducts["de-DE"] = new List<ProductSaveExtended> { psave1, psave2, psave3 };
         }
     }
     public enum EValueMode { TestValues, DatabaseValues }
