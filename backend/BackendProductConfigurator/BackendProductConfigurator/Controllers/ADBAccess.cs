@@ -21,7 +21,10 @@ namespace BackendProductConfigurator.Controllers
             Http = new HttpClient(handler);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
             Http.DefaultRequestHeaders.Add("Accept-Language", language);
 
 >>>>>>> Stashed changes

@@ -5,17 +5,23 @@ namespace BackendProductConfigurator.Controllers
     public abstract class AValuesClass
     {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         public static List<Configurator> Configurators { get; set; } = new List<Configurator>();
         public static List<ConfiguratorSlim> ConfiguratorsSlim { get; set; } = new List<ConfiguratorSlim>();
         public static List<ConfiguredProduct> ConfiguredProducts { get; set; } = new List<ConfiguredProduct>();
         public static List<ProductSaveExtended> SavedProducts { get; set; } = new List<ProductSaveExtended>();
         public static List<Account> Accounts { get; set; } = new List<Account>();
 =======
+=======
+>>>>>>> Stashed changes
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
         public static Dictionary<string, List<ConfiguratorSlim>> ConfiguratorsSlim { get; set; } = new Dictionary<string, List<ConfiguratorSlim>>() { { "de", new List<ConfiguratorSlim>() }, { "en", new List<ConfiguratorSlim>() }, { "fr", new List<ConfiguratorSlim>() } };
         public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
         private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
@@ -43,12 +49,22 @@ namespace BackendProductConfigurator.Controllers
         {
             if(ValueMode == EValueMode.DatabaseValues)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 ADBAccess<T>.PostValue(serverAddress, typeApis[typeof(ConfiguredProduct)], value);
         }
         public static void SetDBValues()
         {
             Configurators = ADBAccess<Configurator>.GetValues(serverAddress, typeApis[typeof(Configurator)]).Result;
             //SavedProducts = ADBAccess<ProductSaveExtended>.GetValues(serverAddress, "/db/account/configurations").Result;
+=======
+                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(ConfiguredProduct)], value);
+        }
+        public static void SetDBValues()
+        {
+            Configurators["de"] = ADBAccess<Configurator>.GetValues("de", serverAddress, typeApis[typeof(Configurator)]).Result;
+            Configurators["en"] = ADBAccess<Configurator>.GetValues("en", serverAddress, typeApis[typeof(Configurator)]).Result;
+            Configurators["fr"] = ADBAccess<Configurator>.GetValues("fr", serverAddress, typeApis[typeof(Configurator)]).Result;
+>>>>>>> Stashed changes
 =======
                 ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(ConfiguredProduct)], value);
         }
@@ -123,7 +139,11 @@ namespace BackendProductConfigurator.Controllers
             };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Configurators.Add(new Configurator()
+=======
+            Configurators["de"].Add(new Configurator()
+>>>>>>> Stashed changes
 =======
             Configurators["de"].Add(new Configurator()
 >>>>>>> Stashed changes
@@ -170,7 +190,11 @@ namespace BackendProductConfigurator.Controllers
             };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ConfiguredProducts = new List<ConfiguredProduct> { p1, p2, p3 };
+=======
+            ConfiguredProducts["de"] = new List<ConfiguredProduct> { p1, p2, p3 };
+>>>>>>> Stashed changes
 =======
             ConfiguredProducts["de"] = new List<ConfiguredProduct> { p1, p2, p3 };
 >>>>>>> Stashed changes
@@ -199,7 +223,11 @@ namespace BackendProductConfigurator.Controllers
             };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ConfiguratorsSlim = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
+=======
+            ConfiguratorsSlim["de"] = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
+>>>>>>> Stashed changes
 =======
             ConfiguratorsSlim["de"] = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
 >>>>>>> Stashed changes
@@ -223,7 +251,11 @@ namespace BackendProductConfigurator.Controllers
             };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Accounts = new List<Account> { acc1, acc2, acc3 };
+=======
+            Accounts["de"] = new List<Account> { acc1, acc2, acc3 };
+>>>>>>> Stashed changes
 =======
             Accounts["de"] = new List<Account> { acc1, acc2, acc3 };
 >>>>>>> Stashed changes
@@ -259,7 +291,11 @@ namespace BackendProductConfigurator.Controllers
                 ConfigId = "BENZ1"
             };
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             SavedProducts = new List<ProductSaveExtended> { psave1, psave2, psave3 };
+=======
+            SavedProducts["de"] = new List<ProductSaveExtended> { psave1, psave2, psave3 };
+>>>>>>> Stashed changes
 =======
             SavedProducts["de"] = new List<ProductSaveExtended> { psave1, psave2, psave3 };
 >>>>>>> Stashed changes

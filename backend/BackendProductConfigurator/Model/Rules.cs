@@ -6,6 +6,7 @@ namespace Model
     {
         public float BasePrice { get; set; }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         public List<string> DefaultOptions { get; set; }
         public Dictionary<string, List<string>> ReplacementGroups { get; set; }
         public Dictionary<string, List<string>> Requirements { get; set; }
@@ -13,6 +14,8 @@ namespace Model
         public Dictionary<string, List<string>> GroupRequirements { get; set; }
         public Dictionary<string, float> PriceList { get; set; }
 =======
+=======
+>>>>>>> Stashed changes
         public Dictionary<string, List<string>> Models { get; set; } = new Dictionary<string, List<string>>();
         public Dictionary<string, List<string>> ReplacementGroups { get; set; } = new Dictionary<string, List<string>>();
         public Dictionary<string, List<string>> Requirements { get; set; } = new Dictionary<string, List<string>>();

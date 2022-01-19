@@ -16,7 +16,11 @@ namespace BackendProductConfigurator.Controllers
         public AController()
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             if(AValuesClass.Configurators.Count == 0)
+=======
+            if(AValuesClass.Configurators["de"].Count == 0)
+>>>>>>> Stashed changes
 =======
             if(AValuesClass.Configurators["de"].Count == 0)
 >>>>>>> Stashed changes
@@ -36,9 +40,12 @@ namespace BackendProductConfigurator.Controllers
         public virtual IEnumerable<T> Get()
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
             return entities;
 =======
+=======
+>>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
 >>>>>>> Stashed changes
@@ -49,9 +56,12 @@ namespace BackendProductConfigurator.Controllers
         public virtual T Get(K id)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
             return entities.Find(entity => (entity as IIndexable).Id.Equals(id));
 =======
+=======
+>>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id));
 >>>>>>> Stashed changes
@@ -62,8 +72,14 @@ namespace BackendProductConfigurator.Controllers
         public virtual void Post([FromBody] T value)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             entities.Add(value);
             AValuesClass.PostValue<T>(value);
+=======
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+            entities[GetAccLang(Request)].Add(value);
+            AValuesClass.PostValue<T>(value, GetAccLang(Request));
+>>>>>>> Stashed changes
 =======
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Add(value);
@@ -84,8 +100,11 @@ namespace BackendProductConfigurator.Controllers
         public virtual void Delete(K id)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             entities.Remove(entities.Find(entity => (entity as IIndexable).Id.Equals(id)));
 =======
+=======
+>>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id)));
         }
@@ -96,6 +115,9 @@ namespace BackendProductConfigurator.Controllers
                 return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split("-")[0];
             else
                 return request.Headers.AcceptLanguage.ToString();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
     }
@@ -118,9 +140,12 @@ namespace BackendProductConfigurator.Controllers
         public override Configurator Get(string id)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
             return entities.Find(entity => entity.ConfigId.Equals(id));
 =======
+=======
+>>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
 >>>>>>> Stashed changes
@@ -146,9 +171,12 @@ namespace BackendProductConfigurator.Controllers
         public override IEnumerable<ConfiguratorSlim> Get()
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
             return entities;
 =======
+=======
+>>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
 >>>>>>> Stashed changes
@@ -183,8 +211,13 @@ namespace BackendProductConfigurator.Controllers
                     PdfProducer.GeneratePDF(value, configId);
             }).Start();
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             entities.Add(value);
             AValuesClass.PostValue<ConfiguredProduct>(value);
+=======
+            entities[GetAccLang(Request)].Add(value);
+            AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
+>>>>>>> Stashed changes
 =======
             entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
@@ -203,8 +236,13 @@ namespace BackendProductConfigurator.Controllers
         public override void Post([FromBody] Account value)
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             entities.Add(value);
             AValuesClass.PostValue<Account>(value);
+=======
+            entities[GetAccLang(Request)].Add(value);
+            AValuesClass.PostValue<Account>(value, GetAccLang(Request));
+>>>>>>> Stashed changes
 =======
             entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<Account>(value, GetAccLang(Request));
@@ -224,9 +262,12 @@ namespace BackendProductConfigurator.Controllers
         public override List<ProductSaveExtended> Get()
         {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
             return entities;
 =======
+=======
+>>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
 >>>>>>> Stashed changes
