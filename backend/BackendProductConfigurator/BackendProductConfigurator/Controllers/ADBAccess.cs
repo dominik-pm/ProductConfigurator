@@ -7,7 +7,7 @@ namespace BackendProductConfigurator.Controllers
         private static HttpClientHandler handler;
 
         private static HttpClient Http;
-        public static async Task<List<T>> GetValues(string address, string api)
+        public static async Task<List<T>> GetValues(string language, string address, string api)
         {
             handler = new HttpClientHandler();
 
@@ -20,20 +20,11 @@ namespace BackendProductConfigurator.Controllers
 
             Http = new HttpClient(handler);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
             Http.DefaultRequestHeaders.Add("Accept-Language", language);
-
->>>>>>> Stashed changes
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
-        public static async Task<HttpResponseMessage> PostValue(string address, string api, T value)
+        public static async Task<HttpResponseMessage> PostValue(string language, string address, string api, T value)
         {
-<<<<<<< Updated upstream
-=======
             HttpClientHandler handler;
 
             HttpClient Http;
@@ -50,7 +41,6 @@ namespace BackendProductConfigurator.Controllers
 
             Http.DefaultRequestHeaders.Add("Accept-Language", language);
 
->>>>>>> Stashed changes
             return await Http.PostAsJsonAsync($"{address}{api}", value);
         }
     }

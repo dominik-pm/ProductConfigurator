@@ -11,19 +11,11 @@ namespace BackendProductConfigurator.Controllers
     [ApiController]
     public abstract class AController<T, K> : ControllerBase where T : class
     {
-        public List<T> entities;
+        public Dictionary<string, List<T>> entities;
 
         public AController()
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            if(AValuesClass.Configurators.Count == 0)
-=======
             if(AValuesClass.Configurators["de"].Count == 0)
->>>>>>> Stashed changes
-=======
-            if(AValuesClass.Configurators["de"].Count == 0)
->>>>>>> Stashed changes
             {
                 AValuesClass.SetValues();
             }
@@ -39,52 +31,25 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet]
         public virtual IEnumerable<T> Get()
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities;
-=======
-=======
->>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
->>>>>>> Stashed changes
         }
 
         // GET api/<Controller>/5
         [HttpGet("{id}")]
         public virtual T Get(K id)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities.Find(entity => (entity as IIndexable).Id.Equals(id));
-=======
-=======
->>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id));
->>>>>>> Stashed changes
         }
 
         // POST api/<Controller>
         [HttpPost]
         public virtual void Post([FromBody] T value)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            entities.Add(value);
-            AValuesClass.PostValue<T>(value);
-=======
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<T>(value, GetAccLang(Request));
->>>>>>> Stashed changes
-=======
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<T>(value, GetAccLang(Request));
->>>>>>> Stashed changes
         }
 
         // PUT api/<Controller>/5
@@ -99,12 +64,6 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete("{id}")]
         public virtual void Delete(K id)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            entities.Remove(entities.Find(entity => (entity as IIndexable).Id.Equals(id)));
-=======
-=======
->>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id)));
         }
@@ -115,10 +74,6 @@ namespace BackendProductConfigurator.Controllers
                 return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split("-")[0];
             else
                 return request.Headers.AcceptLanguage.ToString();
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         }
     }
 
@@ -131,24 +86,16 @@ namespace BackendProductConfigurator.Controllers
 
         private void AddConfigurator(Configurator value)
         {
-            entities.Add(value);
-            AValuesClass.ConfiguratorsSlim.Add(value);
+            entities[GetAccLang(Request)].Add(value);
+            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Add(value);
         }
 
         // GET api/<Controller>/5
         [HttpGet("{id}")]
         public override Configurator Get(string id)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities.Find(entity => entity.ConfigId.Equals(id));
-=======
-=======
->>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
->>>>>>> Stashed changes
         }
 
         // POST api/<Controller>
@@ -170,16 +117,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet]
         public override IEnumerable<ConfiguratorSlim> Get()
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities;
-=======
-=======
->>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
->>>>>>> Stashed changes
         }
     }
     public partial class configuredProductsController : AController<ConfiguredProduct, string>
@@ -195,10 +134,10 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             EValidationResult validationResult;
-            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).OptionGroups);
+            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).OptionGroups);
             if (validationResult == EValidationResult.ValidationPassed)
             {
-                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators.Find(config => config.ConfigId == configId).Rules);
+                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).Rules);
             }
             new Thread(() =>
             {
@@ -208,20 +147,10 @@ namespace BackendProductConfigurator.Controllers
             {
                 validationResult = EValidationResult.ValidationPassed;
                 if(validationResult == EValidationResult.ValidationPassed)
-                    PdfProducer.GeneratePDF(value, configId);
+                    PdfProducer.GeneratePDF(value, configId, Request);
             }).Start();
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            entities.Add(value);
-            AValuesClass.PostValue<ConfiguredProduct>(value);
-=======
             entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
->>>>>>> Stashed changes
-=======
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
->>>>>>> Stashed changes
         }
     }
     public class accountController : AController<Account, int>
@@ -235,18 +164,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] Account value)
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            entities.Add(value);
-            AValuesClass.PostValue<Account>(value);
-=======
             entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<Account>(value, GetAccLang(Request));
->>>>>>> Stashed changes
-=======
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<Account>(value, GetAccLang(Request));
->>>>>>> Stashed changes
         }
     }
     public partial class savedConfigsController : AController<ProductSaveExtended, string>
@@ -261,16 +180,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet]
         public override List<ProductSaveExtended> Get()
         {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities;
-=======
-=======
->>>>>>> Stashed changes
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
->>>>>>> Stashed changes
         }
 
         // GET: /account/configuration
@@ -288,16 +199,16 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ProductSaveSlim value, string configId)
         {
             string description, name;
-            description = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Description;
-            name = AValuesClass.Configurators.Find(con => con.ConfigId == configId).Name;
-            entities.Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
+            description = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Description;
+            name = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Name;
+            entities[GetAccLang(Request)].Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
         }
 
         // DELETE api/<Controller>/5
         [HttpDelete("{id}")]
         public override void Delete(string id)
         {
-            entities.Remove(entities.Find(entity => entity.SavedName.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
         }
     }
 
