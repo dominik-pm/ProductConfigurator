@@ -1,5 +1,6 @@
 ﻿using BackendProductConfigurator.MediaProducers;
 using Model;
+using System.Linq;
 
 namespace BackendProductConfigurator.Validation
 {
@@ -14,31 +15,46 @@ namespace BackendProductConfigurator.Validation
                 {
                     endPrice += dependencies.PriceList[product.Options[i].Id];
                 }
-                catch
-                {
-                    endPrice += 0;
-                }
+                catch { }
             }
             return (product.Price == endPrice) ? EValidationResult.ValidationPassed : EValidationResult.PriceInvalid;
         }
-        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, List<OptionGroup> optionsGroups)
+        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, Configurator configurator, List<OptionGroup> optionsGroups, Rules dependencies)
         {
             EValidationResult validationResult = EValidationResult.ValidationPassed;
-            foreach (var group in optionsGroups)
+            List<string> allowedOptions = new List<string>();
+            foreach (var group in configurator.OptionGroups)
             {
-                if(group.Required == true)
+                foreach (var item in dependencies.GroupRequirements)
                 {
-                    try
+                    if ()
+                        allowedOptions = (List<string>)allowedOptions.Concat(item.Value);
+                }
+                foreach (Option option in product.Options)
+                {
+                }
+                if (group.Required)
+                {
+                    bool valid = false;
+                    foreach(string optionGroupId in dependencies.GroupRequirements[group.Id])
                     {
-                        validationResult = product.Options.Select(productOption => productOption.Id).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
+                        if (group.OptionIds.Select(x => x).Intersect(product.Options).Any())
+                            valid = true; //hier valid setzen = required ungültig machen
                     }
-                    catch
+                    if(valid)
                     {
+                        try
+                        {
+                            validationResult = product.Options.Select(productOption => productOption.Id).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
+                        }
+                        catch
+                        {
 
-                    }
-                    if (validationResult == EValidationResult.ConfigurationInvalid)
-                    {
-                        break;
+                        }
+                        if (validationResult == EValidationResult.ConfigurationInvalid)
+                        {
+                            break;
+                        }
                     }
                 }
             }
