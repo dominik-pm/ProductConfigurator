@@ -1,12 +1,11 @@
 import axios from 'axios'
-
-const baseURL = `https://sqrt3.ddns.net:7187`
+import { baseURL } from './general'
 
 export const fetchId = (productId) => {
-    // return fetchApiTest(productId)
+    return fetchApiTest(productId)
 
     return new Promise((resolve, reject) => {
-        // axios.get(`/configuration/${productId}`)
+        // axios.get(`${baseURL}/configuration/${productId}`)
         axios.get(`${baseURL}/configuration/Golf`)
         .then(res => {
             resolve(res.data)
@@ -23,7 +22,7 @@ export const postConfiguration = (newConfiguration) => {
 
         // const data = {
         // }
-        // axios.post(`/configuration/${configurationId}`, data)
+        // axios.post(`${baseURL}/configuration/${configurationId}`, data)
         // .then(res => {
         //     resolve(res.data)
         // })
@@ -39,7 +38,7 @@ function fetchApiTest(configId) {
     return new Promise((resolve, reject) =>
         setTimeout(() => {
 
-            const conf = configurations.find(c => c.id === configId)
+            const conf = configurations.find(c => c.configId === configId)
             if (!conf) {
                 reject('NO_CONFIGURATION_FOUND')
                 return
@@ -57,7 +56,7 @@ function fetchApiTest(configId) {
 
 const configurations = [
     {
-        configId: 0,
+        configId: "0",
         name: 'Car',
         description: 'automobile',
         image: '1.jpg',
@@ -243,6 +242,16 @@ const configurations = [
             basePrice: 10000,
             // defaultOptions: [],
             defaultOptions: ['BLUE', 'DIESEL', 'D150'],
+            // models: [
+            //     {
+            //         modelName: 'Golf',
+            //         options: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE']
+            //     },
+            //     {
+            //         passat: 'Golf GTI',
+            //         options: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM']
+            //     }
+            // ],
             replacementGroups: {
                 COLOR_GROUP: [
                     'BLUE', 'YELLOW', 'GREEN'

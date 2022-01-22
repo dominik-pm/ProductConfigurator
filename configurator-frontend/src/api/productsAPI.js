@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { baseURL } from './general'
 
 export const fetchAll = () => {    
     return fetchApiTest()
@@ -12,7 +13,7 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
             options: selectedOptions,
             price
         }
-        axios.post(`/products/${configurationId}`, data)
+        axios.post(`${baseURL}/products/${configurationId}`, data)
         .then(res => {
             resolve(res.data)
         })
@@ -37,7 +38,7 @@ function fetchApiTest(amount = products.length) {
 
 const products = [
     {
-        id: 0,
+        id: "0",
         name: 'Car',
         description: 'a next generation automobile',
         image: 'Car0.jpg'

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
-import { Button, IconButton, Stack, Typography } from '@mui/material'
+import { Button, IconButton, Stack, Tooltip } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { connect } from 'react-redux'
 import { createGroup, createSection } from '../../../state/configurationBuilder/builderSlice'
@@ -13,6 +13,7 @@ import { selectLanguage } from '../../../state/language/languageSelectors'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
 import { selectBuilderGroups, selectBuilderSections } from '../../../state/configurationBuilder/builderSelectors'
 import BuilderOptionGroup from './Options/BuilderOptionGroup'
+import { translate } from '../../../lang'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -80,7 +81,7 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
             groupDescription: {name: 'description', value: ''},
             groupIsRequired: {name: 'is required', value: false, isCheckBox: true}
         }
-        openInputDialog('New Group', data, (data) => {
+        openInputDialog(translate('newGroup', language), data, (data) => {
             const success = createGroup(sectionId, data.groupName.value, data.groupDescription.value, data.groupIsRequired.value)
             if (!success) {
                 openAlert('Group already exists!', alertTypes.ERROR)
@@ -108,9 +109,11 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
                         <Tab key={section.id} label={section.name} wrapped {...a11yProps(index)} />
                     ))}
 
-                    <IconButton onClick={() => handleAddSection()}>
-                        <Add />
-                    </IconButton>
+                    <Tooltip title={translate('addSection', language)}>
+                        <IconButton onClick={() => handleAddSection()}>
+                            <Add />
+                        </IconButton>
+                    </Tooltip>
                 </Tabs>
             </Box>
             

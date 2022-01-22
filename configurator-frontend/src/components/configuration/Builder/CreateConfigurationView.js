@@ -103,9 +103,7 @@ function CreateConfigurationView({ isAdmin, status, error, openAlert, openInputD
         openInputDialog(title, data, (data) => {
             const configurationName = data.configurationName.value
 
-            // TODO: set name
-
-            finish()
+            finish(configurationName)
         })
     }
 

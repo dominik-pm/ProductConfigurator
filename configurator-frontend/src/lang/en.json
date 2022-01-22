@@ -14,6 +14,7 @@
     "failedToLoadProducts": "Failed to load products!",
     "loadingProducts": "Loading Products",
     "noProductsFound": "No products found",
+    "invalidProductId": "Invalid Product Id",
 
     "confirmationPrompt": "Confirmation Prompt",
     "cancel": "cancel",
@@ -53,5 +54,9 @@
 
     "finishBuild": "Finish New Configuration",
     "resetBuild": "Reset",
-    "resetBuildConfirmation": "Do you really want to reset this configuration?"
+    "resetBuildConfirmation": "Do you really want to reset this configuration?",
+    "addSection": "Add Section",
+    "addOption": "Add Option",
+    "newGroup": "New Group",
+    "newOption": "New Option"
 }

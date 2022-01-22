@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { postConfiguration } from '../../api/configurationAPI'
-import { getDoesGroupdExist, getDoesSectionExist, selectConfiguration } from './builderSelectors'
+import { getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectConfiguration } from './builderSelectors'
 
 
 const initialState = {
@@ -16,24 +16,24 @@ const initialState = {
             // }
         ],
         optionSections: [
-            // {
-            //     id: 'EXTERIOR',
-            //     name: 'Exterior',
-            //     optionGroupIds: [
-            //         'COLOR_GROUP'
-            //     ]
-            // }
+            {
+                id: 'EXTERIOR',
+                name: 'Exterior',
+                optionGroupIds: [
+                    'WHEELS'
+                ]
+            }
         ],
         optionGroups: [
-            // {
-            //     id: 'COLOR_GROUP',
-            //     name: 'Color',
-            //     description: 'the exterior color of the car',
-            //     optionIds: [
-            //         'BLUE', 'YELLOW', 'GREEN'
-            //     ],
-            //     required: true
-            // }
+            {
+                id: 'WHEELS',
+                name: 'Wheels',
+                description: 'round objects for diriving',
+                optionIds: [
+                    // 'BLUE', 'YELLOW', 'GREEN'
+                ],
+                required: true
+            }
         ],
         rules: {
             basePrice: 0,
@@ -87,7 +87,16 @@ export const builderSlice = createSlice({
             if (section) section.optionGroupIds.push(name)
         },
         addOption: (state, action) => {
-            console.log('adding option...')
+            const { groupId, name, description } = action.payload
+
+            state.configuration.options.push({
+                id: name,
+                name: name,
+                description: description
+            })
+
+            const group = state.configuration.optionGroups.find(g => g.id === groupId)
+            if (group) group.optionIds.push(name)
         },
         resetBuild: (state, action) => {
             state.configuration = {}
@@ -137,10 +146,25 @@ export const createGroup = (sectionId, name, description, required) => (dispatch
     return true
 }
 
-export const finishConfigurationBuild = () => async (dispatch, getState) => {
+export const createOption = (groupId, name, description) => (dispatch, getState) => {
+    // check if option doesn't already exist
+    const optionExists = getDoesOptionExist(getState(), name)
+    if (optionExists) {
+        return false
+    }
+
+    dispatch(addOption({groupId, name, description}))
+    return true
+}
+
+export const finishConfigurationBuild = (name = '') => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
-    const configuration = selectConfiguration(getState())
+    let configuration = selectConfiguration(getState())
+    
+    if (name) {
+        configuration.name = name
+    }
 
     postConfiguration(configuration)
     .then(res => {

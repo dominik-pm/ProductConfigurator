@@ -3,37 +3,33 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { translate } from '../../../lang'
+import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
 import { fetchConfiguration } from '../../../state/configuration/configurationSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import Configurator from './Configurator'
 
-function ConfigurationView({ fetchConfiguration, status, error, language }) {
+function ConfigurationView({ fetchConfiguration, openAlert, status, error, language }) {
 
     const navigate = useNavigate()
 
     // const { configuration, status, error } = useSelector(state => state.configuration)
 
     const { id } = useParams()
-    const productId = Number(id);
     
     // const { products/*, status, error*/ } = useSelector(state => state.product)
-    // let product = products.find(p => p.id === productId)
+    // let product = products.find(p => p.id === id)
     // if (!product && configuration) {
     //     const {id, name, description, image} = configuration
     //     product = {id, name, description, image}
     // }
 
-    // console.log('loading configuration for product id:', productId)
+    // console.log('loading configuration for product id:', id)
 
     useEffect(() => {
-        if (productId || productId === 0) {
-            // console.log('calling to fetch configuration')
-            fetchConfiguration(productId)
-        } else {
-            console.log('invalid id')
-            navigate('/')
+        if (id) {
+            fetchConfiguration(id)
         }
-    }, [navigate, fetchConfiguration, productId])
+    }, [fetchConfiguration, id])
 
 
     function render() {
@@ -79,7 +75,8 @@ const mapStateToProps = (state) => ({
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {
-    fetchConfiguration
+    fetchConfiguration,
+    openAlert
 }
 export default connect(
     mapStateToProps,
