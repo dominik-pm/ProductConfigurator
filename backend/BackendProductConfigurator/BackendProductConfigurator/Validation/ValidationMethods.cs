@@ -25,21 +25,13 @@ namespace BackendProductConfigurator.Validation
             List<string> allowedOptions = new List<string>();
             foreach (var group in configurator.OptionGroups)
             {
-                foreach (var item in configurator.Rules.GroupRequirements)
-                {
-                    //if ()
-                    //    allowedOptions = (List<string>)allowedOptions.Concat(item.Value);
-                }
-                foreach (Option option in product.Options)
-                {
-                }
                 if (group.Required)
                 {
                     bool valid = false;
                     foreach(string optionGroupId in configurator.Rules.GroupRequirements[group.Id])
                     {
-                        if (group.OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
-                            valid = true; //hier valid setzen = required ungültig machen
+                        if (configurator.OptionGroups.Where(x => x.Id == optionGroupId).First().OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
+                            valid = true;
                     }
                     if(valid)
                     {
