@@ -2,6 +2,6 @@
 {
     public enum EValidationResult
     {
-        ValidationPassed = 0, PriceInvalid, ConfigurationInvalid
+        ValidationPassed = 0, PriceInvalid, ConfigurationInvalid, ConfiguratorInvalid
     }
 }

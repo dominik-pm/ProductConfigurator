@@ -61,5 +61,12 @@ namespace BackendProductConfigurator.Validation
 
             return validationResult;
         }
+        public static EValidationResult ValidateConfigurator(Configurator configurator)
+        {
+            if(configurator.Rules.Models.Select(x => x.Name).Count() != configurator.Rules.Models.Select(x => x.Name).Distinct().Count())
+                return EValidationResult.ConfiguratorInvalid;
+
+            return EValidationResult.ValidationPassed;
+        }
     }
 }

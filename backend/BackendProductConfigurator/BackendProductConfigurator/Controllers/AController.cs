@@ -102,8 +102,12 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] Configurator value)
         {
-            AddConfigurator(value);
-            AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
+            if(validationResult == EValidationResult.ValidationPassed)
+            {
+                AddConfigurator(value);
+                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+            }
         }
     }
     public partial class productsController : AController<ConfiguratorSlim, string>
