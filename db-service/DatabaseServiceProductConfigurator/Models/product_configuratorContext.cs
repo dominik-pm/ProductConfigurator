@@ -32,7 +32,7 @@ namespace DatabaseServiceProductConfigurator.Models {
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder ) {
             if ( !optionsBuilder.IsConfigured ) {
-                //optionsBuilder.UseMySql("server=localhost;database=product_configurator;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+                optionsBuilder.UseMySql("server=localhost;database=product_configurator;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
 
             }
         }
