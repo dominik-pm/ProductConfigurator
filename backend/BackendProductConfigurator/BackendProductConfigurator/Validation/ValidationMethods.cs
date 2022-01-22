@@ -23,17 +23,22 @@ namespace BackendProductConfigurator.Validation
         {
             EValidationResult validationResult = EValidationResult.ValidationPassed;
             List<string> allowedOptions = new List<string>();
+            bool requiredValid;
             foreach (var group in configurator.OptionGroups)
             {
                 if (group.Required)
                 {
-                    bool valid = false;
-                    foreach(string optionGroupId in configurator.Rules.GroupRequirements[group.Id])
+                    requiredValid = false;
+                    try
                     {
-                        if (configurator.OptionGroups.Where(x => x.Id == optionGroupId).First().OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
-                            valid = true;
+                        foreach (string optionGroupId in configurator.Rules.GroupRequirements[group.Id])
+                        {
+                            if (configurator.OptionGroups.Where(x => x.Id == optionGroupId).First().OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
+                                requiredValid = true;
+                        }
                     }
-                    if(valid)
+                    catch { requiredValid = true; }
+                    if(requiredValid)
                     {
                         try
                         {
