@@ -11,7 +11,7 @@ namespace Model
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<Option> Options { get; set; } = new List<Option>();
+        public List<string> Options { get; set; } = new List<string>();
 
     }
 }

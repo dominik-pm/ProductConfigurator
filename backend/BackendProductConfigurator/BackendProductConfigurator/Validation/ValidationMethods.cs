@@ -19,13 +19,13 @@ namespace BackendProductConfigurator.Validation
             }
             return (product.Price == endPrice) ? EValidationResult.ValidationPassed : EValidationResult.PriceInvalid;
         }
-        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, Configurator configurator, List<OptionGroup> optionsGroups, Rules dependencies)
+        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, Configurator configurator)
         {
             EValidationResult validationResult = EValidationResult.ValidationPassed;
             List<string> allowedOptions = new List<string>();
             foreach (var group in configurator.OptionGroups)
             {
-                foreach (var item in dependencies.GroupRequirements)
+                foreach (var item in configurator.Rules.GroupRequirements)
                 {
                     //if ()
                     //    allowedOptions = (List<string>)allowedOptions.Concat(item.Value);
@@ -36,7 +36,7 @@ namespace BackendProductConfigurator.Validation
                 if (group.Required)
                 {
                     bool valid = false;
-                    foreach(string optionGroupId in dependencies.GroupRequirements[group.Id])
+                    foreach(string optionGroupId in configurator.Rules.GroupRequirements[group.Id])
                     {
                         if (group.OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
                             valid = true; //hier valid setzen = required ungültig machen

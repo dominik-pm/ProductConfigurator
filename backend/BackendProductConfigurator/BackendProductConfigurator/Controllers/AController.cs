@@ -138,7 +138,7 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             EValidationResult validationResult;
-            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).OptionGroups);
+            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId));
             if (validationResult == EValidationResult.ValidationPassed)
             {
                 validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).Rules);

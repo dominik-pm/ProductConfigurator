@@ -10,7 +10,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
+        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
         private static string serverAddress = "http://andifined.ddns.net:5129";
 
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
@@ -95,7 +95,8 @@ namespace BackendProductConfigurator.Controllers
             Rules productDependencies = new Rules()
             {
                 BasePrice = 50000f,
-                Models = new Dictionary<string, List<string>> { { "159 Basic", new List<string> { "RED", "DIESEL", "D150" } } },
+                Models = new List<ModelType> { new ModelType { Name = "TI", Description = "Sportliche Version", Options = new List<string>() { "RED", "DIESEL", "D150" } } },
+                DefaultModel = "TI",
                 ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
                 Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
                 Incompatibilities = new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
