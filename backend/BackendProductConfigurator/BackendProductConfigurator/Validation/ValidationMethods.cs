@@ -27,8 +27,8 @@ namespace BackendProductConfigurator.Validation
             {
                 foreach (var item in dependencies.GroupRequirements)
                 {
-                    if ()
-                        allowedOptions = (List<string>)allowedOptions.Concat(item.Value);
+                    //if ()
+                    //    allowedOptions = (List<string>)allowedOptions.Concat(item.Value);
                 }
                 foreach (Option option in product.Options)
                 {
@@ -38,7 +38,7 @@ namespace BackendProductConfigurator.Validation
                     bool valid = false;
                     foreach(string optionGroupId in dependencies.GroupRequirements[group.Id])
                     {
-                        if (group.OptionIds.Select(x => x).Intersect(product.Options).Any())
+                        if (group.OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
                             valid = true; //hier valid setzen = required ungültig machen
                     }
                     if(valid)
