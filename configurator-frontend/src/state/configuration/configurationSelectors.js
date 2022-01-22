@@ -12,6 +12,7 @@ export const OPTION_ERRORS = {
 // input selectors:
 const selectGroupId = (state, groupId) =>               groupId
 const selectOptionId = (state, optionId) =>             optionId
+const selectModelName = (state, modelName) =>           modelName
 
 const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilities
 const selectAllOptionRequirements = state =>            state.configuration.configuration.rules.requirements
@@ -25,6 +26,10 @@ export const selectConfigurationId = (state) =>         state.configuration.conf
 
 export const selectBasePrice = state =>                 state.configuration.configuration.rules?.basePrice || 0
 export const selectPriceList = state =>                 state.configuration.configuration.rules?.priceList || []
+// export const selectDefaultOptions = state =>            state.configuration.configuration.rules?.defaultOptions || []
+export const selectDefaultModel = state =>              state.configuration.configuration.rules?.defaultModel || ''
+export const selectSelectedModel = state =>             state.configuration.selectedModel
+export const selectModels = state =>                    state.configuration.configuration.rules?.models || []
 export const selectDefaultOptions = state =>            state.configuration.configuration.rules?.defaultOptions || []
 export const selectConfigurationName = state =>         state.configuration.configuration.name
 export const selectConfigurationDescription = state =>  state.configuration.configuration.description
@@ -33,6 +38,18 @@ export const selectOptions = state =>                   state.configuration.conf
 export const selectOptionGroups = state =>              state.configuration.configuration.optionGroups
 export const selectOptionSections = state =>            state.configuration.configuration.optionSections
 export const selectSelectedOptions = state =>           state.configuration.selectedOptions
+
+
+// export const getCurrentModel = createSelector([selectModels, selectSelectedModel, selectDefaultModel], (models, selectedModel, defaultModel) => {
+//     const modelName = selectedModel ? selectedModel : defaultModel
+
+//     return models.find(m => m.name === modelName)
+// })
+export const getModelOptions = createSelector([selectModels, selectModelName], (models, modelName) => {
+    const model = models.find(m => m.modelName === modelName)
+
+    return model ? model.options : []
+})
 
 export const getOption = createSelector([selectOptions, selectOptionId], (options, id) => {
     // console.log('Option output')

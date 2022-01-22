@@ -5,13 +5,14 @@ export const fetchAll = () => {
     return fetchApiTest()
 }
 
-export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price) => {
+export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price, model = '') => {
     return new Promise((resolve, reject) => {
 
         const data = {
             configurationName: name,
             options: selectedOptions,
-            price
+            price,
+            model
         }
         axios.post(`${baseURL}/products/${configurationId}`, data)
         .then(res => {

@@ -4,16 +4,16 @@ import { baseURL } from './general'
 export const fetchId = (productId) => {
     return fetchApiTest(productId)
 
-    return new Promise((resolve, reject) => {
-        // axios.get(`${baseURL}/configuration/${productId}`)
-        axios.get(`${baseURL}/configuration/Golf`)
-        .then(res => {
-            resolve(res.data)
-        })
-        .catch(err => {
-            reject(err)
-        })
-    })
+    // return new Promise((resolve, reject) => {
+    //     // axios.get(`${baseURL}/configuration/${productId}`)
+    //     axios.get(`${baseURL}/configuration/Golf`)
+    //     .then(res => {
+    //         resolve(res.data)
+    //     })
+    //     .catch(err => {
+    //         reject(err)
+    //     })
+    // })
 }
 
 export const postConfiguration = (newConfiguration) => {
@@ -241,17 +241,21 @@ const configurations = [
         rules: {
             basePrice: 10000,
             // defaultOptions: [],
-            defaultOptions: ['BLUE', 'DIESEL', 'D150'],
-            // models: [
-            //     {
-            //         modelName: 'Golf',
-            //         options: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE']
-            //     },
-            //     {
-            //         passat: 'Golf GTI',
-            //         options: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM']
-            //     }
-            // ],
+            // defaultOptions: ['BLUE', 'DIESEL', 'D150'],
+
+            defaultModel: 'Golf',
+            models: [
+                {
+                    modelName: 'Golf',
+                    options: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE'],
+                    description: "base model of this car"
+                },
+                {
+                    modelName: 'Golf GTI',
+                    options: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM'],
+                    description: "advanced model"
+                }
+            ],
             replacementGroups: {
                 COLOR_GROUP: [
                     'BLUE', 'YELLOW', 'GREEN'

@@ -1,13 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId } from '../../api/configurationAPI'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
-import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultOptions, selectSelectedOptions } from './configurationSelectors'
+import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectDefaultOptions, selectModels, selectSelectedModel, selectSelectedOptions } from './configurationSelectors'
 
 // const openDialog = useConfirmationDialog.open
 
 const initialState = {
     configuration: {},
     selectedOptions: [],
+    selectedModel: '',
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
     error: null
 }
@@ -30,6 +31,10 @@ export const configurationSlice = createSlice({
             console.log('setting selected options')
             state.selectedOptions = action.payload
         },
+        setSelectedModel: (state, action) => {
+            // console.log('setting selected model: ' + action.payload)
+            state.selectedModel = action.payload
+        },
         reset: (state, action) => {
             console.log('reset active configuration')
             state.selectedOptions = action.payload
@@ -42,7 +47,7 @@ export const configurationSlice = createSlice({
             console.log('configuration loaded:', action.payload)
             state.status = 'succeeded'
             state.configuration = action.payload
-            state.selectedOptions = loadSelectedOptionsFromStorage(state.configuration.id) || action.payload.rules.defaultOptions
+            state.selectedOptions = loadSelectedOptionsFromStorage(state.configuration.id) || []
         },
         loadingFailed: (state, action) => {
             console.log('configuration loading failed:', action.payload)
@@ -53,22 +58,50 @@ export const configurationSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        // builder.addCase(actionFromOtherSlice, (state, action) => {
-        //     state.status = 'succeeded'
+        // builder.addCase(selectOption, (state, action) => {
+        //     checkModel()
         // })
     }
 })
 
-export const fetchConfiguration = (id) => async (dispatch) => {
+export const fetchConfiguration = (id) => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
     fetchId(id)
     .then(res => {
+        dispatch(setModel(selectDefaultModel(getState())))
         dispatch(loadingSucceeded(res))
     })
     .catch(error => {
         dispatch(loadingFailed(error))
     })
+}
+
+const checkModel = () => (dispatch, getState) => {
+    const selectedOptions = selectSelectedOptions(getState())
+    const models = selectModels(getState())
+
+    // check if the selected options are part of a model and then set this model as the current one
+    const containsAll = (arr1, arr2) => arr2.every(arr2Item => arr1.includes(arr2Item))
+    const sameMembers = (arr1, arr2) => containsAll(arr1, arr2) && containsAll(arr2, arr1);
+    for (const model of models) {
+        if (sameMembers(model.options, selectedOptions)) {
+            dispatch(setModel(model.modelName))
+            return
+        }
+    }
+
+    // no model matches the current configuration -> unset model
+    dispatch(setModel(''))
+
+}
+export const setModel = (modelName = '') => (dispatch, getState) => {
+    if (modelName) {
+        const modelOptions = getModelOptions(getState(), modelName)
+        dispatch(setSelectedOptions(modelOptions))
+    }
+
+    dispatch(setSelectedModel(modelName))
 }
 
 // save the currently active configuration to the local storage
@@ -277,6 +310,10 @@ export const selectAndDeselectOptions = (optionsToSelect, optionsToDeselect) => 
 
     // after adjusting the current selection -> save the configuration
     dispatch(saveActiveConfiguration())
+
+    // check if the model changes based on the different selected options
+    dispatch(checkModel())
+
 }
 // recursive function to get all options that depend on the deselected option 
 const getDependenciesDeselect = (state, id) => {
@@ -298,6 +335,6 @@ const getDependenciesDeselect = (state, id) => {
 }
 
 // Action creators are generated for each case reducer function
-export const { selectOption, deselectOption, setSelectedOptions, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
+export const { selectOption, deselectOption, setSelectedOptions, setSelectedModel, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
 
 export default configurationSlice.reducer

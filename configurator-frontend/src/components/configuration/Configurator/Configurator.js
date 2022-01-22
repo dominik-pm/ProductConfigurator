@@ -7,7 +7,7 @@ import { postOrderConfiguredProduct } from '../../../api/productsAPI'
 import { requestSaveConfiguration } from '../../../api/userAPI'
 import { translate } from '../../../lang'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
-import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
+import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectModels, selectSelectedModel, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
 import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
@@ -15,6 +15,7 @@ import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAuthenticated } from '../../../state/user/userSelector'
 import { openLogInDialog } from '../../header/LoginButton'
 import Loader from '../../Loader'
+import ModelSelector from './ModelSelector/ModelSelector'
 
 import OptionTabs from './OptionTabs'
 import Summary from './SidePanel/Summary'
@@ -36,7 +37,7 @@ optionGroups: [
 
 */
 
-function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
+function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, model, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
 
     const navigate = useNavigate()
 
@@ -92,7 +93,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
         openInputDialog(title, data, (data) => {
             const configurationName = data.configurationName.value
 
-            postOrderConfiguredProduct(configurationId, configurationName, selectedOptions, price)
+            postOrderConfiguredProduct(configurationId, configurationName, selectedOptions, price, model)
             .then(res => {
                 openAlert(`${translate('successOrderedConfiguration', language)}!`, alertTypes.SUCCESS)
                 console.log(res)
@@ -127,6 +128,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 
     return (
         <div>
+            {/* Configurator header */}
             <Grid container justifyContent="flex-end">
                 <Box sx={{flexGrow: 1}}>
                     <Typography variant="h2">{translate('configureYour', language)} {configurationName}</Typography>
@@ -162,6 +164,10 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                     </Tooltip>
                 </Grid>
             </Grid>
+
+            {/* Models */}
+            <ModelSelector></ModelSelector>
+
             {
                 isLoading ? 
                 <Loader></Loader>
@@ -178,6 +184,7 @@ const mapStateToProps = (state) => ({
     configurationId: selectConfigurationId(state),
     selectedOptions: selectSelectedOptions(state),
     price: getCurrentPrice(state),
+    mode: selectSelectedModel(state),
     language: selectLanguage(state),
     isLoggedIn: selectIsAuthenticated(state)
 })
