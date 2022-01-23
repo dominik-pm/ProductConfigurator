@@ -137,6 +137,12 @@ export const builderSlice = createSlice({
             const model = state.configuration.rules.models.find(m => m.modelName === modelName)
             if (model) model.options = options
         },
+        setBasePrice: (state, action) => {
+            state.configuration.rules.basePrice = action.payload
+        },
+        setDescription: (state, action) => {
+            state.configuration.description = action.payload
+        },
         resetBuild: (state, action) => {
             state.configuration = {}
         },
@@ -234,6 +240,6 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, addOptionGroup, addOption, addModel, removeModel, setDefaultModel, setModelOptions, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { addSection, addOptionGroup, addOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
 
 export default builderSlice.reducer

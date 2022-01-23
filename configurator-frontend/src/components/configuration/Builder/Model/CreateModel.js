@@ -47,7 +47,7 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
                             labelId='select-lang-label'
                             value={selectedDefaultModel}
                             autoWidth
-                            label="Lang"
+                            label="Default Model"
                             onChange={handleSetDefaultModel}
                             >
                             {models.map((model, index) => (
