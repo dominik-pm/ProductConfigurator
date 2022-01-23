@@ -12,6 +12,7 @@ import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmatio
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAdmin } from '../../../state/user/userSelector'
+import CreateModel from './Model/CreateModel'
 import SectionTabs from './SectionTabs'
 
 function CreateConfigurationView({ isAdmin, status, error, openAlert, openInputDialog, openConfirmDialog, finish, reset, loadingHandled, language }) {
@@ -116,6 +117,7 @@ function CreateConfigurationView({ isAdmin, status, error, openAlert, openInputD
     const renderBuilderBody = () => {
         return (
             <Grid container>
+                <CreateModel></CreateModel>
                 <SectionTabs></SectionTabs>
             </Grid>
         )

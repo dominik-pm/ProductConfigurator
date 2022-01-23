@@ -55,8 +55,14 @@
     "finishBuild": "Finish New Configuration",
     "resetBuild": "Reset",
     "resetBuildConfirmation": "Do you really want to reset this configuration?",
+    "removeModelConfirmation": "Do you really want to remove the model",
     "addSection": "Add Section",
+    "addModel": "Add Model",
     "addOption": "Add Option",
     "newGroup": "New Group",
-    "newOption": "New Option"
+    "newOption": "New Option",
+    "remove": "Remove",
+    "modelName": "Model Name",
+    "modelDescription": "Model Description",
+    "options": "Options"
 }

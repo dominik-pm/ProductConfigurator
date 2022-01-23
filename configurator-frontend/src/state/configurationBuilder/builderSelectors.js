@@ -7,8 +7,15 @@ export const selectBuilderError = (state) =>            state.builder.error
 export const selectBuilderSections = (state) =>         state.builder.configuration.optionSections
 export const selectBuilderGroups = (state) =>           state.builder.configuration.optionGroups
 export const selectBuilderOptions = (state) =>          state.builder.configuration.options
+export const selectBuilderModels = (state) =>           state.builder.configuration.rules.models
+export const selectBuilderDefaultModel = (state) =>     state.builder.configuration.rules.defaultModel
 
 const selectName = (state, name) =>                     name
+
+export const getBuilderOptionById = createSelector([selectName, selectBuilderOptions], (optionId, options) => {
+    const option = options.find(o => o.id === optionId)
+    return option ? option : null
+})
 
 export const getDoesSectionExist = createSelector([selectBuilderSections, selectName], (sections, sectionName) => {
     return sections.find(s => s.id.toUpperCase() === sectionName.toUpperCase()) ? true : false

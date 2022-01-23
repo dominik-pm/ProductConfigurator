@@ -9,11 +9,16 @@ const initialState = {
         description: '',
         images: [],
         options: [
-            // {
-            //     id: 'BLUE',
-            //     name: 'Blue',
-            //     description: 'A blue color',
-            // }
+            {
+                id: 'ALLOY19',
+                name: '19 inch Alloy',
+                description: 'description',
+            },
+            {
+                id: 'STEEL16',
+                name: '16 inch Steel',
+                description: 'description',
+            }
         ],
         optionSections: [
             {
@@ -30,14 +35,27 @@ const initialState = {
                 name: 'Wheels',
                 description: 'round objects for diriving',
                 optionIds: [
-                    // 'BLUE', 'YELLOW', 'GREEN'
+                    'ALLOY19', 'STEEL16'
                 ],
                 required: true
             }
         ],
         rules: {
             basePrice: 0,
-            defaultOptions: [/*BLUE*/],
+            // defaultOptions: [/*BLUE*/],
+            defaultModel: '',
+            models: [
+                {
+                    modelName: 'Sport',
+                    options: ['ALLOY19'],
+                    description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
+                },
+                {
+                    modelName: 'Basic',
+                    options: ['STEEL16'],
+                    description: 'description, description, description, description, description, description, description, description, '
+                }
+            ],
             replacementGroups: {
                 // COLOR_GROUP: [
                 //     'BLUE'
@@ -98,6 +116,27 @@ export const builderSlice = createSlice({
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
             if (group) group.optionIds.push(name)
         },
+        addModel: (state, action) => {
+            const { modelName, options, description } = action.payload
+
+            state.configuration.rules.models.push({
+                modelName, 
+                options, 
+                description
+            })
+        },
+        removeModel: (state, action) => {
+            state.configuration.rules.models = state.configuration.rules.models.filter(model => model.modelName !== action.payload)
+        },
+        setDefaultModel: (state, action) => {
+            state.configuration.rules.defaultModel = action.payload
+        },
+        setModelOptions: (state, action) => {
+            const { modelName, options } = action.payload
+            
+            const model = state.configuration.rules.models.find(m => m.modelName === modelName)
+            if (model) model.options = options
+        },
         resetBuild: (state, action) => {
             state.configuration = {}
         },
@@ -157,6 +196,23 @@ export const createOption = (groupId, name, description) => (dispatch, getState)
     return true
 }
 
+export const createModel = (modelName, options, description) => (dispatch) => {
+    dispatch(addModel({
+        modelName,
+        options,
+        description
+    }))
+}
+export const createDefaultModel = (modelName) => (dispatch) => {
+    dispatch(setDefaultModel(modelName))
+}
+export const changeModelOptions = (modelName, options) => (dispatch) => {
+    dispatch(setModelOptions({
+        modelName,
+        options
+    }))
+}
+
 export const finishConfigurationBuild = (name = '') => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
@@ -178,6 +234,6 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, addOptionGroup, addOption, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { addSection, addOptionGroup, addOption, addModel, removeModel, setDefaultModel, setModelOptions, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
 
 export default builderSlice.reducer
