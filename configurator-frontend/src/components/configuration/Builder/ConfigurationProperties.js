@@ -33,7 +33,6 @@ function ConfigurationProperties({ setDescription, setPrice, language }) {
     return (
         
         <Grid item>
-            {/* TODO: Product properties -> baseprice, description, name, images */}
             <Typography variant="h3">Product Properties</Typography>
             <Grid container columnGap={0} rowGap={2}>
 
