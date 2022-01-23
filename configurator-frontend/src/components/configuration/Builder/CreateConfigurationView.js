@@ -1,6 +1,5 @@
 import { Delete, Done } from '@mui/icons-material'
 import { Grid, IconButton, Tooltip, Typography } from '@mui/material'
-import { Box } from '@mui/system'
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -12,6 +11,7 @@ import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmatio
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAdmin } from '../../../state/user/userSelector'
+import ConfigurationProperties from './ConfigurationProperties'
 import CreateModel from './Model/CreateModel'
 import SectionTabs from './SectionTabs'
 
@@ -116,7 +116,8 @@ function CreateConfigurationView({ isAdmin, status, error, openAlert, openInputD
 
     const renderBuilderBody = () => {
         return (
-            <Grid container>
+            <Grid container direction="column" gap={2}>
+                <ConfigurationProperties></ConfigurationProperties>
                 <CreateModel></CreateModel>
                 <SectionTabs></SectionTabs>
             </Grid>
@@ -126,9 +127,9 @@ function CreateConfigurationView({ isAdmin, status, error, openAlert, openInputD
     return (
         <div>
             <Grid container justifyContent="flex-end">
-                <Box sx={{flexGrow: 1}}>
+                <Grid item sx={{flexGrow: 1}}>
                     <Typography variant="h2">Create a new Configuration</Typography>
-                </Box>
+                </Grid>
 
                 <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
                     <Tooltip title={translate('finishBuild', language)}>

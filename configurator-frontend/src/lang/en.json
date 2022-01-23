@@ -64,5 +64,6 @@
     "remove": "Remove",
     "modelName": "Model Name",
     "modelDescription": "Model Description",
-    "options": "Options"
+    "options": "Options",
+    "description": "Description"
 }
