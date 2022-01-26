@@ -14,7 +14,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class ProductController : ControllerBase {
 
-        static product_configuratorContext context = new product_configuratorContext();
+        static Product_configuratorContext context = new Product_configuratorContext();
 
         //[HttpGet("GetBuyableProduct")]
         //public IActionResult GetBuyableProducts() {
@@ -34,7 +34,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = LanguageService.HandleLanguageInput(lang);
 
-            List<Configurator> products = ProductService.getAllConfigurators(lang);
+            List<Configurator> products = ProductService.GetAllConfigurators(lang);
             if ( products.Count == 0 )
                 return NoContent();
 

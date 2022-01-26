@@ -5,18 +5,19 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 
 namespace DatabaseServiceProductConfigurator.Models {
-    public partial class product_configuratorContext : DbContext {
+    public partial class Product_configuratorContext : DbContext {
 
-        public product_configuratorContext() {
+        public Product_configuratorContext() {
         }
 
-        public product_configuratorContext( DbContextOptions<product_configuratorContext> options )
+        public Product_configuratorContext( DbContextOptions<Product_configuratorContext> options )
             : base(options) {
         }
 
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
         public virtual DbSet<Configuration> Configurations { get; set; } = null!;
         public virtual DbSet<ConfigurationHasOptionField> ConfigurationHasOptionFields { get; set; } = null!;
+        public virtual DbSet<ConfigurationsHasLanguage> ConfigurationsHasLanguages { get; set; } = null!;
         public virtual DbSet<EDependencyType> EDependencyTypes { get; set; } = null!;
         public virtual DbSet<ELanguage> ELanguages { get; set; } = null!;
         public virtual DbSet<EOptionType> EOptionTypes { get; set; } = null!;
@@ -492,7 +493,7 @@ namespace DatabaseServiceProductConfigurator.Models {
             MyThings(modelBuilder);
         }
 
-        private void MyThings( ModelBuilder modelBuilder ) {
+        private static void MyThings( ModelBuilder modelBuilder ) {
             modelBuilder.Entity<Product>().Navigation(e => e.ProductHasLanguages).AutoInclude();
             modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.OptionFieldsNavigation).AutoInclude();
             modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.ProductNumberNavigation).AutoInclude();

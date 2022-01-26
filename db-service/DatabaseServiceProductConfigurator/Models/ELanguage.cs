@@ -8,8 +8,8 @@ namespace DatabaseServiceProductConfigurator.Models
     {
         public ELanguage()
         {
+            ConfigurationsHasLanguages = new HashSet<ConfigurationsHasLanguage>();
             OptionFieldHasLanguages = new HashSet<OptionFieldHasLanguage>();
-            ProductHasLanguages = new HashSet<ProductHasLanguage>();
             ProductHasLanguages = new HashSet<ProductHasLanguage>();
         }
 

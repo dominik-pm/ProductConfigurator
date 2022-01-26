@@ -7,17 +7,17 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public static class ProductService {
 
-        private static product_configuratorContext context = new product_configuratorContext();
+        private static readonly Product_configuratorContext context = new();
 
-        private static List<Configurator> getConfigurators( string lang ) {
+        private static List<Configurator> GetConfigurators( string lang ) {
             List<Configurator> temp = (
                 from p in context.Products
                 let depen = new Rules { BasePrice = p.Price }
                 let infos = LanguageService.GetProductWithLanguage(p.ProductNumber, lang)
                 select new Configurator {
                     ConfigId = p.ProductNumber,
-                    Name = infos == null ? "" : infos.Name,
-                    Description = infos == null ? "" : infos.Description,
+                    Name = infos.Name,
+                    Description = infos.Description,
                     Images = ( from pic in context.Pictures where pic.ProductNumber == p.ProductNumber select pic.Url ).ToList(),
                     Options = GetOptionsByProductNumber(p.ProductNumber, lang),
                     OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang),
@@ -30,23 +30,23 @@ namespace DatabaseServiceProductConfigurator.Services {
                 item.Options.ForEach(o => item.Rules = item.Rules.ExtendProductDependencies(o.Id));
                 item.OptionGroups.ForEach(o => item.Rules = item.Rules.ExtendProductDependenciesByOptionField(o.Id));
                 item.OptionSections.ForEach(o => item.Rules = item.Rules.ExtendProductDependenciesByOptionField(o.Id));
-                item.Rules.DefaultOptions.AddRange(ConfigurationService.getDefaultConfig(item.ConfigId, lang));
+                item.Rules.DefaultOptions.AddRange(ConfigurationService.GetDefaultConfig(item.ConfigId, lang));
             }
 
             return temp;
         }
 
-        public static List<Configurator> getAllConfigurators (string lang) => getConfigurators(lang).Where(c => (from p in context.Products where p.ProductNumber == c.ConfigId select p.Buyable).FirstOrDefault()).ToList();
+        public static List<Configurator> GetAllConfigurators (string lang) => GetConfigurators(lang).Where(c => (from p in context.Products where p.ProductNumber == c.ConfigId select p.Buyable).FirstOrDefault()).ToList();
 
-        public static Configurator? GetConfiguratorByProductNumber (string productNumber, string lang) => getConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
+        public static Configurator? GetConfiguratorByProductNumber (string productNumber, string lang) => GetConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
 
         private static List<OptionSection> GetOptionSectionByProductNumber( string productNumber, string lang ) {
-            product_configuratorContext localContext = new product_configuratorContext();
+            Product_configuratorContext localContext = new();
 
-            List<OptionSection> sections = new List<OptionSection>();
+            List<OptionSection> sections = new();
 
-            List<OptionField> rawFields = new List<OptionField>();
-            List<OptionField> cookedFields = new List<OptionField>();
+            List<OptionField> rawFields = new();
+            List<OptionField> cookedFields = new();
 
             rawFields.AddRange(
                 (
@@ -59,10 +59,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             int cookedCount = 0;
             int rawCount = 0;
             do {
-                cookedCount = cookedFields.Count();
-                rawCount = rawFields.Count();
+                cookedCount = cookedFields.Count;
+                rawCount = rawFields.Count;
 
-                List<OptionField> toAdd = new List<OptionField> ();
+                List<OptionField> toAdd = new();
                 foreach ( var field in rawFields ) {
                     if ( field.Type == "PARENT" ) {
                         toAdd.AddRange(
@@ -78,7 +78,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 }
                 rawFields.AddRange(toAdd);
-            } while ( cookedCount != cookedFields.Count() || rawCount != rawFields.Count() );
+            } while ( cookedCount != cookedFields.Count || rawCount != rawFields.Count );
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
@@ -87,11 +87,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                     select ofo.OptionField.ToString()
                 ).ToList();
 
-                OptionFieldHasLanguage? fieldinfos = LanguageService.GetOptionsfieldWithLanguage(field.Id, lang);
+                InfoStruct fieldinfos = LanguageService.GetOptionsfieldWithLanguage(field.Id, lang);
 
                 sections.Add(
                     new OptionSection (
-                        (fieldinfos == null ? "" : fieldinfos.Name),
+                        fieldinfos.Name,
                         field.Id,
                         options
                     )
@@ -102,12 +102,12 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         private static List<OptionGroup> GetOptionGroupsByProductNumber( string productNumber, string lang ) {
-            product_configuratorContext localContext = new product_configuratorContext();
+            Product_configuratorContext localContext = new();
 
-            List<OptionGroup> optionGroups = new List<OptionGroup>();
+            List<OptionGroup> optionGroups = new();
 
-            List<OptionField> rawFields = new List<OptionField>();
-            List<OptionField> cookedFields = new List<OptionField>();
+            List<OptionField> rawFields = new();
+            List<OptionField> cookedFields = new();
 
             rawFields.AddRange(
                 (
@@ -120,10 +120,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             int cookedCount = 0;
             int rawCount = 0;
             do {
-                cookedCount = cookedFields.Count();
-                rawCount = rawFields.Count();
+                cookedCount = cookedFields.Count;
+                rawCount = rawFields.Count;
 
-                List<OptionField> toAdd = new List<OptionField> ();
+                List<OptionField> toAdd = new();
                 foreach ( var field in rawFields ) {
                     if ( field.Type == "PARENT" ) {
                         toAdd.AddRange(
@@ -141,7 +141,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 }
                 rawFields.AddRange(toAdd);
-            } while ( cookedCount != cookedFields.Count() || rawCount != rawFields.Count() );
+            } while ( cookedCount != cookedFields.Count || rawCount != rawFields.Count );
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
@@ -151,13 +151,13 @@ namespace DatabaseServiceProductConfigurator.Services {
                     select pof.ProductNumber
                 ).ToList();
 
-                OptionFieldHasLanguage? fieldinfos = LanguageService.GetOptionsfieldWithLanguage(field.Id, lang);
+                InfoStruct fieldinfos = LanguageService.GetOptionsfieldWithLanguage(field.Id, lang);
 
                 optionGroups.Add(
                     new OptionGroup {
                         Id = field.Id,
-                        Name = fieldinfos == null ? "" : fieldinfos.Name,
-                        Description = fieldinfos == null ? "" : fieldinfos.Description,
+                        Name = fieldinfos.Name,
+                        Description = fieldinfos.Description,
                         OptionIds = options,
                         Required = field.Required
                     }
@@ -168,9 +168,9 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         private static List<Option> GetOptionsByProductNumber( string productNumber, string lang ) {
-            product_configuratorContext localContext = new product_configuratorContext();
+            Product_configuratorContext localContext = new();
 
-            List<Option> options = new List<Option>();
+            List<Option> options = new();
 
             List<OptionField> fields = (
                 from pof in localContext.ProductsHasOptionFields
@@ -180,8 +180,8 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             int currentCount = 0;
             do {
-                currentCount = fields.Count();
-                List<OptionField> toAdd = new List<OptionField>();
+                currentCount = fields.Count;
+                List<OptionField> toAdd = new();
                 foreach ( var item in fields ) {
                     toAdd.AddRange(
                         (
@@ -192,7 +192,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     );
                 }
                 fields.AddRange(toAdd);
-            } while ( currentCount != fields.Count() );
+            } while ( currentCount != fields.Count );
 
 
 
@@ -271,10 +271,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             // OPTION SECTIONS
-            List<OptionField> temp = new List<OptionField>();
+            List<OptionField> temp = new();
 
             foreach ( var item in config.OptionSections ) {
-                OptionField tempSave = new OptionField {
+                OptionField tempSave = new() {
                     Id = item.Id,
                     Type = "PARENT",
                     Required = false
@@ -284,7 +284,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             // OPTION GROUPS
-            List<string> SingleSelect = new List<string>();
+            List<string> SingleSelect = new();
             foreach( var item in config.Rules.ReplacementGroups ) {
                 foreach(var item2 in item.Value ) {
                     SingleSelect.Add(item2);
@@ -292,7 +292,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             foreach ( var item in config.OptionGroups ) {
-                OptionField tempSave = new OptionField {
+                OptionField tempSave = new() {
                     Id = item.Id,
                     Type = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT",
                     Required = item.Required

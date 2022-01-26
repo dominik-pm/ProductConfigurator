@@ -12,8 +12,6 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class ConfigurationController : ControllerBase {
 
-        static product_configuratorContext context = new product_configuratorContext();
-
         [HttpGet]
         public IActionResult Get() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);

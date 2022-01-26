@@ -12,7 +12,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public class BookingService {
 
-        static product_configuratorContext context = new product_configuratorContext();
+        //static product_configuratorContext context = new product_configuratorContext();
 
         //public static List<object> GetBookingsByCustomer( int customerID ) => context.Bookings.Where(b => b.Customer == customerID).Select(b => new {
         //    id = b.Id,

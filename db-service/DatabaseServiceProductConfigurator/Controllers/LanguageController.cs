@@ -11,7 +11,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class LanguageController : ControllerBase {
 
-        static product_configuratorContext context = new product_configuratorContext();
+        static Product_configuratorContext context = new Product_configuratorContext();
 
         [HttpGet]
         public IActionResult get() {

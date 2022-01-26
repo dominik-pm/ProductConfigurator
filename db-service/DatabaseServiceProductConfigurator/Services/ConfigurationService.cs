@@ -5,27 +5,27 @@ using Model;
 namespace DatabaseServiceProductConfigurator.Services {
 
     internal struct ConfiguredProductStruct {
-        public float price { get; init; }
-        public List<Option> options { get; init; }
+        public float Price { get; init; }
+        public List<Option> Options { get; init; }
 
         public ConfiguredProductStruct( float price, List<Option> options ) {
-            this.price = price;
-            this.options = options;
+            this.Price = price;
+            this.Options = options;
         }
     }
 
     public static class ConfigurationService {
 
-        static product_configuratorContext context = new product_configuratorContext();
+        static readonly Product_configuratorContext context = new();
 
-        public static List<string> getDefaultConfig(string id, string lang ) {
-            List<string> toAdd = new List<string>();
+        public static List<string> GetDefaultConfig(string id, string lang ) {
+            List<string> toAdd = new();
 
             List<Option>? options =  (
                 from conf in context.Configurations
                 where conf.ProductNumber == id && conf.Customer == null
                 let opts = GetOptionsByConfigId(conf.Id, lang)
-                select opts.options
+                select opts.Options
             ).FirstOrDefault();
 
             if ( options == null )
@@ -40,10 +40,11 @@ namespace DatabaseServiceProductConfigurator.Services {
             return (
                 from conf in context.Configurations
                 let opts = GetOptionsByConfigId(conf.Id, lang)
+                let infos = LanguageService.GetConfigurationWithLanguage(conf.Id, lang)
                 select new ConfiguredProduct {
-                    ConfigurationName = conf.ProductNumber,
-                    Options = opts.options,
-                    Price = opts.price
+                    ConfigurationName = infos.Name,
+                    Options = opts.Options,
+                    Price = opts.Price
                 }
             ).ToList();
         }
@@ -51,9 +52,9 @@ namespace DatabaseServiceProductConfigurator.Services {
         public static ConfiguredProduct? GetConfiguredProductById( string id ) => GetConfiguredProducts(id).FirstOrDefault();
 
         private static ConfiguredProductStruct GetOptionsByConfigId( int configId, string lang ) {
-            product_configuratorContext localContext = new product_configuratorContext();
+            Product_configuratorContext localContext = new();
 
-            List<ConfigurationHasOptionField> fields = new List<ConfigurationHasOptionField>();
+            List<ConfigurationHasOptionField> fields = new();
             foreach ( var item in (
                 from op in localContext.Configurations
                 where op.Id == configId
@@ -62,7 +63,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 fields.AddRange(item.ToList());
             }
 
-            List<Option> toReturn = new List<Option>();
+            List<Option> toReturn = new();
             float price = 0;
 
             foreach ( var item in fields ) {
@@ -70,12 +71,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                 foreach ( var el in item.ProductNumbers ) {
                     price += el.Price;
 
-                    ProductHasLanguage? infos = LanguageService.GetProductWithLanguage(el.ProductNumber, lang);
+                    InfoStruct infos = LanguageService.GetProductWithLanguage(el.ProductNumber, lang);
                     toReturn.Add(
                         new Option {
                             Id = el.ProductNumber,
-                            Name = infos == null ? "" : infos.Name,
-                            Description = infos == null ? "" : infos.Description
+                            Name = infos.Name,
+                            Description = infos.Description
                         }
                     );
                 }

@@ -5,7 +5,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public static class RuleService {
 
-        static product_configuratorContext context = new product_configuratorContext();
+        static readonly Product_configuratorContext context = new();
 
         public static Rules ExtendProductDependencies( this Rules dependencies, string productNumber ) {
 
