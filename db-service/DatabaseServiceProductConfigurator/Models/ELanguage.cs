@@ -10,10 +10,13 @@ namespace DatabaseServiceProductConfigurator.Models
         {
             OptionFieldHasLanguages = new HashSet<OptionFieldHasLanguage>();
             ProductHasLanguages = new HashSet<ProductHasLanguage>();
+            ProductHasLanguages = new HashSet<ProductHasLanguage>();
         }
 
         public string Language { get; set; } = null!;
 
+        [JsonIgnore]
+        public virtual ICollection<ConfigurationsHasLanguage> ConfigurationsHasLanguages { get; set; }
         [JsonIgnore]
         public virtual ICollection<OptionFieldHasLanguage> OptionFieldHasLanguages { get; set; }
         [JsonIgnore]

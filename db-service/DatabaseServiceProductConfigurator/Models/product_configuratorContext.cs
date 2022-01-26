@@ -32,13 +32,13 @@ namespace DatabaseServiceProductConfigurator.Models {
 
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder ) {
             if ( !optionsBuilder.IsConfigured ) {
-                optionsBuilder.UseMySql("server=localhost;database=product_configurator;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
-
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySql("server=localhost;database=product_configurator;port=3306;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
             }
         }
         protected override void OnModelCreating( ModelBuilder modelBuilder ) {
             modelBuilder.UseCollation("utf8_general_ci")
-                .HasCharSet("utf8");
+                            .HasCharSet("utf8");
 
             modelBuilder.Entity<Booking>(entity => {
                 entity.ToTable("bookings");
@@ -134,6 +134,44 @@ namespace DatabaseServiceProductConfigurator.Models {
 
                             j.IndexerProperty<string>("ProductNumber").HasColumnName("product_number");
                         });
+            });
+
+            modelBuilder.Entity<ConfigurationsHasLanguage>(entity => {
+                entity.HasKey(e => new { e.Configuration, e.Language })
+                    .HasName("PRIMARY")
+                    .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
+
+                entity.ToTable("configurations_has_language");
+
+                entity.HasIndex(e => e.Configuration, "fk_CONFIGURATIONS_has_E_LANGUAGES_CONFIGURATIONS1_idx");
+
+                entity.HasIndex(e => e.Language, "fk_CONFIGURATIONS_has_E_LANGUAGES_E_LANGUAGES1_idx");
+
+                entity.Property(e => e.Configuration).HasColumnName("configuration");
+
+                entity.Property(e => e.Language)
+                    .HasMaxLength(45)
+                    .HasColumnName("language");
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("text")
+                    .HasColumnName("description");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255)
+                    .HasColumnName("name");
+
+                entity.HasOne(d => d.ConfigurationNavigation)
+                    .WithMany(p => p.ConfigurationsHasLanguages)
+                    .HasForeignKey(d => d.Configuration)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_CONFIGURATIONS_has_E_LANGUAGES_CONFIGURATIONS1");
+
+                entity.HasOne(d => d.LanguageNavigation)
+                    .WithMany(p => p.ConfigurationsHasLanguages)
+                    .HasForeignKey(d => d.Language)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_CONFIGURATIONS_has_E_LANGUAGES_E_LANGUAGES1");
             });
 
             modelBuilder.Entity<EDependencyType>(entity => {
@@ -447,6 +485,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_PRODUCTS_has_PRODUCTS_PRODUCTS1");
             });
+
+            OnModelCreatingPartial(modelBuilder);
 
             OnModelCreatingPartial(modelBuilder);
             MyThings(modelBuilder);

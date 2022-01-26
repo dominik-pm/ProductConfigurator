@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
+      "projectUniqueName": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
       "projectName": "Model",
-      "projectPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
+      "projectPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
       "packagesPath": "C:\\Users\\basti\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\obj\\",
+      "outputPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\basti\\AppData\\Roaming\\NuGet\\NuGet.Config",
