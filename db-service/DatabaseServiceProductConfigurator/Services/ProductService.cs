@@ -30,15 +30,15 @@ namespace DatabaseServiceProductConfigurator.Services {
                 item.Options.ForEach(o => item.Rules = item.Rules.ExtendProductDependencies(o.Id));
                 item.OptionGroups.ForEach(o => item.Rules = item.Rules.ExtendProductDependenciesByOptionField(o.Id));
                 item.OptionSections.ForEach(o => item.Rules = item.Rules.ExtendProductDependenciesByOptionField(o.Id));
-                item.Rules.DefaultOptions.AddRange(ConfigurationService.GetDefaultConfig(item.ConfigId, lang));
+                item.Rules.Models.AddRange(ConfigurationService.GetModelsByProduct(item.ConfigId, lang));
             }
 
             return temp;
         }
 
-        public static List<Configurator> GetAllConfigurators (string lang) => GetConfigurators(lang).Where(c => (from p in context.Products where p.ProductNumber == c.ConfigId select p.Buyable).FirstOrDefault()).ToList();
+        public static List<Configurator> GetAllConfigurators( string lang ) => GetConfigurators(lang).Where(c => ( from p in context.Products where p.ProductNumber == c.ConfigId select p.Buyable ).FirstOrDefault()).ToList();
 
-        public static Configurator? GetConfiguratorByProductNumber (string productNumber, string lang) => GetConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
+        public static Configurator? GetConfiguratorByProductNumber( string productNumber, string lang ) => GetConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
 
         private static List<OptionSection> GetOptionSectionByProductNumber( string productNumber, string lang ) {
             Product_configuratorContext localContext = new();
@@ -90,7 +90,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 InfoStruct fieldinfos = LanguageService.GetOptionsfieldWithLanguage(field.Id, lang);
 
                 sections.Add(
-                    new OptionSection (
+                    new OptionSection(
                         fieldinfos.Name,
                         field.Id,
                         options
@@ -203,7 +203,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         from opt in localContext.ProductsHasOptionFields
                         where opt.OptionFields == item.Id && opt.DependencyType == "CHILD"
                         let infos = LanguageService.GetProductWithLanguage(opt.ProductNumber, lang)
-                        select new Option { 
+                        select new Option {
                             Id = opt.ProductNumber,
                             Name = infos.Name,
                             Description = infos.Description
@@ -215,178 +215,183 @@ namespace DatabaseServiceProductConfigurator.Services {
             return options;
         }
 
-        public static bool SaveConfigurator(Configurator config, string lang) {
+        public static bool SaveConfigurator( Configurator config, string lang ) {
             bool worked = true;
 
             try {
 
-            // MAIN PRODUCT
-            context.Products.Add(
-                new Product {
-                    ProductNumber = config.ConfigId,
-                    Price = config.Rules.BasePrice,
-                    Category = "",
-                    Buyable = true
-                }
-            );
-
-            // OPTION PRODUCTS
-            foreach (var item in config.Options ) {
-                bool priceAvailable = config.Rules.PriceList.TryGetValue(item.Id, out float price);
-
+                // MAIN PRODUCT
                 context.Products.Add(
                     new Product {
-                        ProductNumber = item.Id,
-                        Price = priceAvailable ? price : 0,
+                        ProductNumber = config.ConfigId,
+                        Price = config.Rules.BasePrice,
                         Category = "",
-                        Buyable = false
+                        Buyable = true
                     }
                 );
-            }
 
-            // REQUIREMENTS
-            foreach (var item in config.Rules.Requirements ) {
-                foreach(var reqitem in item.Value ) {
-                    context.ProductsHasProducts.Add(
-                        new ProductsHasProduct {
-                            BaseProduct = item.Key,
-                            OptionProduct = reqitem,
-                            DependencyType = "REQUIRED"
+                // OPTION PRODUCTS
+                foreach ( var item in config.Options ) {
+                    bool priceAvailable = config.Rules.PriceList.TryGetValue(item.Id, out float price);
+
+                    context.Products.Add(
+                        new Product {
+                            ProductNumber = item.Id,
+                            Price = priceAvailable ? price : 0,
+                            Category = "",
+                            Buyable = false
                         }
                     );
                 }
-            }
 
-            // INCOMPABILITIES
-            foreach ( var item in config.Rules.Incompatibilities ) {
-                foreach ( var reqitem in item.Value ) {
-                    context.ProductsHasProducts.Add(
-                        new ProductsHasProduct {
-                            BaseProduct = item.Key,
-                            OptionProduct = reqitem,
-                            DependencyType = "EXCLUDING"
-                        }
-                    );
+                // REQUIREMENTS
+                foreach ( var item in config.Rules.Requirements ) {
+                    foreach ( var reqitem in item.Value ) {
+                        context.ProductsHasProducts.Add(
+                            new ProductsHasProduct {
+                                BaseProduct = item.Key,
+                                OptionProduct = reqitem,
+                                DependencyType = "REQUIRED"
+                            }
+                        );
+                    }
                 }
-            }
 
-            // OPTION SECTIONS
-            List<OptionField> temp = new();
-
-            foreach ( var item in config.OptionSections ) {
-                OptionField tempSave = new() {
-                    Id = item.Id,
-                    Type = "PARENT",
-                    Required = false
-                };
-                temp.Add( tempSave );
-                context.OptionFields.Add(tempSave);
-            }
-
-            // OPTION GROUPS
-            List<string> SingleSelect = new();
-            foreach( var item in config.Rules.ReplacementGroups ) {
-                foreach(var item2 in item.Value ) {
-                    SingleSelect.Add(item2);
+                // INCOMPABILITIES
+                foreach ( var item in config.Rules.Incompatibilities ) {
+                    foreach ( var reqitem in item.Value ) {
+                        context.ProductsHasProducts.Add(
+                            new ProductsHasProduct {
+                                BaseProduct = item.Key,
+                                OptionProduct = reqitem,
+                                DependencyType = "EXCLUDING"
+                            }
+                        );
+                    }
                 }
-            }
 
-            foreach ( var item in config.OptionGroups ) {
-                OptionField tempSave = new() {
-                    Id = item.Id,
-                    Type = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT",
-                    Required = item.Required
-                };
-                temp.Add(tempSave);
-                context.OptionFields.Add(tempSave);
-            }
+                // OPTION SECTIONS
+                List<OptionField> temp = new();
 
-            // OPTIONFIELD HAS OPTIONFIELD
-            foreach(var item in config.OptionSections ) {
-                foreach ( var field in item.OptionGroupIds ) {
-                    context.OptionFieldsHasOptionFields.Add(
-                        new OptionFieldsHasOptionField {
-                            Base = item.Id,
-                            OptionField = field,
-                            DependencyType = "CHILD"
-                        }    
-                    );
+                foreach ( var item in config.OptionSections ) {
+                    OptionField tempSave = new() {
+                        Id = item.Id,
+                        Type = "PARENT",
+                        Required = false
+                    };
+                    temp.Add(tempSave);
+                    context.OptionFields.Add(tempSave);
                 }
-            }
 
-            // OPTIONFIELD HAS PRODUCT
-            foreach ( var item in config.OptionGroups ) {
-                foreach (var field in item.OptionIds ) {
+                // OPTION GROUPS
+                List<string> SingleSelect = new();
+                foreach ( var item in config.Rules.ReplacementGroups ) {
+                    foreach ( var item2 in item.Value ) {
+                        SingleSelect.Add(item2);
+                    }
+                }
+
+                foreach ( var item in config.OptionGroups ) {
+                    OptionField tempSave = new() {
+                        Id = item.Id,
+                        Type = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT",
+                        Required = item.Required
+                    };
+                    temp.Add(tempSave);
+                    context.OptionFields.Add(tempSave);
+                }
+
+                // OPTIONFIELD HAS OPTIONFIELD
+                foreach ( var item in config.OptionSections ) {
+                    foreach ( var field in item.OptionGroupIds ) {
+                        context.OptionFieldsHasOptionFields.Add(
+                            new OptionFieldsHasOptionField {
+                                Base = item.Id,
+                                OptionField = field,
+                                DependencyType = "CHILD"
+                            }
+                        );
+                    }
+                }
+
+                // OPTIONFIELD HAS PRODUCT
+                foreach ( var item in config.OptionGroups ) {
+                    foreach ( var field in item.OptionIds ) {
+                        context.ProductsHasOptionFields.Add(
+                            new ProductsHasOptionField {
+                                ProductNumber = field,
+                                OptionFields = item.Id,
+                                DependencyType = "CHILD"
+                            }
+                        );
+                    }
+                }
+
+                // PRODUCT HAS OPTIONFIELD
+                foreach ( var item in config.OptionSections ) {
                     context.ProductsHasOptionFields.Add(
                         new ProductsHasOptionField {
-                            ProductNumber = field,
+                            ProductNumber = config.ConfigId,
                             OptionFields = item.Id,
-                            DependencyType = "CHILD"
+                            DependencyType = "PARENT"
                         }
                     );
                 }
-            }
 
-            // PRODUCT HAS OPTIONFIELD
-            foreach ( var item in config.OptionSections ) {
-                context.ProductsHasOptionFields.Add(
-                    new ProductsHasOptionField {
-                        ProductNumber = config.ConfigId,
-                        OptionFields = item.Id,
-                        DependencyType = "PARENT"
-                    }
-                );
-            }
+                //IMAGES
+                foreach ( var item in config.Images ) {
+                    context.Pictures.Add(
+                        new Picture {
+                            ProductNumber = config.ConfigId,
+                            Url = item
+                        }
+                    );
+                }
 
-            //IMAGES
-            foreach (var item in config.Images ) {
-                context.Pictures.Add(
-                    new Picture {
-                        ProductNumber = config.ConfigId,
-                        Url = item
-                    }
-                );
-            }
+                //LANGUAGE FOR PRODUCTS
+                foreach ( var item in config.Options ) {
+                    context.ProductHasLanguages.Add(
+                        new ProductHasLanguage {
+                            ProductNumber = config.ConfigId,
+                            Language = lang,
+                            Name = item.Name,
+                            Description = item.Description
+                        }
+                    );
+                }
 
-            //LANGUAGE FOR PRODUCTS
-            foreach(var item in config.Options ) {
-                context.ProductHasLanguages.Add(
-                    new ProductHasLanguage {
-                        ProductNumber = config.ConfigId,
-                        Language = lang,
-                        Name = item.Name,
-                        Description = item.Description
-                    }
-                );
-            }
+                //LANGUAGE FOR OPTIONFIELDS
+                foreach ( var item in config.OptionGroups ) {
+                    context.OptionFieldHasLanguages.Add(
+                        new OptionFieldHasLanguage {
+                            OptionFieldId = item.Id,
+                            Language = lang,
+                            Name = item.Name,
+                            Description = item.Description
+                        }
+                    );
+                }
 
-            //LANGUAGE FOR OPTIONFIELDS
-            foreach(var item in config.OptionGroups ) {
-                context.OptionFieldHasLanguages.Add(
-                    new OptionFieldHasLanguage {
-                        OptionFieldId = item.Id,
-                        Language = lang,
-                        Name = item.Name,
-                        Description = item.Description
-                    }    
-                );
-            }
+                foreach ( var item in config.OptionSections ) {
+                    context.OptionFieldHasLanguages.Add(
+                        new OptionFieldHasLanguage {
+                            OptionFieldId = item.Id,
+                            Language = lang,
+                            Name = item.Name,
+                            Description = ""
+                        }
+                    );
+                }
 
-            foreach ( var item in config.OptionSections ) {
-                context.OptionFieldHasLanguages.Add(
-                    new OptionFieldHasLanguage {
-                        OptionFieldId = item.Id,
-                        Language = lang,
-                        Name = item.Name,
-                        Description = ""
-                    }
-                );
-            }
+                // MODELS
+                foreach ( var item in config.Rules.Models ) {
+                    ConfigurationService.SaveModels(context, config.ConfigId, item, lang);
+                }
 
-            context.SaveChanges();
+                context.SaveChanges();
 
             }
-            catch(Exception ex) {
+            catch ( Exception ex ) {
                 Console.WriteLine(ex.Message);
                 context.Dispose();
                 worked = false;

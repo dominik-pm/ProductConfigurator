@@ -32,9 +32,12 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             return Ok(toReturn);
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] ConfiguredProduct config) {
-            bool worked = ConfigurationService.SaveConfiguredProduct(config);
+        [HttpPost("{productNumber}")]
+        public IActionResult Post(string productNumber, [FromBody] ConfiguredProduct config) {
+            Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = LanguageService.HandleLanguageInput(lang);
+
+            bool worked = ConfigurationService.SaveConfiguredProduct(config, productNumber, lang);
 
             if ( !worked )
                 return BadRequest();

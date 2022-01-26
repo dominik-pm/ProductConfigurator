@@ -12,28 +12,25 @@ namespace DatabaseServiceProductConfigurator.Services {
             this.Price = price;
             this.Options = options;
         }
+
+        public List<string> GetOptionsId() => Options.Select(x => x.Id).ToList();
     }
 
     public static class ConfigurationService {
 
         static readonly Product_configuratorContext context = new();
 
-        public static List<string> GetDefaultConfig(string id, string lang ) {
-            List<string> toAdd = new();
-
-            List<Option>? options =  (
-                from conf in context.Configurations
-                where conf.ProductNumber == id && conf.Customer == null
-                let opts = GetOptionsByConfigId(conf.Id, lang)
-                select opts.Options
-            ).FirstOrDefault();
-
-            if ( options == null )
-                return toAdd;
-
-            toAdd.AddRange(options.Select(o => o.Id).ToList());
-
-            return toAdd;
+        public static List<ModelType> GetModelsByProduct( string productNumber, string lang ) {
+            return ( from conf in context.Configurations
+                     where conf.ProductNumber == productNumber
+                     let infos = LanguageService.GetConfigurationWithLanguage(conf.Id, lang)
+                     let opts = GetOptionsByConfigId(conf.Id, lang)
+                     select new ModelType {
+                         Name = infos.Name,
+                         Description = infos.Description,
+                         Options = opts.GetOptionsId()
+                     }
+            ).ToList();
         }
 
         public static List<ConfiguredProduct> GetConfiguredProducts( string lang ) {
@@ -85,14 +82,14 @@ namespace DatabaseServiceProductConfigurator.Services {
             return new ConfiguredProductStruct(price, toReturn);
         }
 
-        public static bool SaveConfiguredProduct( ConfiguredProduct toSave ) {
+        public static bool SaveConfiguredProduct( ConfiguredProduct toSave, string productNumber, string lang, int? customerId = null ) {
             bool worked = true;
 
             try {
                 Configuration added = context.Configurations.Add(
                     new Configuration {
-                        ProductNumber = toSave.ConfigurationName,
-                        Customer = null
+                        ProductNumber = productNumber,
+                        Customer = customerId
                     }
                 ).Entity;
 
@@ -109,6 +106,15 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 ).ToList();
 
+                context.ConfigurationsHasLanguages.Add(
+                    new ConfigurationsHasLanguage {
+                        Configuration = added.Id,
+                        Language = lang,
+                        Name = toSave.ConfigurationName,
+                        Description = ""
+                    }
+                );
+
                 context.ConfigurationHasOptionFields.AddRange(fields);
                 context.SaveChanges();
             }
@@ -120,6 +126,55 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             return worked;
 
+        }
+
+        public static void SaveModels( Product_configuratorContext local_Context, string productNumber, ModelType model, string lang ) {
+            Configuration temp = local_Context.Configurations.Add(
+                new Configuration {
+                    Id = 0,
+                    ProductNumber = productNumber,
+                    Customer = null
+                }
+            ).Entity;
+
+            local_Context.ConfigurationsHasLanguages.Add(
+                new ConfigurationsHasLanguage {
+                    Configuration = temp.Id,
+                    Language = lang,
+                    Name = model.Name,
+                    Description = model.Description
+                }
+            );
+
+            foreach(var item in model.Options ) { 
+            local_Context.ConfigurationHasOptionFields.Add(
+                new ConfigurationHasOptionField {
+                    ConfigId = temp.Id,
+                    OptionFieldId = GetOptionfieldByProductAndOption(productNumber, item)
+                }
+            );
+            }
+        }
+
+        private static string GetOptionfieldByProductAndOption( string productNumber, string option ) {
+            List<string> products = (
+                from of in context.ProductsHasOptionFields
+                where of.ProductNumber == productNumber && of.DependencyType == "PARENT"
+                select of.OptionFields
+            ).ToList();
+
+            List<string> options = (
+                from of in context.ProductsHasOptionFields
+                where of.ProductNumber == option && of.DependencyType == "CHILD"
+                select of.OptionFields
+            ).ToList();
+
+            foreach(var item in options ) {
+                if(products.Contains(item))
+                    return item;
+            }
+
+            throw new Exception("Option Product has no Dependency to Product or is not in Database!");
         }
 
 

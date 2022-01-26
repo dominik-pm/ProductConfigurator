@@ -14,7 +14,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class ProductController : ControllerBase {
 
-        static Product_configuratorContext context = new Product_configuratorContext();
+        static Product_configuratorContext context = new();
 
         //[HttpGet("GetBuyableProduct")]
         //public IActionResult GetBuyableProducts() {
