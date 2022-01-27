@@ -9,6 +9,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         private static readonly Product_configuratorContext context = new();
 
+        #region GET
         private static List<Configurator> GetConfigurators( string lang ) {
             List<Configurator> temp = (
                 from p in context.Products
@@ -215,6 +216,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             return options;
         }
 
+        #endregion
+
+        #region POST
+
         public static bool SaveConfigurator( Configurator config, string lang ) {
             bool worked = true;
 
@@ -400,6 +405,93 @@ namespace DatabaseServiceProductConfigurator.Services {
             return worked;
 
         }
+
+        #endregion
+
+        #region DELETE
+
+        public static bool DeleteConfigurator( Configurator configurator) {
+            bool worked = true;
+            try {
+
+                // PICTURES
+                context.Pictures.RemoveRange(
+                    from p in context.Pictures
+                    where p.ProductNumber.Equals(configurator.ConfigId)
+                    select p 
+                );
+
+                // LANGUAGE
+                context.ProductHasLanguages.RemoveRange(
+                    from pol in context.ProductHasLanguages
+                    where pol.ProductNumber.Equals(configurator.ConfigId)
+                    select pol
+                );
+
+                // MODELS
+#warning Please implement the Method in ConfigurationService
+
+                // OPTIONGROUPS/OPTIONSECTIONS
+                List<string> removeOptionFieldID = new();
+                foreach (var item in configurator.OptionGroups ) {
+                    removeOptionFieldID.Add(item.Id);
+                }
+                foreach ( var item in configurator.OptionSections ) {
+                    removeOptionFieldID.Add(item.Id);
+                }
+                List<OptionField> removeOptionField = (
+                    from of in context.OptionFields
+                    where removeOptionFieldID.Contains(of.Id)
+                    select of
+                ).ToList();
+                List<string> removeProductID = new();
+                foreach(var item in configurator.Options ) {
+                    removeProductID.Add(item.Id);
+                }
+                List < Product > removeProduct = (
+                    from p in context.Products
+                    where removeProductID.Contains(p.ProductNumber)
+                    select p
+                ).ToList();
+
+                // OPTIONFIELDS
+                foreach(var item in removeOptionField) {
+                    if ( !context.ProductsHasOptionFields.Where(p => p.ProductNumber != configurator.ConfigId).Select(p => p.OptionFields).Contains(item.Id) ) {
+                        List<OptionFieldsHasOptionField> temp = context.OptionFieldsHasOptionFields.ToList();
+                        foreach(var ofo in temp ) {
+                            if ( !removeOptionFieldID.Contains(ofo.Base) || !removeOptionFieldID.Contains(ofo.OptionField) )
+                                removeOptionField.Remove(item);
+                        }
+                    }
+                }
+
+                // OPTIONS
+#warning Please continue here
+
+                // RULES
+                context.ProductsHasProducts.RemoveRange(
+                    from php in context.ProductsHasProducts
+                    where php.BaseProduct.Equals(configurator.ConfigId) || php.OptionProduct.Equals(configurator.ConfigId)
+                    select php
+                );
+                context.ProductsHasOptionFields.RemoveRange(
+                    from pho in context.ProductsHasOptionFields
+                    where pho.ProductNumber.Equals(configurator.ConfigId)
+                    select pho
+                );
+
+                context.SaveChanges();
+            }
+            catch ( Exception ex ) {
+                Console.WriteLine(ex.Message);
+                context.Dispose();
+                worked = false;
+            }
+
+            return worked;
+        }
+
+        #endregion
 
     }
 }
