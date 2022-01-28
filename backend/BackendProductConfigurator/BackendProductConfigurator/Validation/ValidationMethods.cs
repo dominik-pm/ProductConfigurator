@@ -65,5 +65,10 @@ namespace BackendProductConfigurator.Validation
 
             return EValidationResult.ValidationPassed;
         }
+        public static EValidationResult ValidateSelectedModel(ConfiguredProduct configuredProduct, Configurator configurator)
+        {
+
+            return EValidationResult.ValidationPassed;
+        }
     }
 }
