@@ -67,6 +67,10 @@ namespace BackendProductConfigurator.Validation
         }
         public static EValidationResult ValidateSelectedModel(ConfiguredProduct configuredProduct, Configurator configurator)
         {
+            List<string> modelList = configurator.Rules.Models.Where(x => x.Name == configuredProduct.SelectedModel).Select(x => x.Options).First();
+
+            if (modelList.Intersect(configuredProduct.Options.Select(x => x.Id)).Count() >= modelList.Count())
+                return EValidationResult.ModelSelectionInvalid;
 
             return EValidationResult.ValidationPassed;
         }
