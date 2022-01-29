@@ -105,16 +105,34 @@ export const builderSlice = createSlice({
             if (section) section.optionGroupIds.push(name)
         },
         addOption: (state, action) => {
-            const { groupId, name, description } = action.payload
+            const { groupId, name, description, price } = action.payload
 
+            // add option to options list
             state.configuration.options.push({
                 id: name,
                 name: name,
                 description: description
             })
 
+            // add option to group
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
             if (group) group.optionIds.push(name)
+
+            // add option price to pricelist in rules
+            if (price) state.configuration.rules.priceList[name] = price
+        },
+        removeOption: (state, action) => {
+            const { groupId, optionId } = action.payload
+
+            // remove option from option list
+            state.configuration.options = state.configuration.options.filter(o => o.id !== optionId)
+
+            // remove option from group
+            const group = state.configuration.optionGroups.find(g => g.id === groupId)
+            if (group) group.optionIds = group.optionIds.filter(o => o !== optionId)
+
+            // remove option price from pricelist
+            if (state.configuration.rules.priceList[optionId]) delete state.configuration.rules.priceList[optionId]
         },
         addModel: (state, action) => {
             const { modelName, options, description } = action.payload
@@ -191,15 +209,18 @@ export const createGroup = (sectionId, name, description, required) => (dispatch
     return true
 }
 
-export const createOption = (groupId, name, description) => (dispatch, getState) => {
+export const createOption = (groupId, name, description, price = 0) => (dispatch, getState) => {
     // check if option doesn't already exist
     const optionExists = getDoesOptionExist(getState(), name)
     if (optionExists) {
         return false
     }
 
-    dispatch(addOption({groupId, name, description}))
+    dispatch(addOption({groupId, name, description, price}))
     return true
+}
+export const deleteOption = (groupId, name) => (dispatch, getState) => {
+    dispatch(removeOption({groupId, optionId: name}))
 }
 
 export const createModel = (modelName, options, description) => (dispatch) => {
@@ -240,6 +261,6 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, addOptionGroup, addOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { addSection, addOptionGroup, addOption, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
 
 export default builderSlice.reducer

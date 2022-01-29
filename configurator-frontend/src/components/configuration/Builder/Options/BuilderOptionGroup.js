@@ -12,7 +12,7 @@ import { inputDialogOpen } from '../../../../state/inputDialog/inputDialogSlice'
 
 function OptionGroup({group, createOption, openInputDialog, openAlert, language}) {
 
-    const { name, description, optionIds } = group
+    const { id, name, description, optionIds } = group
 
 
     function handleAddOption() {
@@ -21,7 +21,7 @@ function OptionGroup({group, createOption, openInputDialog, openAlert, language}
             optionDescription: {name: 'description', value: ''},
         }
         openInputDialog(translate('newOption', language), data, (data) => {
-            const success = createOption(group.id, data.optionName.value, data.optionDescription.value)
+            const success = createOption(id, data.optionName.value, data.optionDescription.value)
             if (!success) {
                 openAlert('Option already exists!', alertTypes.ERROR)
             }
@@ -45,7 +45,7 @@ function OptionGroup({group, createOption, openInputDialog, openAlert, language}
             </Box>
             <Box>
                 {optionIds.map(optionId => (
-                    <BuilderOption key={optionId} optionId={optionId}></BuilderOption>
+                    <BuilderOption key={optionId} group={group} optionId={optionId}></BuilderOption>
                 ))}
             </Box>
         </Box>
