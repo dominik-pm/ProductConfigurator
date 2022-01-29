@@ -466,7 +466,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                 }
 
                 // OPTIONS
-#warning Please continue here
+                foreach( var item in removeProductID) {
+                    Configurator? temp = GetConfiguratorByProductNumber(item, "");
+                    if ( temp != null )
+                        DeleteConfigurator(temp);
+                }
 
                 // RULES
                 context.ProductsHasProducts.RemoveRange(
@@ -478,6 +482,20 @@ namespace DatabaseServiceProductConfigurator.Services {
                     from pho in context.ProductsHasOptionFields
                     where pho.ProductNumber.Equals(configurator.ConfigId)
                     select pho
+                );
+                context.OptionFieldsHasOptionFields.RemoveRange(
+                    from ofho in context.OptionFieldsHasOptionFields
+                    where removeOptionField.Select(rof => rof.Id).Contains(ofho.Base)
+                        || removeOptionField.Select(rof => rof.Id).Contains(ofho.OptionField)
+                    select ofho
+                );
+
+                // REMOVE ALL OPTION FIELDS
+                context.OptionFields.RemoveRange(removeOptionField);
+
+                // MAIN PRODUCT
+                context.Products.RemoveRange(
+                    context.Products.Where(p => p.ProductNumber.Equals(configurator.ConfigId))
                 );
 
                 context.SaveChanges();
