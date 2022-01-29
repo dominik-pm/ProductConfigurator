@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import Box from '@mui/material/Box'
-import { Button, IconButton, Stack, Tooltip } from '@mui/material'
+import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { connect } from 'react-redux'
 import { createGroup, createSection } from '../../../state/configurationBuilder/builderSlice'
@@ -92,6 +92,8 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
 
     return (
         <Box sx={{ width: '100%' }}>
+            <Typography variant="h3">Options</Typography>
+
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs 
                     value={value} 

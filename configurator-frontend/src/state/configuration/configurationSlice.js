@@ -47,7 +47,7 @@ export const configurationSlice = createSlice({
             console.log('configuration loaded:', action.payload)
             state.status = 'succeeded'
             state.configuration = action.payload
-            state.selectedOptions = loadSelectedOptionsFromStorage(state.configuration.id) || []
+            state.selectedOptions = loadSelectedOptionsFromStorage(state.configuration.configId) || []
         },
         loadingFailed: (state, action) => {
             console.log('configuration loading failed:', action.payload)
@@ -71,6 +71,7 @@ export const fetchConfiguration = (id) => async (dispatch, getState) => {
     .then(res => {
         dispatch(setModel(selectDefaultModel(getState())))
         dispatch(loadingSucceeded(res))
+        dispatch(checkModel())
     })
     .catch(error => {
         dispatch(loadingFailed(error))
@@ -136,7 +137,12 @@ export const saveConfigurationToStorage = (id, options) => {
 
 // get the selected options for the specific configuration (id) from the storage
 const loadSelectedOptionsFromStorage = (id) => {
-    const configuration = loadConfigurationsFromStorage().find(config => config.id === id)
+    console.log('all stored configs:', loadConfigurationsFromStorage())
+    console.log(id)
+    const configuration = loadConfigurationsFromStorage().find(c => c.id === id)
+
+    console.log('storage loaded config:', configuration)
+
     if (!configuration) return null
 
     if (!configuration.options) return null

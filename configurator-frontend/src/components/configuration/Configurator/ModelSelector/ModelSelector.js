@@ -8,7 +8,7 @@ import ModelButton from './ModelButton'
 function ModelSelector({ models, selectedModel }) {
     return (
         <Box marginBottom={4}>
-            <Typography variant="body1">Models:</Typography>
+            <Typography variant="h3">Models</Typography>
             <Box display="flex" justifyContent="space-evenly" alignItems="center" flexWrap="wrap">
 
                 {models.map((model, index) => (

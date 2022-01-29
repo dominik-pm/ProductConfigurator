@@ -1,5 +1,4 @@
 import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
-import { Box } from '@mui/system'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../lang'

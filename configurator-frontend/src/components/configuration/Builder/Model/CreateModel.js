@@ -38,7 +38,7 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
         <Box width="100%">
             <Grid container justifyContent="space-between">
 
-                <Typography variant="h3">Models:</Typography>
+                <Typography variant="h3">Models</Typography>
 
                 <Box sx={{ minWidth: 120 }}>
                     <FormControl variant='standard' fullWidth>
