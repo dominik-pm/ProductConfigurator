@@ -410,7 +410,12 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region DELETE
 
-        public static bool DeleteConfigurator( Configurator configurator) {
+        public static bool DeleteConfigurator( string productNumber) {
+            Configurator? configurator = GetConfiguratorByProductNumber(productNumber, "");
+
+            if ( configurator == null )
+                return false;
+
             bool worked = true;
             try {
 
@@ -418,7 +423,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 context.Pictures.RemoveRange(
                     from p in context.Pictures
                     where p.ProductNumber.Equals(configurator.ConfigId)
-                    select p 
+                    select p
                 );
 
                 // LANGUAGE
@@ -429,8 +434,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                 );
 
                 // MODELS
-#warning Please implement the Method in ConfigurationService
-
+                context.Configurations.Where(c => c.ProductNumber.Equals(productNumber))
+                .ToList().ForEach(item => ConfigurationService.DeleteSavedProduct(item.Id));
+              
                 // OPTIONGROUPS/OPTIONSECTIONS
                 List<string> removeOptionFieldID = new();
                 foreach (var item in configurator.OptionGroups ) {
@@ -448,11 +454,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                 foreach(var item in configurator.Options ) {
                     removeProductID.Add(item.Id);
                 }
-                List < Product > removeProduct = (
-                    from p in context.Products
-                    where removeProductID.Contains(p.ProductNumber)
-                    select p
-                ).ToList();
 
                 // OPTIONFIELDS
                 foreach(var item in removeOptionField) {
@@ -467,9 +468,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
                 // OPTIONS
                 foreach( var item in removeProductID) {
-                    Configurator? temp = GetConfiguratorByProductNumber(item, "");
-                    if ( temp != null )
-                        DeleteConfigurator(temp);
+                    DeleteConfigurator(item);
                 }
 
                 // RULES

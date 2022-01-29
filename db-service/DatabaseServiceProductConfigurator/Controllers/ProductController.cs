@@ -16,19 +16,6 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
         static Product_configuratorContext context = new();
 
-        //[HttpGet("GetBuyableProduct")]
-        //public IActionResult GetBuyableProducts() {
-        //    Request.Headers.TryGetValue("Accept-Language", out var lang);
-        //    lang = LanguageService.HandleLanguageInput(lang);
-
-        //    List<object> products = ProductService.GetBuyableProducts(lang);
-
-        //    if ( products.Count == 0 )
-        //        return NoContent();
-
-        //    return Ok(products);
-        //}
-
         [HttpGet]
         public IActionResult GetAllProducts() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
@@ -63,5 +50,14 @@ namespace DatabaseServiceProductConfigurator.Controllers {
                 return BadRequest();
             return Accepted();
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete( string id ) {
+            bool worked = ProductService.DeleteConfigurator(id);
+            if ( !worked )
+                return BadRequest();
+            return Accepted();
+        }
+
     }
 }

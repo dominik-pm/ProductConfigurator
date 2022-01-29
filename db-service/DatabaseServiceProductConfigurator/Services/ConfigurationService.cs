@@ -20,6 +20,8 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         static readonly Product_configuratorContext context = new();
 
+        #region GET
+
         public static List<ModelType> GetModelsByProduct( string productNumber, string lang ) {
             return ( from conf in context.Configurations
                      where conf.ProductNumber == productNumber
@@ -81,6 +83,10 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             return new ConfiguredProductStruct(price, toReturn);
         }
+
+        #endregion
+
+        #region POST
 
         public static bool SaveConfiguredProduct( ConfiguredProduct toSave, string productNumber, string lang, int? customerId = null ) {
             bool worked = true;
@@ -177,6 +183,29 @@ namespace DatabaseServiceProductConfigurator.Services {
             throw new Exception("Option Product has no Dependency to Product or is not in Database!");
         }
 
+        #endregion
+
+        #region DELETE
+
+        public static bool DeleteSavedProduct(int configID) {
+            bool worked = true;
+
+            try {
+
+
+
+                context.SaveChanges();
+            }
+            catch ( Exception ex ) {
+                Console.WriteLine(ex);
+                context.Dispose();
+                worked = false;
+            }
+            return worked;
+
+        }
+
+        #endregion
 
     }
 }
