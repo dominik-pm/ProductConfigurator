@@ -14,6 +14,6 @@ namespace Model
     }
     public enum EStatus
     {
-        Ordered = 0, Saved
+        ordered = 0, saved
     }
 }
