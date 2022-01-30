@@ -42,6 +42,10 @@ namespace BackendProductConfigurator.Controllers
             Configurators["en"] = ADBAccess<Configurator>.GetValues("en", serverAddress, typeApis[typeof(Configurator)]).Result;
             Configurators["fr"] = ADBAccess<Configurator>.GetValues("fr", serverAddress, typeApis[typeof(Configurator)]).Result;
 
+            ConfiguratorsSlim["de"] = Configurators["de"].Cast<ConfiguratorSlim>().ToList();
+            ConfiguratorsSlim["en"] = Configurators["en"].Cast<ConfiguratorSlim>().ToList();
+            ConfiguratorsSlim["fr"] = Configurators["fr"].Cast<ConfiguratorSlim>().ToList();
+
             SavedProducts["de"] = ADBAccess<ProductSaveExtended>.GetValues("de", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
             SavedProducts["en"] = ADBAccess<ProductSaveExtended>.GetValues("en", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
             SavedProducts["fr"] = ADBAccess<ProductSaveExtended>.GetValues("fr", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
