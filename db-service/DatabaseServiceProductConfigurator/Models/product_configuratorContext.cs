@@ -525,6 +525,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_PRODUCTS_has_PRODUCTS_PRODUCTS1");
             });
 
+            modelBuilder.Entity<ConfigurationHasOptionField>().Navigation(c => c.ProductNumbers).AutoInclude();
+
             OnModelCreatingPartial(modelBuilder);
         }
 

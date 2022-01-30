@@ -73,7 +73,10 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         }
 
-        public static List<string> GetAllLanguages() => context.ELanguages.Select(l => l.Language).ToList();
+        public static List<string> GetAllLanguages() {
+            Product_configuratorContext localContext = new Product_configuratorContext();
+            return localContext.ELanguages.Select(l => l.Language).ToList();
+        }
 
         public static string HandleLanguageInput( string input ) {
             if ( input == null )

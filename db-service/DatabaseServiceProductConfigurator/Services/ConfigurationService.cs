@@ -7,13 +7,14 @@ namespace DatabaseServiceProductConfigurator.Services {
     internal struct ConfiguredProductStruct {
         public float Price { get; init; }
         public List<Option> Options { get; init; }
+        public List<string> OptionId { get; init; }
 
         public ConfiguredProductStruct( float price, List<Option> options ) {
             this.Price = price;
             this.Options = options;
+            OptionId = options.Select( x => x.Id ).ToList();
+            Console.WriteLine(OptionId[0]);
         }
-
-        public List<string> GetOptionsId() => Options.Select(x => x.Id).ToList();
     }
 
     public static class ConfigurationService {
@@ -30,7 +31,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                      select new ModelType {
                          Name = infos.Name,
                          Description = infos.Description,
-                         Options = opts.GetOptionsId()
+                         Options = opts.OptionId
                      }
             ).ToList();
         }
@@ -50,7 +51,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     ConfigId = conf.ProductNumber,
                     Name = productInfo.Name,
                     Description = productInfo.Description,
-                    Status = ordered ? EStatus.Ordered.ToString() : EStatus.Saved.ToString(),
+                    Status = ordered ? EStatus.ordered.ToString() : EStatus.saved.ToString(),
                     Date = conf.Date,
                     User = new Model.Account {
                         UserName = customer != null ? customer.Username : "",
@@ -100,14 +101,16 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region POST
 
-        public static bool SaveConfiguration( ProductSave toSave, string lang, int? customerId = null ) {
+        public static bool SaveConfiguration( ProductSaveExtended toSave, string lang ) {
             bool worked = true;
 
             try {
+                Models.Account? user = context.Accounts.Where(a => a.Email.Equals(toSave.User.UserEmail)).FirstOrDefault(); 
+
                 Configuration added = context.Configurations.Add(
                     new Configuration {
                         ProductNumber = toSave.ConfigId,
-                        AccountId = customerId,
+                        AccountId = user != null ? user.Id : null,
                         Date = toSave.Date
                     }
                 ).Entity;
