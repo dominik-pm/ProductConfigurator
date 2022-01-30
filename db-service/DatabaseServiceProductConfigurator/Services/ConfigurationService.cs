@@ -230,5 +230,26 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #endregion
 
+        #region PUT
+
+        public static bool UpdateConfiguration( ConfiguredProduct config ) {
+            bool worked = true;
+
+            try {
+
+                context.SaveChanges();
+            }
+            catch ( Exception ex ) {
+                Console.WriteLine(ex);
+                context.Dispose();
+                worked = false;
+            }
+
+            return worked;
+
+        }
+
+        #endregion
+
     }
 }
