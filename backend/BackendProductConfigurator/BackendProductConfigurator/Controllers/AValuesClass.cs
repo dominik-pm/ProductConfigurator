@@ -209,7 +209,7 @@ namespace BackendProductConfigurator.Controllers
                 Name = "Alfa 147",
                 Options = options,
                 SavedName = "Scherzermobil",
-                Status = EStatus.Saved,
+                Status = EStatus.Saved.ToString(),
                 User = acc1,
                 ConfigId = "ALFA1"
             };
@@ -219,7 +219,7 @@ namespace BackendProductConfigurator.Controllers
                 Name = "Alfa 156",
                 Options = options,
                 SavedName = "Pömmermobil",
-                Status = EStatus.Saved,
+                Status = EStatus.Saved.ToString(),
                 User = acc2,
                 ConfigId = "ALFA"
             };
@@ -229,7 +229,7 @@ namespace BackendProductConfigurator.Controllers
                 Name = "Alfa 166",
                 Options = options,
                 SavedName = "Leutgeb Toyota",
-                Status = EStatus.Saved,
+                Status = EStatus.Saved.ToString(),
                 User = acc3,
                 ConfigId = "BENZ1"
             };
