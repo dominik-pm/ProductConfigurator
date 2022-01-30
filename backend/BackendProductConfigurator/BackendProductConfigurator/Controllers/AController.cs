@@ -193,7 +193,7 @@ namespace BackendProductConfigurator.Controllers
         }
 
         // GET: /account/configuration
-        [Route("/account/configuration")]
+        [Route("/account/configurations")]
         [HttpGet]
         public List<ProductSave> GetSavedConfigs()
         {
@@ -202,7 +202,7 @@ namespace BackendProductConfigurator.Controllers
         }
 
         // POST: /account/configuration
-        [Route("/account/configuration/{configId}")]
+        [Route("/account/configurations/{configId}")]
         [HttpPost]
         public void Post([FromBody] ProductSaveSlim value, string configId)
         {
