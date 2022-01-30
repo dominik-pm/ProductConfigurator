@@ -6,7 +6,7 @@ namespace BackendProductConfigurator.Controllers
     {
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
         public static Dictionary<string, List<ConfiguratorSlim>> ConfiguratorsSlim { get; set; } = new Dictionary<string, List<ConfiguratorSlim>>() { { "de", new List<ConfiguratorSlim>() }, { "en", new List<ConfiguratorSlim>() }, { "fr", new List<ConfiguratorSlim>() } };
-        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
+        public static Dictionary<string, List<ProductSaveExtended>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
@@ -15,7 +15,7 @@ namespace BackendProductConfigurator.Controllers
 
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
-            {typeof(ConfiguredProduct), "/db/configuration"},
+            {typeof(ProductSaveExtended), "/db/configuration"},
             {typeof(Configurator), "/db/product" }
         };
 
@@ -34,7 +34,7 @@ namespace BackendProductConfigurator.Controllers
         public static void PostValue<T>(T value, string language) where T : class
         {
             if(ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(ConfiguredProduct)], value);
+                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(ProductSaveExtended)], value);
         }
         public static void SetDBValues()
         {
@@ -42,9 +42,9 @@ namespace BackendProductConfigurator.Controllers
             Configurators["en"] = ADBAccess<Configurator>.GetValues("en", serverAddress, typeApis[typeof(Configurator)]).Result;
             Configurators["fr"] = ADBAccess<Configurator>.GetValues("fr", serverAddress, typeApis[typeof(Configurator)]).Result;
 
-            ConfiguredProducts["de"] = ADBAccess<ConfiguredProduct>.GetValues("de", serverAddress, typeApis[typeof(ConfiguredProduct)]).Result;
-            ConfiguredProducts["en"] = ADBAccess<ConfiguredProduct>.GetValues("en", serverAddress, typeApis[typeof(ConfiguredProduct)]).Result;
-            ConfiguredProducts["fr"] = ADBAccess<ConfiguredProduct>.GetValues("fr", serverAddress, typeApis[typeof(ConfiguredProduct)]).Result;
+            SavedProducts["de"] = ADBAccess<ProductSaveExtended>.GetValues("de", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+            SavedProducts["en"] = ADBAccess<ProductSaveExtended>.GetValues("en", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+            SavedProducts["fr"] = ADBAccess<ProductSaveExtended>.GetValues("fr", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
         }
 
         public static void SetStaticValues()
