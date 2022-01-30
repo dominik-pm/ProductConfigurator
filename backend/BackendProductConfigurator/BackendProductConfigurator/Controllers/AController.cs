@@ -143,6 +143,10 @@ namespace BackendProductConfigurator.Controllers
             {
                 validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).Rules);
             }
+            if (validationResult == EValidationResult.ValidationPassed)
+            {
+                validationResult = ValidationMethods.ValidateSelectedModel(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId));
+            }
             new Thread(() =>
             {
                 EmailProducer.SendEmail(value, validationResult);
@@ -153,6 +157,7 @@ namespace BackendProductConfigurator.Controllers
                 if(validationResult == EValidationResult.ValidationPassed)
                     PdfProducer.GeneratePDF(value, configId, Request);
             }).Start();
+            //Add Validation for model here
             entities[GetAccLang(Request)].Add(value);
             AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
         }
