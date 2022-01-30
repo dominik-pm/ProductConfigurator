@@ -38,17 +38,16 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void SetDBValues()
         {
-            Configurators["de"] = ADBAccess<Configurator>.GetValues("de", serverAddress, typeApis[typeof(Configurator)]).Result;
-            Configurators["en"] = ADBAccess<Configurator>.GetValues("en", serverAddress, typeApis[typeof(Configurator)]).Result;
-            Configurators["fr"] = ADBAccess<Configurator>.GetValues("fr", serverAddress, typeApis[typeof(Configurator)]).Result;
+            List<string> languages = new List<string>() { "de", "en", "fr"};
 
-            ConfiguratorsSlim["de"] = Configurators["de"].Cast<ConfiguratorSlim>().ToList();
-            ConfiguratorsSlim["en"] = Configurators["en"].Cast<ConfiguratorSlim>().ToList();
-            ConfiguratorsSlim["fr"] = Configurators["fr"].Cast<ConfiguratorSlim>().ToList();
+            foreach(string language in languages)
+            {
+                Configurators[language] = ADBAccess<Configurator>.GetValues(language, serverAddress, typeApis[typeof(Configurator)]).Result;
 
-            SavedProducts["de"] = ADBAccess<ProductSaveExtended>.GetValues("de", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
-            SavedProducts["en"] = ADBAccess<ProductSaveExtended>.GetValues("en", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
-            SavedProducts["fr"] = ADBAccess<ProductSaveExtended>.GetValues("fr", serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+                ConfiguratorsSlim[language] = Configurators[language].Cast<ConfiguratorSlim>().ToList();
+
+                SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+            }
         }
 
         public static void SetStaticValues()
