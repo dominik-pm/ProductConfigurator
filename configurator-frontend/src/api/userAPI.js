@@ -1,64 +1,65 @@
-// import axios from 'axios'
+import axios from 'axios'
+import { baseURL } from './general'
 import jwt from 'jsonwebtoken'
 
 export const requestSaveConfiguration = (configurationId, name, selectedOptions) => {
-    return saveConfigTest(name, selectedOptions)
+    // return saveConfigTest(name, selectedOptions)
 
-    // return new Promise((resolve, reject) => {
-    //     const data = {
-    //         savedName: name,
-    //         options: selectedOptions
-    //     }
-    //     axios.post(`/account/configurations/${configurationId}`, data)
-    //     .then(res => {
-    //         resolve(res.data)
-    //     })
-    //     .catch(err => {
-    //         reject('Could not save configuration!')
-    //     })
-    // })
+    return new Promise((resolve, reject) => {
+        const data = {
+            savedName: name,
+            options: selectedOptions
+        }
+        axios.post(`${baseURL}/account/configurations/${configurationId}`, data)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject('Could not save configuration!')
+        })
+    })
 }
 export const requestDeleteSavedConfiguration = (configurationId, name) => {
     return new Promise((resolve, reject) => {
-        reject('Not implemented!')
+        // reject('Not implemented!')
 
-        // const data = {
-        //     savedName: name
-        // }
-        // axios.delete(`/account/configurations/${configurationId}`, data)
-        // .then(res => {
-        //     resolve(res.data)
-        // })
-        // .catch(err => {
-        //     reject('Could not get saved configurations!')
-        // })
+        const data = {
+            savedName: name
+        }
+        axios.delete(`${baseURL}/account/configurations/${configurationId}`, data)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject('Could not get saved configurations!')
+        })
     })
 }
 export const fetchSavedConfigurations = () => {
-    return fetchConfigsTest()
+    // return fetchConfigsTest()
 
-    // return new Promise((resolve, reject) => {
-    //     axios.get(`/account/configurations/`)
-    //     .then(res => {
-    //         resolve(res.data)
-    //     })
-    //     .catch(err => {
-    //         reject('Could not get saved configurations!')
-    //     })
-    // })
+    return new Promise((resolve, reject) => {
+        axios.get(`${baseURL}/account/configurations/`)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject('Could not get saved configurations!')
+        })
+    })
 }
 export const fetchAllOrderedConfigurations = () => {
-    return fetchOrderedConfigsTest()
+    // return fetchOrderedConfigsTest()
 
-    // return new Promise((resolve, reject) => {
-    //     axios.get(`/account/allorderedconfigurations/`)
-    //     .then(res => {
-    //         resolve(res.data)
-    //     })
-    //     .catch(err => {
-    //         reject('Could not get all ordered configurations!')
-    //     })
-    // })
+    return new Promise((resolve, reject) => {
+        axios.get(`${baseURL}/account/allorderedconfigurations/`)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject('Could not get all ordered configurations!')
+        })
+    })
 }
 
 export const requestRegister = (username, email, password) => {

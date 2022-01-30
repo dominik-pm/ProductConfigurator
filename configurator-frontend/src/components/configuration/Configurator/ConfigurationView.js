@@ -17,7 +17,7 @@ function ConfigurationView({ fetchConfiguration, /*openAlert,*/ status, error, l
     const { id } = useParams()
     
     // const { products/*, status, error*/ } = useSelector(state => state.product)
-    // let product = products.find(p => p.id === id)
+    // let product = products.find(p => p.configId === id)
     // if (!product && configuration) {
     //     const {id, name, description, image} = configuration
     //     product = {id, name, description, image}

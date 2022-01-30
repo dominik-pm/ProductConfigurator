@@ -6,6 +6,7 @@ import { selectModels, selectSelectedModel } from '../../../../state/configurati
 import ModelButton from './ModelButton'
 
 function ModelSelector({ models, selectedModel }) {
+    
     return (
         <Box marginBottom={4}>
             <Typography variant="h3">Models</Typography>
@@ -14,7 +15,7 @@ function ModelSelector({ models, selectedModel }) {
 
                 {models.map((model, index) => (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                        <ModelButton model={model} isSelected={model.modelName === selectedModel}></ModelButton>
+                        <ModelButton model={model} isSelected={model.name === selectedModel}></ModelButton>
                     </Grid>
                 ))}
 

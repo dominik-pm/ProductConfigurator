@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router'
 export default function Product({product}) {
     const navigate = useNavigate()
 
-    const { id, name, description, images } = product
+    const { configId, name, description, images } = product
 
     const image = images[0]
 
     let imageSource = ''
 
     try {
-        const src = require(`../../assets/img/${image}`)
+        const src = require(`../../assets/img/${image.replace('./', '')}`)
         imageSource = src.default
     } catch (err) {
         console.log(`image '${image}' no found!`)
@@ -34,7 +34,7 @@ export default function Product({product}) {
         //     </Box>
         // </ButtonBase>
 
-        <ImageListItem key={imageSource} sx={{width: '100%', ':hover': {cursor: 'pointer'}}} onClick={() => handleClick(id)}>
+        <ImageListItem key={imageSource} sx={{width: '100%', ':hover': {cursor: 'pointer'}}} onClick={() => handleClick(configId)}>
             <img
                 width="100%"
                 src={`${imageSource}?w=248&fit=crop&auto=format`}

@@ -107,73 +107,67 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
     }
 
 
-    function renderConfiguratorBody() {
+    function renderConfigurator() {
+
+        if (isLoading) {
+            return (
+                <Loader></Loader>
+            )
+        }
 
         return (
-            // <Grid container spacing={2}>
-            //     <Grid item xs={12} md={3}>
-            //         <Summary></Summary>
-            //     </Grid>
+            <div>
+                {/* Configurator header */}
+                <Grid container justifyContent="flex-end">
+                    <Box sx={{flexGrow: 1}}>
+                        <Typography variant="h2">{translate('configureYour', language)} {configurationName}</Typography>
+                        <Typography variant="subtitle1">{configurationDescription}</Typography>
+                    </Box>
 
-            //     <Grid item xs={12} md={9}>
-            //         <OptionTabs></OptionTabs>
-            //     </Grid>
-            // </Grid>
-            <Grid container>
-                <OptionTabs></OptionTabs>
-            </Grid>
+                    <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
+                        <Tooltip title={translate('saveConfiguration', language)}>
+                            <IconButton 
+                                variant="contained" 
+                                onClick={handleSaveClicked}
+                                >
+                                <SaveAs />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title={translate('resetConfiguration', language)}>
+                            <IconButton
+                                variant="contained" 
+                                onClick={handleResetClicked}
+                            >
+                                <RestartAlt />
+                            </IconButton>
+                        </Tooltip>
+
+                        <Tooltip title={translate('finishConfiguration', language)}>
+                            <IconButton 
+                                variant="contained" 
+                                onClick={handleFinishClicked}
+                                >
+                                <Done />
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                </Grid>
+
+                {/* Models */}
+                <ModelSelector></ModelSelector>
+
+                <Grid container>
+                    <OptionTabs></OptionTabs>
+                </Grid>
+            </div>
 
         )
     }
 
     return (
         <div>
-            {/* Configurator header */}
-            <Grid container justifyContent="flex-end">
-                <Box sx={{flexGrow: 1}}>
-                    <Typography variant="h2">{translate('configureYour', language)} {configurationName}</Typography>
-                    <Typography variant="subtitle1">{configurationDescription}</Typography>
-                </Box>
-
-                <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
-                    <Tooltip title={translate('saveConfiguration', language)}>
-                        <IconButton 
-                            variant="contained" 
-                            onClick={handleSaveClicked}
-                            >
-                            <SaveAs />
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={translate('resetConfiguration', language)}>
-                        <IconButton
-                            variant="contained" 
-                            onClick={handleResetClicked}
-                        >
-                            <RestartAlt />
-                        </IconButton>
-                    </Tooltip>
-
-                    <Tooltip title={translate('finishConfiguration', language)}>
-                        <IconButton 
-                            variant="contained" 
-                            onClick={handleFinishClicked}
-                            >
-                            <Done />
-                        </IconButton>
-                    </Tooltip>
-                </Grid>
-            </Grid>
-
-            {/* Models */}
-            <ModelSelector></ModelSelector>
-
-            {
-                isLoading ? 
-                <Loader></Loader>
-                 :
-                renderConfiguratorBody()
-            }
+            {renderConfigurator()}
         </div>
     )
 }

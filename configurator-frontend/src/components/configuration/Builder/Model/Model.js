@@ -10,11 +10,11 @@ import { selectBuilderOptions } from '../../../../state/configurationBuilder/bui
 
 function Model({ model, isSelected = false, allOptions, removeModel, setModelOptions, openConfirmDialog, language }) {
 
-    const { modelName, description, options } = model
+    const { name, description, options } = model
 
     function handleDelete() {
-        openConfirmDialog(`${translate('removeModelConfirmation', language)} '${modelName}'?`, {}, null, () => {
-            removeModel(modelName)
+        openConfirmDialog(`${translate('removeModelConfirmation', language)} '${name}'?`, {}, null, () => {
+            removeModel(name)
         })
     }
 
@@ -26,7 +26,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, setModelOpt
         // On autofill we get a stringified value. 
         const newOptions = typeof value === 'string' ? value.split(',') : value
 
-        setModelOptions(modelName, newOptions)
+        setModelOptions(name, newOptions)
     }
 
     return (
@@ -36,7 +36,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, setModelOpt
                 item xs={12} sm={10} xl={9}
             >
                 <Typography variant="body1">
-                    {modelName}
+                    {name}
                 </Typography>
                 <Typography variant="body2">
                     {description}
@@ -50,7 +50,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, setModelOpt
             >
                 
 
-                <Tooltip title={`${translate('remove', language)} '${modelName}'`}>
+                <Tooltip title={`${translate('remove', language)} '${name}'`}>
                     <IconButton onClick={handleDelete}>
                         <Delete />
                     </IconButton>

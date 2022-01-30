@@ -53,7 +53,7 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
                             onChange={handleSetDefaultModel}
                             >
                             {models.map((model, index) => (
-                                <MenuItem key={index} value={model.modelName}>{model.modelName}</MenuItem>
+                                <MenuItem key={index} value={model.name}>{model.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -63,7 +63,7 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
             <Grid container gap={2} marginTop={2} direction="column" justifyContent="center" alignItems="center">
 
                 {models.map((model, index) => (
-                    <Model key={index} model={model} isSelected={model.modelName === selectedDefaultModel}></Model>
+                    <Model key={index} model={model} isSelected={model.name === selectedDefaultModel}></Model>
                 ))}
 
                 <Box>

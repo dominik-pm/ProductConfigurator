@@ -10,7 +10,7 @@ function ModelButton({ model, isSelected = false, disabled = false, selectedOpti
     // for the custom model, dont display sections if it is not selected
     if (!model && !isSelected) sections = []
 
-    const { modelName, description, options } = model || { modelName: 'Custom', description: '', options: isSelected ? selectedOptions : [] }
+    const { name, description, options } = model || { name: 'Custom', description: '', options: isSelected ? selectedOptions : [] }
 
     const [hover, setHover] = useState(false)
 
@@ -19,7 +19,7 @@ function ModelButton({ model, isSelected = false, disabled = false, selectedOpti
 
     function handleClick() {
         if (!disabled) {
-            selectModel(modelName)
+            selectModel(name)
         }
     }
 
@@ -39,7 +39,7 @@ function ModelButton({ model, isSelected = false, disabled = false, selectedOpti
                 
                 <Box height="80px">
                     <Typography variant="h4">
-                        {modelName}
+                        {name}
                     </Typography>
                     <Typography variant="body1">
                         {description}

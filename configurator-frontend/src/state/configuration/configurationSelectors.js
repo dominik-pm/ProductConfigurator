@@ -47,7 +47,7 @@ export const selectSelectedOptions = state =>           state.configuration.sele
 //     return models.find(m => m.name === modelName)
 // })
 export const getModelOptions = createSelector([selectModels, selectModelName], (models, modelName) => {
-    const model = models.find(m => m.modelName === modelName)
+    const model = models.find(m => m.name === modelName)
 
     return model ? model.options : []
 })

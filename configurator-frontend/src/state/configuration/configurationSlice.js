@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId } from '../../api/configurationAPI'
+import { alertTypes, openAlert } from '../alert/alertSlice'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
 import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectDefaultOptions, selectModels, selectSelectedOptions } from './configurationSelectors'
 
@@ -74,6 +75,7 @@ export const fetchConfiguration = (id) => async (dispatch, getState) => {
         dispatch(checkModel())
     })
     .catch(error => {
+        dispatch(openAlert(error, alertTypes.ERROR))
         dispatch(loadingFailed(error))
     })
 }
@@ -87,7 +89,7 @@ const checkModel = () => (dispatch, getState) => {
     const sameMembers = (arr1, arr2) => containsAll(arr1, arr2) && containsAll(arr2, arr1);
     for (const model of models) {
         if (sameMembers(model.options, selectedOptions)) {
-            dispatch(setModel(model.modelName))
+            dispatch(setModel(model.name))
             return
         }
     }
@@ -165,10 +167,12 @@ const loadConfigurationsFromStorage = () => {
 // reset the active confirguration
 export const resetActiveConfiguration = () => (dispatch, getState) => {
     try {
-        const defaultOptions = selectDefaultOptions(getState())
-        dispatch(reset(defaultOptions))
+        // const defaultOptions = selectDefaultOptions(getState())
+        // dispatch(reset(defaultOptions))
+        const defaultModel = selectDefaultModel(getState())
+        dispatch(setModel(defaultModel))
     } catch {
-        console.log('Can no reset -> no configuration found')
+        console.log('Can not reset -> no configuration found')
     }
 }
 

@@ -2,7 +2,23 @@ import axios from 'axios'
 import { baseURL } from './general'
 
 export const fetchAll = () => {    
-    return fetchApiTest()
+    // return fetchApiTest()
+
+    return new Promise((resolve, reject) => {
+        axios.get(`${baseURL}/products`)
+        .then(res => {
+            if (!res.data) {
+                console.log('no response data')
+                resolve([])
+            }
+            console.log(res.data)
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err.toString())
+            reject(err.toString())
+        })
+    })
 }
 
 export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price, model = '') => {
@@ -19,7 +35,7 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
             resolve(res.data)
         })
         .catch(err => {
-            reject(err)
+            reject('API not reachable')
         })
 
     })
@@ -30,10 +46,7 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
 function fetchApiTest(amount = products.length) {
     return new Promise((resolve, reject) =>
         // setTimeout(() => reject('AUTHENTICATION_FAILED'), 500)
-        setTimeout(() => resolve({
-            error: null,
-            products
-        }), 500)
+        setTimeout(() => resolve(products), 500)
     )
 }
 

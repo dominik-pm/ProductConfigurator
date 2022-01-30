@@ -1,20 +1,20 @@
-// import axios from 'axios'
-// import { baseURL } from './general'
+import axios from 'axios'
+import { baseURL } from './general'
 
 export const fetchId = (productId) => {
-    return fetchApiTest(productId)
+    // return fetchApiTest(productId)
 
-    // return new Promise((resolve, reject) => {
-    //  axios.get(`${baseURL}/configuration/${productId}`)
+    return new Promise((resolve, reject) => {
+        axios.get(`${baseURL}/configuration/${productId}`)
         
-    //     // axios.get(`${baseURL}/configuration/Golf`)
-    //     .then(res => {
-    //         resolve(res.data)
-    //     })
-    //     .catch(err => {
-    //         reject(err)
-    //     })
-    // })
+        // axios.get(`${baseURL}/configuration/Golf`)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            reject(err.toString())
+        })
+    })
 }
 
 export const postConfiguration = (newConfiguration) => {
@@ -27,7 +27,8 @@ export const postConfiguration = (newConfiguration) => {
         //     resolve(res.data)
         // })
         // .catch(err => {
-        //     reject(err)
+            // console.log(err)
+            // reject('Api unreachable')
         // })
     })
 }
@@ -246,12 +247,12 @@ const configurations = [
             defaultModel: 'Golf',
             models: [
                 {
-                    modelName: 'Golf',
+                    name: 'Golf',
                     options: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE'],
                     description: "base model of this car"
                 },
                 {
-                    modelName: 'Golf GTI',
+                    name: 'Golf GTI',
                     options: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM'],
                     description: "advanced model"
                 }

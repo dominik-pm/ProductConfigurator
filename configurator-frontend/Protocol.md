@@ -711,7 +711,7 @@ function ProductView({ products, status, error, fetchProducts, language }) {
             <div className="ProductContainer">
                 {
                     products.map(product => (
-                        <Product key={product.id} product={product}></Product>
+                        <Product key={product.configId} product={product}></Product>
                     ))
                 }
             </div>

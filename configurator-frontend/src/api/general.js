@@ -3,6 +3,8 @@ import axios from 'axios'
 export const baseURL = `https://sqrt3.ddns.net:7187`
 // export const baseURL = ``
 
+axios.defaults.timeout = 5000
+
 export const setAuthorizationToken = (token) => {
     if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`

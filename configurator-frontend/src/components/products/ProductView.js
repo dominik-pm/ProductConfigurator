@@ -6,8 +6,9 @@ import { fetchProducts } from '../../state/product/productSlice'
 import { selectProductError, selectProducts, selectProductStatus } from '../../state/product/productSelector'
 import { selectLanguage } from '../../state/language/languageSelectors'
 import { translate } from '../../lang'
+import Loader from '../Loader'
 
-function ProductView({ products, status, error, fetchProducts, language }) {
+function ProductView({ products = [], status, error, fetchProducts, language }) {
 
     const isEmpty = products.length === 0 ? true : false
 
@@ -33,7 +34,8 @@ function ProductView({ products, status, error, fetchProducts, language }) {
 
     function renderLoadingProducts() {
         return (
-            <Typography variant="h2">{translate('loadingProducts', language)}...</Typography>
+            // <Typography variant="h2">{translate('loadingProducts', language)}...</Typography>
+            <Loader></Loader>
         )
     }
 
@@ -47,7 +49,7 @@ function ProductView({ products, status, error, fetchProducts, language }) {
             <Grid container columns={12} spacing={2} sx={{paddingTop: 2, marginRight: 4}}>
             {/* <ImageList width='100%> */}
                 {products.map(product => (
-                    <Grid item sm={12} md={6} lg={4} xl={3} width="100%" key={product.id}>
+                    <Grid item sm={12} md={6} lg={4} xl={3} width="100%" key={product.configId}>
                         <Product product={product}></Product>
                     </Grid>
                 ))}
@@ -66,7 +68,7 @@ function ProductView({ products, status, error, fetchProducts, language }) {
     function renderApiFailed(errorMessage) {
         return (
             <div>
-                <Typography variant="h1">{translate('failedToLoadProducts', language)}</Typography>
+                <Typography variant="h2">{translate('failedToLoadProducts', language)}</Typography>
                 <Typography variant="body1">{translate(errorMessage, language)}</Typography>
             </div>
         )

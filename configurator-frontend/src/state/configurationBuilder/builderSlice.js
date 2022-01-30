@@ -46,12 +46,12 @@ const initialState = {
             defaultModel: '',
             models: [
                 {
-                    modelName: 'Sport',
+                    name: 'Sport',
                     options: ['ALLOY19'],
                     description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
                 },
                 {
-                    modelName: 'Basic',
+                    name: 'Basic',
                     options: ['STEEL16'],
                     description: 'description, description, description, description, description, description, description, description, '
                 }
@@ -138,13 +138,13 @@ export const builderSlice = createSlice({
             const { modelName, options, description } = action.payload
 
             state.configuration.rules.models.push({
-                modelName, 
+                name: modelName, 
                 options, 
                 description
             })
         },
         removeModel: (state, action) => {
-            state.configuration.rules.models = state.configuration.rules.models.filter(model => model.modelName !== action.payload)
+            state.configuration.rules.models = state.configuration.rules.models.filter(model => model.name !== action.payload)
         },
         setDefaultModel: (state, action) => {
             state.configuration.rules.defaultModel = action.payload
@@ -152,7 +152,7 @@ export const builderSlice = createSlice({
         setModelOptions: (state, action) => {
             const { modelName, options } = action.payload
             
-            const model = state.configuration.rules.models.find(m => m.modelName === modelName)
+            const model = state.configuration.rules.models.find(m => m.name === modelName)
             if (model) model.options = options
         },
         setBasePrice: (state, action) => {
