@@ -6,7 +6,7 @@ namespace BackendProductConfigurator.Controllers
     {
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
         public static Dictionary<string, List<ConfiguratorSlim>> ConfiguratorsSlim { get; set; } = new Dictionary<string, List<ConfiguratorSlim>>() { { "de", new List<ConfiguratorSlim>() }, { "en", new List<ConfiguratorSlim>() }, { "fr", new List<ConfiguratorSlim>() } };
-        public static Dictionary<string, List<ProductSaveExtended>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
+        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
@@ -34,7 +34,7 @@ namespace BackendProductConfigurator.Controllers
         public static void PostValue<T>(T value, string language) where T : class
         {
             if(ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(ProductSaveExtended)], value);
+                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(T)], value);
         }
         public static void SetDBValues()
         {
