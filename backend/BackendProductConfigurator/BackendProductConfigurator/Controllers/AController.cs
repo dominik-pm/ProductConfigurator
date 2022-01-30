@@ -195,10 +195,10 @@ namespace BackendProductConfigurator.Controllers
         // GET: /account/configuration
         [Route("/account/configurations")]
         [HttpGet]
-        public List<ProductSave> GetSavedConfigs()
+        public List<ProductSaveExtended> GetSavedConfigs()
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities.Cast<ProductSave>().ToList();
+            return entities[GetAccLang(Request)];
         }
 
         // POST: /account/configuration
