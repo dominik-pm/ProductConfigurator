@@ -41,6 +41,10 @@ namespace BackendProductConfigurator.Controllers
             Configurators["de"] = ADBAccess<Configurator>.GetValues("de", serverAddress, typeApis[typeof(Configurator)]).Result;
             Configurators["en"] = ADBAccess<Configurator>.GetValues("en", serverAddress, typeApis[typeof(Configurator)]).Result;
             Configurators["fr"] = ADBAccess<Configurator>.GetValues("fr", serverAddress, typeApis[typeof(Configurator)]).Result;
+
+            ConfiguredProducts["de"] = ADBAccess<ConfiguredProduct>.GetValues("de", serverAddress, typeApis[typeof(ConfiguredProduct)]).Result;
+            ConfiguredProducts["en"] = ADBAccess<ConfiguredProduct>.GetValues("en", serverAddress, typeApis[typeof(ConfiguredProduct)]).Result;
+            ConfiguredProducts["fr"] = ADBAccess<ConfiguredProduct>.GetValues("fr", serverAddress, typeApis[typeof(ConfiguredProduct)]).Result;
         }
 
         public static void SetStaticValues()
