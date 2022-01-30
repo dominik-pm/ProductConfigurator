@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
-namespace DatabaseServiceProductConfigurator.Models
-{
+namespace DatabaseServiceProductConfigurator.Models {
     public partial class Configuration {
         public Configuration() {
             Bookings = new HashSet<Booking>();
@@ -13,11 +11,11 @@ namespace DatabaseServiceProductConfigurator.Models
 
         public int Id { get; set; }
         public string ProductNumber { get; set; } = null!;
-        public int? Customer { get; set; }
+        public DateTime Date { get; set; }
+        public int? AccountId { get; set; }
 
-        [JsonIgnore]
+        public virtual Account? Account { get; set; }
         public virtual Product ProductNumberNavigation { get; set; } = null!;
-        [JsonIgnore]
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual ICollection<ConfigurationHasOptionField> ConfigurationHasOptionFields { get; set; }
         public virtual ICollection<ConfigurationsHasLanguage> ConfigurationsHasLanguages { get; set; }

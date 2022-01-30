@@ -35,20 +35,32 @@ namespace DatabaseServiceProductConfigurator.Services {
             ).ToList();
         }
 
-        public static List<ConfiguredProduct> GetConfiguredProducts( string lang ) {
+        public static List<ProductSaveExtended> GetConfigurations( string lang ) {
             return (
                 from conf in context.Configurations
+                where conf.AccountId != null
                 let opts = GetOptionsByConfigId(conf.Id, lang)
                 let infos = LanguageService.GetConfigurationWithLanguage(conf.Id, lang)
-                select new ConfiguredProduct {
-                    ConfigurationName = infos.Name,
+                let productInfo = LanguageService.GetProductWithLanguage(conf.ProductNumber, lang)
+                let ordered = context.Bookings.Where(b => b.ConfigId == conf.Id && b.AccountId == conf.AccountId).Any()
+                let customer = context.Accounts.Where(ac => ac.Id == conf.AccountId).FirstOrDefault()
+                select new ProductSaveExtended {
+                    SavedName = infos.Name,
                     Options = opts.Options,
-                    Price = opts.Price
+                    ConfigId = conf.ProductNumber,
+                    Name = productInfo.Name,
+                    Description = productInfo.Description,
+                    Status = ordered ? EStatus.Ordered.ToString() : EStatus.Saved.ToString(),
+                    Date = conf.Date,
+                    User = new Model.Account {
+                        UserName = customer != null ? customer.Username : "",
+                        UserEmail = customer != null ? customer.Email : ""
+                    }
                 }
             ).ToList();
         }
 
-        public static ConfiguredProduct? GetConfiguredProductById( string id ) => GetConfiguredProducts(id).FirstOrDefault();
+        public static ProductSaveExtended? GetConfiguredProductById( string id ) => GetConfigurations(id).FirstOrDefault();
 
         private static ConfiguredProductStruct GetOptionsByConfigId( int configId, string lang ) {
             Product_configuratorContext localContext = new();
@@ -88,16 +100,26 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region POST
 
-        public static bool SaveConfiguredProduct( ConfiguredProduct toSave, string productNumber, string lang, int? customerId = null ) {
+        public static bool SaveConfiguration( ProductSave toSave, string lang, int? customerId = null ) {
             bool worked = true;
 
             try {
                 Configuration added = context.Configurations.Add(
                     new Configuration {
-                        ProductNumber = productNumber,
-                        Customer = customerId
+                        ProductNumber = toSave.ConfigId,
+                        AccountId = customerId,
+                        Date = toSave.Date
                     }
                 ).Entity;
+
+                context.ConfigurationsHasLanguages.Add(
+                    new ConfigurationsHasLanguage {
+                        Configuration = added.Id,
+                        Language = lang,
+                        Name = toSave.SavedName,
+                        Description = ""
+                    }
+                );
 
                 List<string> products = ( from p in context.Products where toSave.Options.Select(c => c.Id).Contains(p.ProductNumber) select p.ProductNumber ).ToList();
 
@@ -112,15 +134,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 ).ToList();
 
-                context.ConfigurationsHasLanguages.Add(
-                    new ConfigurationsHasLanguage {
-                        Configuration = added.Id,
-                        Language = lang,
-                        Name = toSave.ConfigurationName,
-                        Description = ""
-                    }
-                );
-
                 context.ConfigurationHasOptionFields.AddRange(fields);
                 context.SaveChanges();
             }
@@ -133,13 +146,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             return worked;
 
         }
-
+                
         public static void SaveModels( Product_configuratorContext local_Context, string productNumber, ModelType model, string lang ) {
             Configuration temp = local_Context.Configurations.Add(
                 new Configuration {
                     Id = 0,
                     ProductNumber = productNumber,
-                    Customer = null
+                    AccountId = null
                 }
             ).Entity;
 

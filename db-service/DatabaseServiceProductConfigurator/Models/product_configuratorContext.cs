@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 
 namespace DatabaseServiceProductConfigurator.Models {
     public partial class Product_configuratorContext : DbContext {
-
         public Product_configuratorContext() {
         }
 
@@ -14,6 +12,7 @@ namespace DatabaseServiceProductConfigurator.Models {
             : base(options) {
         }
 
+        public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
         public virtual DbSet<Configuration> Configurations { get; set; } = null!;
         public virtual DbSet<ConfigurationHasOptionField> ConfigurationHasOptionFields { get; set; } = null!;
@@ -34,15 +33,36 @@ namespace DatabaseServiceProductConfigurator.Models {
         protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder ) {
             if ( !optionsBuilder.IsConfigured ) {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;database=product_configurator;port=3306;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+                optionsBuilder.UseMySql("server=localhost;database=product_configurator;port=3306;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"));
             }
         }
+
         protected override void OnModelCreating( ModelBuilder modelBuilder ) {
             modelBuilder.UseCollation("utf8_general_ci")
-                            .HasCharSet("utf8");
+                .HasCharSet("utf8");
+
+            modelBuilder.Entity<Account>(entity => {
+                entity.ToTable("account");
+
+                entity.HasIndex(e => e.Email, "email_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Id, "id_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Email).HasColumnName("email");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(255)
+                    .HasColumnName("username");
+            });
 
             modelBuilder.Entity<Booking>(entity => {
                 entity.ToTable("bookings");
+
+                entity.HasIndex(e => e.AccountId, "fk_BOOKINGS_ACCOUNT1_idx");
 
                 entity.HasIndex(e => e.ConfigId, "fk_BOOKINGS_CONFIGURATIONS1_idx");
 
@@ -51,7 +71,14 @@ namespace DatabaseServiceProductConfigurator.Models {
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.AccountId).HasColumnName("ACCOUNT_id");
+
                 entity.Property(e => e.ConfigId).HasColumnName("config_id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Bookings)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("fk_BOOKINGS_ACCOUNT1");
 
                 entity.HasOne(d => d.Config)
                     .WithMany(p => p.Bookings)
@@ -65,9 +92,20 @@ namespace DatabaseServiceProductConfigurator.Models {
 
                 entity.HasIndex(e => e.ProductNumber, "fk_BOOKINGS_PRODUCTS1_idx");
 
+                entity.HasIndex(e => e.AccountId, "fk_CONFIGURATIONS_ACCOUNT1_idx");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.AccountId).HasColumnName("ACCOUNT_id");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
                 entity.Property(e => e.ProductNumber).HasColumnName("product_number");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Configurations)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("fk_CONFIGURATIONS_ACCOUNT1");
 
                 entity.HasOne(d => d.ProductNumberNavigation)
                     .WithMany(p => p.Configurations)
@@ -488,18 +526,6 @@ namespace DatabaseServiceProductConfigurator.Models {
             });
 
             OnModelCreatingPartial(modelBuilder);
-
-            OnModelCreatingPartial(modelBuilder);
-            MyThings(modelBuilder);
-        }
-
-        private static void MyThings( ModelBuilder modelBuilder ) {
-            modelBuilder.Entity<Product>().Navigation(e => e.ProductHasLanguages).AutoInclude();
-            modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.OptionFieldsNavigation).AutoInclude();
-            modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.ProductNumberNavigation).AutoInclude();
-            modelBuilder.Entity<OptionField>().Navigation(e => e.OptionFieldHasLanguages).AutoInclude();
-            modelBuilder.Entity<Product>().Navigation(e => e.Pictures).AutoInclude();
-            modelBuilder.Entity<ConfigurationHasOptionField>().Navigation(e => e.ProductNumbers).AutoInclude();
         }
 
         partial void OnModelCreatingPartial( ModelBuilder modelBuilder );

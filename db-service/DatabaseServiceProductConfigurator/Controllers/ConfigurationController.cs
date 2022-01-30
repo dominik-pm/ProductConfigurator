@@ -17,7 +17,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = LanguageService.HandleLanguageInput(lang);
 
-            List<ConfiguredProduct> toReturn = ConfigurationService.GetConfiguredProducts(lang);
+            List<ProductSaveExtended> toReturn = ConfigurationService.GetConfigurations(lang);
 
             if ( !toReturn.Any() )
                 return NoContent();
@@ -26,18 +26,18 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
         [HttpGet("{id}")]
         public IActionResult GetById( string id ) {
-            ConfiguredProduct? toReturn = ConfigurationService.GetConfiguredProductById(id);
+            ProductSaveExtended? toReturn = ConfigurationService.GetConfiguredProductById(id);
             if ( toReturn == null )
                 return NotFound();
             return Ok(toReturn);
         }
 
-        [HttpPost("{productNumber}")]
-        public IActionResult Post( string productNumber, [FromBody] ConfiguredProduct config ) {
+        [HttpPost("{customerId}")]
+        public IActionResult Post( int customerId, [FromBody] ProductSaveExtended config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = LanguageService.HandleLanguageInput(lang);
 
-            bool worked = ConfigurationService.SaveConfiguredProduct(config, productNumber, lang);
+            bool worked = ConfigurationService.SaveConfiguration(config , lang, customerId);
 
             if ( !worked )
                 return BadRequest();

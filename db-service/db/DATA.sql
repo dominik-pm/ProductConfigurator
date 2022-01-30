@@ -7,6 +7,10 @@ VALUES ('CAR'),
        ('PANORAMA_ROOF'),
        ('');
 
+INSERT IGNORE INTO account(id, email, username)
+VALUES (1, 't.scherzer@htlkrems.at', 'sqrt3'),
+       (2, 's.leutgeb@htlkrems.at', 'andifined');
+
 INSERT IGNORE INTO products (product_number, price, category, buyable)
 VALUES ('Golf', 10000, 'CAR', 1),
        ('BLUE', 0, 'COLOR', 0),
@@ -161,9 +165,9 @@ VALUES ('6', '1', 'CHILD'),
        ('3', '2', 'REQUIRED');
 
 
-INSERT IGNORE INTO configurations (id, product_number)
-VALUES (1, 'Golf'),
-       (2, 'Golf');
+INSERT IGNORE INTO configurations (id, product_number, Date, ACCOUNT_id)
+VALUES (1, 'Golf', CURRENT_DATE, 1),
+       (2, 'Golf', CURRENT_DATE, null);
 
 INSERT IGNORE INTO configurations_has_language (configuration, language, name, description)
 VALUES (1, 'en', 'Basic', 'It is a basic configuration of a Golf.'),
@@ -172,10 +176,9 @@ VALUES (1, 'en', 'Basic', 'It is a basic configuration of a Golf.'),
        (1, 'de', 'Basic', 'Eine einfache Konfiguration.'),
        (2, 'de', 'Sport', 'Eine sportliche Konfiguration');
 
-INSERT IGNORE INTO bookings (Customer, config_id)
+INSERT IGNORE INTO bookings (ACCOUNT_id, config_id)
 VALUES (1, 1),
-       (2, 1),
-       (1, 2);
+       (2, 2);
 
 INSERT IGNORE INTO configuration_has_option_fields (config_id, option_field_id, parent_config_id, parent_option_field_id)
 VALUES (1, '6', null, null),
