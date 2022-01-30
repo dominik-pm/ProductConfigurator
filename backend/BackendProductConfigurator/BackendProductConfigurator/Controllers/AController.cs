@@ -157,9 +157,8 @@ namespace BackendProductConfigurator.Controllers
                 if(validationResult == EValidationResult.ValidationPassed)
                     PdfProducer.GeneratePDF(value, configId, Request);
             }).Start();
-            //Add Validation for model here
             entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
+            //AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
         }
     }
     public class accountController : AController<Account, int>
@@ -210,7 +209,9 @@ namespace BackendProductConfigurator.Controllers
             string description, name;
             description = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Description;
             name = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Name;
-            entities[GetAccLang(Request)].Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
+            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail = "test@now.com" } };
+            entities[GetAccLang(Request)].Add(temp);
+            AValuesClass.PostValue(temp, GetAccLang(Request));
         }
 
         // DELETE api/<Controller>/5
