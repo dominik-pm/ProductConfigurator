@@ -152,13 +152,13 @@ namespace DatabaseServiceProductConfigurator.Services {
                 }
             );
 
-            foreach(var item in model.Options ) { 
-            local_Context.ConfigurationHasOptionFields.Add(
-                new ConfigurationHasOptionField {
-                    ConfigId = temp.Id,
-                    OptionFieldId = GetOptionfieldByProductAndOption(productNumber, item)
-                }
-            );
+            foreach ( var item in model.Options ) {
+                local_Context.ConfigurationHasOptionFields.Add(
+                    new ConfigurationHasOptionField {
+                        ConfigId = temp.Id,
+                        OptionFieldId = GetOptionfieldByProductAndOption(productNumber, item)
+                    }
+                );
             }
         }
 
@@ -175,8 +175,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 select of.OptionFields
             ).ToList();
 
-            foreach(var item in options ) {
-                if(products.Contains(item))
+            foreach ( var item in options ) {
+                if ( products.Contains(item) )
                     return item;
             }
 
@@ -187,12 +187,35 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region DELETE
 
-        public static bool DeleteSavedProduct(int configID) {
+        public static bool DeleteConfiguration( int configID ) {
             bool worked = true;
+
+            Configuration? config = context.Configurations.Where(c => c.Id.Equals(configID)).FirstOrDefault();
+            if ( config == null )
+                return false;
 
             try {
 
+                if ( context.Bookings.Where(c => c.ConfigId == configID).Any() )
+                    return false;
 
+                // LANGUAGE
+                context.ConfigurationsHasLanguages.RemoveRange(
+                    from chl in context.ConfigurationsHasLanguages
+                    where chl.Configuration == configID
+                    select chl
+                );
+
+                // OPTIONS
+                context.ConfigurationHasOptionFields.RemoveRange(
+                    from cho in context.ConfigurationHasOptionFields
+                    where cho.ConfigId == configID
+                    select cho
+                );
+
+                context.Configurations.RemoveRange(
+                    context.Configurations.Where(c => c.Id == configID)
+                );
 
                 context.SaveChanges();
             }

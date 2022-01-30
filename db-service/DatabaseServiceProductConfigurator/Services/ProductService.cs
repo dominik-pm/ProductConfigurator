@@ -435,7 +435,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
                 // MODELS
                 context.Configurations.Where(c => c.ProductNumber.Equals(productNumber))
-                .ToList().ForEach(item => ConfigurationService.DeleteSavedProduct(item.Id));
+                .ToList().ForEach(item => ConfigurationService.DeleteConfiguration(item.Id));
               
                 // OPTIONGROUPS/OPTIONSECTIONS
                 List<string> removeOptionFieldID = new();

@@ -25,7 +25,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(string id) {
+        public IActionResult GetById( string id ) {
             ConfiguredProduct? toReturn = ConfigurationService.GetConfiguredProductById(id);
             if ( toReturn == null )
                 return NotFound();
@@ -33,11 +33,20 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpPost("{productNumber}")]
-        public IActionResult Post(string productNumber, [FromBody] ConfiguredProduct config) {
+        public IActionResult Post( string productNumber, [FromBody] ConfiguredProduct config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = LanguageService.HandleLanguageInput(lang);
 
             bool worked = ConfigurationService.SaveConfiguredProduct(config, productNumber, lang);
+
+            if ( !worked )
+                return BadRequest();
+            return Accepted();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete( int id ) {
+            bool worked = ConfigurationService.DeleteConfiguration(id);
 
             if ( !worked )
                 return BadRequest();
