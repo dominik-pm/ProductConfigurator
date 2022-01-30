@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Checkbox, FormControl, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
-import { changeModelOptions, removeModel, setModelOptions } from '../../../../state/configurationBuilder/builderSlice'
+import { changeModelOptions, removeModel } from '../../../../state/configurationBuilder/builderSlice'
 import { Delete } from '@mui/icons-material'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../../../lang'

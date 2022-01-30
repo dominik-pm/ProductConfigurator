@@ -41,7 +41,9 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
                 <Typography variant="h3">Models</Typography>
 
                 <Box sx={{ minWidth: 120 }}>
-                    <FormControl variant='standard' fullWidth>
+                    <FormControl variant='standard' 
+                        fullWidth
+                    >
                         <InputLabel id="select-lang-label">Default Model</InputLabel>
                         <Select
                             labelId='select-lang-label'

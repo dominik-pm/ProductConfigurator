@@ -5,7 +5,7 @@ import { setModel } from '../../../../state/configuration/configurationSlice'
 
 function ModelButton({ model, isSelected = false, disabled = false, selectModel }) {
 
-    const { modelName, description, options } = model
+    const { modelName, description/*, options*/ } = model
 
     function handleClick() {
         if (!disabled) {

@@ -47,6 +47,11 @@ function a11yProps(index) {
     }
 }
 
+// a tab has to have a children prop
+function TooltipAsTab({ children, title }) {
+    return <Tooltip title={title} children={children} />
+}
+
 function SectionTabs({ sections, optionGroups, openInputDialog, createSection, createGroup, openAlert, language }) {
 
     const [value, setValue] = useState(0)
@@ -89,7 +94,6 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
         })
     }
 
-
     return (
         <Box sx={{ width: '100%' }}>
             <Typography variant="h3">Options</Typography>
@@ -103,19 +107,15 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
                     onChange={handleChange} 
                     aria-label="sectiontabs"
                 >
-                    {/* <Tab label="Item One" {...a11yProps(0)} />
-                    <Tab label="Item Two" {...a11yProps(1)} />
-                    <Tab label="Item Three" {...a11yProps(2)} /> */}
-
                     {sections.map((section, index) => (
                         <Tab key={section.id} label={section.name} wrapped {...a11yProps(index)} />
                     ))}
 
-                    <Tooltip title={translate('addSection', language)}>
+                    <TooltipAsTab title={translate('addSection', language)}>
                         <IconButton onClick={() => handleAddSection()}>
                             <Add />
                         </IconButton>
-                    </Tooltip>
+                    </TooltipAsTab>
                 </Tabs>
             </Box>
             

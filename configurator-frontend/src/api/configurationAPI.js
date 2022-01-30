@@ -1,5 +1,5 @@
-import axios from 'axios'
-import { baseURL } from './general'
+// import axios from 'axios'
+// import { baseURL } from './general'
 
 export const fetchId = (productId) => {
     return fetchApiTest(productId)

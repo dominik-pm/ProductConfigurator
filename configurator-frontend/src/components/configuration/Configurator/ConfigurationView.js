@@ -1,16 +1,16 @@
 import { Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
-import { useNavigate, useParams } from 'react-router-dom'
+import { /*useNavigate,*/ useParams } from 'react-router-dom'
 import { translate } from '../../../lang'
-import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
+// import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
 import { fetchConfiguration } from '../../../state/configuration/configurationSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import Configurator from './Configurator'
 
-function ConfigurationView({ fetchConfiguration, openAlert, status, error, language }) {
+function ConfigurationView({ fetchConfiguration, /*openAlert,*/ status, error, language }) {
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
     // const { configuration, status, error } = useSelector(state => state.configuration)
 
@@ -76,7 +76,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     fetchConfiguration,
-    openAlert
+    // openAlert
 }
 export default connect(
     mapStateToProps,
