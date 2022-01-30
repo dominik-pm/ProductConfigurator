@@ -9,9 +9,9 @@ namespace Model
 {
     public class ProductSave : ProductSaveSlim, INameable, IDescribable, IConfigId
     {
-        public string ConfigId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string ConfigId { get; set; } //Produktnummer
+        public string Name { get; set; } //Produkt
+        public string Description { get; set; } //Produkt
         public string Status { get; set; }
         public DateTime Date { get; set; }
     }
