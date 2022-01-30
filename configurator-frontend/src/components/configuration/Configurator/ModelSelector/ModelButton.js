@@ -1,11 +1,21 @@
-import { Box, Button, Typography } from '@mui/material'
-import React from 'react'
+import { Box, ButtonBase, List, ListSubheader, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
+import { selectOptionSections, selectSelectedOptions } from '../../../../state/configuration/configurationSelectors'
 import { setModel } from '../../../../state/configuration/configurationSlice'
+import SectionOptionList from './SectionOptionList'
 
-function ModelButton({ model, isSelected = false, disabled = false, selectModel }) {
+function ModelButton({ model, isSelected = false, disabled = false, selectedOptions, selectModel, sections = [] }) {
 
-    const { modelName, description/*, options*/ } = model
+    // for the custom model, dont display sections if it is not selected
+    if (!model && !isSelected) sections = []
+
+    const { modelName, description, options } = model || { modelName: 'Custom', description: '', options: isSelected ? selectedOptions : [] }
+
+    const [hover, setHover] = useState(false)
+
+    const border = isSelected ? '2px solid grey' : hover ? '1px solid grey' : '1px dashed grey'
+
 
     function handleClick() {
         if (!disabled) {
@@ -13,25 +23,60 @@ function ModelButton({ model, isSelected = false, disabled = false, selectModel 
         }
     }
 
+    function handleHover(isHovering) {
+        setHover(isHovering)
+    }
+
+
     return (
-        <Button variant={isSelected ? "contained" : "outlined"} onClick={handleClick} disabled={false}>
-            <Box>
-                <Typography variant="body1">
-                    {modelName}
-                </Typography>
-                <Typography variant="body2">
-                    {description}
-                </Typography>
+        <ButtonBase 
+            sx={{width: '100%', height: '100%'}}
+            onMouseLeave={() => handleHover(false)} 
+            onMouseOver={() => handleHover(true)}
+            onClick={handleClick} 
+        >
+            <Box padding={2} sx={{ width: '100%', border: border }}>
+                
+                <Box height="80px">
+                    <Typography variant="h4">
+                        {modelName}
+                    </Typography>
+                    <Typography variant="body1">
+                        {description}
+                    </Typography>
+                </Box>
+
+                <List
+                    dense={true}
+                    sx={{
+                        position: 'relative',
+                        overflow: 'auto',
+                        maxHeight: 300,
+                        '& ul': { padding: 0 },
+                    }}
+                    subheader={<li />}
+                >
+                    {sections.map(section => (
+                        <li key={section.id}>
+                            <ul>
+                                <ListSubheader>{section.name}</ListSubheader>
+                                <SectionOptionList sectionId={section.id} selectedOptions={options}></SectionOptionList>
+                            </ul>
+                        </li>
+                    ))}
+                </List>
+
             </Box>
-        </Button>
+        </ButtonBase>
     )
 }
 
 const mapStateToProps = (state) => ({
-
+    selectedOptions: selectSelectedOptions(state),
+    sections: selectOptionSections(state)
 })
 const mapDispatchToProps = {
-    selectModel: setModel
+    selectModel: setModel,
 }
 export default connect(
     mapStateToProps, 

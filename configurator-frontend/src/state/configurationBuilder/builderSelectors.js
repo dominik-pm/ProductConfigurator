@@ -16,6 +16,10 @@ export const getBuilderOptionById = createSelector([selectName, selectBuilderOpt
     const option = options.find(o => o.id === optionId)
     return option ? option : null
 })
+// export const getBuilderModelOptions = createSelector([selectName, selectBuilderModels, selectBuilderOptions], (modelName, models, options) => {
+//     const model = models.find(m => m.modelName === modelName)
+//     return model.options
+// })
 
 export const getDoesSectionExist = createSelector([selectBuilderSections, selectName], (sections, sectionName) => {
     return sections.find(s => s.id.toUpperCase() === sectionName.toUpperCase()) ? true : false

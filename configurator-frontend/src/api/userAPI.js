@@ -7,7 +7,7 @@ export const requestSaveConfiguration = (configurationId, name, selectedOptions)
     // return new Promise((resolve, reject) => {
     //     const data = {
     //         savedName: name,
-    //         selectedOptions: selectedOptions
+    //         options: selectedOptions
     //     }
     //     axios.post(`/account/configurations/${configurationId}`, data)
     //     .then(res => {

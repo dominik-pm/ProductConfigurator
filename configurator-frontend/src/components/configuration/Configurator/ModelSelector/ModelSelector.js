@@ -1,4 +1,4 @@
-import { Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -9,15 +9,20 @@ function ModelSelector({ models, selectedModel }) {
     return (
         <Box marginBottom={4}>
             <Typography variant="h3">Models</Typography>
-            <Box display="flex" justifyContent="space-evenly" alignItems="center" flexWrap="wrap">
+
+            <Grid container spacing={2} alignItems="flex-start">
 
                 {models.map((model, index) => (
-                    <ModelButton key={index} model={model} isSelected={model.modelName === selectedModel}></ModelButton>
+                    <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
+                        <ModelButton model={model} isSelected={model.modelName === selectedModel}></ModelButton>
+                    </Grid>
                 ))}
 
-                <ModelButton model={{modelName: 'custom', description: ''}} isSelected={!selectedModel} disabled={true}></ModelButton>
+                <Grid item xs={12} sm={6} md={4} lg={3}>
+                    <ModelButton model={null} isSelected={!selectedModel} disabled={true}></ModelButton>
+                </Grid>
 
-            </Box>
+            </Grid>
         </Box>
     )
 }

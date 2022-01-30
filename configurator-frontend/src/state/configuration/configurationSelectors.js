@@ -13,6 +13,7 @@ export const OPTION_ERRORS = {
 const selectGroupId = (state, groupId) =>               groupId
 const selectOptionId = (state, optionId) =>             optionId
 const selectModelName = (state, modelName) =>           modelName
+const selectSectionId = (state, sectionId) =>           sectionId
 
 const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilities
 const selectAllOptionRequirements = state =>            state.configuration.configuration.rules.requirements
@@ -49,6 +50,23 @@ export const getModelOptions = createSelector([selectModels, selectModelName], (
     const model = models.find(m => m.modelName === modelName)
 
     return model ? model.options : []
+})
+
+export const getOptionsInSection = createSelector([selectSectionId, selectOptionGroups, selectOptionSections], (sectionId, groups, sections) => {
+    
+    // find the specific section
+    const section = sections.find(s => s.id === sectionId)
+    
+    // get all groups in that section
+    const groupsInSection = groups.filter(g => section.optionGroupIds.includes(g.id))
+
+    // get all options from these groups
+    let options = []
+    groupsInSection.forEach(g => {
+        options.push(...g.optionIds)
+    })
+
+    return options
 })
 
 export const getOption = createSelector([selectOptions, selectOptionId], (options, id) => {

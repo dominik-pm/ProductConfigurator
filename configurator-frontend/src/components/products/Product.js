@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router'
 export default function Product({product}) {
     const navigate = useNavigate()
 
-    const {id, name, description, image} = product
+    const { id, name, description, images } = product
+
+    const image = images[0]
 
     let imageSource = ''
 
@@ -33,17 +35,17 @@ export default function Product({product}) {
         // </ButtonBase>
 
         <ImageListItem key={imageSource} sx={{width: '100%', ':hover': {cursor: 'pointer'}}} onClick={() => handleClick(id)}>
-        <img
-            width="100%"
-            src={`${imageSource}?w=248&fit=crop&auto=format`}
-            srcSet={`${imageSource}?w=248&fit=crop&auto=format&dpr=2 2x`}
-            alt={name}
-            loading="lazy"
-        />
-        <ImageListItemBar
-            title={name}
-            subtitle={description}
-        />
+            <img
+                width="100%"
+                src={`${imageSource}?w=248&fit=crop&auto=format`}
+                srcSet={`${imageSource}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                alt={name}
+                loading="lazy"
+            />
+            <ImageListItemBar
+                title={name}
+                subtitle={description}
+            />
         </ImageListItem>
     )
 }
