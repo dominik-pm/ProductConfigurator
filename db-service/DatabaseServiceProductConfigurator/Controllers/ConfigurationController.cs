@@ -12,12 +12,20 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class ConfigurationController : ControllerBase {
 
+        private readonly IConfigurationService _configurationService;
+        private readonly ILanguageService _languageService;
+
+        public ConfigurationController(IConfigurationService configurationService, ILanguageService languageService) {
+            _configurationService = configurationService;
+            _languageService = languageService;
+        }
+
         [HttpGet]
         public IActionResult Get() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            List<ProductSaveExtended> toReturn = ConfigurationService.GetConfigurations(lang);
+            List<ProductSaveExtended> toReturn = _configurationService.GetConfigurations(lang);
 
             if ( !toReturn.Any() )
                 return NoContent();
@@ -26,7 +34,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
         [HttpGet("{id}")]
         public IActionResult GetById( string id ) {
-            ProductSaveExtended? toReturn = ConfigurationService.GetConfiguredProductById(id);
+            ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(id);
             if ( toReturn == null )
                 return NotFound();
             return Ok(toReturn);
@@ -35,21 +43,17 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpPost]
         public IActionResult Post( [FromBody] ProductSaveExtended config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            bool worked = ConfigurationService.SaveConfiguration(config, lang);
+            _configurationService.SaveConfiguration(config, lang);
 
-            if ( !worked )
-                return BadRequest();
             return Accepted();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete( int id ) {
-            bool worked = ConfigurationService.DeleteConfiguration(id);
+            _configurationService.DeleteConfiguration(id);
 
-            if ( !worked )
-                return BadRequest();
             return Accepted();
         }
 

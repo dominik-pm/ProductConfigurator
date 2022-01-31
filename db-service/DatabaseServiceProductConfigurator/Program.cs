@@ -1,4 +1,5 @@
 using DatabaseServiceProductConfigurator.Models;
+using DatabaseServiceProductConfigurator.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,10 +18,16 @@ builder.Services.AddCors(options => {
 });
 
 // Connection String
+string activeDb = builder.Configuration.GetValue<string>("activeDB");
+builder.Services.AddDbContext<Product_configuratorContext>(options => 
+    options.UseMySql(builder.Configuration.GetConnectionString("default"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"))
+);
 
-//builder.Services.AddDbContext<product_configuratorContext>(options => {
-//    options.UseMySql(builder.Configuration.GetConnectionString("default"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
-//});
+// Services
+builder.Services.AddScoped<ILanguageService, LanguageService>();
+builder.Services.AddScoped<IRuleService, RuleService>();
+builder.Services.AddScoped<IConfigurationService, ConfigurationService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 // Add services to the container.
 

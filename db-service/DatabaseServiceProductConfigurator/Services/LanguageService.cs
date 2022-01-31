@@ -15,14 +15,18 @@ namespace DatabaseServiceProductConfigurator.Services {
         public string Description { get; set; } = "";
     }
 
-    public static class LanguageService {
+    public class LanguageService : ILanguageService {
 
         static readonly string default_lang = "en";
 
-        static readonly Product_configuratorContext context = new();
+        private readonly Product_configuratorContext _context;
 
-        public static InfoStruct GetProductWithLanguage( string productNumber, string language ) {
-            List<ProductHasLanguage> infos = context.ProductHasLanguages.Where(c => c.ProductNumber == productNumber).ToList();
+        public LanguageService( Product_configuratorContext context ) {
+            _context = context;
+        }
+
+        public InfoStruct GetProductWithLanguage( string productNumber, string language ) {
+            List<ProductHasLanguage> infos = _context.ProductHasLanguages.Where(c => c.ProductNumber == productNumber).ToList();
 
             ProductHasLanguage temp;
 
@@ -38,8 +42,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 return new InfoStruct();
         }
 
-        public static InfoStruct GetOptionsfieldWithLanguage( string id, string language ) {
-            List<OptionFieldHasLanguage> infos = context.OptionFieldHasLanguages.Where(c => c.OptionFieldId == id).ToList();
+        public InfoStruct GetOptionsfieldWithLanguage( string id, string language ) {
+            List<OptionFieldHasLanguage> infos = _context.OptionFieldHasLanguages.Where(c => c.OptionFieldId == id).ToList();
 
             OptionFieldHasLanguage temp;
 
@@ -55,8 +59,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 return new InfoStruct();
         }
 
-        public static InfoStruct GetConfigurationWithLanguage( int id, string language ) {
-            List<ConfigurationsHasLanguage> infos = context.ConfigurationsHasLanguages.Where(c => c.Configuration == id).ToList();
+        public InfoStruct GetConfigurationWithLanguage( int id, string language ) {
+            List<ConfigurationsHasLanguage> infos = _context.ConfigurationsHasLanguages.Where(c => c.Configuration == id).ToList();
 
             ConfigurationsHasLanguage temp;
 
@@ -73,12 +77,11 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         }
 
-        public static List<string> GetAllLanguages() {
-            Product_configuratorContext localContext = new Product_configuratorContext();
-            return localContext.ELanguages.Select(l => l.Language).ToList();
+        public List<string> GetAllLanguages() {
+            return _context.ELanguages.Select(l => l.Language).ToList();
         }
 
-        public static string HandleLanguageInput( string input ) {
+        public string HandleLanguageInput( string input ) {
             if ( input == null )
                 return default_lang;
 

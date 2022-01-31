@@ -3,14 +3,18 @@ using Model;
 
 namespace DatabaseServiceProductConfigurator.Services {
 
-    public static class RuleService {
+    public class RuleService : IRuleService {
 
-        static readonly Product_configuratorContext context = new();
+        private readonly Product_configuratorContext _context;
 
-        public static Rules ExtendProductDependencies( this Rules dependencies, string productNumber ) {
+        public RuleService(Product_configuratorContext context) {
+            _context = context;
+        }
+
+        public Rules ExtendProductDependencies( Rules dependencies, string productNumber ) {
 
             List<string> ReplacementGroups = (
-                    from pof in context.ProductsHasOptionFields
+                    from pof in _context.ProductsHasOptionFields
                     where pof.ProductNumber == productNumber && pof.DependencyType == "PARENT" && pof.OptionFieldsNavigation.Type == "SINGLE_SELECT"
                     select pof.OptionFields.ToString()
                 ).ToList();
@@ -18,7 +22,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 dependencies.ReplacementGroups.Add(productNumber, ReplacementGroups);
 
             List<string> Requirements = (
-                    from pof in context.ProductsHasProducts
+                    from pof in _context.ProductsHasProducts
                     where pof.BaseProduct == productNumber && pof.DependencyType == "REQUIRED"
                     select pof.OptionProduct
                 ).ToList();
@@ -26,25 +30,25 @@ namespace DatabaseServiceProductConfigurator.Services {
                 dependencies.Requirements.Add(productNumber, Requirements);
 
             List<string> Incompabilities = (
-                    from pof in context.ProductsHasProducts
+                    from pof in _context.ProductsHasProducts
                     where pof.BaseProduct == productNumber && pof.DependencyType == "EXCLUDING"
                     select pof.OptionProduct
                 ).ToList();
             if( Incompabilities.Count > 0 )
                 dependencies.Incompatibilities.Add(productNumber, Incompabilities);
 
-            float? price = ( from pof in context.Products where pof.ProductNumber == productNumber select pof.Price ).FirstOrDefault();
+            float? price = ( from pof in _context.Products where pof.ProductNumber == productNumber select pof.Price ).FirstOrDefault();
             if(price != null && price != 0)
                 dependencies.PriceList.Add(productNumber, (float)price);
 
             return dependencies;
         }
 
-        public static Rules ExtendProductDependenciesByOptionField( this Rules dependencies, string id ) {
+        public Rules ExtendProductDependenciesByOptionField( Rules dependencies, string id ) {
             string toSave = id.ToString();
 
             List<string> ReplacementGroups = (
-                      from pof in context.ProductsHasOptionFields
+                      from pof in _context.ProductsHasOptionFields
                       where pof.OptionFields == id && pof.DependencyType == "CHILD" && pof.OptionFieldsNavigation.Type == "SINGLE_SELECT"
                       select pof.ProductNumber
                 ).ToList();
@@ -52,7 +56,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 dependencies.ReplacementGroups.Add(toSave, ReplacementGroups);
 
             List<string> Requirements = (
-                    from pof in context.OptionFieldsHasOptionFields
+                    from pof in _context.OptionFieldsHasOptionFields
                     where pof.Base == id && pof.DependencyType == "REQUIRED"
                     select pof.OptionField.ToString()
                 ).ToList();
@@ -60,7 +64,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 dependencies.GroupRequirements.Add(toSave, Requirements);
 
             List<string> Incompabilities = (
-                    from pof in context.OptionFieldsHasOptionFields
+                    from pof in _context.OptionFieldsHasOptionFields
                     where pof.Base == id && pof.DependencyType == "EXCLUDING"
                     select pof.OptionField.ToString()
                 ).ToList();

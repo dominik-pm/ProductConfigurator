@@ -14,14 +14,20 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class ProductController : ControllerBase {
 
-        static Product_configuratorContext context = new();
+        private readonly IProductService _productService;
+        private readonly ILanguageService _languageService;
+
+        public ProductController(IProductService productService, ILanguageService languageService) {
+            _productService = productService;
+            _languageService = languageService;
+        }
 
         [HttpGet]
         public IActionResult GetAllProducts() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            List<Configurator> products = ProductService.GetAllConfigurators(lang);
+            List<Configurator> products = _productService.GetAllConfigurators(lang);
             if ( products.Count == 0 )
                 return NoContent();
 
@@ -31,9 +37,9 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet("{id}")]
         public IActionResult Get( string id ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            object? product = ProductService.GetConfiguratorByProductNumber(id, lang);
+            object? product = _productService.GetConfiguratorByProductNumber(id, lang);
             if ( product == null )
                 return NotFound();
 
@@ -43,19 +49,17 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpPost]
         public IActionResult Post( [FromBody] Configurator config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            bool worked = ProductService.SaveConfigurator(config, lang);
-            if ( !worked )
-                return BadRequest();
+            _productService.SaveConfigurator(config, lang);
+
             return Accepted();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete( string id ) {
-            bool worked = ProductService.DeleteConfigurator(id);
-            if ( !worked )
-                return BadRequest();
+            _productService.DeleteConfigurator(id);
+
             return Accepted();
         }
 

@@ -5,8 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DatabaseServiceProductConfigurator.Models {
     public partial class Product_configuratorContext : DbContext {
-        public Product_configuratorContext() {
-        }
 
         public Product_configuratorContext( DbContextOptions<Product_configuratorContext> options )
             : base(options) {
@@ -29,13 +27,6 @@ namespace DatabaseServiceProductConfigurator.Models {
         public virtual DbSet<ProductHasLanguage> ProductHasLanguages { get; set; } = null!;
         public virtual DbSet<ProductsHasOptionField> ProductsHasOptionFields { get; set; } = null!;
         public virtual DbSet<ProductsHasProduct> ProductsHasProducts { get; set; } = null!;
-
-        protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder ) {
-            if ( !optionsBuilder.IsConfigured ) {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;database=product_configurator;port=3306;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"));
-            }
-        }
 
         protected override void OnModelCreating( ModelBuilder modelBuilder ) {
             modelBuilder.UseCollation("utf8_general_ci")

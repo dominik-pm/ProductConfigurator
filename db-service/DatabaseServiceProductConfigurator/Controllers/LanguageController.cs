@@ -11,11 +11,15 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class LanguageController : ControllerBase {
 
-        static Product_configuratorContext context = new Product_configuratorContext();
+        private readonly ILanguageService _languageService;
+
+        public LanguageController(ILanguageService languageService) {
+            _languageService = languageService;
+        }
 
         [HttpGet]
-        public IActionResult get() {
-            List<string> list = LanguageService.GetAllLanguages();
+        public IActionResult Get() {
+            List<string> list = _languageService.GetAllLanguages();
             if ( list.Count == 0 )
                 return NoContent();
             return Ok(list);
