@@ -10,6 +10,7 @@ import { requestDeleteSavedConfiguration } from '../../api/userAPI'
 import { alertTypes, openAlert } from '../../state/alert/alertSlice'
 import { translate } from '../../lang'
 import { selectLanguage } from '../../state/language/languageSelectors'
+import { extractDateFromConfiguration, extractIdFromConfiguration, extractNameFromConfiguration, extractOptionsFromConfiguration, extractUsernameFromConfiguration } from '../../state/user/userSelector'
 
 function ConfigurationList({ configurations, openConfirm, isOrdered = false, isAdminView = false, openAlert, language }) {
 
@@ -42,31 +43,37 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
         <Box>
             <Grid container justifyContent="center">
                 {configurations.map((config, index) => {
+                    const id = extractIdFromConfiguration(config)
+                    const options = extractOptionsFromConfiguration(config)
+                    const name = extractNameFromConfiguration(config)
+                    const date = extractDateFromConfiguration(config)
+                    const username = extractUsernameFromConfiguration(config)
+
                     return (
                         <Box key={index} margin={2}>
                             <Box display="flex" alignItems="center">
-                                <Typography variant="body1">{config.savedName}</Typography>
-                                <IconButton onClick={() => handleEditClick(config.id, config.options)}>
+                                <Typography variant="body1">{name}</Typography>
+                                <IconButton onClick={() => handleEditClick(id, options)}>
                                     <Edit></Edit>
                                 </IconButton>
                                 {!isOrdered ? 
-                                <IconButton onClick={() => handleDeleteClicked(config.id, config.savedName)}>
+                                <IconButton onClick={() => handleDeleteClicked(id, name)}>
                                     <Delete></Delete>
                                 </IconButton>
                                 : ''}
                                 {isOrdered ?
-                                <IconButton onClick={() => handleShowSummaryClicked(config.id, config.options)}>
+                                <IconButton onClick={() => handleShowSummaryClicked(id, options)}>
                                     <Preview></Preview>
                                 </IconButton>
                                 : ''}
                             </Box>
 
-                            <Typography variant="body2">{config.name}</Typography>
+                            <Typography variant="body2">{name}</Typography>
 
-                            <Typography variant="body2">{new Date(config.date).toLocaleTimeString()}</Typography>
+                            <Typography variant="body2">{new Date(date).toLocaleTimeString()}</Typography>
 
                             {isAdminView ? 
-                            <Typography variant="body2">From: {config.userName}</Typography>
+                            <Typography variant="body2">From: {username}</Typography>
                             : ''}
                         </Box>
                     )

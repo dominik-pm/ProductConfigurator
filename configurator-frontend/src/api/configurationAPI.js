@@ -60,7 +60,7 @@ const configurations = [
         configId: "0",
         name: 'Car',
         description: 'automobile',
-        image: '1.jpg',
+        images: ['1.jpg'],
         options: [
             {
                 id: 'BLUE',
