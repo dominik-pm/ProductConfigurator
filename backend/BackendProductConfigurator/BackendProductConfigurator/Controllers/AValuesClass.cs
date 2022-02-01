@@ -10,7 +10,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
+        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
         private static string serverAddress = "http://andifined.ddns.net:5129";
 
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
@@ -207,7 +207,7 @@ namespace BackendProductConfigurator.Controllers
             { 
                 Description = "Saved product",
                 Name = "Alfa 147",
-                Options = options,
+                Options = options.Select(x => x.Id).Cast<string>().ToList(),
                 SavedName = "Scherzermobil",
                 Status = EStatus.saved.ToString(),
                 User = acc1,
@@ -217,7 +217,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 Description = "Saved product",
                 Name = "Alfa 156",
-                Options = options,
+                Options = options.Select(x => x.Id).Cast<string>().ToList(),
                 SavedName = "Pömmermobil",
                 Status = EStatus.saved.ToString(),
                 User = acc2,
@@ -227,7 +227,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 Description = "Saved product",
                 Name = "Alfa 166",
-                Options = options,
+                Options = options.Select(x => x.Id).Cast<string>().ToList(),
                 SavedName = "Leutgeb Toyota",
                 Status = EStatus.saved.ToString(),
                 User = acc3,
