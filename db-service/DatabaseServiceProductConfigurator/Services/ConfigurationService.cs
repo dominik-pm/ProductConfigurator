@@ -19,10 +19,10 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public class ConfigurationService : IConfigurationService {
 
-        private readonly Product_configuratorContext _context;
+        private readonly ConfiguratorContext _context;
         private readonly ILanguageService _languageService;
 
-        public ConfigurationService( Product_configuratorContext context, ILanguageService languageService ) {
+        public ConfigurationService( ConfiguratorContext context, ILanguageService languageService ) {
             _context = context;
             _languageService = languageService;
         }

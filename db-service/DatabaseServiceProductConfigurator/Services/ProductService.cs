@@ -7,12 +7,12 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public class ProductService : IProductService {
 
-        private readonly Product_configuratorContext _context;
+        private readonly ConfiguratorContext _context;
         private readonly ILanguageService _languageService;
         private readonly IConfigurationService _configurationService;
         private readonly IRuleService _ruleService;
 
-        public ProductService( Product_configuratorContext context, ILanguageService languageService, IConfigurationService configurationService, IRuleService ruleService ) {
+        public ProductService( ConfiguratorContext context, ILanguageService languageService, IConfigurationService configurationService, IRuleService ruleService ) {
             _context = context;
             _languageService = languageService;
             _configurationService = configurationService;
@@ -52,7 +52,14 @@ namespace DatabaseServiceProductConfigurator.Services {
             return temp;
         }
 
-        public List<Configurator> GetAllConfigurators( string lang ) => GetConfigurators(lang).Where(c => ( from p in _context.Products where p.ProductNumber == c.ConfigId select p.Buyable ).FirstOrDefault()).ToList();
+        public List<Configurator> GetAllConfigurators( string lang ) {
+            List<Product> products = _context.Products.ToList();
+            Dictionary<string, bool> temp = new();
+            products.ForEach(p => {
+                temp[p.ProductNumber] = p.Buyable;
+            });
+            return GetConfigurators(lang).Where(c => temp[c.ConfigId]).ToList();
+        }
 
         public Configurator? GetConfiguratorByProductNumber( string productNumber, string lang ) => GetConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
 
@@ -497,6 +504,14 @@ namespace DatabaseServiceProductConfigurator.Services {
             );
 
             _context.SaveChanges();
+
+        }
+
+        #endregion
+
+        #region PUT
+
+        public void UpdateProduct(Configurator product) {
 
         }
 

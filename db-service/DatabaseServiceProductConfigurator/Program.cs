@@ -19,8 +19,8 @@ builder.Services.AddCors(options => {
 
 // Connection String
 string activeDb = builder.Configuration.GetValue<string>("activeDB");
-builder.Services.AddDbContext<Product_configuratorContext>(options => 
-    options.UseMySql(builder.Configuration.GetConnectionString("default"), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"))
+builder.Services.AddDbContext<ConfiguratorContext>(options => 
+    options.UseMySql(builder.Configuration.GetConnectionString(activeDb), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"))
 );
 
 // Services

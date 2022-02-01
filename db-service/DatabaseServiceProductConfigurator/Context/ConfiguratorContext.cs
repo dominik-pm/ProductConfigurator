@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DatabaseServiceProductConfigurator.Models {
-    public partial class Product_configuratorContext : DbContext {
+    public partial class ConfiguratorContext : DbContext {
 
-        public Product_configuratorContext( DbContextOptions<Product_configuratorContext> options )
+        public ConfiguratorContext( DbContextOptions<ConfiguratorContext> options )
             : base(options) {
         }
 
@@ -69,6 +69,7 @@ namespace DatabaseServiceProductConfigurator.Models {
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Bookings)
                     .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("fk_BOOKINGS_ACCOUNT1");
 
                 entity.HasOne(d => d.Config)
@@ -516,11 +517,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_PRODUCTS_has_PRODUCTS_PRODUCTS1");
             });
 
-            modelBuilder.Entity<ConfigurationHasOptionField>().Navigation(c => c.ProductNumbers).AutoInclude();
-
             OnModelCreatingPartial(modelBuilder);
         }
-
         partial void OnModelCreatingPartial( ModelBuilder modelBuilder );
     }
 }

@@ -5,9 +5,9 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public class RuleService : IRuleService {
 
-        private readonly Product_configuratorContext _context;
+        private readonly ConfiguratorContext _context;
 
-        public RuleService(Product_configuratorContext context) {
+        public RuleService(ConfiguratorContext context) {
             _context = context;
         }
 
