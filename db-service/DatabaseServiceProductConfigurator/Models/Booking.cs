@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DatabaseServiceProductConfigurator.Models {
-    public partial class Booking {
+namespace DatabaseServiceProductConfigurator.Models
+{
+    public partial class Booking
+    {
         public int Id { get; set; }
         public int ConfigId { get; set; }
         public int AccountId { get; set; }

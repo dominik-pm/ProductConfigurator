@@ -1,4 +1,5 @@
-﻿using DatabaseServiceProductConfigurator.Models;
+﻿using DatabaseServiceProductConfigurator.Context;
+using DatabaseServiceProductConfigurator.Models;
 using Microsoft.EntityFrameworkCore;
 using Model;
 using System.Text.Json.Serialization;
@@ -248,7 +249,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                 new Product {
                     ProductNumber = config.ConfigId,
                     Price = config.Rules.BasePrice,
-                    Category = "",
                     Buyable = true
                 }
             );
@@ -261,7 +261,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                     new Product {
                         ProductNumber = item.Id,
                         Price = priceAvailable ? price : 0,
-                        Category = "",
                         Buyable = false
                     }
                 );

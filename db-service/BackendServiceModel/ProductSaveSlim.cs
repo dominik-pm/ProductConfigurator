@@ -10,7 +10,7 @@ namespace Model
     public  class ProductSaveSlim
     {
         public string SavedName { get; set; }
-        public List<Option> Options { get; set; } = new List<Option>();
+        public List<string> Options { get; set; } = new();
     }
     public enum EStatus
     {

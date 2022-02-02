@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DatabaseServiceProductConfigurator.Models {
-    public partial class Configuration {
-        public Configuration() {
+namespace DatabaseServiceProductConfigurator.Models
+{
+    public partial class Configuration
+    {
+        public Configuration()
+        {
             Bookings = new HashSet<Booking>();
             ConfigurationHasOptionFields = new HashSet<ConfigurationHasOptionField>();
             ConfigurationsHasLanguages = new HashSet<ConfigurationsHasLanguage>();

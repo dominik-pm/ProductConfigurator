@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DatabaseServiceProductConfigurator.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace DatabaseServiceProductConfigurator.Models {
+namespace DatabaseServiceProductConfigurator.Context {
     public partial class ConfiguratorContext : DbContext {
 
         partial void OnModelCreatingPartial( ModelBuilder modelBuilder ) {
