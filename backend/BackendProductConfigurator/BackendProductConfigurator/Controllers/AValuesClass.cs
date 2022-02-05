@@ -12,6 +12,7 @@ namespace BackendProductConfigurator.Controllers
 
         private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
         private static string serverAddress = "http://andifined.ddns.net:5129";
+        private List<string> languages = new List<string>() { "de", "en", "fr" };
 
         private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
@@ -38,8 +39,6 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void SetDBValues()
         {
-            List<string> languages = new List<string>() { "de", "en", "fr"};
-
             foreach(string language in languages)
             {
                 Configurators[language] = ADBAccess<Configurator>.GetValues(language, serverAddress, typeApis[typeof(Configurator)]).Result;
