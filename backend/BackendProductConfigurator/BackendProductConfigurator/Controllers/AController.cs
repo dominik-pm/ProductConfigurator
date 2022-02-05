@@ -154,7 +154,6 @@ namespace BackendProductConfigurator.Controllers
             }).Start();
             entities[GetAccLang(Request)].Add(value);
             //AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
-            AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
         }
     }
     public class accountController : AController<Account, int>
