@@ -20,6 +20,15 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.PostAsJsonAsync($"{address}{api}", value);
         }
+        public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, string id)
+        {
+            HttpClient Http = GenerateHttpClient();
+
+            Http.DefaultRequestHeaders.Add("Accept-Language", language);
+
+            return await Http.DeleteAsync($"{address}{api}/{id}");
+
+        }
         private static HttpClient GenerateHttpClient()
         {
             HttpClientHandler handler = new HttpClientHandler();
