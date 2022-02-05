@@ -154,6 +154,7 @@ namespace BackendProductConfigurator.Controllers
             }).Start();
             entities[GetAccLang(Request)].Add(value);
             //AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
+            AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
         }
     }
     public class accountController : AController<Account, int>
@@ -210,7 +211,8 @@ namespace BackendProductConfigurator.Controllers
         }
 
         // DELETE api/<Controller>/5
-        [HttpDelete("{id}")]
+        [Route("/account/configurations/{id}")]
+        [HttpDelete]
         public override void Delete(string id)
         {
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
