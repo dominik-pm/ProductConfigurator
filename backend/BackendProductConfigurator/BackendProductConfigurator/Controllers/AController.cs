@@ -143,16 +143,16 @@ namespace BackendProductConfigurator.Controllers
             {
                 validationResult = ValidationMethods.ValidateSelectedModel(value, configurator);
             }
-            new Thread(() =>
-            {
-                EmailProducer.SendEmail(value, validationResult);
-            }).Start();
-            new Thread(() =>
-            {
-                validationResult = EValidationResult.ValidationPassed;
-                if(validationResult == EValidationResult.ValidationPassed)
-                    PdfProducer.GeneratePDF(value, configId, Request);
-            }).Start();
+            //new Thread(() =>
+            //{
+            //    EmailProducer.SendEmail(value, validationResult);
+            //}).Start();
+            //new Thread(() =>
+            //{
+            //    validationResult = EValidationResult.ValidationPassed;
+            //    if(validationResult == EValidationResult.ValidationPassed)
+            //        PdfProducer.GeneratePDF(value, configId, Request);
+            //}).Start();
             entities[GetAccLang(Request)].Add(value);
 
             savedConfigsController scc = new savedConfigsController();
