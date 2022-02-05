@@ -154,6 +154,9 @@ namespace BackendProductConfigurator.Controllers
             }).Start();
             entities[GetAccLang(Request)].Add(value);
             //AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
+            savedConfigsController scc = new savedConfigsController();
+            ProductSaveExtended temp = new ProductSaveExtended();
+            scc.PostOrdered(temp, Request);
         }
     }
     public class accountController : AController<Account, int>
@@ -207,6 +210,12 @@ namespace BackendProductConfigurator.Controllers
             ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = new Account() { UserName = "scherzert", UserEmail = "test@now.com" } };
             entities[GetAccLang(Request)].Add(temp);
             AValuesClass.PostValue(temp, GetAccLang(Request));
+        }
+
+        public void PostOrdered(ProductSaveExtended value, HttpRequest Request)
+        {
+            entities[GetAccLang(Request)].Add(value);
+            AValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
         }
 
         // DELETE api/<Controller>/5
