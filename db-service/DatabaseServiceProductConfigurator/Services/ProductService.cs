@@ -266,14 +266,20 @@ namespace DatabaseServiceProductConfigurator.Services {
                 );
             }
 
+            var products = _context.Products;
+            var dependencyTypes = _context.EDependencyTypes;
+
             // REQUIREMENTS
             foreach ( var item in config.Rules.Requirements ) {
                 foreach ( var reqitem in item.Value ) {
                     _context.ProductsHasProducts.Add(
                         new ProductsHasProduct {
                             BaseProduct = item.Key,
+                            BaseProductNavigation = products.Where(p => p.ProductNumber == item.Key).First(),
                             OptionProduct = reqitem,
-                            DependencyType = "REQUIRED"
+                            OptionProductNavigation = products.Where(p => p.ProductNumber == reqitem).First(),
+                            DependencyType = "REQUIRED",
+                            DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "REQUIRED").First()
                         }
                     );
                 }
@@ -285,23 +291,28 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.ProductsHasProducts.Add(
                         new ProductsHasProduct {
                             BaseProduct = item.Key,
+                            BaseProductNavigation = products.Where(p => p.ProductNumber == item.Key).First(),
                             OptionProduct = reqitem,
-                            DependencyType = "EXCLUDING"
+                            OptionProductNavigation = products.Where(p => p.ProductNumber == reqitem).First(),
+                            DependencyType = "EXCLUDING",
+                            DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "EXCLUDING").First()
                         }
                     );
                 }
             }
 
             // OPTION SECTIONS
-            List<OptionField> temp = new();
+            List<OptionField> optionFields = new();
+            var optionTypes = _context.EOptionTypes;
 
             foreach ( var item in config.OptionSections ) {
                 OptionField tempSave = new() {
                     Id = item.Id,
                     Type = "PARENT",
+                    TypeNavigation = optionTypes.Where(o => o.Type == "PARENT").First(),
                     Required = false
                 };
-                temp.Add(tempSave);
+                optionFields.Add(tempSave);
                 _context.OptionFields.Add(tempSave);
             }
 
@@ -314,14 +325,18 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             foreach ( var item in config.OptionGroups ) {
+                string temp = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT";
                 OptionField tempSave = new() {
                     Id = item.Id,
-                    Type = SingleSelect.Contains(item.Id) ? "SINGLE_SELECT" : "MULTI_SELECT",
+                    Type = temp,
+                    TypeNavigation = optionTypes.Where(o => o.Type == temp).First(),
                     Required = item.Required
                 };
-                temp.Add(tempSave);
+                optionFields.Add(tempSave);
                 _context.OptionFields.Add(tempSave);
             }
+
+            var dbOptionFields = _context.OptionFields;
 
             // OPTIONFIELD HAS OPTIONFIELD
             foreach ( var item in config.OptionSections ) {
@@ -329,8 +344,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.OptionFieldsHasOptionFields.Add(
                         new OptionFieldsHasOptionField {
                             Base = item.Id,
+                            BaseNavigation = dbOptionFields.Where(of => of.Id == item.Id).First(),
                             OptionField = field,
-                            DependencyType = "CHILD"
+                            OptionFieldNavigation = dbOptionFields.Where(of => of.Id == field).First(),
+                            DependencyType = "CHILD",
+                            DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "CHILD").First()
                         }
                     );
                 }
@@ -342,8 +360,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.ProductsHasOptionFields.Add(
                         new ProductsHasOptionField {
                             ProductNumber = field,
+                            ProductNumberNavigation = products.Where(p => p.ProductNumber == field).First(),
                             OptionFields = item.Id,
-                            DependencyType = "CHILD"
+                            OptionFieldsNavigation = dbOptionFields.Where(o => o.Id == item.Id).First(),
+                            DependencyType = "CHILD",
+                            DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "CHILD").First()
                         }
                     );
                 }
@@ -354,8 +375,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.ProductsHasOptionFields.Add(
                     new ProductsHasOptionField {
                         ProductNumber = config.ConfigId,
+                        ProductNumberNavigation = products.Where(p => p.ProductNumber == config.ConfigId).First(),
                         OptionFields = item.Id,
-                        DependencyType = "PARENT"
+                        OptionFieldsNavigation = dbOptionFields.Where(o => o.Id == item.Id).First(),
+                        DependencyType = "PARENT",
+                        DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "PARENT").First()
                     }
                 );
             }
@@ -365,17 +389,22 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.Pictures.Add(
                     new Picture {
                         ProductNumber = config.ConfigId,
+                        ProductNumberNavigation = products.Where(p => p.ProductNumber == config.ConfigId).First(),
                         Url = item
                     }
                 );
             }
+
+            var languages = _context.ELanguages;
 
             //LANGUAGE FOR PRODUCTS
             foreach ( var item in config.Options ) {
                 _context.ProductHasLanguages.Add(
                     new ProductHasLanguage {
                         ProductNumber = config.ConfigId,
+                        ProductNumberNavigation = products.Where(p => p.ProductNumber == config.ConfigId).First(),
                         Language = lang,
+                        LanguageNavigation = languages.Where(l => l.Language == lang).First(),
                         Name = item.Name,
                         Description = item.Description
                     }
@@ -387,7 +416,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.OptionFieldHasLanguages.Add(
                     new OptionFieldHasLanguage {
                         OptionFieldId = item.Id,
+                        OptionField = dbOptionFields.Where(o => o.Id == item.Id).First(),
                         Language = lang,
+                        LanguageNavigation = languages.Where(l => l.Language == lang).First(),
                         Name = item.Name,
                         Description = item.Description
                     }
@@ -398,7 +429,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.OptionFieldHasLanguages.Add(
                     new OptionFieldHasLanguage {
                         OptionFieldId = item.Id,
+                        OptionField = dbOptionFields.Where(o => o.Id == item.Id).First(),
                         Language = lang,
+                        LanguageNavigation = languages.Where(l => l.Language == lang).First(),
                         Name = item.Name,
                         Description = ""
                     }

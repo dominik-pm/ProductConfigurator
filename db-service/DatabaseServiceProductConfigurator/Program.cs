@@ -1,5 +1,4 @@
 using DatabaseServiceProductConfigurator.Context;
-using DatabaseServiceProductConfigurator.Models;
 using DatabaseServiceProductConfigurator.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,8 +19,10 @@ builder.Services.AddCors(options => {
 
 // Connection String
 string activeDb = builder.Configuration.GetValue<string>("activeDB");
+string connectionString = builder.Configuration.GetConnectionString(activeDb);
+
 builder.Services.AddDbContext<ConfiguratorContext>(options => 
-    options.UseMySql(builder.Configuration.GetConnectionString(activeDb), Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.22-mysql"))
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
 );
 
 // Services
