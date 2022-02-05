@@ -19,11 +19,6 @@ namespace BackendProductConfigurator.Controllers
             {
                 AValuesClass.SetValues();
             }
-            HttpClientHandler clientHandler = new HttpClientHandler();
-            clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
-
-            // Pass the handler to httpclient(from you are calling api)
-            HttpClient client = new HttpClient(clientHandler);
         }
 
 
