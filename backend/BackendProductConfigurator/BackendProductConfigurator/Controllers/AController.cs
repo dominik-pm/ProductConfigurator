@@ -224,6 +224,7 @@ namespace BackendProductConfigurator.Controllers
             AValuesClass.PostValue(temp, GetAccLang(Request));
         }
 
+        [NonAction]
         public void PostOrdered(ProductSaveExtended value, HttpRequest Request)
         {
             entities[GetAccLang(Request)].Add(value);
