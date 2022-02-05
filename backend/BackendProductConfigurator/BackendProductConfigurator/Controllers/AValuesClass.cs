@@ -1,4 +1,6 @@
-﻿using Model;
+﻿using BackendProductConfigurator.Validation.JWT.Managers;
+using Model;
+using System.Security.Claims;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -233,6 +235,27 @@ namespace BackendProductConfigurator.Controllers
                 ConfigId = "BENZ1"
             };
             SavedProducts["de"] = new List<ProductSaveExtended> { psave1, psave2, psave3 };
+        }
+
+        public static Account FillAccountFromToken(string bearerToken)
+        {
+            Account account = new Account();
+            JWTService jWTService = new JWTService("sjeh93uhAUhiuosdh988hoiAuh3");
+
+            foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
+            {
+                switch(claim.Type)
+                {
+                    case ClaimTypes.Name:
+                        account.UserName = claim.Value;
+                        break;
+                    case ClaimTypes.Email:
+                        account.UserEmail = claim.Value;
+                        break;
+                }
+            }
+
+            return account;
         }
     }
     public enum EValueMode { TestValues, DatabaseValues }
