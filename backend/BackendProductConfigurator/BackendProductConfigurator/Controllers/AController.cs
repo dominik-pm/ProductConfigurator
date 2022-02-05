@@ -154,7 +154,7 @@ namespace BackendProductConfigurator.Controllers
                     PdfProducer.GeneratePDF(value, configId, Request);
             }).Start();
             entities[GetAccLang(Request)].Add(value);
-            //AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
+
             savedConfigsController scc = new savedConfigsController();
             Account tempAccount = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
             ProductSaveExtended temp = new ProductSaveExtended()
