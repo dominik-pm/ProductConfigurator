@@ -6,30 +6,23 @@ namespace BackendProductConfigurator.Controllers
     {
         public static async Task<List<T>> GetValues(string language, string address, string api)
         {
-            HttpClient Http = GenerateHttpClient();
-
-            Http.DefaultRequestHeaders.Add("Accept-Language", language);
+            HttpClient Http = GenerateHttpClient(language);
 
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
         public static async Task<HttpResponseMessage> PostValue(string language, string address, string api, T value)
         {
-            HttpClient Http = GenerateHttpClient();
-
-            Http.DefaultRequestHeaders.Add("Accept-Language", language);
+            HttpClient Http = GenerateHttpClient(language);
 
             return await Http.PostAsJsonAsync($"{address}{api}", value);
         }
         public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, string id)
         {
-            HttpClient Http = GenerateHttpClient();
-
-            Http.DefaultRequestHeaders.Add("Accept-Language", language);
+            HttpClient Http = GenerateHttpClient(language);
 
             return await Http.DeleteAsync($"{address}{api}/{id}");
-
         }
-        private static HttpClient GenerateHttpClient()
+        private static HttpClient GenerateHttpClient(string language)
         {
             HttpClientHandler handler = new HttpClientHandler();
 
@@ -41,6 +34,8 @@ namespace BackendProductConfigurator.Controllers
                 };
 
             HttpClient Http = new HttpClient(handler);
+
+            Http.DefaultRequestHeaders.Add("Accept-Language", language);
 
             return Http;
         }
