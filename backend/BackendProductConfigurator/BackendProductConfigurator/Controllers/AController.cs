@@ -133,14 +133,15 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             EValidationResult validationResult;
-            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId));
+            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId);
+            validationResult = ValidationMethods.ValidateConfiguration(value, configurator);
             if (validationResult == EValidationResult.ValidationPassed)
             {
-                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).Rules);
+                validationResult = ValidationMethods.ValidatePrice(value, configurator.Rules);
             }
             if (validationResult == EValidationResult.ValidationPassed)
             {
-                validationResult = ValidationMethods.ValidateSelectedModel(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId));
+                validationResult = ValidationMethods.ValidateSelectedModel(value, configurator);
             }
             new Thread(() =>
             {
@@ -155,7 +156,18 @@ namespace BackendProductConfigurator.Controllers
             entities[GetAccLang(Request)].Add(value);
             //AValuesClass.PostValue<ConfiguredProduct>(value, GetAccLang(Request));
             savedConfigsController scc = new savedConfigsController();
-            ProductSaveExtended temp = new ProductSaveExtended();
+            Account tempAccount = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
+            ProductSaveExtended temp = new ProductSaveExtended()
+            {
+                Status = EStatus.ordered.ToString(),
+                Date = DateTime.Now,
+                ConfigId = configurator.ConfigId,
+                Name = configurator.Name,
+                Description = configurator.Description,
+                Options = value.Options.Select(x => x.Id).ToList(),
+                SavedName = value.ConfigurationName,
+                User = tempAccount
+            };
             scc.PostOrdered(temp, Request);
         }
     }
