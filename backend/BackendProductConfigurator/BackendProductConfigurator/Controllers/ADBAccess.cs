@@ -6,30 +6,25 @@ namespace BackendProductConfigurator.Controllers
     {
         public static async Task<List<T>> GetValues(string language, string address, string api)
         {
-            HttpClientHandler handler;
-
-            HttpClient Http;
-            handler = new HttpClientHandler();
-
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) =>
-                {
-                    return true;
-                }; 
-
-            Http = new HttpClient(handler);
-
-            Http.DefaultRequestHeaders.Add("Accept-language", language);
+            HttpClient Http = GenerateHttpClient(language);
 
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
         public static async Task<HttpResponseMessage> PostValue(string language, string address, string api, T value)
         {
-            HttpClientHandler handler;
+            HttpClient Http = GenerateHttpClient(language);
 
-            HttpClient Http;
-            handler = new HttpClientHandler();
+            return await Http.PostAsJsonAsync($"{address}{api}", value);
+        }
+        public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, string id)
+        {
+            HttpClient Http = GenerateHttpClient(language);
+
+            return await Http.DeleteAsync($"{address}{api}/{id}");
+        }
+        private static HttpClient GenerateHttpClient(string language)
+        {
+            HttpClientHandler handler = new HttpClientHandler();
 
             handler.ClientCertificateOptions = ClientCertificateOption.Manual;
             handler.ServerCertificateCustomValidationCallback =
@@ -38,11 +33,11 @@ namespace BackendProductConfigurator.Controllers
                     return true;
                 };
 
-            Http = new HttpClient(handler);
+            HttpClient Http = new HttpClient(handler);
 
-            Http.DefaultRequestHeaders.Add("Accept-language", language);
+            Http.DefaultRequestHeaders.Add("Accept-Language", language);
 
-            return await Http.PostAsJsonAsync($"{address}{api}", value);
+            return Http;
         }
     }
 }
