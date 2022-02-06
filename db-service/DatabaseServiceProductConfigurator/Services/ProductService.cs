@@ -28,7 +28,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Configurator> temp = new();
             products.ForEach(
                 p => {
-                    var depen = new Rules { BasePrice = p.Price };
+                    var depen = new RulesExtended { BasePrice = p.Price };
                     var infos = _languageService.GetProductWithLanguage(p.ProductNumber, lang);
                     temp.Add(new Configurator {
                         ConfigId = p.ProductNumber,

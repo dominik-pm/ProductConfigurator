@@ -15,7 +15,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         void DeleteConfiguration( int configID );
 
-        void UpdateConfiguration( ConfiguredProduct config );
+        void UpdateConfiguration( ProductSaveExtended config, string lang, string oldSavedName );
 
     }
 }

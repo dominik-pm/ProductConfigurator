@@ -12,7 +12,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             _context = context;
         }
 
-        public Rules ExtendProductDependencies( Rules dependencies, string productNumber ) {
+        public RulesExtended ExtendProductDependencies( RulesExtended dependencies, string productNumber ) {
 
             List<string> ReplacementGroups = (
                     from pof in _context.ProductsHasOptionFields
@@ -45,7 +45,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             return dependencies;
         }
 
-        public Rules ExtendProductDependenciesByOptionField( Rules dependencies, string id ) {
+        public RulesExtended ExtendProductDependenciesByOptionField( RulesExtended dependencies, string id ) {
             string toSave = id.ToString();
 
             List<string> ReplacementGroups = (

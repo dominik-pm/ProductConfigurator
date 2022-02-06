@@ -15,13 +15,13 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         private readonly IConfigurationService _configurationService;
         private readonly ILanguageService _languageService;
 
-        public ConfigurationController(IConfigurationService configurationService, ILanguageService languageService) {
+        public ConfigurationController( IConfigurationService configurationService, ILanguageService languageService ) {
             _configurationService = configurationService;
             _languageService = languageService;
         }
 
         [HttpGet]
-        public IActionResult Get() {
+        public ActionResult<List<ProductSaveExtended>> Get() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = _languageService.HandleLanguageInput(lang);
 
@@ -33,7 +33,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById( string id ) {
+        public ActionResult<ProductSaveExtended> GetById( string id ) {
             ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(id);
             if ( toReturn == null )
                 return NotFound();
@@ -41,7 +41,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Post( [FromBody] ProductSaveExtended config ) {
+        public ActionResult Post( [FromBody] ProductSaveExtended config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = _languageService.HandleLanguageInput(lang);
 
@@ -51,8 +51,18 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete( int id ) {
+        public ActionResult Delete( int id ) {
             _configurationService.DeleteConfiguration(id);
+
+            return Accepted();
+        }
+
+        [HttpPut("{savedName}")]
+        public ActionResult Put( [FromBody] ProductSaveExtended config, string savedName ) {
+            Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = _languageService.HandleLanguageInput(lang);
+
+            _configurationService.UpdateConfiguration(config, lang, savedName);
 
             return Accepted();
         }

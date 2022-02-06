@@ -23,7 +23,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpGet]
-        public IActionResult GetAllProducts() {
+        public ActionResult<List<Configurator>> GetAllProducts() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = _languageService.HandleLanguageInput(lang);
 
@@ -35,11 +35,11 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get( string id ) {
+        public ActionResult<Configurator> Get( string id ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
             lang = _languageService.HandleLanguageInput(lang);
 
-            object? product = _productService.GetConfiguratorByProductNumber(id, lang);
+            Configurator? product = _productService.GetConfiguratorByProductNumber(id, lang);
             if ( product == null )
                 return NotFound();
 
@@ -47,7 +47,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Post( [FromBody] Configurator config ) {
+        public ActionResult Post( [FromBody] Configurator config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
             lang = _languageService.HandleLanguageInput(lang);
 
@@ -57,7 +57,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete( string id ) {
+        public ActionResult Delete( string id ) {
             _productService.DeleteConfigurator(id);
 
             return Accepted();

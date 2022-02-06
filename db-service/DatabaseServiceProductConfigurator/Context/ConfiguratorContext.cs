@@ -8,7 +8,6 @@ namespace DatabaseServiceProductConfigurator.Context
 {
     public partial class ConfiguratorContext : DbContext
     {
-
         public ConfiguratorContext(DbContextOptions<ConfiguratorContext> options)
             : base(options)
         {

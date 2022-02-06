@@ -121,6 +121,14 @@ namespace DatabaseServiceProductConfigurator.Services {
                 }
             ).Entity;
 
+            SaveConfigurationParameter(toSave, lang, added);
+
+            _context.SaveChanges();
+
+        }
+
+        private void SaveConfigurationParameter( ProductSaveExtended toSave, string lang, Configuration added ) {
+
             _context.ConfigurationsHasLanguages.Add(    // Adding the Language for the Configuration
                 new ConfigurationsHasLanguage {
                     Configuration = added.Id,
@@ -134,19 +142,6 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // Getting the selected Option from the Database
             List<string> products = ( from p in _context.Products where toSave.Options.Contains(p.ProductNumber) select p.ProductNumber ).ToList();
-
-            //List<ConfigurationHasOptionField> fields = (
-            //    from of in _context.OptionFields
-            //    join pof in _context.ProductsHasOptionFields on of.Id equals pof.OptionFields
-            //    where products.Contains(pof.ProductNumber)
-            //    select new ConfigurationHasOptionField {
-            //        ConfigId = added.Id,
-            //        Config = added,
-            //        OptionFieldId = of.Id,
-            //        OptionField = of,
-            //        ProductNumbers = ( from pof1 in _context.ProductsHasOptionFields where pof1.OptionFields == of.Id && products.Contains(pof.ProductNumber) select pof1.ProductNumberNavigation ).ToList()
-            //    }
-            //).ToList();
 
             // Saving the selected Options in the Database
             List<OptionField> fields = new();
@@ -180,20 +175,17 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // Check if the Configuration is booked or saved
             if ( toSave.Status == EStatus.ordered.ToString() ) {
-                if ( user == null )
+                if ( added.Account == null )
                     throw new Exception("User not in Database!");
                 _context.Bookings.Add(
                     new Booking {
                         ConfigId = added.Id,
                         Config = added,
-                        AccountId = user.Id,
-                        Account = user
+                        AccountId = added.Account.Id,
+                        Account = added.Account
                     }
                 );
             }
-
-            _context.SaveChanges();
-
         }
 
         public void SaveModels( string productNumber, ModelType model, string lang ) {
@@ -306,8 +298,39 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region PUT
 
-        public void UpdateConfiguration( ConfiguredProduct config ) {
+        public void UpdateConfiguration( ProductSaveExtended config, string lang, string oldSavedName ) {
+            Configuration toUpdate = getConfigurationByProductSaveExtended(config, oldSavedName);
 
+            toUpdate.Date = config.Date;
+
+            List<ConfigurationHasOptionField> fields = _context.ConfigurationHasOptionFields.Where(c => c.ConfigId == toUpdate.Id).ToList();
+            foreach(var item in fields ) {
+                item.ProductNumbers = new List<Product>();
+            }
+            _context.UpdateRange(fields); // Remove Dependencies
+            _context.RemoveRange(fields); // Then Delete
+
+            _context.RemoveRange(_context.ConfigurationsHasLanguages.Where(c => c.Configuration == toUpdate.Id && c.Language == lang));
+
+            SaveConfigurationParameter(config, lang, toUpdate);
+
+            _context.SaveChanges();
+        }
+
+        private Configuration getConfigurationByProductSaveExtended( ProductSaveExtended productSaveExtended, string oldSavedName ) {
+            // get the User
+            Models.Account? user = _context.Accounts.Where(a => a.Email.Equals(productSaveExtended.User.UserEmail)).FirstOrDefault();
+
+            // get the Configuration with ProductNumber, Name and User
+            Configuration configuration = (
+                from c in _context.Configurations
+                where c.ProductNumber == productSaveExtended.ConfigId
+                && c.ConfigurationsHasLanguages.Select(c => c.Name).Contains(oldSavedName)
+                && c.Account == user
+                select c
+            ).First();
+
+            return configuration;
         }
 
         #endregion

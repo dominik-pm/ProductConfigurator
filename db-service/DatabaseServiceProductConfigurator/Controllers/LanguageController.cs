@@ -18,7 +18,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpGet]
-        public IActionResult Get() {
+        public ActionResult<List<string>> Get() {
             List<string> list = _languageService.GetAllLanguages();
             if ( list.Count == 0 )
                 return NoContent();

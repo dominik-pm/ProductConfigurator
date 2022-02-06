@@ -3,9 +3,9 @@
 namespace DatabaseServiceProductConfigurator.Services {
     public interface IRuleService {
 
-        Rules ExtendProductDependencies( Rules dependencies, string productNumber );
+        RulesExtended ExtendProductDependencies( RulesExtended dependencies, string productNumber );
 
-        Rules ExtendProductDependenciesByOptionField( Rules dependencies, string id );
+        RulesExtended ExtendProductDependenciesByOptionField( RulesExtended dependencies, string id );
 
     }
 }
