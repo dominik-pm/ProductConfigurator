@@ -139,21 +139,21 @@ namespace BackendProductConfigurator.Controllers
             ConfiguredProduct p1 = new ConfiguredProduct()
             {
                 ConfigurationName = "Fetter Benz",
-                Options = optionsList,
+                Options = optionsList.Select(x => x.Id).ToList(),
                 Price=4.2f
             };
 
             ConfiguredProduct p2 = new ConfiguredProduct()
             {
                 ConfigurationName = "Eleganter Alfa Romeo",
-                Options = optionsList,
+                Options = optionsList.Select(x => x.Id).ToList(),
                 Price = 9.65f
             };
 
             ConfiguredProduct p3 = new ConfiguredProduct()
             {
                 ConfigurationName = "Fetterer Benz",
-                Options = optionsList,
+                Options = optionsList.Select(x => x.Id).ToList(),
                 Price = 0.8f
             };
 
