@@ -1,1 +1,4 @@
 *.pdf
+*.sou
+*.cache
+*.editorconfig
