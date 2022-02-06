@@ -257,6 +257,20 @@ namespace BackendProductConfigurator.Controllers
 
             return account;
         }
+        public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost)
+        {
+            Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
+
+            foreach(OptionGroupExtended oge in configurator.OptionGroups)
+            {
+                if(oge.Replacement)
+                {
+                    configurator.Rules.ReplacementGroups.Add(oge.Id, oge.OptionIds);
+                }
+            }
+
+            return configurator;
+        }
     }
     public enum EValueMode { TestValues, DatabaseValues }
 }

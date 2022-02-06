@@ -97,13 +97,13 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public void Post([FromBody] ConfiguratorPost value)
         {
+            Configurator configurator = AValuesClass.GenerateConfigurator(value);
 
-
-            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
+            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configurator);
             if(validationResult == EValidationResult.ValidationPassed)
             {
-                AddConfigurator(value);
-                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+                AddConfigurator(configurator);
+                AValuesClass.PostValue<Configurator>(configurator, GetAccLang(Request));
             }
         }
     }
