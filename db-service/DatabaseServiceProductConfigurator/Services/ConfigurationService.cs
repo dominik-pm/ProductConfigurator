@@ -109,7 +109,20 @@ namespace DatabaseServiceProductConfigurator.Services {
         #region POST
 
         public void SaveConfiguration( ProductSaveExtended toSave, string lang ) {
+
+            Configuration? config = getConfigurationByProductSaveExtended(toSave, lang);
             Models.Account? user = _context.Accounts.Where(a => a.Email.Equals(toSave.User.UserEmail)).FirstOrDefault();
+
+            if ( config != null && toSave.Status == EStatus.ordered.ToString() ) {
+                _ = _context.Bookings.Add(
+                    new Booking {
+                        AccountId = user.Id,
+                        Account = user,
+                        Config = config,
+                        ConfigId = config.Id
+                    }
+                );
+            }
 
             Configuration added = _context.Configurations.Add(  // Adding the Configuration to the Database
                 new Configuration {
@@ -299,7 +312,10 @@ namespace DatabaseServiceProductConfigurator.Services {
         #region PUT
 
         public void UpdateConfiguration( ProductSaveExtended config, string lang, string oldSavedName ) {
-            Configuration toUpdate = getConfigurationByProductSaveExtended(config, oldSavedName);
+            Configuration? toUpdate = getConfigurationByProductSaveExtended(config, oldSavedName);
+
+            if ( toUpdate == null )
+                throw new NullReferenceException();
 
             toUpdate.Date = config.Date;
 
@@ -317,18 +333,18 @@ namespace DatabaseServiceProductConfigurator.Services {
             _context.SaveChanges();
         }
 
-        private Configuration getConfigurationByProductSaveExtended( ProductSaveExtended productSaveExtended, string oldSavedName ) {
+        private Configuration? getConfigurationByProductSaveExtended( ProductSaveExtended productSaveExtended, string oldSavedName ) {
             // get the User
             Models.Account? user = _context.Accounts.Where(a => a.Email.Equals(productSaveExtended.User.UserEmail)).FirstOrDefault();
 
             // get the Configuration with ProductNumber, Name and User
-            Configuration configuration = (
+            Configuration? configuration = (
                 from c in _context.Configurations
                 where c.ProductNumber == productSaveExtended.ConfigId
                 && c.ConfigurationsHasLanguages.Select(c => c.Name).Contains(oldSavedName)
                 && c.Account == user
                 select c
-            ).First();
+            ).FirstOrDefault();
 
             return configuration;
         }
