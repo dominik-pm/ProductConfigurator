@@ -157,7 +157,7 @@ namespace BackendProductConfigurator.Controllers
             //}).Start();
             entities[GetAccLang(Request)].Add(value);
 
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            //Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
             savedConfigsController scc = new savedConfigsController();
             Account tempAccount = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
