@@ -2,7 +2,7 @@
 
 namespace Model
 {
-    public class Rules
+    public class RulesExtended
     {
         public float BasePrice { get; set; }
         public string DefaultModel { get; set; }

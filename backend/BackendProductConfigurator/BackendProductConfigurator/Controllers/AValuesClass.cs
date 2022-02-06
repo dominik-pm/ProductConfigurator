@@ -100,7 +100,7 @@ namespace BackendProductConfigurator.Controllers
                 new OptionSection("Motor", "MOTOR_SECTION", new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" })
             };
 
-            Rules productDependencies = new Rules()
+            RulesExtended productDependencies = new RulesExtended()
             {
                 BasePrice = 50000f,
                 Models = new List<ModelType> { new ModelType { Name = "TI", Description = "Sportliche Version", Options = new List<string>() { "RED", "DIESEL", "D150" } } },
