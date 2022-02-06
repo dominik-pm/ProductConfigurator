@@ -56,6 +56,8 @@
     "resetBuild": "Reset",
     "resetBuildConfirmation": "Do you really want to reset this configuration?",
     "removeModelConfirmation": "Do you really want to remove the model",
+    "removeSectionConfirmation": "Do you really want to remove the section",
+    "removeGroupConfirmation": "Do you really want to remove the option group",
     "addSection": "Add Section",
     "addModel": "Add Model",
     "addOption": "Add Option",
@@ -65,5 +67,8 @@
     "modelName": "Model Name",
     "modelDescription": "Model Description",
     "options": "Options",
-    "description": "Description"
+    "description": "Description",
+    "requirements": "requirements",
+    "incompatibilities": "incompatibilities"
+
 }

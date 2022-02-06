@@ -7,6 +7,7 @@ export default function Product({product}) {
 
     const { configId, name, description, images } = product
 
+    console.log(product)
     const image = images[0]
 
     let imageSource = ''

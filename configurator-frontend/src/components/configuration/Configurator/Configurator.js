@@ -178,7 +178,7 @@ const mapStateToProps = (state) => ({
     configurationId: selectConfigurationId(state),
     selectedOptions: selectSelectedOptions(state),
     price: getCurrentPrice(state),
-    mode: selectSelectedModel(state),
+    model: selectSelectedModel(state),
     language: selectLanguage(state),
     isLoggedIn: selectIsAuthenticated(state)
 })

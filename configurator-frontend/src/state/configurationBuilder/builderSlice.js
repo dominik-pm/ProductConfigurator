@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { postConfiguration } from '../../api/configurationAPI'
-import { getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectConfiguration } from './builderSelectors'
+import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectConfiguration } from './builderSelectors'
 
 
 const initialState = {
@@ -18,6 +18,16 @@ const initialState = {
                 id: 'STEEL16',
                 name: '16 inch Steel',
                 description: 'description',
+            },
+            {
+                id: 'RED',
+                name: 'red',
+                description: 'color',
+            },
+            {
+                id: 'BLUE',
+                name: 'blue',
+                description: 'color',
             }
         ],
         optionSections: [
@@ -25,7 +35,7 @@ const initialState = {
                 id: 'EXTERIOR',
                 name: 'Exterior',
                 optionGroupIds: [
-                    'WHEELS'
+                    'WHEELS', 'COLOR_GROUP'
                 ]
             }
         ],
@@ -37,7 +47,18 @@ const initialState = {
                 optionIds: [
                     'ALLOY19', 'STEEL16'
                 ],
-                required: true
+                required: true,
+                replacement: true
+            },
+            {
+                id: 'COLOR_GROUP',
+                name: 'Color',
+                description: 'of the car',
+                optionIds: [
+                    'BLUE', 'RED'
+                ],
+                required: false,
+                replacement: false
             }
         ],
         rules: {
@@ -47,31 +68,36 @@ const initialState = {
             models: [
                 {
                     name: 'Sport',
-                    options: ['ALLOY19'],
+                    options: ['ALLOY19', 'RED'],
                     description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
                 },
                 {
                     name: 'Basic',
-                    options: ['STEEL16'],
+                    options: ['STEEL16', 'BLUE'],
                     description: 'description, description, description, description, description, description, description, description, '
                 }
             ],
-            replacementGroups: {
-                // COLOR_GROUP: [
-                //     'BLUE'
-                // ]
-            },
+            // replacementGroups: {
+            //     // COLOR_GROUP: [
+            //     //     'BLUE'
+            //     // ]
+            // },
             groupRequirements: {
                 // PANORAMATYPE_GROUP: ['PANORAMA_GROUP']
+                COLOR_GROUP: ['WHEELS'],
+                WHEELS: ['COLOR_GROUP']
             },
             requirements: {
-                // D150: ['DIESEL']
+                BLUE: ['STEEL16'],
+                ALLOY19: ['RED']
             },
-            incompatibilites: {
+            incompatibilities: {
                 // PANORAMAROOF: ['PETROL']
+                BLUE: ['ALLOY19'],
+                STEEL16: ['RED']
             },
             priceList: {
-                // D150: 8000
+                'BLUE': 500
             }
         }
     },
@@ -90,19 +116,50 @@ export const builderSlice = createSlice({
                 optionGroupIds: []
             })
         },
+        removeSection: (state, action) => {
+            const sectionId = action.payload
+
+            state.configuration.optionSections = state.configuration.optionSections.filter(s => s.id !== sectionId)
+        },
         addOptionGroup: (state, action) => {
-            const { sectionId, name, description, required } = action.payload
+            const { sectionId, name, description, isRequired, isReplacementGroup } = action.payload
 
             state.configuration.optionGroups.push({
                 id: name,
                 name: name,
                 description: description,
-                required: required,
+                required: isRequired,
+                replacement: isReplacementGroup,
                 optionIds: []
             })
 
             const section = state.configuration.optionSections.find(s => s.id === sectionId)
             if (section) section.optionGroupIds.push(name)
+        },
+        setGroupRequirements: (state, action) => {
+            const { groupId, requirements } = action.payload
+
+            state.configuration.rules.groupRequirements[groupId] = requirements
+
+            // cleanup empty requirements (remove dictionary entry if the option array is empty)
+            for (const gId in state.configuration.rules.groupRequirements) {
+                if (state.configuration.rules.groupRequirements[gId].length === 0) {
+                    delete state.configuration.rules.groupRequirements[gId]
+                }
+            }
+        },
+        removeOptionGroup: (state, action) => {
+            const { groupId, sectionId } = action.payload
+
+            // remove group requirements
+            if (state.configuration.rules.groupRequirements[groupId]) delete state.configuration.rules.groupRequirements[groupId]
+
+            // remove group from group list
+            state.configuration.optionGroups = state.configuration.optionGroups.filter(g => g.id !== groupId)
+
+            // remove group from section
+            const section = state.configuration.optionSections.find(s => s.id === sectionId)
+            if (section) section.optionGroupIds = section.optionGroupIds.filter(g => g !== groupId)
         },
         addOption: (state, action) => {
             const { groupId, name, description, price } = action.payload
@@ -121,6 +178,30 @@ export const builderSlice = createSlice({
             // add option price to pricelist in rules
             if (price) state.configuration.rules.priceList[name] = price
         },
+        setOptionRequirements: (state, action) => {
+            const { optionId, requirements } = action.payload
+
+            state.configuration.rules.requirements[optionId] = requirements
+
+            // cleanup empty requirements (remove dictionary entry if the option array is empty)
+            for (const oId in state.configuration.rules.requirements) {
+                if (state.configuration.rules.requirements[oId].length === 0) {
+                    delete state.configuration.rules.requirements[oId]
+                }
+            }
+        },
+        setOptionIncompatibilities: (state, action) => {
+            const { optionId, incompatibilities } = action.payload
+
+            state.configuration.rules.incompatibilities[optionId] = incompatibilities
+
+            // cleanup empty incompatitbilities (remove dictionary entry if the option array is empty)
+            for (const oId in state.configuration.rules.incompatibilities) {
+                if (state.configuration.rules.incompatibilities[oId].length === 0) {
+                    delete state.configuration.rules.incompatibilities[oId]
+                }
+            }
+        },
         removeOption: (state, action) => {
             const { groupId, optionId } = action.payload
 
@@ -130,6 +211,12 @@ export const builderSlice = createSlice({
             // remove option from group
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
             if (group) group.optionIds = group.optionIds.filter(o => o !== optionId)
+
+            // remove option requirements
+            if (state.configuration.rules.requirements[optionId]) delete state.configuration.rules.requirements[optionId]
+
+            // remove option incompatibilities
+            if (state.configuration.rules.incompatibilities[optionId]) delete state.configuration.rules.incompatibilities[optionId]
 
             // remove option price from pricelist
             if (state.configuration.rules.priceList[optionId]) delete state.configuration.rules.priceList[optionId]
@@ -160,6 +247,9 @@ export const builderSlice = createSlice({
         },
         setDescription: (state, action) => {
             state.configuration.description = action.payload
+        },
+        setName: (state, action) => {
+            state.configuration.name = action.payload
         },
         resetBuild: (state, action) => {
             state.configuration = {}
@@ -197,16 +287,57 @@ export const createSection = (sectionName) => (dispatch, getState) => {
     dispatch(addSection(sectionName))
     return true
 }
+export const deleteSection = (sectionId) => (dispatch, getState) => {
+    const section = getBuilderSectionById(getState(), sectionId)
 
-export const createGroup = (sectionId, name, description, required) => (dispatch, getState) => {
+    if (!section) {
+        console.log('Could not delete section -> no section matches the id: ' + sectionId)
+        return
+    }
+    
+    // remove associated groups
+    const groups = extractGroupsFromBuilderSection(section)
+    groups.forEach(groupId => {
+        dispatch(deleteOptionGroup(groupId))
+    })
+
+    // remove section
+    dispatch(removeSection(sectionId))
+}
+
+export const createGroup = (sectionId, name, description, isRequired, isReplacementGroup) => (dispatch, getState) => {
     // check if section doesn't already exist
     const groupExists = getDoesGroupdExist(getState(), name)
     if (groupExists) {
         return false
     }
 
-    dispatch(addOptionGroup({sectionId, name, description, required}))
+    dispatch(addOptionGroup({sectionId, name, description, isRequired, isReplacementGroup}))
     return true
+}
+export const deleteOptionGroup = (groupId, sectionId) => (dispatch, getState) => {
+    const group = getBuilderGroupById(getState(), groupId)
+
+    if (!group) {
+        console.log('Could not delete group -> no group matches the id: ' + groupId)
+        return
+    }
+
+    // remove associated options
+    const options = extractOptionsFromBuilderGroup(group)
+    options.forEach(optionId => {
+        dispatch(deleteOption(groupId, optionId))
+    })
+
+    // remove group from other group requirements
+    const groups = selectBuilderGroupRequirements(getState())
+    for (const gId in groups) {
+        const requirements = groups[gId].filter(req => req !== groupId)
+        dispatch(setGroupRequirements({groupId: gId, requirements}))
+    }
+
+    // remove group
+    dispatch(removeOptionGroup({groupId, sectionId}))
 }
 
 export const createOption = (groupId, name, description, price = 0) => (dispatch, getState) => {
@@ -220,6 +351,28 @@ export const createOption = (groupId, name, description, price = 0) => (dispatch
     return true
 }
 export const deleteOption = (groupId, name) => (dispatch, getState) => {
+    // remove option from models
+    const models = selectBuilderModels(getState())
+    models.forEach(model => {
+        const modelName = extractModelNameFromBuilderModel(model)
+        const newOptions = extractModelOptionsFromBuilderModel(model).filter(optionId => optionId !== name)
+        dispatch(changeModelOptions(modelName, newOptions))
+    })
+
+    // remove option from other requirements
+    const allRequirements = selectBuilderOptionRequirements(getState())
+    for (const oId in allRequirements) {
+        const requirements = allRequirements[oId].filter(req => req !== name)
+        dispatch(setOptionRequirements({optionId: oId, requirements}))
+    }
+
+    // remove option from other incompatibilities
+    const allIncompatibilities = selectBuilderOptionIncompatibilities(getState())
+    for (const oId in allIncompatibilities) {
+        const incompatibilities = allIncompatibilities[oId].filter(req => req !== name)
+        dispatch(setOptionIncompatibilities({optionId: oId, incompatibilities}))
+    }
+    
     dispatch(removeOption({groupId, optionId: name}))
 }
 
@@ -246,7 +399,7 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
     let configuration = selectConfiguration(getState())
     
     if (name) {
-        configuration.name = name
+        dispatch(setName(name))
     }
 
     postConfiguration(configuration)
@@ -261,6 +414,6 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, addOptionGroup, addOption, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { addSection, removeSection, addOptionGroup, setGroupRequirements, removeOptionGroup, addOption, setOptionRequirements, setOptionIncompatibilities, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, setName, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
 
 export default builderSlice.reducer

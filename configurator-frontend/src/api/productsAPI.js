@@ -30,6 +30,7 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
             price,
             model
         }
+        console.log(data)
         axios.post(`${baseURL}/products/${configurationId}`, data)
         .then(res => {
             resolve(res.data)
@@ -55,36 +56,36 @@ const products = [
         id: "0",
         name: 'Car',
         description: 'a next generation automobile',
-        image: 'Car0.jpg'
+        images: ['Car0.jpg']
     },
     {
         id: 1,
         name: 'Computer',
         description: 'high end computer',
-        image: 'Computer0.jpg'
+        images: ['Computer0.jpg']
     },
     {
         id: 2,
         name: 'watch',
         description: 'entry level watch',
-        image: 'Watch0.jpg'
+        images: ['Watch0.jpg']
     },
     {
         id: 3,
         name: 'watch',
         description: 'entry level watch',
-        image: 'Watch0.jpg'
+        images: ['Watch0.jpg']
     },
     {
         id: 4,
         name: 'watch',
         description: 'entry level watch',
-        image: 'Watch0.jpg'
+        images: ['Watch0.jpg']
     },
     {
         id: 5,
         name: 'Computer',
         description: 'high end computer',
-        image: 'Computer0123.jpg'
+        images: ['Computer0123.jpg']
     }
 ]

@@ -21,8 +21,10 @@ export const postConfiguration = (newConfiguration) => {
     return new Promise((resolve, reject) => {
         reject('Posting a new configuration not implemented')
 
-        // const data = newConfiguration
-        // axios.post(`${baseURL}/configuration/${configurationId}`, data)
+        // const data = {
+        //     newConfiguration
+        // }
+        // axios.post(`${baseURL}/configuration`, data)
         // .then(res => {
         //     resolve(res.data)
         // })

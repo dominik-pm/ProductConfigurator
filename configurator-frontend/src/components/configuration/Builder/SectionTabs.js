@@ -7,13 +7,14 @@ import Box from '@mui/material/Box'
 import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { connect } from 'react-redux'
-import { createGroup, createSection } from '../../../state/configurationBuilder/builderSlice'
+import { createGroup, createSection, deleteSection } from '../../../state/configurationBuilder/builderSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
 import { selectBuilderGroups, selectBuilderSections } from '../../../state/configurationBuilder/builderSelectors'
 import BuilderOptionGroup from './Options/BuilderOptionGroup'
 import { translate } from '../../../lang'
+import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -52,7 +53,7 @@ function TooltipAsTab({ children, title }) {
     return <Tooltip title={title} children={children} />
 }
 
-function SectionTabs({ sections, optionGroups, openInputDialog, createSection, createGroup, openAlert, language }) {
+function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialog, createSection, createGroup, deleteSection, openAlert, language }) {
 
     const [value, setValue] = useState(0)
 
@@ -73,10 +74,11 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
     }
 
 
-    function renderSectionHeader(sectionId) {
+    function renderSectionHeader(sectionId, sectionName) {
         return (
             <Box>
                 <Button onClick={() => handleAddGroup(sectionId)}>Add Option Group</Button>
+                <Button onClick={() => removeSection(sectionId, sectionName)}>Remove Section</Button>
             </Box>
         )
     }
@@ -84,13 +86,20 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
         const data = {
             groupName: {name: 'name', value: '' },
             groupDescription: {name: 'description', value: ''},
-            groupIsRequired: {name: 'is required', value: false, isCheckBox: true}
+            groupIsRequired: {name: 'is required', value: false, isCheckBox: true},
+            groupIsMultiselect: {name: 'multiselect', value: true, isCheckBox: true}
         }
         openInputDialog(translate('newGroup', language), data, (data) => {
-            const success = createGroup(sectionId, data.groupName.value, data.groupDescription.value, data.groupIsRequired.value)
+            const isReplacementGroup = !data.groupIsMultiselect.value   // is replacement group if its not a multiselect
+            const success = createGroup(sectionId, data.groupName.value, data.groupDescription.value, data.groupIsRequired.value, isReplacementGroup)
             if (!success) {
                 openAlert('Group already exists!', alertTypes.ERROR)
             }
+        })
+    }
+    function removeSection(sectionId, name) {
+        openConfirmDialog(`${translate('removeSectionConfirmation', language)}: ${name}?`, {}, null, () => {
+            deleteSection(sectionId)
         })
     }
 
@@ -121,13 +130,13 @@ function SectionTabs({ sections, optionGroups, openInputDialog, createSection, c
             
             {sections.map((section, index) => (
                 <TabPanel key={section.id} value={value} index={index}>
-                    <Stack>
-                        {renderSectionHeader(section.id)}
+                    <Stack minHeight={400} mb={10}>
+                        {renderSectionHeader(section.id, section.name)}
 
                         {optionGroups
                             .filter(group => section.optionGroupIds.includes(group.id))
                             .map((group, index) => (
-                                <BuilderOptionGroup key={group.id} group={group}></BuilderOptionGroup>
+                                <BuilderOptionGroup key={group.id} group={group} sectionId={section.id}></BuilderOptionGroup>
                         ))}
                     </Stack>
                 </TabPanel>
@@ -153,7 +162,9 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
+    openConfirmDialog: confirmDialogOpen,
     createSection,
+    deleteSection,
     createGroup,
     openAlert
 }

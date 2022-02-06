@@ -94,11 +94,11 @@ function loginTest(username, password) {
         
         setTimeout(() => {
             // user token
-            let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3R1c2VyIiwidXNlckVtYWlsIjoidGVzdHVzZXJAdGVzdC1mdWNocy5jb20iLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTYxNzQ0OTAyMn0._7yEV3pSyIve6bxczwVJdXfp5qF7jzfSZLn0IGae6rU'
+            let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6InRlc3R1c2VyIiwidXNlckVtYWlsIjoidGVzdHVzZXJAdGVzdC1mdWNocy5jb20iLCJhZG1pbiI6ZmFsc2UsImlhdCI6MTYxNzQ0OTAyMn0.mNE0pAsXlfADoB9xvvPbyOqo4cO_nPJa2aCrUIeXMRY'
             
             // admin token
             if (username === 'admin') {
-                token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidXNlckVtYWlsIjoiY29uZmlndXJhdG9yLWFkbWluQHRlc3QtZnVjaHMuY29tIiwiYWRtaW4iOnRydWUsImlhdCI6MTYxNzQ0OTAyMn0.CLWSaCBRDReIf9UbG3pXpLzuNyH-8n8RQK8OIxBIDE0'
+                token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwidXNlckVtYWlsIjoiY29uZmlndXJhdG9yLWFkbWluQHRlc3QtZnVjaHMuY29tIiwiYWRtaW4iOnRydWUsImlhdCI6MTYxNzQ0OTAyMn0.c3_WbsSenWEZTfCnesqIOz1067u2xL1FoE_efepoaBI'
             }
             
             const user = jwt.decode(token)

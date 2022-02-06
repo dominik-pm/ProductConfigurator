@@ -48,8 +48,8 @@ function ProductView({ products = [], status, error, fetchProducts, language }) 
         return (
             <Grid container columns={12} spacing={2} sx={{paddingTop: 2, marginRight: 4}}>
             {/* <ImageList width='100%> */}
-                {products.map(product => (
-                    <Grid item sm={12} md={6} lg={4} xl={3} width="100%" key={product.configId}>
+                {products.map((product, index) => (
+                    <Grid item sm={12} md={6} lg={4} xl={3} width="100%" key={index}>
                         <Product product={product}></Product>
                     </Grid>
                 ))}

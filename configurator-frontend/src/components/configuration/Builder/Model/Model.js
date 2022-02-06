@@ -63,7 +63,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, setModelOpt
                 justifyContent={{xs: 'center', xl: 'flex-end'}}
             >
                 <FormControl sx={{ m: 1, width: 300 }}>
-                    <InputLabel id="options-label">{translate('options', language)}</InputLabel>
+                    <InputLabel id={`options-label-${name}`}>{translate('options', language)}</InputLabel>
                     <Select
                         labelId="options-label"
                         multiple
