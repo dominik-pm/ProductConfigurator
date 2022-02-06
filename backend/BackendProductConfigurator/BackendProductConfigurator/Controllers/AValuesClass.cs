@@ -267,6 +267,7 @@ namespace BackendProductConfigurator.Controllers
                 {
                     configurator.Rules.ReplacementGroups.Add(oge.Id, oge.OptionIds);
                 }
+                configurator.OptionGroups.Add(oge as OptionGroup);
             }
 
             return configurator;
