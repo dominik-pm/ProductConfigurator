@@ -168,7 +168,7 @@ namespace BackendProductConfigurator.Controllers
                 ConfigId = configurator.ConfigId,
                 Name = configurator.Name,
                 Description = configurator.Description,
-                Options = value.Options.Select(x => x.Id).ToList(),
+                Options = value.Options,
                 SavedName = value.ConfigurationName,
                 User = tempAccount
             };
