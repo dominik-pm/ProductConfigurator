@@ -72,7 +72,7 @@ namespace BackendProductConfigurator.Controllers
         }
     }
 
-    public class configurationController : AController<Configurator, string>
+    public partial class configurationController : AController<Configurator, string>
     {
         public configurationController() : base()
         {
@@ -95,8 +95,10 @@ namespace BackendProductConfigurator.Controllers
 
         // POST api/<Controller>
         [HttpPost]
-        public override void Post([FromBody] Configurator value)
+        public void Post([FromBody] ConfiguratorPost value)
         {
+
+
             EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
             if(validationResult == EValidationResult.ValidationPassed)
             {
@@ -258,6 +260,21 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] ConfiguratorSlim value) { }
     }
+    public partial class configurationController : AController<Configurator, string>
+    {
+        // POST api/<Controller>
+        [Route("/redactedConfigurator")]
+        [HttpPost]
+        public override void Post([FromBody] Configurator value)
+        {
+            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
+            if (validationResult == EValidationResult.ValidationPassed)
+            {
+                AddConfigurator(value);
+                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+            }
+        }
+    }
 
         #endregion
-    }
+}
