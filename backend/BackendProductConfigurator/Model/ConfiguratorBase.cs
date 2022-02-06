@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ConfiguratorBase
+    public class ConfiguratorBase : ConfiguratorSlim
     {
-
+        public List<OptionSection> OptionSections { get; set; }
+        public List<Option> Options { get; set; }
     }
 }
