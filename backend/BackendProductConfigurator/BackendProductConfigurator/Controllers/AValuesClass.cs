@@ -39,7 +39,7 @@ namespace BackendProductConfigurator.Controllers
             if(ValueMode == EValueMode.DatabaseValues)
                 ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(T)], value);
         }
-        public static async void DeleteValue<T>(T value, string language, object identifier) where T : class
+        public static async void DeleteValue<T>(string language, T identifier) where T : class
         {
             if (ValueMode == EValueMode.DatabaseValues)
                 await ADBAccess<T>.DeleteValue(language, serverAddress, typeApis[typeof(T)], identifier);

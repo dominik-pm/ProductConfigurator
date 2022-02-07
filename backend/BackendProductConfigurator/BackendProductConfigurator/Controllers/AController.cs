@@ -242,7 +242,7 @@ namespace BackendProductConfigurator.Controllers
         public void SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
         {
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName));
-            //AValuesClass
+            AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigWrapper() { ConfigId = id, SavedName = requestBody.SavedName });
         }
     }
 
