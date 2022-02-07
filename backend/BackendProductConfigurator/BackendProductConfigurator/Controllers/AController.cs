@@ -3,6 +3,7 @@ using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Interfaces;
+using Model.Wrapper;
 using System.Net;
 
 namespace BackendProductConfigurator.Controllers
@@ -238,9 +239,9 @@ namespace BackendProductConfigurator.Controllers
         // DELETE api/<Controller>/5
         [Route("/account/configurations/{id}")]
         [HttpDelete]
-        public void SavedConfigDelete([FromBody] dynamic requestBody, string id)
+        public void SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
         {
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.savedName));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName));
             //AValuesClass
         }
     }
