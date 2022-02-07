@@ -1,4 +1,4 @@
-import { Grid, Typography } from '@mui/material'
+import { Grid, Stack, Typography, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -6,11 +6,11 @@ import { selectModels, selectSelectedModel } from '../../../../state/configurati
 import ModelButton from './ModelButton'
 
 function ModelSelector({ models, selectedModel }) {
-    
-    return (
-        <Box marginBottom={4}>
-            <Typography variant="h3">Models</Typography>
 
+    const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('sm'))
+
+    function modelSelectGridLayout() {
+        return (
             <Grid container spacing={2} alignItems="flex-start">
 
                 {models.map((model, index) => (
@@ -24,6 +24,42 @@ function ModelSelector({ models, selectedModel }) {
                 </Grid>
 
             </Grid>
+        )
+    }
+
+    function modelSelectHorizontalScrollLayout() {
+        return (
+            <Box sx={{overflowX: 'scroll'}}>
+                <Stack
+                    direction={{xs: 'row', md: 'column'}}
+                    justifyContent="space-around"
+                    alignItems="center"
+                    width={`${(models.length + 1)*90}vw`}
+                >
+                    {models.map((model, index) => (
+                        <Box key={index} width="80vw">
+                            <ModelButton model={model} isSelected={model.name === selectedModel}></ModelButton>
+                        </Box>
+                    ))}
+
+                    <Box width="80vw">
+                        <ModelButton model={null} isSelected={!selectedModel} disabled={true}></ModelButton>
+                    </Box>
+
+                </Stack>
+            </Box>
+        )
+    }
+
+    return (
+        <Box marginBottom={4}>
+            <Typography variant="h3">Models</Typography>
+
+            {isDesktop ? 
+                modelSelectGridLayout()
+            :
+                modelSelectHorizontalScrollLayout()
+            }
         </Box>
     )
 }
