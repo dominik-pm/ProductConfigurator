@@ -241,6 +241,7 @@ namespace BackendProductConfigurator.Controllers
         public void SavedConfigDelete([FromBody] dynamic requestBody, string id)
         {
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.savedName));
+            //AValuesClass
         }
     }
 
