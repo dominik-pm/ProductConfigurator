@@ -1,4 +1,6 @@
-﻿using System.Net.Http.Json;
+﻿using Model.Wrapper;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -16,11 +18,17 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.PostAsJsonAsync($"{address}{api}", value);
         }
-        public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, object identifier)
+        public static async Task<HttpResponseMessage> DeleteValue<T>(string language, string address, string api, T identifier)
         {
             HttpClient Http = GenerateHttpClient(language);
 
-            return await Http.DeleteAsync($"{address}{api}/{id}");
+            StringBuilder sb = new StringBuilder($"{address}{api}");
+            if(typeof(T) == typeof(SavedConfigWrapper))
+            {
+                sb.Append($"/{(identifier as SavedConfigWrapper).ConfigId}/{(identifier as SavedConfigWrapper).SavedName}");
+            }
+
+            return await Http.DeleteAsync(sb.ToString());
         }
         private static HttpClient GenerateHttpClient(string language)
         {
