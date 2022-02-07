@@ -215,7 +215,7 @@ namespace BackendProductConfigurator.Controllers
             Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)];
+            return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).ToList();
         }
 
         // POST: /account/configuration
