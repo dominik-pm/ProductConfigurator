@@ -245,7 +245,7 @@ namespace BackendProductConfigurator.Controllers
         public static Account FillAccountFromToken(string bearerToken)
         {
             Account account = new Account();
-            JWTService jWTService = new JWTService("sjeh93uhAUhiuosdh988hoiAuh3=");
+            JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
 
             bearerToken = bearerToken.Replace("Bearer ", "");
 
