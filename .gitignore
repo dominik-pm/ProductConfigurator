@@ -1,0 +1,4 @@
+backend/**/*.pdf
+backend/**/*.cache
+backend/**/*.sou
+backend/**/*.editorconfig
