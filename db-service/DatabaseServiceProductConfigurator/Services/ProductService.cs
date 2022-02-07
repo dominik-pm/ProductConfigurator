@@ -543,7 +543,171 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region PUT
 
-        public void UpdateProduct(Configurator product) {
+        public void UpdateProduct( Configurator product, string lang ) {
+            // Update Main Product
+            var MainProduct = _context.Products.Where(p => p.ProductNumber == product.ConfigId).First();
+            MainProduct.Price = product.Rules.BasePrice;
+            _context.Update(MainProduct);
+
+            //Updating Language
+            var MainProductHasLanguage = (
+                                            from p in _context.ProductHasLanguages
+                                            where p.ProductNumber == product.ConfigId && p.Language == lang
+                                            select p
+                                        ).First();
+            MainProductHasLanguage.Name = product.Name;
+            MainProductHasLanguage.Description = product.Description;
+            _context.Update(MainProductHasLanguage);
+
+            // Update Images
+            _context.RemoveRange(_context.Pictures.Where(p => p.ProductNumber == product.ConfigId));
+            foreach ( var item in product.Images ) {
+                _context.Add(new Picture {
+                    ProductNumber = MainProduct.ProductNumber,
+                    ProductNumberNavigation = MainProduct,
+                    Url = item
+                }
+                );
+            }
+
+            //------------------------------Deleting or Removing Dependencies of unused Options and Fields
+
+            // Optionfields to Delete
+            List<OptionField> fields = new();
+            List<ProductsHasOptionField> pofDependency = (  // Option Sections
+                from pof in _context.ProductsHasOptionFields
+                where pof.ProductNumber == product.ConfigId
+                && pof.DependencyType == "PARENT"
+                && !product.OptionSections.Select(os => os.Id).Contains(pof.OptionFields)
+                select pof
+            ).ToList();
+            fields.AddRange(pofDependency.Select(o => o.OptionFieldsNavigation).ToList());
+
+            List<OptionFieldsHasOptionField> ofoDependency =    // Option Group
+            (
+                from ofo in _context.OptionFieldsHasOptionFields
+                where fields.Select(f => f.Id).Contains(ofo.Base)
+                select ofo
+            ).ToList();
+            fields.AddRange(ofoDependency.Select(o => o.OptionFieldNavigation).ToList());
+
+            List<ProductsHasOptionField> temp = (   // Options
+                from p in _context.ProductsHasOptionFields
+                where p.DependencyType == "CHILD"
+                && fields.Select(o => o.Id).Contains(p.OptionFields)
+                select p
+            ).ToList();
+
+            List<Product> productToRemove = temp.Select(t => t.ProductNumberNavigation).Where(p => !product.Options.Select(o => o.Id).Contains(p.ProductNumber)).ToList();
+            pofDependency.AddRange(temp);
+
+            // Removing the Dependencies
+            _context.ProductsHasOptionFields.RemoveRange(pofDependency);
+            _context.OptionFieldsHasOptionFields.RemoveRange(ofoDependency);
+
+            List<OptionField> toRemoveOptionField = new();
+            foreach ( var item in fields ) {    // filter out the ones with dependencies
+                if ( item.ConfigurationHasOptionFields.Count == 0
+                    && item.ProductsHasOptionFields.Count == 0
+                    && item.OptionFieldsHasOptionFieldOptionFieldNavigations.Count == 0
+                    && item.OptionFieldsHasOptionFieldBaseNavigations.Count == 0 ) { toRemoveOptionField.Add(item); }
+            }
+
+            _context.OptionFieldHasLanguages.RemoveRange(_context.OptionFieldHasLanguages.Where(l => toRemoveOptionField.Select(o => o.Id).Contains(l.OptionFieldId)));
+
+            List<Product> toRemoveProduct = new();
+            foreach ( var item in productToRemove ) {    // filter out the ones with dependencies
+                if ( item.Configurations.Count == 0
+                     && item.ConfigurationHasOptionFields.Count == 0
+                     && item.ProductsHasOptionFields.Count == 0 ) { toRemoveProduct.Add(item); }
+            }
+
+            // Remove Dependencies
+            _context.ProductsHasProducts.RemoveRange(
+                from p in _context.ProductsHasProducts
+                where toRemoveProduct.Select(p => p.ProductNumber).Contains(p.BaseProduct)
+                || toRemoveProduct.Select(p => p.ProductNumber).Contains(p.OptionProduct)
+                select p
+            );
+
+            // remove images
+            _context.Pictures.RemoveRange(
+                from p in _context.Pictures
+                where toRemoveProduct.Select(p => p.ProductNumber).Contains(p.ProductNumber)
+                select p
+            );
+
+            // remove languages
+            _context.ProductHasLanguages.RemoveRange(
+                from p in _context.ProductHasLanguages
+                where toRemoveProduct.Select(p => p.ProductNumber).Contains(p.ProductNumber)
+                select p
+            );
+
+            // Remove Options
+            _context.Products.RemoveRange(toRemoveProduct);
+            // Remove OptionFields
+            _context.OptionFields.RemoveRange(fields);
+
+
+            // ------------------------------Inserting new Options and Fields and Updating older Options and Fields
+
+            // Updating existing Products
+            List<ProductHasLanguage> dbProductHasLanguage = _context.ProductHasLanguages.ToList();
+            ELanguage language = _context.ELanguages.Where(l => l.Language == lang).First();
+            List<Product> productsToUpdate = _context.Products.Where(p => product.Options.Select(o => o.Id).Contains(p.ProductNumber)).ToList();
+            productsToUpdate.ForEach( p => {
+#warning Wos mochst du eigentlich; Do san Olle Produkte dabei und nd nur de wos fiah des Produkt relevant san
+                Option theOption = product.Options.Where(o => o.Id == p.ProductNumber).First();
+                p.Price = product.Rules.PriceList[p.ProductNumber];
+                ProductHasLanguage? temp = dbProductHasLanguage.Where(l => p.ProductNumber == l.ProductNumber && l.Language == lang).FirstOrDefault();
+                if(temp != null ) {
+                    temp.Name = theOption.Name;
+                    temp.Description = theOption.Description;
+                    _context.Update(temp);
+                }
+                else {
+                    p.ProductHasLanguages.Add(
+                        new ProductHasLanguage {
+                            ProductNumber = p.ProductNumber,
+                            ProductNumberNavigation = p,
+                            Language = lang,
+                            LanguageNavigation = language,
+                            Name = theOption.Name,
+                            Description = theOption.Description
+                        }
+                    );
+                }
+            });
+            _context.Update(productsToUpdate);
+
+            // Inserting new Products
+            List<Product> productsToInsert = new();
+            foreach(var item in product.Options.Where(p => !productsToUpdate.Select(t => t.ProductNumber).Contains(p.Id))){
+                Product toAdd = new() {
+                    ProductNumber = item.Id,
+                    Price = product.Rules.PriceList[item.Id],
+                    Buyable = false
+                };
+                toAdd.ProductHasLanguages.Add(
+                    new ProductHasLanguage {
+                        ProductNumber = toAdd.ProductNumber,
+                        ProductNumberNavigation = toAdd,
+                        Language = lang,
+                        LanguageNavigation = language,
+                        Name = item.Name,
+                        Description = item.Description
+                    }
+                );
+            }
+            _context.Products.AddRange(productsToInsert);
+
+            List<Product> productOptions = new(); // One List for all Options
+            productOptions.AddRange(productsToUpdate);
+            productOptions.AddRange(productsToInsert);
+
+            //---------------------Option Groups
+            // Updating existing OptionFields
 
         }
 

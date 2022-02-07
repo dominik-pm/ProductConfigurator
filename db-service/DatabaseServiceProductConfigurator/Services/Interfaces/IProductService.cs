@@ -7,7 +7,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         Configurator? GetConfiguratorByProductNumber( string productNumber, string lang );
         void SaveConfigurator( Configurator config, string lang );
         void DeleteConfigurator( string productNumber );
-        void UpdateProduct( Configurator product );
+        void UpdateProduct( Configurator product, string lang );
 
     }
 }

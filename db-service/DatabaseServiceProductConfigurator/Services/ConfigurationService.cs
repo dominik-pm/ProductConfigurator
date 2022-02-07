@@ -110,8 +110,11 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         public void SaveConfiguration( ProductSaveExtended toSave, string lang ) {
 
-            Configuration? config = getConfigurationByProductSaveExtended(toSave, lang);
+            Configuration? config = GetConfigurationByProductSaveExtended(toSave, lang);
             Models.Account? user = _context.Accounts.Where(a => a.Email.Equals(toSave.User.UserEmail)).FirstOrDefault();
+
+            if ( user == null )
+                throw new NullReferenceException();
 
             if ( config != null && toSave.Status == EStatus.ordered.ToString() ) {
                 _ = _context.Bookings.Add(
@@ -312,7 +315,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         #region PUT
 
         public void UpdateConfiguration( ProductSaveExtended config, string lang, string oldSavedName ) {
-            Configuration? toUpdate = getConfigurationByProductSaveExtended(config, oldSavedName);
+            Configuration? toUpdate = GetConfigurationByProductSaveExtended(config, oldSavedName);
 
             if ( toUpdate == null )
                 throw new NullReferenceException();
@@ -320,7 +323,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             toUpdate.Date = config.Date;
 
             List<ConfigurationHasOptionField> fields = _context.ConfigurationHasOptionFields.Where(c => c.ConfigId == toUpdate.Id).ToList();
-            foreach(var item in fields ) {
+            foreach ( var item in fields ) {
                 item.ProductNumbers = new List<Product>();
             }
             _context.UpdateRange(fields); // Remove Dependencies
@@ -333,7 +336,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             _context.SaveChanges();
         }
 
-        private Configuration? getConfigurationByProductSaveExtended( ProductSaveExtended productSaveExtended, string oldSavedName ) {
+        private Configuration? GetConfigurationByProductSaveExtended( ProductSaveExtended productSaveExtended, string oldSavedName ) {
             // get the User
             Models.Account? user = _context.Accounts.Where(a => a.Email.Equals(productSaveExtended.User.UserEmail)).FirstOrDefault();
 
