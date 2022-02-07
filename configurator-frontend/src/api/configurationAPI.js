@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { baseURL } from './general'
+import { baseURL, LOCAL_DATA } from './general'
 
 export const fetchId = (productId) => {
-    // return fetchApiTest(productId)
+    if (LOCAL_DATA) {
+        return fetchApiTest(productId)
+    }
 
     return new Promise((resolve, reject) => {
         axios.get(`${baseURL}/configuration/${productId}`)
@@ -19,19 +21,22 @@ export const fetchId = (productId) => {
 
 export const postConfiguration = (newConfiguration) => {
     return new Promise((resolve, reject) => {
-        reject('Posting a new configuration not implemented')
+        if (LOCAL_DATA) {
+            reject('Posting a new configuration not available in test mode!')
+            return
+        }
 
-        // const data = {
-        //     newConfiguration
-        // }
-        // axios.post(`${baseURL}/configuration`, data)
-        // .then(res => {
-        //     resolve(res.data)
-        // })
-        // .catch(err => {
-            // console.log(err)
-            // reject('Api unreachable')
-        // })
+        const data = {
+            newConfiguration
+        }
+        axios.post(`${baseURL}/configuration`, data)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+            reject('Api unreachable')
+        })
     })
 }
 
@@ -59,10 +64,10 @@ function fetchApiTest(configId) {
 
 const configurations = [
     {
-        configId: "0",
+        configId: '0',
         name: 'Car',
         description: 'automobile',
-        images: ['1.jpg'],
+        images: ['vw-golf-r-2021.jpg', 'vw-golf-r-2021.jpg', 'vw-golf-r-2021.jpg'],
         options: [
             {
                 id: 'BLUE',

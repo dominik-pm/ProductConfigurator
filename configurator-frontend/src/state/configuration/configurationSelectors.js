@@ -34,6 +34,7 @@ export const selectModels = state =>                    state.configuration.conf
 export const selectDefaultOptions = state =>            state.configuration.configuration.rules?.defaultOptions || []
 export const selectConfigurationName = state =>         state.configuration.configuration.name
 export const selectConfigurationDescription = state =>  state.configuration.configuration.description
+export const selectConfigurationImages = state =>       state.configuration.configuration.images
 
 export const selectOptions = state =>                   state.configuration.configuration.options
 export const selectOptionGroups = state =>              state.configuration.configuration.optionGroups

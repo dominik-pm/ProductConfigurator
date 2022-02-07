@@ -1,24 +1,27 @@
 import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
-import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { Box, Grid, IconButton, ImageList, ImageListItem, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { postOrderConfiguredProduct } from '../../../api/productsAPI'
 import { requestSaveConfiguration } from '../../../api/userAPI'
+import { getImageSource } from '../../../App'
 import { translate } from '../../../lang'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
-import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationName, selectSelectedModel, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
+import { getCurrentPrice, selectConfigurationDescription, selectConfigurationId, selectConfigurationImages, selectConfigurationName, selectSelectedModel, selectSelectedOptions } from '../../../state/configuration/configurationSelectors'
 import { resetActiveConfiguration } from '../../../state/configuration/configurationSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAuthenticated } from '../../../state/user/userSelector'
 import { openLogInDialog } from '../../header/LoginButton'
+import { Slide } from 'react-slideshow-image'
 import Loader from '../../Loader'
 import ModelSelector from './ModelSelector/ModelSelector'
 
 import OptionTabs from './OptionTabs'
 import Summary from './SidePanel/Summary'
+import 'react-slideshow-image/dist/styles.css'
 // import Summary from './SidePanel/Summary'
 
 
@@ -37,7 +40,7 @@ optionGroups: [
 
 */
 
-function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationId, selectedOptions, price, model, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
+function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationImages, configurationId, selectedOptions, price, model, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
 
     const navigate = useNavigate()
 
@@ -154,6 +157,38 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                     </Grid>
                 </Grid>
 
+                {/* Images */}
+                <Box mb={4}>
+                    <Slide easing="ease">
+                        {configurationImages.map((image, index) => (
+                            <div key={index} className="each-slide">
+                                <div style={{
+                                    height: '60vw',
+                                    maxHeight: '600px', 
+                                    backgroundImage: `url(${getImageSource(image)})`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center'
+                                }}>
+                                </div>
+                            </div>
+                        ))}
+                    </Slide>
+                </Box>
+
+                {/* <ImageList sx={{ width: '100%', height: '350px' }} cols={{sm: 1, lg: 4}} rowHeight={350}>
+                    {[...configurationImages, ...configurationImages, ...configurationImages].map((item) => (
+                        <ImageListItem key={item}>
+                            <img
+                                {...srcset(getImageSource(item), '100%', 350, 1, 1)}
+                                //src={`${getImageSource(item)}`}
+                                //srcSet={`${getImageSource(item)}`}
+                                alt={configurationName}
+                                loading="lazy"
+                            />
+                        </ImageListItem>
+                    ))}
+                </ImageList> */}
+
                 {/* Models */}
                 <ModelSelector></ModelSelector>
 
@@ -163,6 +198,13 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
             </div>
 
         )
+    }
+
+    function srcset(image, width, height, rows = 1, cols = 1) {
+        return {
+            src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
+            srcSet: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format&dpr=2 2x`
+        }
     }
 
     return (
@@ -175,6 +217,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 const mapStateToProps = (state) => ({
     configurationName: selectConfigurationName(state),
     configurationDescription: selectConfigurationDescription(state),
+    configurationImages: selectConfigurationImages(state),
     configurationId: selectConfigurationId(state),
     selectedOptions: selectSelectedOptions(state),
     price: getCurrentPrice(state),

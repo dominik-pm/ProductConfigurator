@@ -58,4 +58,19 @@ function App() {
     )
 }
 
+export function getImageSource(image) {
+    let imageSource = ''
+
+    try {
+        const src = require(`./assets/img/${image.replace('./', '')}`)
+        imageSource = src.default
+    } catch (err) {
+        console.log(`image '${image}' no found!`)
+        const src = require(`./assets/img/notfound.jpg`)
+        imageSource = src.default
+    } finally {
+        return imageSource
+    }
+}
+
 export default App

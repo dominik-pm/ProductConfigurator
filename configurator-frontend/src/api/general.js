@@ -1,8 +1,10 @@
 import axios from 'axios'
 
 // export const baseURL = `https://sqrt3.ddns.net:7187`
-export const baseURL = `http://sqrt3.ddns.net:5187`
-// export const baseURL = ``
+// export const baseURL = `http://sqrt3.ddns.net:5187`
+export const baseURL = ``
+
+export const LOCAL_DATA = true
 
 axios.defaults.timeout = 5000
 

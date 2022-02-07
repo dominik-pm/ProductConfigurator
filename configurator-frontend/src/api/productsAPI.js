@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { baseURL } from './general'
+import { baseURL, LOCAL_DATA } from './general'
 
-export const fetchAll = () => {    
-    // return fetchApiTest()
+export const fetchAll = () => {
+    if (LOCAL_DATA) {
+        return fetchApiTest()
+    }
 
     return new Promise((resolve, reject) => {
         axios.get(`${baseURL}/products`)
@@ -24,13 +26,19 @@ export const fetchAll = () => {
 export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price, model = '') => {
     return new Promise((resolve, reject) => {
 
+        if (LOCAL_DATA) {
+            reject('Ordering not available in test mode!')
+        }
+        
+
         const data = {
             configurationName: name,
             options: selectedOptions,
-            price,
+            price: price,
             model
         }
         console.log(data)
+
         axios.post(`${baseURL}/products/${configurationId}`, data)
         .then(res => {
             resolve(res.data)
@@ -53,37 +61,37 @@ function fetchApiTest(amount = products.length) {
 
 const products = [
     {
-        id: "0",
+        configId: '0',
         name: 'Car',
         description: 'a next generation automobile',
-        images: ['Car0.jpg']
+        images: ['vw-golf-r-2021.jpg']
     },
     {
-        id: 1,
+        configId: 1,
         name: 'Computer',
         description: 'high end computer',
         images: ['Computer0.jpg']
     },
     {
-        id: 2,
+        configId: 2,
         name: 'watch',
         description: 'entry level watch',
         images: ['Watch0.jpg']
     },
     {
-        id: 3,
+        configId: 3,
         name: 'watch',
         description: 'entry level watch',
         images: ['Watch0.jpg']
     },
     {
-        id: 4,
+        configId: 4,
         name: 'watch',
         description: 'entry level watch',
         images: ['Watch0.jpg']
     },
     {
-        id: 5,
+        configId: 5,
         name: 'Computer',
         description: 'high end computer',
         images: ['Computer0123.jpg']
