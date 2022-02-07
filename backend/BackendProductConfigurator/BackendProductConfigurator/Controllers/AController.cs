@@ -212,6 +212,8 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet]
         public List<ProductSaveExtended> GetSavedConfigs()
         {
+            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
         }
