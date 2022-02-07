@@ -22,14 +22,6 @@ export default function Product({ product }) {
     }
 
     return (
-        // <ButtonBase className="Product" onClick={() => handleClick(id)}>
-        //     <Box>
-        //         <Typography variant="h2" color="main">{name}</Typography>
-        //         <Typography>{description}</Typography>
-        //         <img src={imageSource} alt={`${name}`} />
-        //     </Box>
-        // </ButtonBase>
-
         <ImageListItem key={imageSource} sx={{width: '100%', ':hover': {cursor: 'pointer'}}} onClick={handleClick}>
             <img
                 width="100%"

@@ -6,7 +6,7 @@ import { Delete } from '@mui/icons-material'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
-import { selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import { extractGroupIdFromBuilderOption, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
 
 function Model({ model, isSelected = false, allOptions, removeModel, setModelOptions, openConfirmDialog, language }) {
 
@@ -79,7 +79,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, setModelOpt
                         {allOptions.map((option) => (
                             <MenuItem key={option.id} value={option.id}>
                                 <Checkbox checked={options.indexOf(option.id) > -1} />
-                                <ListItemText primary={option.name} />
+                                <ListItemText primary={`${option.name} (${extractGroupIdFromBuilderOption(option)})`} />
                             </MenuItem>
                         ))}
                     </Select>

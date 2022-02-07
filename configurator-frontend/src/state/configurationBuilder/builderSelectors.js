@@ -60,3 +60,5 @@ export const extractOptionsFromBuilderGroup = (group) =>            group.option
 export const extractGroupsFromBuilderSection = (section) =>         section.optionGroupIds || []
 export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
 export const extractModelOptionsFromBuilderModel = (model) =>       model.options || []
+export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''
+export const extractGroupNameFromBuilderGroup = (group) =>          group.name || ''

@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { postConfiguration } from '../../api/configurationAPI'
+import { selectConfigurationName } from '../configuration/configurationSelectors'
 import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectConfiguration } from './builderSelectors'
 
 
@@ -13,21 +14,25 @@ const initialState = {
                 id: 'ALLOY19',
                 name: '19 inch Alloy',
                 description: 'description',
+                groupId: 'WHEELS'
             },
             {
                 id: 'STEEL16',
                 name: '16 inch Steel',
                 description: 'description',
+                groupId: 'WHEELS'
             },
             {
                 id: 'RED',
                 name: 'red',
                 description: 'color',
+                groupId: 'COLOR_GROUP'
             },
             {
                 id: 'BLUE',
                 name: 'blue',
                 description: 'color',
+                groupId: 'COLOR_GROUP'
             }
         ],
         optionSections: [
@@ -122,10 +127,10 @@ export const builderSlice = createSlice({
             state.configuration.optionSections = state.configuration.optionSections.filter(s => s.id !== sectionId)
         },
         addOptionGroup: (state, action) => {
-            const { sectionId, name, description, isRequired, isReplacementGroup } = action.payload
+            const { sectionId, groupId, name, description, isRequired, isReplacementGroup } = action.payload
 
             state.configuration.optionGroups.push({
-                id: name,
+                id: groupId,
                 name: name,
                 description: description,
                 required: isRequired,
@@ -134,7 +139,7 @@ export const builderSlice = createSlice({
             })
 
             const section = state.configuration.optionSections.find(s => s.id === sectionId)
-            if (section) section.optionGroupIds.push(name)
+            if (section) section.optionGroupIds.push(groupId)
         },
         setGroupRequirements: (state, action) => {
             const { groupId, requirements } = action.payload
@@ -162,21 +167,22 @@ export const builderSlice = createSlice({
             if (section) section.optionGroupIds = section.optionGroupIds.filter(g => g !== groupId)
         },
         addOption: (state, action) => {
-            const { groupId, name, description, price } = action.payload
+            const { groupId, optionId, name, description, price } = action.payload
 
             // add option to options list
             state.configuration.options.push({
-                id: name,
+                id: optionId,
                 name: name,
-                description: description
+                description: description,
+                groupId: groupId
             })
 
             // add option to group
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
-            if (group) group.optionIds.push(name)
+            if (group) group.optionIds.push(optionId)
 
             // add option price to pricelist in rules
-            if (price) state.configuration.rules.priceList[name] = price
+            if (price) state.configuration.rules.priceList[optionId] = price
         },
         setOptionRequirements: (state, action) => {
             const { optionId, requirements } = action.payload
@@ -306,13 +312,16 @@ export const deleteSection = (sectionId) => (dispatch, getState) => {
 }
 
 export const createGroup = (sectionId, name, description, isRequired, isReplacementGroup) => (dispatch, getState) => {
+
+    const groupId = name.replace(' ', '_')
+
     // check if section doesn't already exist
-    const groupExists = getDoesGroupdExist(getState(), name)
+    const groupExists = getDoesGroupdExist(getState(), groupId)
     if (groupExists) {
         return false
     }
 
-    dispatch(addOptionGroup({sectionId, name, description, isRequired, isReplacementGroup}))
+    dispatch(addOptionGroup({sectionId, groupId, name, description, isRequired, isReplacementGroup}))
     return true
 }
 export const deleteOptionGroup = (groupId, sectionId) => (dispatch, getState) => {
@@ -341,13 +350,15 @@ export const deleteOptionGroup = (groupId, sectionId) => (dispatch, getState) =>
 }
 
 export const createOption = (groupId, name, description, price = 0) => (dispatch, getState) => {
+    const optionId = `${name}_${groupId}`.replace(' ', '_')
+
     // check if option doesn't already exist
-    const optionExists = getDoesOptionExist(getState(), name)
+    const optionExists = getDoesOptionExist(getState(), optionId)
     if (optionExists) {
         return false
     }
 
-    dispatch(addOption({groupId, name, description, price}))
+    dispatch(addOption({groupId, optionId, name, description, price}))
     return true
 }
 export const deleteOption = (groupId, name) => (dispatch, getState) => {

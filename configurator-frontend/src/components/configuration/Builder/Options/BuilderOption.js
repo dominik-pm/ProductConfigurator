@@ -3,7 +3,7 @@ import { Box, Checkbox, FormControl, Grid, IconButton, InputLabel, ListItemText,
 import React from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../../lang'
-import { getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionRequirementsByOptionId, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import { extractGroupIdFromBuilderOption, extractGroupNameFromBuilderGroup, getBuilderGroupById, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionRequirementsByOptionId, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
 import { deleteOption, setOptionIncompatibilities, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 
@@ -78,12 +78,16 @@ const Multiselect = (title, resultOptions, allOptions, onChangeCallback) => (
                 }
             }
         >
-            {allOptions.map((option) => (
-                <MenuItem key={option.id} value={option.id}>
-                    <Checkbox checked={resultOptions.indexOf(option.id) > -1} />
-                    <ListItemText primary={option.name} />
-                </MenuItem>
-            ))}
+            {allOptions.map((option) => {
+                const groupId = extractGroupIdFromBuilderOption(option)
+                const groupName = groupId
+                return (
+                    <MenuItem key={option.id} value={option.id}>
+                        <Checkbox checked={resultOptions.indexOf(option.id) > -1} />
+                        <ListItemText primary={`${option.name} (${groupName})`} />
+                    </MenuItem>
+                )
+            })}
         </Select>
     </FormControl>
 )

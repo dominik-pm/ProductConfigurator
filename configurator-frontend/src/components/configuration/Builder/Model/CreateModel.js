@@ -44,9 +44,9 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
                     <FormControl variant='standard' 
                         fullWidth
                     >
-                        <InputLabel id="select-lang-label">Default Model</InputLabel>
+                        <InputLabel id="select-default-model-label">Default Model</InputLabel>
                         <Select
-                            labelId='select-lang-label'
+                            labelId='select-default-model-label'
                             value={selectedDefaultModel}
                             autoWidth
                             label="Default Model"
