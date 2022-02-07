@@ -238,9 +238,9 @@ namespace BackendProductConfigurator.Controllers
         // DELETE api/<Controller>/5
         [Route("/account/configurations/{id}")]
         [HttpDelete]
-        public override void Delete(string id)
+        public void SavedConfigDelete([FromBody] dynamic requestBody, string id)
         {
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.savedName));
         }
     }
 
@@ -278,6 +278,17 @@ namespace BackendProductConfigurator.Controllers
             }
         }
     }
+    public partial class savedConfigsController : AController<ProductSaveExtended, string>
+    {
+        // DELETE api/<Controller>/5
+        [Route("/redactedSavedConfigsController")]
+        [HttpDelete]
+        [NonAction]
+        public override void Delete(string id)
+        {
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
+        }
+    }
 
-        #endregion
+    #endregion
 }
