@@ -5,7 +5,7 @@ namespace BackendProductConfigurator.Validation.JWT.Models
 {
     public class JWTContainerModel : IAuthContainerModel
     {
-        public string SecretKey { get; set; } = "sjeh93uhAUhiuosdh988hoiAuh3";
+        public string SecretKey { get; set; } = "sjeh93uhAUhiuosdh988hoiAuh3=";
         public string SecurityAlgorithm { get; set; } = SecurityAlgorithms.HmacSha256Signature;
         public int ExpireMinutes { get; set; } = 10080; // 7 days
         public Claim[] Claims { get; set; }

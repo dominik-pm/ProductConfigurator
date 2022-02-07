@@ -65,9 +65,9 @@ namespace BackendProductConfigurator.MediaProducers
                            new XRect(page.Width * 0.2, yPosition, page.Width * 0.6, 20));
 
             yPosition += smallSpacing;
-            foreach(Option option in product.Options)
+            foreach(string option in product.Options)
             {
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option.Name}", configurator.Rules.PriceList[option.Id]);
+                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option}", configurator.Rules.PriceList[option]);
                 yPosition += smallSpacing;
             }
 

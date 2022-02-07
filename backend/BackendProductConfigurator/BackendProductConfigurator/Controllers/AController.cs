@@ -72,7 +72,7 @@ namespace BackendProductConfigurator.Controllers
         }
     }
 
-    public class configurationController : AController<Configurator, string>
+    public partial class configurationController : AController<Configurator, string>
     {
         public configurationController() : base()
         {
@@ -95,13 +95,15 @@ namespace BackendProductConfigurator.Controllers
 
         // POST api/<Controller>
         [HttpPost]
-        public override void Post([FromBody] Configurator value)
+        public void Post([FromBody] ConfiguratorPost value)
         {
-            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
+            Configurator configurator = AValuesClass.GenerateConfigurator(value);
+
+            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configurator);
             if(validationResult == EValidationResult.ValidationPassed)
             {
-                AddConfigurator(value);
-                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+                AddConfigurator(configurator);
+                AValuesClass.PostValue<Configurator>(configurator, GetAccLang(Request));
             }
         }
     }
@@ -155,7 +157,7 @@ namespace BackendProductConfigurator.Controllers
             //}).Start();
             entities[GetAccLang(Request)].Add(value);
 
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            //Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
             savedConfigsController scc = new savedConfigsController();
             Account tempAccount = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
@@ -166,7 +168,7 @@ namespace BackendProductConfigurator.Controllers
                 ConfigId = configurator.ConfigId,
                 Name = configurator.Name,
                 Description = configurator.Description,
-                Options = value.Options.Select(x => x.Id).ToList(),
+                Options = value.Options,
                 SavedName = value.ConfigurationName,
                 User = tempAccount
             };
@@ -221,7 +223,7 @@ namespace BackendProductConfigurator.Controllers
             string description, name;
             description = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Description;
             name = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Name;
-            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = new Account() { UserName = "scherzert", UserEmail = "test@now.com" } };
+            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = new Account() { UserName = "testUser", UserEmail = "test@user.com" } };
             entities[GetAccLang(Request)].Add(temp);
             AValuesClass.PostValue(temp, GetAccLang(Request));
         }
@@ -258,6 +260,21 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public override void Post([FromBody] ConfiguratorSlim value) { }
     }
+    public partial class configurationController : AController<Configurator, string>
+    {
+        // POST api/<Controller>
+        [Route("/redactedConfigurator")]
+        [HttpPost]
+        public override void Post([FromBody] Configurator value)
+        {
+            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
+            if (validationResult == EValidationResult.ValidationPassed)
+            {
+                AddConfigurator(value);
+                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+            }
+        }
+    }
 
         #endregion
-    }
+}

@@ -12,7 +12,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
+        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
         private static string serverAddress = "http://andifined.ddns.net:5129";
         private static List<string> languages = new List<string>() { "de", "en", "fr" };
 
@@ -139,21 +139,21 @@ namespace BackendProductConfigurator.Controllers
             ConfiguredProduct p1 = new ConfiguredProduct()
             {
                 ConfigurationName = "Fetter Benz",
-                Options = optionsList,
+                Options = optionsList.Select(x => x.Id).ToList(),
                 Price=4.2f
             };
 
             ConfiguredProduct p2 = new ConfiguredProduct()
             {
                 ConfigurationName = "Eleganter Alfa Romeo",
-                Options = optionsList,
+                Options = optionsList.Select(x => x.Id).ToList(),
                 Price = 9.65f
             };
 
             ConfiguredProduct p3 = new ConfiguredProduct()
             {
                 ConfigurationName = "Fetterer Benz",
-                Options = optionsList,
+                Options = optionsList.Select(x => x.Id).ToList(),
                 Price = 0.8f
             };
 
@@ -240,7 +240,9 @@ namespace BackendProductConfigurator.Controllers
         public static Account FillAccountFromToken(string bearerToken)
         {
             Account account = new Account();
-            JWTService jWTService = new JWTService("sjeh93uhAUhiuosdh988hoiAuh3");
+            JWTService jWTService = new JWTService("sjeh93uhAUhiuosdh988hoiAuh3=");
+
+            bearerToken = bearerToken.Replace("Bearer ", "");
 
             foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
             {
@@ -256,6 +258,21 @@ namespace BackendProductConfigurator.Controllers
             }
 
             return account;
+        }
+        public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost)
+        {
+            Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
+
+            foreach(OptionGroupExtended oge in configurator.OptionGroups)
+            {
+                if(oge.Replacement)
+                {
+                    configurator.Rules.ReplacementGroups.Add(oge.Id, oge.OptionIds);
+                }
+                configurator.OptionGroups.Add(oge as OptionGroup);
+            }
+
+            return configurator;
         }
     }
     public enum EValueMode { TestValues, DatabaseValues }

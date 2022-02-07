@@ -13,7 +13,7 @@ namespace BackendProductConfigurator.Validation
             {
                 try
                 {
-                    endPrice += dependencies.PriceList[product.Options[i].Id];
+                    endPrice += dependencies.PriceList[product.Options[i]];
                 }
                 catch { }
             }
@@ -33,7 +33,7 @@ namespace BackendProductConfigurator.Validation
                     {
                         foreach (string optionGroupId in configurator.Rules.GroupRequirements[group.Id])
                         {
-                            if (configurator.OptionGroups.Where(x => x.Id == optionGroupId).First().OptionIds.Select(x => x).Intersect(product.Options.Select(x => x.Id)).Any())
+                            if (configurator.OptionGroups.Where(x => x.Id == optionGroupId).First().OptionIds.Select(x => x).Intersect(product.Options).Any())
                                 requiredValid = true;
                         }
                     }
@@ -42,7 +42,7 @@ namespace BackendProductConfigurator.Validation
                     {
                         try
                         {
-                            validationResult = product.Options.Select(productOption => productOption.Id).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
+                            validationResult = product.Options.Select(productOption => productOption).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
                         }
                         catch
                         {
@@ -67,10 +67,15 @@ namespace BackendProductConfigurator.Validation
         }
         public static EValidationResult ValidateSelectedModel(ConfiguredProduct configuredProduct, Configurator configurator)
         {
-            List<string> modelList = configurator.Rules.Models.Where(x => x.Name == configuredProduct.Model).Select(x => x.Options).First();
+            try
+            {
+                List<string> modelList = configurator.Rules.Models.Where(x => x.Name == configuredProduct.Model).Select(x => x.Options).First();
 
-            if (modelList.Intersect(configuredProduct.Options.Select(x => x.Id)).Count() >= modelList.Count())
-                return EValidationResult.ModelSelectionInvalid;
+                if (modelList.Intersect(configuredProduct.Options).Count() >= modelList.Count())
+                    return EValidationResult.ModelSelectionInvalid;
+            }
+            catch
+            { }
 
             return EValidationResult.ValidationPassed;
         }

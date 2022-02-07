@@ -1,4 +1,5 @@
 ﻿using BackendProductConfigurator.Validation.JWT.Models;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -60,6 +61,8 @@ namespace BackendProductConfigurator.Validation.JWT.Managers
             TokenValidationParameters tokenValidationParameters = GetTokenValidationParameters();
 
             JwtSecurityTokenHandler jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
+            IdentityModelEventSource.ShowPII = true;
             try
             {
                 ClaimsPrincipal tokenValid = jwtSecurityTokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken validatedToken);
