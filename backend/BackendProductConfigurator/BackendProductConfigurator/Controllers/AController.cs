@@ -252,12 +252,14 @@ namespace BackendProductConfigurator.Controllers
     {
         [Route("/redactedConfiguredProducts")]
         [HttpPost]
+        [NonAction]
         public override void Post([FromBody] ConfiguredProduct value) { }
     }
     public partial class productsController : AController<ConfiguratorSlim, string>
     {
         [Route("/redactedProducts")]
         [HttpPost]
+        [NonAction]
         public override void Post([FromBody] ConfiguratorSlim value) { }
     }
     public partial class configurationController : AController<Configurator, string>
@@ -265,6 +267,7 @@ namespace BackendProductConfigurator.Controllers
         // POST api/<Controller>
         [Route("/redactedConfigurator")]
         [HttpPost]
+        [NonAction]
         public override void Post([FromBody] Configurator value)
         {
             EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
