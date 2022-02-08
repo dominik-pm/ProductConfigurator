@@ -269,8 +269,9 @@ namespace BackendProductConfigurator.Controllers
         {
             Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
             configurator.ConfigId = GenerateConfigId(configuratorPost, language);
+            configuratorPost.
 
-            foreach(OptionGroupExtended oge in configurator.OptionGroups)
+            foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
             {
                 if(oge.Replacement)
                 {
