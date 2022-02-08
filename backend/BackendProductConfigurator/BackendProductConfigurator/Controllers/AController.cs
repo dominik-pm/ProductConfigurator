@@ -107,6 +107,12 @@ namespace BackendProductConfigurator.Controllers
                 AValuesClass.PostValue<Configurator>(configurator, GetAccLang(Request));
             }
         }
+        public override void Delete(string id)
+        {
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
+            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Remove(AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
+        }
     }
     public partial class productsController : AController<ConfiguratorSlim, string>
     {
