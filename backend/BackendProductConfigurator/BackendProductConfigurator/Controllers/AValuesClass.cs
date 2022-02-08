@@ -268,6 +268,7 @@ namespace BackendProductConfigurator.Controllers
         public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost, string language)
         {
             Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
+            configurator.ConfigId = GenerateConfigId(configuratorPost, language);
 
             foreach(OptionGroupExtended oge in configurator.OptionGroups)
             {
