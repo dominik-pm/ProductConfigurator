@@ -1,6 +1,7 @@
 ﻿using BackendProductConfigurator.Validation.JWT.Managers;
 using Model;
 using System.Security.Claims;
+using System.Text;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -278,6 +279,19 @@ namespace BackendProductConfigurator.Controllers
             }
 
             return configurator;
+        }
+        private static string GenerateConfigId(ConfiguratorPost configuratorPost)
+        {
+            StringBuilder sb = new StringBuilder(configuratorPost.Name);
+            List<string> configIds = new List<string>();
+            foreach(string language in languages)
+            {
+                configIds.AddRange(AValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
+            }
+
+            sb.Replace(' ', '_');
+
+            return sb.ToString();
         }
     }
     public enum EValueMode { TestValues, DatabaseValues }
