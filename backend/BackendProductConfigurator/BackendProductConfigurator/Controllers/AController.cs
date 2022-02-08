@@ -98,7 +98,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public void Post([FromBody] ConfiguratorPost value)
         {
-            Configurator configurator = AValuesClass.GenerateConfigurator(value);
+            Configurator configurator = AValuesClass.GenerateConfigurator(value, GetAccLang(Request));
 
             EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configurator);
             if(validationResult == EValidationResult.ValidationPassed)

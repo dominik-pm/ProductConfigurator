@@ -265,7 +265,7 @@ namespace BackendProductConfigurator.Controllers
 
             return account;
         }
-        public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost)
+        public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost, string language)
         {
             Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
 
@@ -280,7 +280,7 @@ namespace BackendProductConfigurator.Controllers
 
             return configurator;
         }
-        private static string GenerateConfigId(ConfiguratorPost configuratorPost)
+        private static string GenerateConfigId(ConfiguratorPost configuratorPost, string postLanguage)
         {
             StringBuilder sb = new StringBuilder(configuratorPost.Name);
             List<string> configIds = new List<string>();
@@ -290,6 +290,12 @@ namespace BackendProductConfigurator.Controllers
             }
 
             sb.Replace(' ', '_');
+            sb.Append("_").Append(postLanguage);
+
+            while(configIds.Contains(sb.ToString()))
+            {
+
+            }
 
             return sb.ToString();
         }
