@@ -12,8 +12,4 @@ namespace Model
         public string SavedName { get; set; }
         public List<string> Options { get; set; } = new List<string>();
     }
-    public enum EStatus
-    {
-        ordered = 0, saved
-    }
 }

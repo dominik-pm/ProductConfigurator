@@ -1,5 +1,6 @@
 ﻿using BackendProductConfigurator.Validation.JWT.Managers;
 using Model;
+using Model.Enumerators;
 using System.Security.Claims;
 using System.Text;
 
@@ -102,8 +103,8 @@ namespace BackendProductConfigurator.Controllers
 
             List<OptionSection> optionSections = new List<OptionSection>
             {
-                new OptionSection("Exterior", "EXTERIOR", new List<string> { "COLOR_GROUP" }),
-                new OptionSection("Motor", "MOTOR_SECTION", new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" })
+                new OptionSection() { Name = "Exterior", Id = "EXTERIOR", OptionGroupIds = new List<string> { "COLOR_GROUP" }},
+                new OptionSection() { Name = "Motor", Id = "MOTOR_SECTION", OptionGroupIds = new List<string> { "MOTORTYPE_GROUP", "MOTOR_GROUP" }}
             };
 
             RulesExtended productDependencies = new RulesExtended()
@@ -314,5 +315,4 @@ namespace BackendProductConfigurator.Controllers
             return sb.ToString();
         }
     }
-    public enum EValueMode { TestValues, DatabaseValues }
 }
