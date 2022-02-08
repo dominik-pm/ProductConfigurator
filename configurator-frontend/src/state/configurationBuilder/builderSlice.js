@@ -67,7 +67,7 @@ const initialState = {
             }
         ],
         rules: {
-            basePrice: 0,
+            basePrice: 500,
             // defaultOptions: [/*BLUE*/],
             defaultModel: '',
             models: [
@@ -102,7 +102,7 @@ const initialState = {
                 STEEL16: ['RED']
             },
             priceList: {
-                'BLUE': 500
+                'BLUE': 200
             }
         }
     },
@@ -183,6 +183,11 @@ export const builderSlice = createSlice({
 
             // add option price to pricelist in rules
             if (price) state.configuration.rules.priceList[optionId] = price
+        },
+        setOptionPrice: (state, action) => {
+            const { optionId, price } = action.payload
+
+            state.configuration.rules.priceList[optionId] = price
         },
         setOptionRequirements: (state, action) => {
             const { optionId, requirements } = action.payload
@@ -425,6 +430,6 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, removeSection, addOptionGroup, setGroupRequirements, removeOptionGroup, addOption, setOptionRequirements, setOptionIncompatibilities, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, setName, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { addSection, removeSection, addOptionGroup, setGroupRequirements, removeOptionGroup, addOption, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, setName, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
 
 export default builderSlice.reducer

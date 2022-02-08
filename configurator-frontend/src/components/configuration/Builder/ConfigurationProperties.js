@@ -2,10 +2,11 @@ import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../lang'
+import { selectBuilderBasePrice } from '../../../state/configurationBuilder/builderSelectors'
 import { setBasePrice, setDescription } from '../../../state/configurationBuilder/builderSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 
-function ConfigurationProperties({ setDescription, setPrice, language }) {
+function ConfigurationProperties({ basePrice, setDescription, setPrice, language }) {
 
     const [priceError, setPriceError] = useState(false)
 
@@ -42,7 +43,7 @@ function ConfigurationProperties({ setDescription, setPrice, language }) {
                         variant="outlined"
                         onChange={handleBasePriceChanged}
                         error={priceError}
-                        defaultValue={0}
+                        defaultValue={basePrice}
                         type="number"
                         InputProps={{
                             inputProps: {
@@ -70,6 +71,7 @@ function ConfigurationProperties({ setDescription, setPrice, language }) {
 }
 
 const mapStateToProps = (state) => ({
+    basePrice: selectBuilderBasePrice(state),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {

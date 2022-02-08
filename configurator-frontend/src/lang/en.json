@@ -69,6 +69,7 @@
     "options": "Options",
     "description": "Description",
     "requirements": "requirements",
-    "incompatibilities": "incompatibilities"
+    "incompatibilities": "incompatibilities",
+    "optionPrice": "option price"
 
 }

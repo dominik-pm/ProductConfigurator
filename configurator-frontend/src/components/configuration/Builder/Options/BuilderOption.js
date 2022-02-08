@@ -1,15 +1,18 @@
 import { Delete } from '@mui/icons-material'
-import { Box, Checkbox, FormControl, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
+import { Box, Checkbox, FormControl, Grid, IconButton, InputAdornment, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, TextField, Tooltip, Typography } from '@mui/material'
 import React from 'react'
+import { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../../lang'
-import { extractGroupIdFromBuilderOption, extractGroupNameFromBuilderGroup, getBuilderGroupById, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionRequirementsByOptionId, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
-import { deleteOption, setOptionIncompatibilities, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
+import { extractGroupIdFromBuilderOption, extractGroupNameFromBuilderGroup, getBuilderGroupById, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionRequirementsByOptionId, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import { deleteOption, setOptionIncompatibilities, setOptionPrice, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 
-function BuilderOption({ optionId, group, option, allOptions, optionReqirements, optionIncompatibilities, language, remove, setOptionRequirements, setOptionIncompatibilities }) {
+function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities }) {
 
     const { name, description } = option
+
+    const [priceError, setPriceError] = useState(false)
 
     function handleDelete() {
         remove(group.id, optionId)
@@ -22,6 +25,19 @@ function BuilderOption({ optionId, group, option, allOptions, optionReqirements,
 
         // on autofill we get a stringified value
         return typeof value === 'string' ? value.split(',') : value
+    }
+
+    function handlePriceChanged(event) {
+        const price = Number(event.target.value)
+
+        // check if the price is valid
+        if (price < 0) {
+            setPriceError(true)
+            return
+        }
+
+        setPriceError(false)
+        setOptionPrice({optionId, price})
     }
 
     function handleSetRequirements(event) {
@@ -56,15 +72,36 @@ function BuilderOption({ optionId, group, option, allOptions, optionReqirements,
             </Grid>
 
             <Grid item container justifyContent="center">
-                {Multiselect(translate('requirements', language), optionReqirements, allOptions.filter(o => o.id !== optionId), handleSetRequirements)}
-                {Multiselect(translate('incompatibilities', language), optionIncompatibilities, allOptions.filter(o => o.id !== optionId), handleSetIncompatibilities)}
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    <TextField 
+                        fullWidth
+                        label={translate('optionPrice', language)}
+                        variant="outlined"
+                        onChange={handlePriceChanged}
+                        error={priceError}
+                        defaultValue={optionPrice}
+                        type="number"
+                        InputProps={{
+                            inputProps: {
+                                min: 0
+                            },
+                            startAdornment: <InputAdornment position='start'>€</InputAdornment>
+                        }}
+                    />
+                </FormControl>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    {Multiselect(translate('requirements', language), optionReqirements, allOptions.filter(o => o.id !== optionId), handleSetRequirements)}
+                </FormControl>
+                <FormControl sx={{ m: 1, width: 300 }}>
+                    {Multiselect(translate('incompatibilities', language), optionIncompatibilities, allOptions.filter(o => o.id !== optionId), handleSetIncompatibilities)}
+                </FormControl>
             </Grid>
         </Grid>
     )
 }
 
 const Multiselect = (title, resultOptions, allOptions, onChangeCallback) => (
-    <FormControl sx={{ m: 1, width: 300 }}>
+    <>
         <InputLabel id={`options-label-${title}`}>{title}</InputLabel>
         <Select
             labelId={`options-label-${title}`}
@@ -89,11 +126,12 @@ const Multiselect = (title, resultOptions, allOptions, onChangeCallback) => (
                 )
             })}
         </Select>
-    </FormControl>
+    </>
 )
 
 const mapStateToProps = (state, ownProps) => ({
     option: getBuilderOptionById(state, ownProps.optionId),
+    optionPrice: getBuilderOptionPrice(state, ownProps.optionId),
     allOptions: selectBuilderOptions(state),
     optionReqirements: getBuilderOptionRequirementsByOptionId(state, ownProps.optionId),
     optionIncompatibilities: getBuilderOptionIncompatibilitiesByOptionId(state, ownProps.optionId),
@@ -102,7 +140,8 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = {
     remove: deleteOption,
     setOptionRequirements,
-    setOptionIncompatibilities
+    setOptionIncompatibilities,
+    setOptionPrice
 }
 export default connect(
     mapStateToProps, 

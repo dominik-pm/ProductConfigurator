@@ -9,6 +9,8 @@ export const selectBuilderGroups = (state) =>                   state.builder.co
 export const selectBuilderOptions = (state) =>                  state.builder.configuration.options
 export const selectBuilderModels = (state) =>                   state.builder.configuration.rules.models
 export const selectBuilderDefaultModel = (state) =>             state.builder.configuration.rules.defaultModel
+export const selectBuilderBasePrice = (state) =>                state.builder.configuration.rules.basePrice
+export const selectBuilderPriceList = (state) =>                state.builder.configuration.rules.priceList
 export const selectBuilderOptionRequirements = (state) =>       state.builder.configuration.rules.requirements
 export const selectBuilderOptionIncompatibilities = (state) =>  state.builder.configuration.rules.incompatibilities
 export const selectBuilderGroupRequirements = (state) =>        state.builder.configuration.rules.groupRequirements || []
@@ -18,6 +20,10 @@ const selectName = (state, name) =>                     name
 export const getBuilderOptionById = createSelector([selectName, selectBuilderOptions], (optionId, options) => {
     const option = options.find(o => o.id === optionId)
     return option ? option : null
+})
+export const getBuilderOptionPrice = createSelector([selectName, selectBuilderPriceList], (optionId, priceList) => {
+    const price = priceList[optionId]
+    return price ? price : 0
 })
 export const getBuilderSectionById = createSelector([selectName, selectBuilderSections], (sectionId, sections) => {
     const section = sections.find(s => s.id === sectionId)
