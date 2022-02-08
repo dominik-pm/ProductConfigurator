@@ -112,6 +112,7 @@ namespace BackendProductConfigurator.Controllers
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
             AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Remove(AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
+            AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
         }
     }
     public partial class productsController : AController<ConfiguratorSlim, string>

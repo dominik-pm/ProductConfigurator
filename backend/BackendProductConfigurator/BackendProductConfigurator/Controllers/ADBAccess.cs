@@ -25,7 +25,11 @@ namespace BackendProductConfigurator.Controllers
             StringBuilder sb = new StringBuilder($"{address}{api}");
             if(typeof(T) == typeof(SavedConfigWrapper))
             {
-                sb.Append($"/{(identifier as SavedConfigWrapper).ConfigId}/{(identifier as SavedConfigWrapper).SavedName}");
+                sb.Append("/").Append((identifier as SavedConfigWrapper).ConfigId).Append("/").Append((identifier as SavedConfigWrapper).SavedName);
+            }
+            else if(typeof(T) == typeof(ConfigurationDeleteWrapper))
+            {
+                sb.Append("/").Append((identifier as ConfigurationDeleteWrapper).ConfigId);
             }
 
             return await Http.DeleteAsync(sb.ToString());
