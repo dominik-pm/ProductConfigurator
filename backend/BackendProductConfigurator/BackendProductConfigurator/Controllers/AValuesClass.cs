@@ -269,7 +269,7 @@ namespace BackendProductConfigurator.Controllers
         {
             Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
             configurator.ConfigId = GenerateConfigId(configuratorPost, language);
-            configuratorPost.
+            configuratorPost.OptionGroups = AdaptOptionGroup(configuratorPost);
 
             foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
             {
@@ -282,10 +282,14 @@ namespace BackendProductConfigurator.Controllers
 
             return configurator;
         }
-        private static List<string> AdaptOptionGroup(List<string> options, ConfiguratorPost configuratorPost)
+        private static List<OptionGroupExtended> AdaptOptionGroup(ConfiguratorPost configuratorPost)
         {
-            options.ForEach(option => option = $"{option}_{configuratorPost.ConfigId}");
-            return options;
+            foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
+            {
+                oge.OptionIds.ForEach(optionId => optionId = $"{optionId}_{configuratorPost.ConfigId}");
+            }
+
+            return configuratorPost.OptionGroups;
         }
         private static string GenerateConfigId(ConfiguratorPost configuratorPost, string postLanguage)
         {
