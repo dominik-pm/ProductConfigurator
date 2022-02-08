@@ -18,18 +18,18 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.PostAsJsonAsync($"{address}{api}", value);
         }
-        public static async Task<HttpResponseMessage> DeleteValue<T>(string language, string address, string api, T identifier)
+        public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, T identifier)
         {
             HttpClient Http = GenerateHttpClient(language);
 
-            StringBuilder sb = new StringBuilder($"{address}{api}");
+            StringBuilder sb = new StringBuilder(address).Append(api).Append("/");
             if(typeof(T) == typeof(SavedConfigWrapper))
             {
-                sb.Append("/").Append((identifier as SavedConfigWrapper).ConfigId).Append("/").Append((identifier as SavedConfigWrapper).SavedName);
+                sb.Append((identifier as SavedConfigWrapper).ConfigId).Append("/").Append((identifier as SavedConfigWrapper).SavedName);
             }
             else if(typeof(T) == typeof(ConfigurationDeleteWrapper))
             {
-                sb.Append("/").Append((identifier as ConfigurationDeleteWrapper).ConfigId);
+                sb.Append((identifier as ConfigurationDeleteWrapper).ConfigId);
             }
 
             return await Http.DeleteAsync(sb.ToString());
