@@ -281,6 +281,11 @@ namespace BackendProductConfigurator.Controllers
 
             return configurator;
         }
+        private static List<string> AdaptOptionGroup(List<string> options, ConfiguratorPost configuratorPost)
+        {
+            options.ForEach(option => option = $"{option}_{configuratorPost.ConfigId}");
+            return options;
+        }
         private static string GenerateConfigId(ConfiguratorPost configuratorPost, string postLanguage)
         {
             StringBuilder sb = new StringBuilder(configuratorPost.Name);
