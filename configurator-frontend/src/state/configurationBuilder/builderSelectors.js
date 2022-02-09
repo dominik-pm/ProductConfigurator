@@ -6,6 +6,7 @@ const selectCurrentBuilderLanguage = (state) =>                 state.builder.cu
 export const selectBuilderConfiguration = (state) =>            state.builder.configuration
 export const selectBuilderStatus = (state) =>                   state.builder.status
 export const selectBuilderError = (state) =>                    state.builder.error
+export const selectBuilderInputLanguage = (state) =>            state.builder.currentLanguage
 
 export const selectBuilderSections = (state) =>                 state.builder.configuration.optionSections
 export const selectBuilderGroups = (state) =>                   state.builder.configuration.optionGroups
@@ -18,23 +19,20 @@ export const selectBuilderOptionRequirements = (state) =>       state.builder.co
 export const selectBuilderOptionIncompatibilities = (state) =>  state.builder.configuration.rules.incompatibilities
 export const selectBuilderGroupRequirements = (state) =>        state.builder.configuration.rules.groupRequirements || []
 
+export const selectBuilderDescription = (state) =>                      state.builder.configuration.languages[state.builder.currentLanguage].description
+export const selectBuilderOptionsFromCurrentLanguage = (state) =>       state.builder.configuration.languages[state.builder.currentLanguage].options
+export const selectBuilderGroupsFromCurrentLanguage = (state) =>        state.builder.configuration.languages[state.builder.currentLanguage].optionGroups
+export const selectBuilderSectionsFromCurrentLanguage = (state) =>      state.builder.configuration.languages[state.builder.currentLanguage].optionSections
+
 const selectName = (state, name) =>                                 name
 
-export const getBuilderOptionById = createSelector([selectName, selectBuilderOptions], (optionId, options) => {
+export const getBuilderOptionById = createSelector([selectName, selectBuilderOptionsFromCurrentLanguage], (optionId, options) => {
     const option = options.find(o => o.id === optionId)
     return option ? option : null
 })
 export const getBuilderOptionPrice = createSelector([selectName, selectBuilderPriceList], (optionId, priceList) => {
     const price = priceList[optionId]
     return price ? price : 0
-})
-export const getBuilderSectionById = createSelector([selectName, selectBuilderSections], (sectionId, sections) => {
-    const section = sections.find(s => s.id === sectionId)
-    return section ? section : null
-})
-export const getBuilderGroupById = createSelector([selectName, selectBuilderGroups], (groupId, groups) => {
-    const group = groups.find(g => g.id === groupId)
-    return group ? group : null
 })
 export const getBuilderOptionRequirementsByOptionId = createSelector([selectName, selectBuilderOptionRequirements], (optionId, requirements) => {
     const optionReq = requirements[optionId]
@@ -43,6 +41,24 @@ export const getBuilderOptionRequirementsByOptionId = createSelector([selectName
 export const getBuilderOptionIncompatibilitiesByOptionId = createSelector([selectName, selectBuilderOptionIncompatibilities], (optionId, incompatibilities) => {
     const optionIncomp = incompatibilities[optionId]
     return optionIncomp ? optionIncomp : []
+})
+
+export const getBuilderSectionById = createSelector([selectName, selectBuilderSections], (sectionId, sections) => {
+    const section = sections.find(s => s.id === sectionId)
+    return section ? section : null
+})
+export const getBuilderGroupsInSection = createSelector([selectName, selectBuilderSections], (sectionId, sections) => {
+    const section = sections.find(s => s.id === sectionId)
+    return section ? section.optionGroupIds : []
+})
+
+export const getBuilderGroupById = createSelector([selectName, selectBuilderGroups], (groupId, groups) => {
+    const group = groups.find(g => g.id === groupId)
+    return group ? group : null
+})
+export const getBuilderGroupNameByOptionId = createSelector([selectName, selectBuilderGroups, selectBuilderGroupsFromCurrentLanguage], (optionId, groups, groupLangObj) => {
+    const group = groups.find(g => g.optionIds.includes(optionId))
+    return group ? groupLangObj.find(g => g.id === group.id).name : ''
 })
 export const getBuilderGroupRequirementsByGroupId = createSelector([selectName, selectBuilderGroupRequirements], (groupId, requirements) => {
     const groupReq = requirements[groupId]
@@ -68,17 +84,19 @@ export const getDoesOptionExist = createSelector([selectBuilderOptions, selectNa
     return options.find(o => o.id.toUpperCase() === optionName.toUpperCase()) ? true : false
 })
 
+const getGroupPropertiesFromBuilderGroup = createSelector([getBuilderLanguageObject, selectName], (langObj, groupId) => {
+    const group = langObj.optionGroups.find(g => g.id === groupId)
+    return group || null
+})
+export const getGroupNameFromBuilderGroup = createSelector([getGroupPropertiesFromBuilderGroup], (group) => group ? group.name : '')
+export const getGroupDescriptionFromBuilderGroup = createSelector([getGroupPropertiesFromBuilderGroup], (group) => group ? group.description : '')
 
 const getModelPropertiesFromBuilderModel = createSelector([getBuilderLanguageObject, selectName], (langObj, modelName) => {
     const model = langObj.models.find(m => m.modelNameId === modelName)
     return model || null
 })
-export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => {
-    return model ? model.name : ''
-})
-export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => {
-    return model ? model.description : ''
-})
+export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.name : '')
+export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.description : '')
 
 export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
 export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''

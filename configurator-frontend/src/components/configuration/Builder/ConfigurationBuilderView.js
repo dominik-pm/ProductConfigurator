@@ -1,12 +1,12 @@
 import { Delete, Done } from '@mui/icons-material'
-import { Grid, IconButton, Tooltip, Typography } from '@mui/material'
+import { FormControl, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
 import React, { Component, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { translate } from '../../../lang'
+import { languageNames, translate } from '../../../lang'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
-import { selectBuilderError, selectBuilderStatus } from '../../../state/configurationBuilder/builderSelectors'
-import { finishConfigurationBuild, loadingHandled, resetBuild, saveBuilderToStorage } from '../../../state/configurationBuilder/builderSlice'
+import { selectBuilderError, selectBuilderInputLanguage, selectBuilderStatus } from '../../../state/configurationBuilder/builderSelectors'
+import { changeInputLanguage, finishConfigurationBuild, loadingHandled, resetBuild, saveBuilderToStorage } from '../../../state/configurationBuilder/builderSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
@@ -15,7 +15,7 @@ import ConfigurationProperties from './ConfigurationProperties'
 import CreateModel from './Model/CreateModel'
 import SectionTabs from './SectionTabs'
 
-function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInputDialog, openConfirmDialog, saveBuilderToStorage, finish, reset, loadingHandled, language }) {
+function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openAlert, openInputDialog, openConfirmDialog, changeInputLanguage, saveBuilderToStorage, finish, reset, loadingHandled, language }) {
     
     const navigate = useNavigate()
 
@@ -47,17 +47,14 @@ function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInput
 
     // start the auto save when the component is initialized
     useEffect(() => {
-        let saveBuilderInterval = setInterval(saveBuilder, 10000)
+        let saveBuilderInterval = setInterval(() => {
+            console.log('Saving Builder...')
+            saveBuilderToStorage()
+        }, 10000)
 
         // clear interval when the component is unmounted
         return () => {clearInterval(saveBuilderInterval)}
-    }, [])
-
-
-    const saveBuilder = () => {
-        console.log('Saving Builder...')
-        saveBuilderToStorage()
-    }
+    }, [saveBuilderToStorage])
 
     const handleFinishClicked = () => {
         const data = {
@@ -78,6 +75,11 @@ function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInput
         })
     }
 
+    const handleChangeInputLanguage = (event) => {
+        const newLang = event.target.value
+        changeInputLanguage(newLang)
+    }
+
     const renderBuilderBody = () => {
         return (
             <Grid container direction="column" gap={2}>
@@ -91,11 +93,31 @@ function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInput
     return (
         <div>
             <Grid container justifyContent="flex-end">
+                {/* Header */}
                 <Grid item sx={{flexGrow: 1}}>
                     <Typography variant="h2">{translate('createNewConfiguration', language)}</Typography>
                 </Grid>
 
-                <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
+                {/* Actions */}
+                <Grid item display="flex" alignItems="center" sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
+                    
+                    <FormControl sx={{width: 150}} >
+                        <InputLabel id="select-input-lang-label">Input Language</InputLabel>
+                        <Select
+                            labelId='select-input-lang-label'
+                            value={inputLanguage}
+                            autoWidth
+                            onChange={handleChangeInputLanguage}
+                            input={<OutlinedInput label='Input Language' />}
+                        >
+                            {Object.keys(languageNames).map((lang, index) => (
+                                <MenuItem sx={{width: 150}} key={index} value={languageNames[lang]}>
+                                    <ListItemText primary={lang}></ListItemText>
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
                     <Tooltip title={translate('finishBuild', language)}>
                         <IconButton 
                             variant="contained" 
@@ -104,6 +126,7 @@ function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInput
                             <Done />
                         </IconButton>
                     </Tooltip>
+
                     <Tooltip title={translate('resetBuild', language)}>
                         <IconButton 
                             variant="contained" 
@@ -114,6 +137,11 @@ function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInput
                     </Tooltip>
                 </Grid>
 
+                {/* Language Select */}
+                <Grid item container>
+                </Grid>
+
+                {/* Builder */}
                 {renderBuilderBody()}
             </Grid>
         </div>
@@ -123,13 +151,15 @@ const mapStateToProps = (state) => ({
     isAdmin: selectIsAdmin(state),
     status: selectBuilderStatus(state),
     error: selectBuilderError(state),
+    inputLanguage: selectBuilderInputLanguage(state),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {
     openAlert,
     openInputDialog: inputDialogOpen,
     openConfirmDialog: confirmDialogOpen,
-    saveBuilderToStorage: saveBuilderToStorage,
+    changeInputLanguage,
+    saveBuilderToStorage,
     finish: finishConfigurationBuild,
     reset: resetBuild,
     loadingHandled: loadingHandled

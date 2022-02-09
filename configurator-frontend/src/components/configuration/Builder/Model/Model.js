@@ -6,10 +6,10 @@ import { Delete } from '@mui/icons-material'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
-import { extractGroupIdFromBuilderOption, getModelDescriptionFromBuilderModel, getModelNameFromBuilderModel, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import { getBuilderGroupNameByOptionId, getModelDescriptionFromBuilderModel, getModelNameFromBuilderModel, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import EditButton from '../EditButton'
 
-function Model({ model, name, description, isSelected = false, allOptions, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
+function Model({ model, name, description, isSelected = false, allOptions, getBuilderGroupNameByOptionId, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
 
     const { options } = model
     const modelId = model.name
@@ -101,7 +101,7 @@ function Model({ model, name, description, isSelected = false, allOptions, remov
                         {allOptions.map((option) => (
                             <MenuItem key={option.id} value={option.id}>
                                 <Checkbox checked={options.indexOf(option.id) > -1} />
-                                <ListItemText primary={`${option.name} (${extractGroupIdFromBuilderOption(option)})`} />
+                                <ListItemText primary={`${option.name} (${getBuilderGroupNameByOptionId(option.id)})`} />
                             </MenuItem>
                         ))}
                     </Select>
@@ -115,7 +115,8 @@ function Model({ model, name, description, isSelected = false, allOptions, remov
 const mapStateToProps = (state, ownProps) => ({
     name: getModelNameFromBuilderModel(state, ownProps.model.name),
     description: getModelDescriptionFromBuilderModel(state, ownProps.model.name),
-    allOptions: selectBuilderOptions(state),
+    allOptions: selectBuilderOptionsFromCurrentLanguage(state),
+    getBuilderGroupNameByOptionId: (optionId) => getBuilderGroupNameByOptionId(state, optionId),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {

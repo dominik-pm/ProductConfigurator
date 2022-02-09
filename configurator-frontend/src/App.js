@@ -77,7 +77,7 @@ export function writeToLocalStorage(data, key) {
     try {
         data = JSON.stringify(data)
         localStorage.setItem(key, data)
-        console.log('Saved to storage!')
+        // console.log('Saved to storage!')
         // console.log(data)
     } catch(err) {
         console.log('Can not save the to local storage!')

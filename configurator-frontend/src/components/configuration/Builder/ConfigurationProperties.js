@@ -2,11 +2,11 @@ import { Grid, InputAdornment, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../lang'
-import { selectBuilderBasePrice } from '../../../state/configurationBuilder/builderSelectors'
+import { selectBuilderBasePrice, selectBuilderDescription } from '../../../state/configurationBuilder/builderSelectors'
 import { setBasePrice, setDescription } from '../../../state/configurationBuilder/builderSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 
-function ConfigurationProperties({ basePrice, setDescription, setPrice, language }) {
+function ConfigurationProperties({ basePrice, description, setDescription, setPrice, language }) {
 
     const [priceError, setPriceError] = useState(false)
 
@@ -61,7 +61,8 @@ function ConfigurationProperties({ basePrice, setDescription, setPrice, language
                         fullWidth
                         label={translate('description', language)}
                         variant="outlined"
-                        onChange={handleDescriptionChanged}
+                        defaultValue={description}
+                        onBlur={handleDescriptionChanged} // opnly change description when done (if called on every change -> there would be too many state calls that would result in lag)
                         multiline
                         maxRows={4}
                     />
@@ -74,6 +75,7 @@ function ConfigurationProperties({ basePrice, setDescription, setPrice, language
 
 const mapStateToProps = (state) => ({
     basePrice: selectBuilderBasePrice(state),
+    description: selectBuilderDescription(state),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {

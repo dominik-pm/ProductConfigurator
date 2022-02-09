@@ -11,7 +11,7 @@ import { changeSectionProperties, createGroup, createSection, deleteSection } fr
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
-import { selectBuilderGroups, selectBuilderSections } from '../../../state/configurationBuilder/builderSelectors'
+import { getBuilderGroupsInSection, selectBuilderGroups, selectBuilderSectionsFromCurrentLanguage } from '../../../state/configurationBuilder/builderSelectors'
 import BuilderOptionGroup from './Options/BuilderOptionGroup'
 import { translate } from '../../../lang'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
@@ -54,7 +54,7 @@ function TooltipAsTab({ children, title }) {
     return <Tooltip title={title} children={children} />
 }
 
-function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialog, createSection, createGroup, changeSectionProperties, deleteSection, openAlert, language }) {
+function SectionTabs({ sections, getOptionGroupsInSection, optionGroups, openInputDialog, openConfirmDialog, createSection, createGroup, changeSectionProperties, deleteSection, openAlert, language }) {
 
     const [value, setValue] = useState(0)
 
@@ -74,23 +74,14 @@ function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialo
         })
     }
 
-
-    function renderSectionHeader(sectionId, sectionName) {
-        return (
-            <Box>
-                <Button onClick={() => handleAddGroup(sectionId)}>{translate('addOptionGroup', language)}</Button>
-                <EditButton 
-                    title={`${translate('edit', language)}`}
-                    propertyName={translate('sectionName', language)}
-                    oldValue={sectionName}
-                    valueChangedCallback={(newValue) => {changeSectionProperties({sectionId, newName: newValue})}}
-                    textButton={true}
-                ></EditButton>
-                <Button onClick={() => removeSection(sectionId, sectionName)}>{translate('removeSection', language)}</Button>
-            </Box>
-        )
+    const handleRemoveSection = (sectionId, name) => {
+        openConfirmDialog(`${translate('removeSectionConfirmation', language)}: ${name}?`, {}, null, () => {
+            deleteSection(sectionId)
+            setValue(0)
+        })
     }
-    function handleAddGroup(sectionId) {
+
+    const handleAddGroup = (sectionId) => {
         const data = {
             groupName: {name: 'name', value: '' },
             groupDescription: {name: 'description', value: ''},
@@ -105,10 +96,21 @@ function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialo
             }
         })
     }
-    function removeSection(sectionId, name) {
-        openConfirmDialog(`${translate('removeSectionConfirmation', language)}: ${name}?`, {}, null, () => {
-            deleteSection(sectionId)
-        })
+
+    const renderSectionHeader = (sectionId, sectionName) => {
+        return (
+            <Box>
+                <Button onClick={() => handleAddGroup(sectionId)}>{translate('addOptionGroup', language)}</Button>
+                <EditButton 
+                    title={`${translate('edit', language)}`}
+                    propertyName={translate('sectionName', language)}
+                    oldValue={sectionName}
+                    valueChangedCallback={(newValue) => {changeSectionProperties({sectionId, newName: newValue})}}
+                    textButton={true}
+                ></EditButton>
+                <Button onClick={() => handleRemoveSection(sectionId, sectionName)}>{translate('removeSection', language)}</Button>
+            </Box>
+        )
     }
 
     return (
@@ -142,7 +144,7 @@ function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialo
                         {renderSectionHeader(section.id, section.name)}
 
                         {optionGroups
-                            .filter(group => section.optionGroupIds.includes(group.id))
+                            .filter(group => getOptionGroupsInSection(section.id).includes(group.id))
                             .map((group, index) => (
                                 <BuilderOptionGroup key={group.id} group={group} sectionId={section.id}></BuilderOptionGroup>
                         ))}
@@ -164,9 +166,10 @@ function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialo
 }
 
 const mapStateToProps = (state) => ({
+    sections: selectBuilderSectionsFromCurrentLanguage(state),
+    getOptionGroupsInSection: (sectionId) => getBuilderGroupsInSection(state, sectionId),
+    optionGroups: selectBuilderGroups(state),
     language: selectLanguage(state),
-    sections: selectBuilderSections(state),
-    optionGroups: selectBuilderGroups(state)
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,

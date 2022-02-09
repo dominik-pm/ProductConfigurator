@@ -4,12 +4,12 @@ import React from 'react'
 import { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../../lang'
-import { extractGroupIdFromBuilderOption, extractGroupNameFromBuilderGroup, getBuilderGroupById, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionRequirementsByOptionId, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import { getBuilderGroupNameByOptionId, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionRequirementsByOptionId, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import { changeOptionProperties, deleteOption, setOptionIncompatibilities, setOptionPrice, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 import EditButton from '../EditButton'
 
-function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties }) {
+function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, getBuilderGroupNameByOptionId, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties }) {
 
     const { name, description } = option
 
@@ -107,17 +107,17 @@ function BuilderOption({ optionId, group, option, optionPrice, allOptions, optio
                     />
                 </FormControl>
                 <FormControl sx={{ m: 1, width: 300 }}>
-                    {Multiselect(translate('requirements', language), optionReqirements, allOptions.filter(o => o.id !== optionId), handleSetRequirements)}
+                    {Multiselect(translate('requirements', language), optionReqirements, allOptions.filter(o => o.id !== optionId), getBuilderGroupNameByOptionId, handleSetRequirements)}
                 </FormControl>
                 <FormControl sx={{ m: 1, width: 300 }}>
-                    {Multiselect(translate('incompatibilities', language), optionIncompatibilities, allOptions.filter(o => o.id !== optionId), handleSetIncompatibilities)}
+                    {Multiselect(translate('incompatibilities', language), optionIncompatibilities, allOptions.filter(o => o.id !== optionId), getBuilderGroupNameByOptionId, handleSetIncompatibilities)}
                 </FormControl>
             </Grid>
         </Grid>
     )
 }
 
-const Multiselect = (title, resultOptions, allOptions, onChangeCallback) => (
+const Multiselect = (title, resultOptions, allOptions, getBuilderGroupNameByOptionId, onChangeCallback) => (
     <>
         <InputLabel id={`options-label-${title}`}>{title}</InputLabel>
         <Select
@@ -133,12 +133,10 @@ const Multiselect = (title, resultOptions, allOptions, onChangeCallback) => (
             }
         >
             {allOptions.map((option) => {
-                const groupId = extractGroupIdFromBuilderOption(option)
-                const groupName = groupId
                 return (
                     <MenuItem key={option.id} value={option.id}>
                         <Checkbox checked={resultOptions.indexOf(option.id) > -1} />
-                        <ListItemText primary={`${option.name} (${groupName})`} />
+                        <ListItemText primary={`${option.name} (${getBuilderGroupNameByOptionId(option.id)})`} />
                     </MenuItem>
                 )
             })}
@@ -149,9 +147,10 @@ const Multiselect = (title, resultOptions, allOptions, onChangeCallback) => (
 const mapStateToProps = (state, ownProps) => ({
     option: getBuilderOptionById(state, ownProps.optionId),
     optionPrice: getBuilderOptionPrice(state, ownProps.optionId),
-    allOptions: selectBuilderOptions(state),
+    allOptions: selectBuilderOptionsFromCurrentLanguage(state),
     optionReqirements: getBuilderOptionRequirementsByOptionId(state, ownProps.optionId),
     optionIncompatibilities: getBuilderOptionIncompatibilitiesByOptionId(state, ownProps.optionId),
+    getBuilderGroupNameByOptionId: (optionId) => getBuilderGroupNameByOptionId(state, optionId),
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {

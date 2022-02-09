@@ -5,17 +5,17 @@ import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { translate } from '../../../../lang'
 import { connect } from 'react-redux'
 import BuilderOption from './BuilderOption'
-import { Add, Delete, NearMeDisabledRounded } from '@mui/icons-material'
+import { Add, Delete } from '@mui/icons-material'
 import { alertTypes, openAlert } from '../../../../state/alert/alertSlice'
 import { changeGroupProperties, createOption, deleteOptionGroup, setGroupIsReplacement, setGroupIsRequired, setGroupRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { inputDialogOpen } from '../../../../state/inputDialog/inputDialogSlice'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
-import { getBuilderGroupRequirementsByGroupId, selectBuilderGroups } from '../../../../state/configurationBuilder/builderSelectors'
+import { getBuilderGroupRequirementsByGroupId, getGroupDescriptionFromBuilderGroup, getGroupNameFromBuilderGroup, selectBuilderGroupsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import EditButton from '../EditButton'
 
-function OptionGroup({group, sectionId, allGroups, groupRequirements, createOption, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, changeGroupProperties, deleteGroup, openInputDialog, openConfirmDialog, openAlert, language}) {
+function OptionGroup({group, name, description, sectionId, allGroups, groupRequirements, createOption, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, changeGroupProperties, deleteGroup, openInputDialog, openConfirmDialog, openAlert, language}) {
 
-    const { id, name, description, optionIds, required, replacement } = group
+    const { id, optionIds, required, replacement } = group
 
     function handleAddOption() {
         const data = {
@@ -156,7 +156,9 @@ const Multiselect = (title, groupName, resultGroups, allGroups, onChangeCallback
 
 
 const mapStateToProps = (state, ownProps) => ({
-    allGroups: selectBuilderGroups(state),
+    name: getGroupNameFromBuilderGroup(state, ownProps.group.id),
+    description: getGroupDescriptionFromBuilderGroup(state, ownProps.group.id),
+    allGroups: selectBuilderGroupsFromCurrentLanguage(state),
     groupRequirements: getBuilderGroupRequirementsByGroupId(state, ownProps.group.id),
     language: selectLanguage(state)
 })

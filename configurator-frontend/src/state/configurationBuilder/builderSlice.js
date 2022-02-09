@@ -219,10 +219,13 @@ const initialState = {
 
 export const builderSlice = createSlice({
     name: 'builder',
-    initialState: initialState,
+    initialState: {
+        ...initialState, 
+        configuration: readFromLocalStorage('builder') || initialState.configuration
+    },
     reducers: {
         addSection: (state, action) => {
-            const { name, language } = action.payload
+            const name = action.payload
 
             // add to sections
             state.configuration.optionSections.push({
@@ -231,17 +234,26 @@ export const builderSlice = createSlice({
                 optionGroupIds: []
             })
 
-            // add to language
-            const sections = state.configuration.languages[language].optionSections
-            const section = sections.find(s => s.id === name)
-            if (section) section.name = name
-            else sections.push({id: name, name: name})
+            // add to every language
+            const newSection = { id: name, name }
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
+                const sections = langObj.optionSections
+                sections.push(newSection)
+            }
+            // const section = sections.find(s => s.id === name)
+            // if (section) section.name = name
+            // else sections.push({id: name, name: name})
+
+            // const sections = state.configuration.languages[language].optionSections
+            // const section = sections.find(s => s.id === name)
+            // if (section) section.name = name
+            // else sections.push({id: name, name: name})
 
             // state.configuration.languages[language].optionSections[name] = {name: name}
         },
         changeSectionProperties: (state, action) => {
-            // TODO: call with language
-            const { sectionId, newName, language } = action.payload
+            const { sectionId, newName } = action.payload
 
             const section = state.configuration.languages[state.currentLanguage].optionSections.find(s => s.id === sectionId)
             if (section) {
@@ -255,13 +267,13 @@ export const builderSlice = createSlice({
             state.configuration.optionSections = state.configuration.optionSections.filter(s => s.id !== sectionId)
             
             // remove from all languages
-            for (const langObj of state.configuration.languages) {
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
                 langObj.optionSections = langObj.optionSections.filter(s => s.id !== sectionId)
             }
         },
         addOptionGroup: (state, action) => {
-            // TODO: call with language
-            const { sectionId, groupId, name, description, isRequired, isReplacementGroup, language } = action.payload
+            const { sectionId, groupId, name, description, isRequired, isReplacementGroup } = action.payload
 
             state.configuration.optionGroups.push({
                 id: groupId,
@@ -272,24 +284,35 @@ export const builderSlice = createSlice({
                 optionIds: []
             })
 
-            // add to language
-            const groups = state.configuration.languages[state.currentLanguage].optionGroups
-            let group = groups.find(g => g.id === groupId)
-            const updatedGroup = {
+            // add to every language
+            const newGroup = {
                 id: groupId, 
                 name, 
                 description
             }
-            if (group) group = updatedGroup
-            else groups.push(updatedGroup)
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
+                const groups = langObj.optionGroups
+                groups.push(newGroup)
+            }
+            
+            // add to language
+            // const groups = state.configuration.languages[state.currentLanguage].optionGroups
+            // let group = groups.find(g => g.id === groupId)
+            // const updatedGroup = {
+            //     id: groupId, 
+            //     name, 
+            //     description
+            // }
+            // if (group) group = updatedGroup
+            // else groups.push(updatedGroup)
 
             // add to section
             const section = state.configuration.optionSections.find(s => s.id === sectionId)
             if (section) section.optionGroupIds.push(groupId)
         },
         changeGroupProperties: (state, action) => {
-            // TODO: call with language
-            const { groupId, newName, newDescription, language } = action.payload
+            const { groupId, newName, newDescription } = action.payload
 
             const group = state.configuration.languages[state.currentLanguage].optionGroups.find(g => g.id === groupId)
             if (group) {
@@ -331,7 +354,8 @@ export const builderSlice = createSlice({
             state.configuration.optionGroups = state.configuration.optionGroups.filter(g => g.id !== groupId)
 
             // remove from all languages
-            for (const langObj of state.configuration.languages) {
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
                 langObj.optionGroups = langObj.optionGroups.filter(g => g.id !== groupId)
             }
 
@@ -340,8 +364,7 @@ export const builderSlice = createSlice({
             if (section) section.optionGroupIds = section.optionGroupIds.filter(g => g !== groupId)
         },
         addOption: (state, action) => {
-            // TODO: call with language
-            const { groupId, optionId, name, description, price, language } = action.payload
+            const { groupId, optionId, name, description, price } = action.payload
 
             // add option to options list
             state.configuration.options.push({
@@ -351,16 +374,28 @@ export const builderSlice = createSlice({
                 groupId: groupId
             })
 
-            // add to language
-            const options = state.configuration.languages[language].options
-            let option = options.find(o => o.id === optionId)
-            const updatedOption = {
-                id: optionId,
-                name,
+            // add to every language
+            const newOption = {
+                id: optionId, 
+                name, 
                 description
             }
-            if (option) option = updatedOption
-            else options.push(updatedOption)
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
+                const options = langObj.options
+                options.push(newOption)
+            }
+
+            // add to language
+            // const options = state.configuration.languages[language].options
+            // let option = options.find(o => o.id === optionId)
+            // const updatedOption = {
+            //     id: optionId,
+            //     name,
+            //     description
+            // }
+            // if (option) option = updatedOption
+            // else options.push(updatedOption)
 
             // add option to group
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
@@ -370,8 +405,7 @@ export const builderSlice = createSlice({
             if (price) state.configuration.rules.priceList[optionId] = price
         },
         changeOptionProperties: (state, action) => {
-            // TODO: call with language
-            const { optionId, newName, newDescription, language } = action.payload
+            const { optionId, newName, newDescription } = action.payload
 
             const option = state.configuration.languages[state.currentLanguage].options.find(o => o.id === optionId)
             if (option) {
@@ -419,7 +453,8 @@ export const builderSlice = createSlice({
             if (group) group.optionIds = group.optionIds.filter(o => o !== optionId)
 
             // remove from all languages
-            for (const langObj of state.configuration.languages) {
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
                 langObj.options = langObj.options.filter(o => o.id !== optionId)
             }
 
@@ -433,8 +468,7 @@ export const builderSlice = createSlice({
             if (state.configuration.rules.priceList[optionId]) delete state.configuration.rules.priceList[optionId]
         },
         addModel: (state, action) => {
-            // TODO: call with language
-            const { modelName, options, description, language } = action.payload
+            const { modelName, options, description } = action.payload
 
             state.configuration.rules.models.push({
                 name: modelName, 
@@ -442,20 +476,31 @@ export const builderSlice = createSlice({
                 description
             })
 
-            // add to language
-            const models = state.configuration.languages[state.currentLanguage].models
-            let model = models.find(m => m.name === modelName)
-            const updatedModel = {
+            // add to every language
+            const newModel = {
                 modelNameId: modelName,
                 name: modelName,
                 description
             }
-            if (model) model = updatedModel
-            else models.push(updatedModel)
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
+                const models = langObj.models
+                models.push(newModel)
+            }
+
+            // add to language
+            // const models = state.configuration.languages[state.currentLanguage].models
+            // let model = models.find(m => m.name === modelName)
+            // const updatedModel = {
+            //     modelNameId: modelName,
+            //     name: modelName,
+            //     description
+            // }
+            // if (model) model = updatedModel
+            // else models.push(updatedModel)
         },
         changeModelProperties: (state, action) => {
-            // TODO: call with language
-            const { modelName, newName, newDescription, language } = action.payload
+            const { modelName, newName, newDescription } = action.payload
 
             const model = state.configuration.languages[state.currentLanguage].models.find(m => m.modelNameId === modelName)
             if (model) {
@@ -479,7 +524,8 @@ export const builderSlice = createSlice({
             state.configuration.rules.models = state.configuration.rules.models.filter(m => m.name !== modelName)
 
             // remove from languages
-            for (const langObj of state.configuration.languages) {
+            for (const lang in state.configuration.languages) {
+                const langObj = state.configuration.languages[lang]
                 langObj.models = langObj.models.filter(m => m.name !== modelName)
             }
         },
@@ -487,16 +533,19 @@ export const builderSlice = createSlice({
             state.configuration.rules.basePrice = action.payload
         },
         setDescription: (state, action) => {
-            // TODO: call with language
             const description = action.payload
 
             state.configuration.languages[state.currentLanguage].description = description
         },
         setName: (state, action) => {
-            // TODO: call with language
-            const { name, language } = action.payload
+            const name = action.payload
 
             state.configuration.languages[state.currentLanguage].name = name
+        },
+        changeInputLanguage: (state, action) => {
+            const newLanguage = action.payload
+
+            state.currentLanguage = newLanguage
         },
         resetBuild: (state, action) => {
             state.configuration = initialState
@@ -524,17 +573,17 @@ export const builderSlice = createSlice({
 })
 
 export const saveBuilderToStorage = () => (dispatch, getState) => {
-    // writeToLocalStorage(selectBuilderConfiguration(getState()), 'builder')
+    writeToLocalStorage(selectBuilderConfiguration(getState()), 'builder')
 }
 
-export const createSection = (sectionName, language = defaultLang) => (dispatch, getState) => {
+export const createSection = (sectionName) => (dispatch, getState) => {
     // check if section doesn't already exist
     const sectionExists = getDoesSectionExist(getState(), sectionName)
     if (sectionExists) {
         return false
     }
 
-    dispatch(addSection({name: sectionName, language}))
+    dispatch(addSection(sectionName))
     return true
 }
 export const deleteSection = (sectionId) => (dispatch, getState) => {
@@ -672,13 +721,13 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 // Action creators are generated for each case reducer function
 export const { 
-    addSection, changeSectionProperties, removeSection, 
-    addOptionGroup, changeGroupProperties, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, removeOptionGroup, 
-    addOption, changeOptionProperties, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption, 
+    addSection, changeSectionProperties, removeSection,
+    addOptionGroup, changeGroupProperties, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, removeOptionGroup,
+    addOption, changeOptionProperties, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption,
     addModel, changeModelProperties, setDefaultModel, setModelOptions, removeModel,
-    setBasePrice, setDescription, setName, 
-    resetBuild, 
-    loadingStarted, loadingSucceeded, loadingFailed, loadingHandled 
+    setBasePrice, setDescription, setName, changeInputLanguage,
+    resetBuild,
+    loadingStarted, loadingSucceeded, loadingFailed, loadingHandled
 } = builderSlice.actions
 
 export default builderSlice.reducer

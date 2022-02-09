@@ -3,7 +3,7 @@ import { fetchId } from '../../api/configurationAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { alertTypes, openAlert } from '../alert/alertSlice'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
-import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectDefaultOptions, selectModels, selectSelectedOptions } from './configurationSelectors'
+import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectModels, selectSelectedOptions } from './configurationSelectors'
 
 // const openDialog = useConfirmationDialog.open
 
