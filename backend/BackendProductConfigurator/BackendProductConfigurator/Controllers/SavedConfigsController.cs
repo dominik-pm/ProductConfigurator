@@ -25,12 +25,12 @@ namespace BackendProductConfigurator.Controllers
         // GET: /account/configuration
         [Route("/account/configurations")]
         [HttpGet]
-        public List<ProductSaveExtended> GetSavedConfigs()
+        public List<ProductSave> GetSavedConfigs()
         {
             Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).ToList();
+            return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
         }
 
         // POST: /account/configuration
