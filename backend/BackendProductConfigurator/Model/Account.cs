@@ -14,8 +14,7 @@ namespace Model
         public bool IsSameUser(Account temp)
         {
             if(this.UserName == temp.UserName)
-                if(this.UserEmail == temp.UserEmail)
-                    return true;
+                return true;
             return false;
         }
     }
