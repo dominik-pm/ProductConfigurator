@@ -2,6 +2,7 @@
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using Model.Enumerators;
 using Model.Interfaces;
 using Model.Wrapper;
 

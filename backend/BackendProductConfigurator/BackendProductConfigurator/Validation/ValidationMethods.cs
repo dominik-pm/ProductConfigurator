@@ -1,5 +1,6 @@
 ﻿using BackendProductConfigurator.MediaProducers;
 using Model;
+using Model.Enumerators;
 using System.Linq;
 
 namespace BackendProductConfigurator.Validation
