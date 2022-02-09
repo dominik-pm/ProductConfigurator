@@ -23,7 +23,6 @@ namespace BackendProductConfigurator.Controllers
             }
         }
 
-
         // GET: api/<Controller>
         [HttpGet]
         public virtual IEnumerable<T> Get()
