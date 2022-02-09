@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { postConfiguration } from '../../api/configurationAPI'
-import { selectConfigurationName } from '../configuration/configurationSelectors'
-import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectConfiguration } from './builderSelectors'
+import { readFromLocalStorage, writeToLocalStorage } from '../../App'
+import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration } from './builderSelectors'
 
 
 const initialState = {
@@ -112,7 +112,7 @@ const initialState = {
 
 export const builderSlice = createSlice({
     name: 'builder',
-    initialState,
+    initialState: {configuration: readFromLocalStorage('builder')} || initialState,
     reducers: {
         addSection: (state, action) => {
             state.configuration.optionSections.push({
@@ -327,13 +327,16 @@ export const builderSlice = createSlice({
             state.error = null
         }
     },
-    extraReducers: (builder) => {
-        // builder.addCase(actionFromOtherSlice, (state, action) => {
-        //     state.status = 'succeeded'
-        // })
-    }
+    // extraReducers: (builder) => {
+    //     builder
+    //         .addCase(loadingSucceeded, (state, action) => {
+    //         })
+    // }
 })
 
+export const saveBuilderToStorage = () => (dispatch, getState) => {
+    writeToLocalStorage(selectBuilderConfiguration(getState()), 'builder')
+}
 
 export const createSection = (sectionName) => (dispatch, getState) => {
     // check if section doesn't already exist
@@ -459,7 +462,7 @@ export const changeModelOptions = (modelName, options) => (dispatch) => {
 export const finishConfigurationBuild = (name = '') => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
-    let configuration = selectConfiguration(getState())
+    let configuration = selectBuilderConfiguration(getState())
     
     if (name) {
         dispatch(setName(name))

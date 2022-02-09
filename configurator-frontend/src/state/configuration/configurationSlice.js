@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId } from '../../api/configurationAPI'
+import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { alertTypes, openAlert } from '../alert/alertSlice'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
 import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectDefaultOptions, selectModels, selectSelectedOptions } from './configurationSelectors'
@@ -128,13 +129,7 @@ export const saveConfigurationToStorage = (id, options) => {
     }
 
     // save the updated configurations to the storage
-    try {
-        const data = JSON.stringify(configurations)
-        localStorage.setItem(`configurations`, data)
-        // console.log('Saved configuration to storage!', newConfiguration)
-    } catch {
-        console.log('Can not save the configuration to the local storage!')
-    }
+    writeToLocalStorage(configurations, 'configurations')
 }
 
 // get the selected options for the specific configuration (id) from the storage
@@ -152,13 +147,8 @@ const loadSelectedOptionsFromStorage = (id) => {
     return configuration.options
 }
 const loadConfigurationsFromStorage = () => {
-    let configurations = []
-    try {
-        configurations = JSON.parse(localStorage.getItem(`configurations`))
-    } catch {
-        console.log('Can not load the configuration from the local storage!')
-    }
-
+    let configurations = readFromLocalStorage('configurations')
+    
     if (!configurations) return []
 
     return configurations

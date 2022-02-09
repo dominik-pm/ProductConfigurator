@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 
-export const selectConfiguration = (state) =>                   state.builder.configuration
+export const selectBuilderConfiguration = (state) =>            state.builder.configuration
 export const selectBuilderStatus = (state) =>                   state.builder.status
 export const selectBuilderError = (state) =>                    state.builder.error
 
