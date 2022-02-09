@@ -1,4 +1,4 @@
-﻿namespace BackendProductConfigurator.MediaProducers
+﻿namespace Model.Enumerators
 {
     public enum EValidationResult
     {

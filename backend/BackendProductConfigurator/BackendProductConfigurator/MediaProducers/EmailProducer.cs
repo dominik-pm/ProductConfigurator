@@ -2,6 +2,7 @@
 using FluentEmail.Razor;
 using FluentEmail.Smtp;
 using Model;
+using Model.Enumerators;
 using System.Net.Mail;
 using System.Text;
 
