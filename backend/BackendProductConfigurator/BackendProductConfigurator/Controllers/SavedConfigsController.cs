@@ -18,8 +18,13 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet]
         public override List<ProductSaveExtended> Get()
         {
+            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)];
+            if (account.IsAdmin)
+                return entities[GetAccLang(Request)];
+
+            return new List<ProductSaveExtended>();
         }
 
         // GET: /account/configuration
