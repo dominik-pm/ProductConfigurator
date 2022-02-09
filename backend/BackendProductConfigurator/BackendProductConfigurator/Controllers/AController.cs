@@ -9,7 +9,6 @@ using System.Net;
 
 namespace BackendProductConfigurator.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
     public abstract class AController<T, K> : ControllerBase where T : class
     {
@@ -73,9 +72,10 @@ namespace BackendProductConfigurator.Controllers
         }
     }
 
-    public partial class configurationController : AController<Configurator, string>
+    [Route("configuration")]
+    public partial class ConfigurationController : AController<Configurator, string>
     {
-        public configurationController() : base()
+        public ConfigurationController() : base()
         {
             entities = AValuesClass.Configurators;
         }
@@ -115,9 +115,10 @@ namespace BackendProductConfigurator.Controllers
             AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
         }
     }
-    public partial class productsController : AController<ConfiguratorSlim, string>
+    [Route("products")]
+    public partial class ProductsController : AController<ConfiguratorSlim, string>
     {
-        public productsController() : base()
+        public ProductsController() : base()
         {
             entities = AValuesClass.ConfiguratorsSlim;
         }
@@ -130,9 +131,10 @@ namespace BackendProductConfigurator.Controllers
             return entities[GetAccLang(Request)];
         }
     }
-    public partial class configuredProductsController : AController<ConfiguredProduct, string>
+    [Route("configuredProducts")]
+    public partial class ConfiguredProductsController : AController<ConfiguredProduct, string>
     {
-        public configuredProductsController() : base()
+        public ConfiguredProductsController() : base()
         {
             entities = AValuesClass.ConfiguredProducts;
         }
@@ -167,7 +169,7 @@ namespace BackendProductConfigurator.Controllers
 
             //Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            savedConfigsController scc = new savedConfigsController();
+            SavedConfigsController scc = new SavedConfigsController();
             Account tempAccount = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
             ProductSaveExtended temp = new ProductSaveExtended()
             {
@@ -183,9 +185,10 @@ namespace BackendProductConfigurator.Controllers
             scc.PostOrdered(temp, Request);
         }
     }
-    public class accountController : AController<Account, int>
+    [Route("account")]
+    public class AccountController : AController<Account, int>
     {
-        public accountController() : base()
+        public AccountController() : base()
         {
             entities = AValuesClass.Accounts;
         }
@@ -198,9 +201,10 @@ namespace BackendProductConfigurator.Controllers
             AValuesClass.PostValue<Account>(value, GetAccLang(Request));
         }
     }
-    public partial class savedConfigsController : AController<ProductSaveExtended, string>
+    [Route("savedConfigs")]
+    public partial class SavedConfigsController : AController<ProductSaveExtended, string>
     {
-        public savedConfigsController() : base()
+        public SavedConfigsController() : base()
         {
             entities = AValuesClass.SavedProducts;
         }
@@ -259,21 +263,21 @@ namespace BackendProductConfigurator.Controllers
 
     //Um APIs für eine andere Methoden frei zu machen führen diese Methoden ins nichts
 
-    public partial class configuredProductsController : AController<ConfiguredProduct, string>
+    public partial class ConfiguredProductsController : AController<ConfiguredProduct, string>
     {
         [Route("/redactedConfiguredProducts")]
         [HttpPost]
         [NonAction]
         public override void Post([FromBody] ConfiguredProduct value) { }
     }
-    public partial class productsController : AController<ConfiguratorSlim, string>
+    public partial class ProductsController : AController<ConfiguratorSlim, string>
     {
         [Route("/redactedProducts")]
         [HttpPost]
         [NonAction]
         public override void Post([FromBody] ConfiguratorSlim value) { }
     }
-    public partial class configurationController : AController<Configurator, string>
+    public partial class ConfigurationController : AController<Configurator, string>
     {
         // POST api/<Controller>
         [Route("/redactedConfigurator")]
@@ -289,7 +293,7 @@ namespace BackendProductConfigurator.Controllers
             }
         }
     }
-    public partial class savedConfigsController : AController<ProductSaveExtended, string>
+    public partial class SavedConfigsController : AController<ProductSaveExtended, string>
     {
         // DELETE api/<Controller>/5
         [Route("/redactedSavedConfigsController")]
