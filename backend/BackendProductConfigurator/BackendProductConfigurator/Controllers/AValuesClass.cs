@@ -261,6 +261,9 @@ namespace BackendProductConfigurator.Controllers
                     case ClaimTypes.Email:
                         account.UserEmail = claim.Value;
                         break;
+                    case "admin":
+                        account.IsAdmin = Convert.ToBoolean(claim.Value);
+                        break;
                 }
             }
 
