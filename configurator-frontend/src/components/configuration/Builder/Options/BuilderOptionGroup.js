@@ -1,4 +1,4 @@
-import { Checkbox, Divider, FormControl, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
+import { Checkbox, Divider, FormControl, FormControlLabel, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
@@ -7,14 +7,14 @@ import { connect } from 'react-redux'
 import BuilderOption from './BuilderOption'
 import { Add, Delete } from '@mui/icons-material'
 import { alertTypes, openAlert } from '../../../../state/alert/alertSlice'
-import { createOption, deleteOptionGroup, setGroupRequirements } from '../../../../state/configurationBuilder/builderSlice'
+import { createOption, deleteOptionGroup, setGroupIsReplacement, setGroupIsRequired, setGroupRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { inputDialogOpen } from '../../../../state/inputDialog/inputDialogSlice'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { getBuilderGroupRequirementsByGroupId, selectBuilderGroups } from '../../../../state/configurationBuilder/builderSelectors'
 
-function OptionGroup({group, sectionId, allGroups, groupRequirements, createOption, setGroupRequirements, deleteGroup, openInputDialog, openConfirmDialog, openAlert, language}) {
+function OptionGroup({group, sectionId, allGroups, groupRequirements, createOption, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, deleteGroup, openInputDialog, openConfirmDialog, openAlert, language}) {
 
-    const { id, name, description, optionIds } = group
+    const { id, name, description, optionIds, required, replacement } = group
 
     function handleAddOption() {
         const data = {
@@ -45,6 +45,14 @@ function OptionGroup({group, sectionId, allGroups, groupRequirements, createOpti
         setGroupRequirements({groupId: id, requirements: requirements})
     }
 
+    function handleChangeRequired(event) {
+        setGroupIsRequired({groupId: id, required: !required})
+    }
+
+    function handleChangeMultiselect(event) {
+        setGroupIsReplacement({groupId: id, replacement: !replacement})
+    }
+
     return (
         <Box marginBottom={1} padding={1} sx={{border: '1px dashed grey'}}>
             <Box display={'flex'} flexWrap="wrap" justifyContent={'space-between'} alignItems={'center'}>
@@ -71,6 +79,8 @@ function OptionGroup({group, sectionId, allGroups, groupRequirements, createOpti
 
             <Grid item container justifyContent="center">
                 {Multiselect(translate('requirements', language), name, groupRequirements, allGroups.filter(g => g.id !== id), handleSetGroupRequirements)}
+                {CheckboxInput(translate('required', language), required, (e) => handleChangeRequired(e))}
+                {CheckboxInput(translate('multiselect', language), !replacement, (e) => handleChangeMultiselect(e))}
             </Grid>
             
             <Box>
@@ -82,6 +92,25 @@ function OptionGroup({group, sectionId, allGroups, groupRequirements, createOpti
                 ))}
             </Box>
         </Box>
+    )
+}
+
+const CheckboxInput = (title, checked, callback) => {
+    return (
+        <FormControl sx={{ m: 1, width: 300 }}>
+            <FormControlLabel
+                label={title}
+                labelPlacement="end"
+                control={
+                    <Checkbox
+                        checked={checked}
+                        onChange={(event) => {
+                            callback(event)
+                        }}
+                    />
+                }
+            />
+        </FormControl>
     )
 }
 
@@ -118,7 +147,9 @@ const mapStateToProps = (state, ownProps) => ({
 })
 const mapDispatchToProps = {
     createOption,
-    setGroupRequirements: setGroupRequirements,
+    setGroupRequirements,
+    setGroupIsRequired,
+    setGroupIsReplacement,
     deleteGroup: deleteOptionGroup,
     openInputDialog: inputDialogOpen,
     openConfirmDialog: confirmDialogOpen,

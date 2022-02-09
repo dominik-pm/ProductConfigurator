@@ -32,9 +32,12 @@ function ConfigurationProperties({ basePrice, setDescription, setPrice, language
 
     return (
         
-        <Grid item>
-            <Typography variant="h3">Product Properties</Typography>
-            <Grid container columnGap={0} rowGap={2}>
+        <Grid item container rowGap={2}>
+            <Grid item>
+                <Typography variant="h3">Product Properties</Typography>
+            </Grid>
+
+            <Grid item container columnGap={0} rowGap={2}>
 
                 <Grid item xs={12} md={2}>
                     <TextField 

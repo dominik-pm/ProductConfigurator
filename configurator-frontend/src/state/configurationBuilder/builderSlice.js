@@ -153,6 +153,18 @@ export const builderSlice = createSlice({
                 }
             }
         },
+        setGroupIsRequired: (state, action) => {
+            const { groupId, required } = action.payload
+
+            const group = state.configuration.optionGroups.find(g => g.id === groupId)
+            if (group) group.required = required
+        },
+        setGroupIsReplacement: (state, action) => {
+            const { groupId, replacement } = action.payload
+
+            const group = state.configuration.optionGroups.find(g => g.id === groupId)
+            if (group) group.replacement = replacement
+        },
         removeOptionGroup: (state, action) => {
             const { groupId, sectionId } = action.payload
 
@@ -430,6 +442,6 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, removeSection, addOptionGroup, setGroupRequirements, removeOptionGroup, addOption, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, setName, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { addSection, removeSection, addOptionGroup, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, removeOptionGroup, addOption, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, setName, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
 
 export default builderSlice.reducer

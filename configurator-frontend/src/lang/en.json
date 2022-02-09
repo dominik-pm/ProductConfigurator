@@ -70,6 +70,8 @@
     "description": "Description",
     "requirements": "requirements",
     "incompatibilities": "incompatibilities",
-    "optionPrice": "option price"
+    "optionPrice": "option price",
+    "required": "required",
+    "multiselect": "multiselect"
 
 }
