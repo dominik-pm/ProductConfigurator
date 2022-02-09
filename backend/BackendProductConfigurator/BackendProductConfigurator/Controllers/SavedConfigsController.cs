@@ -63,8 +63,10 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete]
         public void SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
         {
+            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName));
-            AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigWrapper() { ConfigId = id, SavedName = requestBody.SavedName });
+            AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail});
         }
     }
 }
