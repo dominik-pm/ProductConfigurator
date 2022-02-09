@@ -10,14 +10,15 @@ namespace BackendProductConfigurator.Validation.JWT.Models
         public int ExpireMinutes { get; set; } = 10080; // 7 days
         public Claim[] Claims { get; set; }
 
-        private static JWTContainerModel GetJWTContainerModel(string name, string email)
+        private static JWTContainerModel GetJWTContainerModel(string name, string email, bool admin)
         {
             return new JWTContainerModel()
             {
                 Claims = new Claim[]
                 {
                     new Claim(ClaimTypes.Name, name),
-                    new Claim(ClaimTypes.Email, email)
+                    new Claim(ClaimTypes.Email, email),
+                    new Claim("admin", admin.ToString(), ClaimValueTypes.Boolean)
                 }
             };
         }
