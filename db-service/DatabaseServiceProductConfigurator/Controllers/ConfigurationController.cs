@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using Model.Wrapper;
 
 namespace DatabaseServiceProductConfigurator.Controllers {
 
@@ -50,9 +51,9 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             return Accepted();
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult Delete( int id ) {
-            _configurationService.DeleteConfiguration(id);
+        [HttpDelete]
+        public ActionResult Delete( SavedConfigDeleteWrapper wrapper ) {
+            _configurationService.DeleteConfiguration(wrapper);
 
             return Accepted();
         }

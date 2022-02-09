@@ -2,6 +2,7 @@
 using DatabaseServiceProductConfigurator.Models;
 using Microsoft.EntityFrameworkCore;
 using Model;
+using Model.Wrapper;
 
 namespace DatabaseServiceProductConfigurator.Services {
 
@@ -279,31 +280,32 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region DELETE
 
-        public void DeleteConfiguration( int configID ) {
+        public void DeleteConfiguration( SavedConfigDeleteWrapper wrapper ) {
 
-            Configuration? config = _context.Configurations.Where(c => c.Id.Equals(configID)).FirstOrDefault();
+            Configuration? config = GetConfigurationByWrapper(wrapper);
+
             if ( config == null )
                 throw new Exception("no Config");
 
-            if ( _context.Bookings.Where(c => c.ConfigId == configID).Any() )
+            if ( _context.Bookings.Where(c => c.ConfigId == config.Id).Any() )
                 throw new Exception("there are Bookings");
 
             // LANGUAGE
             _context.ConfigurationsHasLanguages.RemoveRange(
                 from chl in _context.ConfigurationsHasLanguages
-                where chl.Configuration == configID
+                where chl.Configuration == config.Id
                 select chl
             );
 
             // OPTIONS
             _context.ConfigurationHasOptionFields.RemoveRange(
                 from cho in _context.ConfigurationHasOptionFields
-                where cho.ConfigId == configID
+                where cho.ConfigId == config.Id
                 select cho
             );
 
             _context.Configurations.RemoveRange(
-                _context.Configurations.Where(c => c.Id == configID)
+                _context.Configurations.Where(c => c.Id == config.Id)
             );
 
             _context.SaveChanges();
@@ -345,6 +347,22 @@ namespace DatabaseServiceProductConfigurator.Services {
                 from c in _context.Configurations
                 where c.ProductNumber == productSaveExtended.ConfigId
                 && c.ConfigurationsHasLanguages.Select(c => c.Name).Contains(oldSavedName)
+                && c.Account == user
+                select c
+            ).FirstOrDefault();
+
+            return configuration;
+        }
+
+        private Configuration? GetConfigurationByWrapper( SavedConfigDeleteWrapper wrapper ) {
+            // get the User
+            Models.Account? user = _context.Accounts.Where(a => a.Email.Equals(wrapper.UserEmail)).FirstOrDefault();
+
+            // get the Configuration with ProductNumber, Name and User
+            Configuration? configuration = (
+                from c in _context.Configurations
+                where c.ProductNumber == wrapper.ConfigId
+                && c.ConfigurationsHasLanguages.Select(c => c.Name).Contains(wrapper.SavedName)
                 && c.Account == user
                 select c
             ).FirstOrDefault();
