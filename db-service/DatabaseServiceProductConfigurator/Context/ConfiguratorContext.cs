@@ -8,6 +8,7 @@ namespace DatabaseServiceProductConfigurator.Context
 {
     public partial class ConfiguratorContext : DbContext
     {
+
         public ConfiguratorContext(DbContextOptions<ConfiguratorContext> options)
             : base(options)
         {
@@ -99,6 +100,8 @@ namespace DatabaseServiceProductConfigurator.Context
                 entity.Property(e => e.Date).HasColumnType("datetime");
 
                 entity.Property(e => e.ProductNumber).HasColumnName("product_number");
+
+                entity.Property(e => e.Visible).HasColumnName("visible");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Configurations)

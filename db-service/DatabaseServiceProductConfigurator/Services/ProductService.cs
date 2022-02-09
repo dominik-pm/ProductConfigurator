@@ -651,17 +651,18 @@ namespace DatabaseServiceProductConfigurator.Services {
 
 
             // ------------------------------Inserting new Options and Fields and Updating older Options and Fields
+            ELanguage language = _context.ELanguages.Where(l => l.Language == lang).First();
+            List<EDependencyType> eDependencyTypes = _context.EDependencyTypes.ToList();
 
             // Updating existing Products
             List<ProductHasLanguage> dbProductHasLanguage = _context.ProductHasLanguages.ToList();
-            ELanguage language = _context.ELanguages.Where(l => l.Language == lang).First();
+
             List<Product> productsToUpdate = _context.Products.Where(p => product.Options.Select(o => o.Id).Contains(p.ProductNumber)).ToList();
-            productsToUpdate.ForEach( p => {
-#warning Wos mochst du eigentlich; Do san Olle Produkte dabei und nd nur de wos fiah des Produkt relevant san
+            productsToUpdate.ForEach(p => {
                 Option theOption = product.Options.Where(o => o.Id == p.ProductNumber).First();
                 p.Price = product.Rules.PriceList[p.ProductNumber];
                 ProductHasLanguage? temp = dbProductHasLanguage.Where(l => p.ProductNumber == l.ProductNumber && l.Language == lang).FirstOrDefault();
-                if(temp != null ) {
+                if ( temp != null ) {
                     temp.Name = theOption.Name;
                     temp.Description = theOption.Description;
                     _context.Update(temp);
@@ -683,7 +684,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // Inserting new Products
             List<Product> productsToInsert = new();
-            foreach(var item in product.Options.Where(p => !productsToUpdate.Select(t => t.ProductNumber).Contains(p.Id))){
+            foreach ( var item in product.Options.Where(p => !productsToUpdate.Select(t => t.ProductNumber).Contains(p.Id)) ) {
                 Product toAdd = new() {
                     ProductNumber = item.Id,
                     Price = product.Rules.PriceList[item.Id],
@@ -699,6 +700,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         Description = item.Description
                     }
                 );
+                productsToInsert.Add(toAdd);
             }
             _context.Products.AddRange(productsToInsert);
 
@@ -708,7 +710,235 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             //---------------------Option Groups
             // Updating existing OptionFields
+            List<OptionFieldHasLanguage> dbOFhasLanguage = _context.OptionFieldHasLanguages.Where(l => l.Language == lang).ToList();
+            List<EOptionType> eOptionTypes = _context.EOptionTypes.ToList();
 
+            List<OptionField> optionGroupToUpdate = _context.OptionFields.Where(o => product.OptionGroups.Select(o => o.Id).Contains(o.Id)).ToList();
+            optionGroupToUpdate.ForEach(o => {
+                OptionGroup temp = product.OptionGroups.Where(og => og.Id == o.Id).First();
+                o.Type = product.Rules.ReplacementGroups[o.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                o.TypeNavigation = eOptionTypes.Where(e => e.Type == o.Type).First();
+                o.Required = temp.Required;
+                OptionFieldHasLanguage? ofhl = dbOFhasLanguage.Where(dbofhl => dbofhl.OptionFieldId == o.Id).FirstOrDefault();
+                if ( ofhl == null ) {
+                    o.OptionFieldHasLanguages.Add(
+                        new OptionFieldHasLanguage {
+                            Language = lang,
+                            LanguageNavigation = language,
+                            OptionFieldId = o.Id,
+                            OptionField = o,
+                            Name = temp.Name,
+                            Description = temp.Description
+                        }
+                    );
+                }
+                else {
+                    ofhl.Name = temp.Name;
+                    ofhl.Description = temp.Description;
+                    _context.Update(ofhl);
+                }
+                foreach ( var item in temp.OptionIds ) {
+                    o.ProductsHasOptionFields.Add(new ProductsHasOptionField {
+                        ProductNumber = item,
+                        ProductNumberNavigation = productOptions.Where(p => p.ProductNumber == item).First(),
+                        DependencyType = "CHILD",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "CHILD").First(),
+                        OptionFields = o.Id,
+                        OptionFieldsNavigation = o
+                    });
+                }
+            });
+            _context.Update(optionGroupToUpdate);
+
+            // Inserting new OptionFields
+            List<OptionField> optionGroupToInsert = new();
+            foreach ( var item in product.OptionGroups.Where(og => !optionGroupToUpdate.Select(of => of.Id).Contains(og.Id)) ) {
+                string type = product.Rules.ReplacementGroups[item.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                OptionField toAdd = new() {
+                    Id = item.Id,
+                    Type = type,
+                    TypeNavigation = eOptionTypes.Where(e => e.Type == type).First(),
+                    Required = item.Required,
+                };
+                toAdd.OptionFieldHasLanguages.Add(new OptionFieldHasLanguage {
+                    OptionFieldId = toAdd.Id,
+                    OptionField = toAdd,
+                    Language = lang,
+                    LanguageNavigation = language,
+                    Name = item.Name,
+                    Description = item.Description
+                });
+                foreach ( var child in item.OptionIds ) {
+                    toAdd.ProductsHasOptionFields.Add(new ProductsHasOptionField {
+                        ProductNumber = child,
+                        ProductNumberNavigation = productOptions.Where(p => p.ProductNumber == child).First(),
+                        DependencyType = "CHILD",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "CHILD").First(),
+                        OptionFields = toAdd.Id,
+                        OptionFieldsNavigation = toAdd
+                    });
+                }
+                optionGroupToInsert.Add(toAdd);
+            }
+            _context.OptionFields.AddRange(optionGroupToInsert);
+
+            List<OptionField> optionGroups = new();
+            optionGroups.AddRange(optionGroupToUpdate);
+            optionGroups.AddRange(optionGroupToInsert);
+
+            //---------------------Option Sections
+            // Updating existing OptionFields
+            List<OptionField> optionSectionsToUpdate = _context.OptionFields.Where(o => product.OptionSections.Select(os => os.Id).Contains(o.Id)).ToList();
+            optionSectionsToUpdate.ForEach(o => {
+                OptionSection temp = product.OptionSections.Where(og => og.Id == o.Id).First();
+                o.Type = product.Rules.ReplacementGroups[o.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                o.TypeNavigation = eOptionTypes.Where(e => e.Type == o.Type).First();
+                o.Required = false;
+                OptionFieldHasLanguage? ofhl = dbOFhasLanguage.Where(dbofhl => dbofhl.OptionFieldId == o.Id).FirstOrDefault();
+                if ( ofhl == null ) {
+                    o.OptionFieldHasLanguages.Add(
+                        new OptionFieldHasLanguage {
+                            Language = lang,
+                            LanguageNavigation = language,
+                            OptionFieldId = o.Id,
+                            OptionField = o,
+                            Name = temp.Name,
+                            Description = ""
+                        }
+                    );
+                }
+                else {
+                    ofhl.Name = temp.Name;
+                    ofhl.Description = "";
+                    _context.Update(ofhl);
+                }
+                foreach ( var item in temp.OptionGroupIds ) {
+                    o.OptionFieldsHasOptionFieldBaseNavigations.Add(new OptionFieldsHasOptionField {
+                        Base = o.Id,
+                        BaseNavigation = o,
+                        DependencyType = "CHILD",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "CHILD").First(),
+                        OptionField = item,
+                        OptionFieldNavigation = optionGroups.Where(og => og.Id == item).First()
+                    });
+                }
+            });
+            _context.OptionFields.UpdateRange(optionSectionsToUpdate);
+
+            // Inserting new OptionFields
+            List<OptionField> optionSectionToInsert = new();
+            foreach ( var item in product.OptionSections.Where(og => !optionSectionsToUpdate.Select(of => of.Id).Contains(og.Id)) ) {
+                string type = product.Rules.ReplacementGroups[item.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                OptionField toAdd = new() {
+                    Id = item.Id,
+                    Type = type,
+                    TypeNavigation = eOptionTypes.Where(e => e.Type == type).First(),
+                    Required = false,
+                };
+                toAdd.OptionFieldHasLanguages.Add(new OptionFieldHasLanguage {
+                    OptionFieldId = toAdd.Id,
+                    OptionField = toAdd,
+                    Language = lang,
+                    LanguageNavigation = language,
+                    Name = item.Name,
+                    Description = ""
+                });
+                foreach ( var opt in item.OptionGroupIds ) {
+                    toAdd.OptionFieldsHasOptionFieldBaseNavigations.Add(new OptionFieldsHasOptionField {
+                        Base = toAdd.Id,
+                        BaseNavigation = toAdd,
+                        DependencyType = "CHILD",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "CHILD").First(),
+                        OptionField = opt,
+                        OptionFieldNavigation = optionGroups.Where(og => og.Id == opt).First()
+                    });
+                }
+                optionGroupToInsert.Add(toAdd);
+            }
+            _context.OptionFields.AddRange(optionSectionToInsert);
+
+            List<OptionField> optionSections = new();
+            optionSections.AddRange(optionSectionsToUpdate);
+            optionSections.AddRange(optionSectionToInsert);
+
+            List<OptionField> optionFields = new();
+            optionFields.AddRange(optionGroups);
+            optionFields.AddRange(optionSections);
+
+            // Creating dependencies from Main Product to OptionSections
+            List<ProductsHasOptionField> ProductToOptionSection = new();
+            optionSections.ForEach(os => {
+                ProductToOptionSection.Add(
+                    new ProductsHasOptionField {
+                        ProductNumber = MainProduct.ProductNumber,
+                        ProductNumberNavigation = MainProduct,
+                        OptionFields = os.Id,
+                        OptionFieldsNavigation = os,
+                        DependencyType = "PARENT",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "PARENT").First()
+                    }
+                );
+            });
+
+            // Update Models
+            List<Configuration> configs = _context.Configurations.Where(c => c.ProductNumber == MainProduct.ProductNumber && c.AccountId == null).ToList();
+            List<ProductSaveExtended> models = _configurationService.GetConfigurations(MainProduct.ProductNumber).Where(sp => sp.ConfigId == MainProduct.ProductNumber).ToList();
+            models.ForEach(m => {
+                if ( product.Rules.Models.Select(rm => rm.Name).Contains(m.Name) ) {
+                    _configurationService.UpdateConfiguration(m, lang, m.Name);
+                }
+                else
+                    _configurationService.DeleteConfiguration(configs.Where(c => c.ConfigurationsHasLanguages.Where(l => l.Language == lang).First().Name == m.Name).First().Id);
+            });
+            foreach ( var item in product.Rules.Models.Where(m => !models.Select(m => m.Name).Contains(m.Name)).ToArray() ) {
+                _configurationService.SaveModels(product.ConfigId, item, lang);
+            }
+
+            //-------------------------RULES
+            List<ProductsHasProduct> productDependencies = new();
+            // Requirements
+            foreach ( var baseP in product.Rules.Requirements.Keys ) {
+                foreach ( var optionP in product.Rules.Requirements[baseP] ) {
+                    productDependencies.Add(new ProductsHasProduct {
+                        BaseProduct = baseP,
+                        BaseProductNavigation = productOptions.Where(p => p.ProductNumber == baseP).First(),
+                        OptionProduct = optionP,
+                        OptionProductNavigation = productOptions.Where(p => p.ProductNumber == optionP).First(),
+                        DependencyType = "REQUIRED",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "REQUIRED").First()
+                    });
+                }
+            }
+            // Incompatibilities
+            foreach ( var baseP in product.Rules.Incompatibilities.Keys ) {
+                foreach ( var optionP in product.Rules.Incompatibilities[baseP] ) {
+                    productDependencies.Add(new ProductsHasProduct {
+                        BaseProduct = baseP,
+                        BaseProductNavigation = productOptions.Where(p => p.ProductNumber == baseP).First(),
+                        OptionProduct = optionP,
+                        OptionProductNavigation = productOptions.Where(p => p.ProductNumber == optionP).First(),
+                        DependencyType = "EXCLUDING",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "EXCLUDING").First()
+                    });
+                }
+            }
+            _context.ProductsHasProducts.AddRange(productDependencies);
+
+            List<OptionFieldsHasOptionField> optionFieldDependencies = new();
+            // GroupRequirements
+            foreach ( var baseOF in product.Rules.GroupRequirements.Keys ) {
+                foreach ( var optionOF in product.Rules.GroupRequirements[baseOF] ) {
+                    optionFieldDependencies.Add(new OptionFieldsHasOptionField {
+                        Base = baseOF,
+                        BaseNavigation = optionFields.Where(p => p.Id == baseOF).First(),
+                        OptionField = optionOF,
+                        OptionFieldNavigation = optionFields.Where(p => p.Id == optionOF).First(),
+                        DependencyType = "REQUIRED",
+                        DependencyTypeNavigation = eDependencyTypes.Where(d => d.Type == "REQUIRED").First()
+                    });
+                }
+            }
+            _context.OptionFieldsHasOptionFields.AddRange(optionFieldDependencies);
         }
 
         #endregion
