@@ -5,10 +5,11 @@ import { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../../lang'
 import { extractGroupIdFromBuilderOption, extractGroupNameFromBuilderGroup, getBuilderGroupById, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionRequirementsByOptionId, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
-import { deleteOption, setOptionIncompatibilities, setOptionPrice, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
+import { changeOptionProperties, deleteOption, setOptionIncompatibilities, setOptionPrice, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
+import EditButton from '../EditButton'
 
-function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities }) {
+function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties }) {
 
     const { name, description } = option
 
@@ -58,8 +59,24 @@ function BuilderOption({ optionId, group, option, optionPrice, allOptions, optio
                 <Box display="flex" justifyContent="space-between">
                     {/* Info */}
                     <Box>
-                        <Typography variant="body1">{name}</Typography>
-                        <Typography variant="body2">{description}</Typography>
+                        <Typography variant="body1">
+                            {name}
+                            <EditButton 
+                                title={`${translate('edit', language)}`} 
+                                propertyName={translate('optionName', language)} 
+                                oldValue={name} 
+                                valueChangedCallback={(newValue) => {changeOptionProperties({optionId, newName: newValue})}}
+                            ></EditButton>
+                        </Typography>
+                        <Typography variant="body2">
+                            {description}
+                            <EditButton 
+                                title={`${translate('edit', language)}`} 
+                                propertyName={translate('optionDescription', language)} 
+                                oldValue={description} 
+                                valueChangedCallback={(newValue) => {changeOptionProperties({optionId, newDescription: newValue})}}
+                            ></EditButton>
+                        </Typography>
                     </Box>
 
                     {/* Actions */}
@@ -141,7 +158,8 @@ const mapDispatchToProps = {
     remove: deleteOption,
     setOptionRequirements,
     setOptionIncompatibilities,
-    setOptionPrice
+    setOptionPrice,
+    changeOptionProperties
 }
 export default connect(
     mapStateToProps, 

@@ -5,14 +5,15 @@ import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { translate } from '../../../../lang'
 import { connect } from 'react-redux'
 import BuilderOption from './BuilderOption'
-import { Add, Delete } from '@mui/icons-material'
+import { Add, Delete, NearMeDisabledRounded } from '@mui/icons-material'
 import { alertTypes, openAlert } from '../../../../state/alert/alertSlice'
-import { createOption, deleteOptionGroup, setGroupIsReplacement, setGroupIsRequired, setGroupRequirements } from '../../../../state/configurationBuilder/builderSlice'
+import { changeGroupProperties, createOption, deleteOptionGroup, setGroupIsReplacement, setGroupIsRequired, setGroupRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { inputDialogOpen } from '../../../../state/inputDialog/inputDialogSlice'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { getBuilderGroupRequirementsByGroupId, selectBuilderGroups } from '../../../../state/configurationBuilder/builderSelectors'
+import EditButton from '../EditButton'
 
-function OptionGroup({group, sectionId, allGroups, groupRequirements, createOption, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, deleteGroup, openInputDialog, openConfirmDialog, openAlert, language}) {
+function OptionGroup({group, sectionId, allGroups, groupRequirements, createOption, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, changeGroupProperties, deleteGroup, openInputDialog, openConfirmDialog, openAlert, language}) {
 
     const { id, name, description, optionIds, required, replacement } = group
 
@@ -59,8 +60,22 @@ function OptionGroup({group, sectionId, allGroups, groupRequirements, createOpti
                 <Box>
                     <Typography variant="h3">
                         {name}
+                        <EditButton 
+                            title={`${translate('edit', language)}`} 
+                            propertyName={translate('groupName', language)} 
+                            oldValue={name} 
+                            valueChangedCallback={(newValue) => {changeGroupProperties({groupId: id, newName: newValue})}}
+                        ></EditButton>
                     </Typography>
-                    <Typography variant="subtitle1">{description}</Typography>
+                    <Typography variant="subtitle1">
+                        {description}
+                        <EditButton 
+                            title={`${translate('edit', language)}`} 
+                            propertyName={translate('groupDescription', language)} 
+                            oldValue={description} 
+                            valueChangedCallback={(newValue) => {changeGroupProperties({groupId: id, newDescription: newValue})}}
+                        ></EditButton>
+                    </Typography>
                 </Box>
 
                 <Box>
@@ -150,6 +165,7 @@ const mapDispatchToProps = {
     setGroupRequirements,
     setGroupIsRequired,
     setGroupIsReplacement,
+    changeGroupProperties,
     deleteGroup: deleteOptionGroup,
     openInputDialog: inputDialogOpen,
     openConfirmDialog: confirmDialogOpen,

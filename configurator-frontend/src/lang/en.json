@@ -59,11 +59,18 @@
     "removeSectionConfirmation": "Do you really want to remove the section",
     "removeGroupConfirmation": "Do you really want to remove the option group",
     "addSection": "Add Section",
+    "removeSection": "Remove Section",
     "addModel": "Add Model",
     "addOption": "Add Option",
+    "addOptionGroup": "Add Optiongroup",
     "newGroup": "New Group",
     "newOption": "New Option",
     "remove": "Remove",
+    "optionName": "Option Name",
+    "optionDescription": "Option Description",
+    "groupName": "Group Name",
+    "groupDescription": "Group Description",
+    "sectionName": "Section Name",
     "modelName": "Model Name",
     "modelDescription": "Model Description",
     "options": "Options",
@@ -72,6 +79,7 @@
     "incompatibilities": "incompatibilities",
     "optionPrice": "option price",
     "required": "required",
-    "multiselect": "multiselect"
+    "multiselect": "multiselect",
+    "edit": "Edit"
 
 }

@@ -31,7 +31,6 @@ function ConfigurationProperties({ basePrice, setDescription, setPrice, language
     }
 
     return (
-        
         <Grid item container rowGap={2}>
             <Grid item>
                 <Typography variant="h3">Product Properties</Typography>

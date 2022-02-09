@@ -121,6 +121,14 @@ export const builderSlice = createSlice({
                 optionGroupIds: []
             })
         },
+        changeSectionProperties: (state, action) => {
+            const { sectionId, newName } = action.payload
+
+            const section = state.configuration.optionSections.find(s => s.id === sectionId)
+            if (section) {
+                section.name = newName || section.name
+            }
+        },
         removeSection: (state, action) => {
             const sectionId = action.payload
 
@@ -140,6 +148,15 @@ export const builderSlice = createSlice({
 
             const section = state.configuration.optionSections.find(s => s.id === sectionId)
             if (section) section.optionGroupIds.push(groupId)
+        },
+        changeGroupProperties: (state, action) => {
+            const { groupId, newName, newDescription } = action.payload
+
+            const group = state.configuration.optionGroups.find(g => g.id === groupId)
+            if (group) {
+                group.name = newName || group.name
+                group.description = newDescription || group.description
+            }
         },
         setGroupRequirements: (state, action) => {
             const { groupId, requirements } = action.payload
@@ -195,6 +212,15 @@ export const builderSlice = createSlice({
 
             // add option price to pricelist in rules
             if (price) state.configuration.rules.priceList[optionId] = price
+        },
+        changeOptionProperties: (state, action) => {
+            const { optionId, newName, newDescription } = action.payload
+
+            const option = state.configuration.options.find(o => o.id === optionId)
+            if (option) {
+                option.name = newName || option.name
+                option.description = newDescription || option.description
+            }
         },
         setOptionPrice: (state, action) => {
             const { optionId, price } = action.payload
@@ -253,8 +279,14 @@ export const builderSlice = createSlice({
                 description
             })
         },
-        removeModel: (state, action) => {
-            state.configuration.rules.models = state.configuration.rules.models.filter(model => model.name !== action.payload)
+        changeModelProperties: (state, action) => {
+            const { modelName, newName, newDescription } = action.payload
+
+            const model = state.configuration.rules.models.find(m => m.name === modelName)
+            if (model) {
+                model.name = newName || model.name
+                model.description = newDescription || model.description
+            }
         },
         setDefaultModel: (state, action) => {
             state.configuration.rules.defaultModel = action.payload
@@ -264,6 +296,9 @@ export const builderSlice = createSlice({
             
             const model = state.configuration.rules.models.find(m => m.name === modelName)
             if (model) model.options = options
+        },
+        removeModel: (state, action) => {
+            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.name !== action.payload)
         },
         setBasePrice: (state, action) => {
             state.configuration.rules.basePrice = action.payload
@@ -442,6 +477,14 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
 
 
 // Action creators are generated for each case reducer function
-export const { addSection, removeSection, addOptionGroup, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, removeOptionGroup, addOption, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption, addModel, removeModel, setDefaultModel, setModelOptions, setBasePrice, setDescription, setName, resetBuild, loadingStarted, loadingSucceeded, loadingFailed, loadingHandled } = builderSlice.actions
+export const { 
+    addSection, changeSectionProperties, removeSection, 
+    addOptionGroup, changeGroupProperties, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, removeOptionGroup, 
+    addOption, changeOptionProperties, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption, 
+    addModel, changeModelProperties, setDefaultModel, setModelOptions, removeModel,
+    setBasePrice, setDescription, setName, 
+    resetBuild, 
+    loadingStarted, loadingSucceeded, loadingFailed, loadingHandled 
+} = builderSlice.actions
 
 export default builderSlice.reducer

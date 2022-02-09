@@ -7,7 +7,7 @@ import Box from '@mui/material/Box'
 import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { Add } from '@mui/icons-material'
 import { connect } from 'react-redux'
-import { createGroup, createSection, deleteSection } from '../../../state/configurationBuilder/builderSlice'
+import { changeSectionProperties, createGroup, createSection, deleteSection } from '../../../state/configurationBuilder/builderSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
@@ -15,6 +15,7 @@ import { selectBuilderGroups, selectBuilderSections } from '../../../state/confi
 import BuilderOptionGroup from './Options/BuilderOptionGroup'
 import { translate } from '../../../lang'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
+import EditButton from './EditButton'
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props
@@ -53,7 +54,7 @@ function TooltipAsTab({ children, title }) {
     return <Tooltip title={title} children={children} />
 }
 
-function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialog, createSection, createGroup, deleteSection, openAlert, language }) {
+function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialog, createSection, createGroup, changeSectionProperties, deleteSection, openAlert, language }) {
 
     const [value, setValue] = useState(0)
 
@@ -77,8 +78,15 @@ function SectionTabs({ sections, optionGroups, openInputDialog, openConfirmDialo
     function renderSectionHeader(sectionId, sectionName) {
         return (
             <Box>
-                <Button onClick={() => handleAddGroup(sectionId)}>Add Option Group</Button>
-                <Button onClick={() => removeSection(sectionId, sectionName)}>Remove Section</Button>
+                <Button onClick={() => handleAddGroup(sectionId)}>{translate('addOptionGroup', language)}</Button>
+                <EditButton 
+                    title={`${translate('edit', language)}`}
+                    propertyName={translate('sectionName', language)}
+                    oldValue={sectionName}
+                    valueChangedCallback={(newValue) => {changeSectionProperties({sectionId, newName: newValue})}}
+                    textButton={true}
+                ></EditButton>
+                <Button onClick={() => removeSection(sectionId, sectionName)}>{translate('removeSection', language)}</Button>
             </Box>
         )
     }
@@ -164,6 +172,7 @@ const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
     openConfirmDialog: confirmDialogOpen,
     createSection,
+    changeSectionProperties,
     deleteSection,
     createGroup,
     openAlert

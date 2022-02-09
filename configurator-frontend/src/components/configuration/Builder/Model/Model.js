@@ -1,14 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Checkbox, FormControl, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
-import { changeModelOptions, removeModel } from '../../../../state/configurationBuilder/builderSlice'
+import { changeModelOptions, changeModelProperties, removeModel } from '../../../../state/configurationBuilder/builderSlice'
 import { Delete } from '@mui/icons-material'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { extractGroupIdFromBuilderOption, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import EditButton from '../EditButton'
 
-function Model({ model, isSelected = false, allOptions, removeModel, setModelOptions, openConfirmDialog, language }) {
+function Model({ model, isSelected = false, allOptions, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
 
     const { name, description, options } = model
 
@@ -35,12 +36,32 @@ function Model({ model, isSelected = false, allOptions, removeModel, setModelOpt
             <Grid 
                 item xs={12} sm={10} xl={9}
             >
-                <Typography variant="body1">
-                    {name}
-                </Typography>
-                <Typography variant="body2">
-                    {description}
-                </Typography>
+                <Grid item container alignItems="center">
+                    <Typography variant="body1">
+                        {name}
+                    </Typography>
+
+                    <EditButton 
+                        title={`${translate('edit', language)}`} 
+                        propertyName={translate('modelName', language)} 
+                        oldValue={name} 
+                        valueChangedCallback={(newValue) => {changeModelProperties({modelName: name, newName: newValue})}}
+                    ></EditButton>
+
+                </Grid>
+                <Grid item container alignItems="center">
+                    <Typography variant="body2">
+                        {description}
+                        <EditButton 
+                            title={`${translate('edit', language)}`} 
+                            propertyName={translate('modelDescription', language)} 
+                            oldValue={description} 
+                            valueChangedCallback={(newValue) => {changeModelProperties({modelName: name, newDescription: newValue})}}
+                        ></EditButton>
+                    </Typography>
+
+
+                </Grid>
             </Grid>
 
             {/* Actions */}
@@ -95,7 +116,8 @@ const mapStateToProps = (state) => ({
     language: selectLanguage(state)
 })
 const mapDispatchToProps = {
-    removeModel: removeModel,
+    removeModel,
+    changeModelProperties,
     setModelOptions: changeModelOptions,
     openConfirmDialog: confirmDialogOpen
 }
