@@ -46,9 +46,8 @@ function ConfigurationBuilderView({ isAdmin, status, error, openAlert, openInput
 
 
     // start the auto save when the component is initialized
-    let saveBuilderInterval = null
     useEffect(() => {
-        saveBuilderInterval = setInterval(saveBuilder, 10000)
+        let saveBuilderInterval = setInterval(saveBuilder, 10000)
 
         // clear interval when the component is unmounted
         return () => {clearInterval(saveBuilderInterval)}

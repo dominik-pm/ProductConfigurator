@@ -1,5 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit'
 
+const selectBuilderLanguages = (state) =>                       state.builder.configuration.languages
+const selectCurrentBuilderLanguage = (state) =>                 state.builder.currentLanguage
+
 export const selectBuilderConfiguration = (state) =>            state.builder.configuration
 export const selectBuilderStatus = (state) =>                   state.builder.status
 export const selectBuilderError = (state) =>                    state.builder.error
@@ -15,7 +18,7 @@ export const selectBuilderOptionRequirements = (state) =>       state.builder.co
 export const selectBuilderOptionIncompatibilities = (state) =>  state.builder.configuration.rules.incompatibilities
 export const selectBuilderGroupRequirements = (state) =>        state.builder.configuration.rules.groupRequirements || []
 
-const selectName = (state, name) =>                     name
+const selectName = (state, name) =>                                 name
 
 export const getBuilderOptionById = createSelector([selectName, selectBuilderOptions], (optionId, options) => {
     const option = options.find(o => o.id === optionId)
@@ -46,6 +49,10 @@ export const getBuilderGroupRequirementsByGroupId = createSelector([selectName, 
     return groupReq ? groupReq : []
 })
 
+const getBuilderLanguageObject = createSelector([selectBuilderLanguages, selectCurrentBuilderLanguage], (languages, language) => {
+    return languages[language]
+})
+
 // export const getBuilderModelOptions = createSelector([selectName, selectBuilderModels, selectBuilderOptions], (modelName, models, options) => {
 //     const model = models.find(m => m.modelName === modelName)
 //     return model.options
@@ -62,9 +69,21 @@ export const getDoesOptionExist = createSelector([selectBuilderOptions, selectNa
 })
 
 
+const getModelPropertiesFromBuilderModel = createSelector([getBuilderLanguageObject, selectName], (langObj, modelName) => {
+    const model = langObj.models.find(m => m.modelNameId === modelName)
+    return model || null
+})
+export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => {
+    return model ? model.name : ''
+})
+export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => {
+    return model ? model.description : ''
+})
+
+export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
+export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''
+
 export const extractOptionsFromBuilderGroup = (group) =>            group.optionIds || []
 export const extractGroupsFromBuilderSection = (section) =>         section.optionGroupIds || []
-export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
 export const extractModelOptionsFromBuilderModel = (model) =>       model.options || []
 export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''
-export const extractGroupNameFromBuilderGroup = (group) =>          group.name || ''

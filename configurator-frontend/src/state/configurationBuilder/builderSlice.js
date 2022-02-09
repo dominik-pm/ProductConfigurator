@@ -1,44 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { postConfiguration } from '../../api/configurationAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
+import { defaultLang } from '../../lang'
 import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration } from './builderSelectors'
 
 
 const initialState = {
     configuration: {
-        name: '',
-        description: '',
         images: [],
         options: [
             {
                 id: 'ALLOY19',
-                name: '19 inch Alloy',
-                description: 'description',
                 groupId: 'WHEELS'
             },
             {
                 id: 'STEEL16',
-                name: '16 inch Steel',
-                description: 'description',
                 groupId: 'WHEELS'
             },
             {
                 id: 'RED',
-                name: 'red',
-                description: 'color',
                 groupId: 'COLOR_GROUP'
             },
             {
                 id: 'BLUE',
-                name: 'blue',
-                description: 'color',
                 groupId: 'COLOR_GROUP'
             }
         ],
         optionSections: [
             {
                 id: 'EXTERIOR',
-                name: 'Exterior',
                 optionGroupIds: [
                     'WHEELS', 'COLOR_GROUP'
                 ]
@@ -47,8 +37,6 @@ const initialState = {
         optionGroups: [
             {
                 id: 'WHEELS',
-                name: 'Wheels',
-                description: 'round objects for diriving',
                 optionIds: [
                     'ALLOY19', 'STEEL16'
                 ],
@@ -57,8 +45,6 @@ const initialState = {
             },
             {
                 id: 'COLOR_GROUP',
-                name: 'Color',
-                description: 'of the car',
                 optionIds: [
                     'BLUE', 'RED'
                 ],
@@ -74,12 +60,10 @@ const initialState = {
                 {
                     name: 'Sport',
                     options: ['ALLOY19', 'RED'],
-                    description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
                 },
                 {
                     name: 'Basic',
                     options: ['STEEL16', 'BLUE'],
-                    description: 'description, description, description, description, description, description, description, description, '
                 }
             ],
             // replacementGroups: {
@@ -104,27 +88,162 @@ const initialState = {
             priceList: {
                 'BLUE': 200
             }
+        },
+        languages: {
+            en: {
+                name: '',
+                description: '',
+                options: [
+                    {
+                        id: 'ALLOY19',
+                        name: '19 inch Alloy',
+                        description: 'description',
+                    },
+                    {
+                        id: 'STEEL16',
+                        name: '16 inch Steel',
+                        description: 'description',
+                    },
+                    {
+                        id: 'RED',
+                        name: 'red',
+                        description: 'Farbe rot',
+                    },
+                    {
+                        id: 'BLUE',
+                        name: 'blue',
+                        description: 'Farbe blau',
+                    }
+                ],
+                optionSections: [
+                    {
+                        id: 'EXTERIOR',
+                        name: 'Exterior'
+                    }
+                ],
+                optionGroups: [
+                    {
+                        id: 'WHEELS',
+                        name: 'Wheels',
+                        description: 'round stuff'
+                    },
+                    {
+                        id: 'COLOR_GROUP',
+                        name: 'Color',
+                        description: 'of the car',
+                    }
+                ],
+                models: [
+                    {
+                        modelNameId: 'Sport',
+                        name: 'Sport',
+                        description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
+                    },
+                    {
+                        modelNameId: 'Basic',
+                        name: 'Basic',
+                        description: 'description, description, description, description, description, description, description, description, '
+                    }
+                ]
+            },
+            de: {
+                name: '',
+                description: '',
+                options: [
+                    {
+                        id: 'ALLOY19',
+                        name: '19 zoll Alo',
+                        description: 'Beschreibung',
+                    },
+                    {
+                        id: 'STEEL16',
+                        name: '16 zoll Stahl',
+                        description: 'Beschreibung',
+                    },
+                    {
+                        id: 'RED',
+                        name: 'red',
+                        description: 'Farbe rot',
+                    },
+                    {
+                        id: 'BLUE',
+                        name: 'blau',
+                        description: 'Farbe blau',
+                    }
+                ],
+                optionSections: [
+                    {
+                        id: 'EXTERIOR',
+                        name: 'Außen'
+                    }
+                ],
+                optionGroups: [
+                    {
+                        id: 'WHEELS',
+                        name: 'Reifen',
+                        description: 'Reifen halt'
+                    },
+                    {
+                        id: 'COLOR_GROUP',
+                        name: 'Farbe',
+                        description: 'Farbe vom Auto'
+                    }
+                ],
+                models: [
+                    {
+                        modelNameId: 'Sport',
+                        name: 'Sport',
+                        description: 'Beschreibung Sport'
+                    },
+                    {
+                        modelNameId: 'Basic',
+                        name: 'Standard',
+                        description: 'Beschreibung Standard'
+                    }
+                ]
+            },
+            fr: {
+                name: '',
+                description: '',
+                options: [],
+                optionSections: [],
+                optionGroups: [],
+                models: []
+            }
         }
     },
+    currentLanguage: defaultLang,
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
     error: null
 }
 
 export const builderSlice = createSlice({
     name: 'builder',
-    initialState: {configuration: readFromLocalStorage('builder')} || initialState,
+    initialState: initialState,
     reducers: {
         addSection: (state, action) => {
+            const { name, language } = action.payload
+
+            // add to sections
             state.configuration.optionSections.push({
-                id: action.payload,
-                name: action.payload,
+                id: name,
+                // name: name,
                 optionGroupIds: []
             })
+
+            // add to language
+            const sections = state.configuration.languages[language].optionSections
+            const section = sections.find(s => s.id === name)
+            if (section) section.name = name
+            else sections.push({id: name, name: name})
+
+            // state.configuration.languages[language].optionSections[name] = {name: name}
         },
         changeSectionProperties: (state, action) => {
-            const { sectionId, newName } = action.payload
+            // TODO: call with language
+            const { sectionId, newName, language } = action.payload
 
-            const section = state.configuration.optionSections.find(s => s.id === sectionId)
+            const section = state.configuration.languages[state.currentLanguage].optionSections.find(s => s.id === sectionId)
             if (section) {
                 section.name = newName || section.name
             }
@@ -132,27 +251,47 @@ export const builderSlice = createSlice({
         removeSection: (state, action) => {
             const sectionId = action.payload
 
+            // remove from sections
             state.configuration.optionSections = state.configuration.optionSections.filter(s => s.id !== sectionId)
+            
+            // remove from all languages
+            for (const langObj of state.configuration.languages) {
+                langObj.optionSections = langObj.optionSections.filter(s => s.id !== sectionId)
+            }
         },
         addOptionGroup: (state, action) => {
-            const { sectionId, groupId, name, description, isRequired, isReplacementGroup } = action.payload
+            // TODO: call with language
+            const { sectionId, groupId, name, description, isRequired, isReplacementGroup, language } = action.payload
 
             state.configuration.optionGroups.push({
                 id: groupId,
-                name: name,
-                description: description,
+                // name: name,
+                // description: description,
                 required: isRequired,
                 replacement: isReplacementGroup,
                 optionIds: []
             })
 
+            // add to language
+            const groups = state.configuration.languages[state.currentLanguage].optionGroups
+            let group = groups.find(g => g.id === groupId)
+            const updatedGroup = {
+                id: groupId, 
+                name, 
+                description
+            }
+            if (group) group = updatedGroup
+            else groups.push(updatedGroup)
+
+            // add to section
             const section = state.configuration.optionSections.find(s => s.id === sectionId)
             if (section) section.optionGroupIds.push(groupId)
         },
         changeGroupProperties: (state, action) => {
-            const { groupId, newName, newDescription } = action.payload
+            // TODO: call with language
+            const { groupId, newName, newDescription, language } = action.payload
 
-            const group = state.configuration.optionGroups.find(g => g.id === groupId)
+            const group = state.configuration.languages[state.currentLanguage].optionGroups.find(g => g.id === groupId)
             if (group) {
                 group.name = newName || group.name
                 group.description = newDescription || group.description
@@ -191,20 +330,37 @@ export const builderSlice = createSlice({
             // remove group from group list
             state.configuration.optionGroups = state.configuration.optionGroups.filter(g => g.id !== groupId)
 
+            // remove from all languages
+            for (const langObj of state.configuration.languages) {
+                langObj.optionGroups = langObj.optionGroups.filter(g => g.id !== groupId)
+            }
+
             // remove group from section
             const section = state.configuration.optionSections.find(s => s.id === sectionId)
             if (section) section.optionGroupIds = section.optionGroupIds.filter(g => g !== groupId)
         },
         addOption: (state, action) => {
-            const { groupId, optionId, name, description, price } = action.payload
+            // TODO: call with language
+            const { groupId, optionId, name, description, price, language } = action.payload
 
             // add option to options list
             state.configuration.options.push({
                 id: optionId,
-                name: name,
-                description: description,
+                // name: name,
+                // description: description,
                 groupId: groupId
             })
+
+            // add to language
+            const options = state.configuration.languages[language].options
+            let option = options.find(o => o.id === optionId)
+            const updatedOption = {
+                id: optionId,
+                name,
+                description
+            }
+            if (option) option = updatedOption
+            else options.push(updatedOption)
 
             // add option to group
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
@@ -214,9 +370,10 @@ export const builderSlice = createSlice({
             if (price) state.configuration.rules.priceList[optionId] = price
         },
         changeOptionProperties: (state, action) => {
-            const { optionId, newName, newDescription } = action.payload
+            // TODO: call with language
+            const { optionId, newName, newDescription, language } = action.payload
 
-            const option = state.configuration.options.find(o => o.id === optionId)
+            const option = state.configuration.languages[state.currentLanguage].options.find(o => o.id === optionId)
             if (option) {
                 option.name = newName || option.name
                 option.description = newDescription || option.description
@@ -261,6 +418,11 @@ export const builderSlice = createSlice({
             const group = state.configuration.optionGroups.find(g => g.id === groupId)
             if (group) group.optionIds = group.optionIds.filter(o => o !== optionId)
 
+            // remove from all languages
+            for (const langObj of state.configuration.languages) {
+                langObj.options = langObj.options.filter(o => o.id !== optionId)
+            }
+
             // remove option requirements
             if (state.configuration.rules.requirements[optionId]) delete state.configuration.rules.requirements[optionId]
 
@@ -271,18 +433,31 @@ export const builderSlice = createSlice({
             if (state.configuration.rules.priceList[optionId]) delete state.configuration.rules.priceList[optionId]
         },
         addModel: (state, action) => {
-            const { modelName, options, description } = action.payload
+            // TODO: call with language
+            const { modelName, options, description, language } = action.payload
 
             state.configuration.rules.models.push({
                 name: modelName, 
                 options, 
                 description
             })
+
+            // add to language
+            const models = state.configuration.languages[state.currentLanguage].models
+            let model = models.find(m => m.name === modelName)
+            const updatedModel = {
+                modelNameId: modelName,
+                name: modelName,
+                description
+            }
+            if (model) model = updatedModel
+            else models.push(updatedModel)
         },
         changeModelProperties: (state, action) => {
-            const { modelName, newName, newDescription } = action.payload
+            // TODO: call with language
+            const { modelName, newName, newDescription, language } = action.payload
 
-            const model = state.configuration.rules.models.find(m => m.name === modelName)
+            const model = state.configuration.languages[state.currentLanguage].models.find(m => m.modelNameId === modelName)
             if (model) {
                 model.name = newName || model.name
                 model.description = newDescription || model.description
@@ -298,19 +473,33 @@ export const builderSlice = createSlice({
             if (model) model.options = options
         },
         removeModel: (state, action) => {
-            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.name !== action.payload)
+            const { modelName } = action.payload
+
+            // remove from models
+            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.name !== modelName)
+
+            // remove from languages
+            for (const langObj of state.configuration.languages) {
+                langObj.models = langObj.models.filter(m => m.name !== modelName)
+            }
         },
         setBasePrice: (state, action) => {
             state.configuration.rules.basePrice = action.payload
         },
         setDescription: (state, action) => {
-            state.configuration.description = action.payload
+            // TODO: call with language
+            const description = action.payload
+
+            state.configuration.languages[state.currentLanguage].description = description
         },
         setName: (state, action) => {
-            state.configuration.name = action.payload
+            // TODO: call with language
+            const { name, language } = action.payload
+
+            state.configuration.languages[state.currentLanguage].name = name
         },
         resetBuild: (state, action) => {
-            state.configuration = {}
+            state.configuration = initialState
         },
         loadingStarted: (state) => {
             state.status = 'loading'
@@ -335,17 +524,17 @@ export const builderSlice = createSlice({
 })
 
 export const saveBuilderToStorage = () => (dispatch, getState) => {
-    writeToLocalStorage(selectBuilderConfiguration(getState()), 'builder')
+    // writeToLocalStorage(selectBuilderConfiguration(getState()), 'builder')
 }
 
-export const createSection = (sectionName) => (dispatch, getState) => {
+export const createSection = (sectionName, language = defaultLang) => (dispatch, getState) => {
     // check if section doesn't already exist
     const sectionExists = getDoesSectionExist(getState(), sectionName)
     if (sectionExists) {
         return false
     }
 
-    dispatch(addSection(sectionName))
+    dispatch(addSection({name: sectionName, language}))
     return true
 }
 export const deleteSection = (sectionId) => (dispatch, getState) => {
@@ -467,6 +656,8 @@ export const finishConfigurationBuild = (name = '') => async (dispatch, getState
     if (name) {
         dispatch(setName(name))
     }
+
+    writeToLocalStorage(initialState, 'builder')
 
     postConfiguration(configuration)
     .then(res => {

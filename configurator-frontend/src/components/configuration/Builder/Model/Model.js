@@ -6,12 +6,13 @@ import { Delete } from '@mui/icons-material'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
-import { extractGroupIdFromBuilderOption, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
+import { extractGroupIdFromBuilderOption, getModelDescriptionFromBuilderModel, getModelNameFromBuilderModel, selectBuilderOptions } from '../../../../state/configurationBuilder/builderSelectors'
 import EditButton from '../EditButton'
 
-function Model({ model, isSelected = false, allOptions, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
+function Model({ model, name, description, isSelected = false, allOptions, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
 
-    const { name, description, options } = model
+    const { options } = model
+    const modelId = model.name
 
     function handleDelete() {
         openConfirmDialog(`${translate('removeModelConfirmation', language)} '${name}'?`, {}, null, () => {
@@ -45,7 +46,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, changeModel
                         title={`${translate('edit', language)}`} 
                         propertyName={translate('modelName', language)} 
                         oldValue={name} 
-                        valueChangedCallback={(newValue) => {changeModelProperties({modelName: name, newName: newValue})}}
+                        valueChangedCallback={(newValue) => {changeModelProperties({modelName: modelId, newName: newValue})}}
                     ></EditButton>
 
                 </Grid>
@@ -56,7 +57,7 @@ function Model({ model, isSelected = false, allOptions, removeModel, changeModel
                             title={`${translate('edit', language)}`} 
                             propertyName={translate('modelDescription', language)} 
                             oldValue={description} 
-                            valueChangedCallback={(newValue) => {changeModelProperties({modelName: name, newDescription: newValue})}}
+                            valueChangedCallback={(newValue) => {changeModelProperties({modelName: modelId, newDescription: newValue})}}
                         ></EditButton>
                     </Typography>
 
@@ -111,7 +112,9 @@ function Model({ model, isSelected = false, allOptions, removeModel, changeModel
     )
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state, ownProps) => ({
+    name: getModelNameFromBuilderModel(state, ownProps.model.name),
+    description: getModelDescriptionFromBuilderModel(state, ownProps.model.name),
     allOptions: selectBuilderOptions(state),
     language: selectLanguage(state)
 })
