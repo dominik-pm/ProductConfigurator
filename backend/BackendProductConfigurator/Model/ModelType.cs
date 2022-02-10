@@ -1,4 +1,5 @@
 ﻿using Model.Interfaces;
+using Model.Languages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ModelType : INameable, IDescribable
+    public class ModelType : ModelTypeVerbal, IIndexable
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string Id { get; set; }
         public List<string> Options { get; set; } = new List<string>();
 
     }
