@@ -299,7 +299,7 @@ namespace BackendProductConfigurator.Controllers
                     Name = languageVariant.Value.Name,
                     Description = languageVariant.Value.Description,
                     OptionGroups = ,
-                    Options = ,
+                    Options = GetOptionsFromLanguage(configuratorPost, languageVariant.Value),
                     OptionSections = 
                 };
                 temp.Rules.Models = GetModelsFromLanguage(configuratorPost, languageVariant.Value);
@@ -309,9 +309,17 @@ namespace BackendProductConfigurator.Controllers
 
             return configs;
         }
-        private static string GetNameFromLanguage(LanguageVariant languageVariant)
+        private static List<Option> GetOptionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
         {
-            return languageVariant.Name;
+            List<Option> options = new List<Option>();
+
+            foreach(Option option in configuratorPost.Options)
+            {
+                Option currentOption = languageVariant.Options.Where(x => x.Id == option.Id).First();
+                options.Add(currentOption);
+            }
+
+            return options;
         }
         private static List<ModelType> GetModelsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
         {
