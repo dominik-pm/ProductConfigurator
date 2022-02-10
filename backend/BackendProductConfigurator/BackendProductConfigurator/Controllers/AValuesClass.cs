@@ -110,7 +110,7 @@ namespace BackendProductConfigurator.Controllers
             RulesExtended productDependencies = new RulesExtended()
             {
                 BasePrice = 50000f,
-                Models = new List<ModelType> { new ModelType { Name = "TI", Description = "Sportliche Version", Options = new List<string>() { "RED", "DIESEL", "D150" } } },
+                Models = new List<ModelType> { new ModelType { Id = "TI", Description = "Sportliche Version", OptionIds = new List<string>() { "RED", "DIESEL", "D150" } } },
                 DefaultModel = "TI",
                 ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
                 Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
@@ -271,51 +271,54 @@ namespace BackendProductConfigurator.Controllers
         }
         public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost, string language)
         {
-            Configurator configurator = configuratorPost as ConfiguratorBase as Configurator;
-            configurator.ConfigId = GenerateConfigId(configuratorPost, language);
-            configuratorPost.OptionGroups = AdaptOptionGroup(configuratorPost);
+            //Configurator configurator = configuratorPost as ConfiguratorSlim as Configurator;
+            //configurator.ConfigId = GenerateConfigId(configuratorPost, language);
+            //configuratorPost.OptionGroups = AdaptOptionGroup(configuratorPost);
 
-            foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
-            {
-                if(oge.Replacement)
-                {
-                    configurator.Rules.ReplacementGroups.Add(oge.Id, oge.OptionIds);
-                }
-                configurator.OptionGroups.Add(oge as OptionGroup);
-            }
+            //foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
+            //{
+            //    if(oge.Replacement)
+            //    {
+            //        configurator.Rules.ReplacementGroups.Add(oge.Id, oge.OptionIds);
+            //    }
+            //    configurator.OptionGroups.Add(oge as OptionGroup);
+            //}
 
-            return configurator;
+            //return configurator;
+            return null;
         }
         private static List<OptionGroupExtended> AdaptOptionGroup(ConfiguratorPost configuratorPost)
         {
-            foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
-            {
-                oge.OptionIds.ForEach(optionId => optionId = $"{optionId}_{configuratorPost.ConfigId}");
-            }
+            //foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
+            //{
+            //    oge.OptionIds.ForEach(optionId => optionId = $"{optionId}_{configuratorPost.ConfigId}");
+            //}
 
-            return configuratorPost.OptionGroups;
+            //return configuratorPost.OptionGroups;
+            return null;
         }
         private static string GenerateConfigId(ConfiguratorPost configuratorPost, string postLanguage)
         {
-            StringBuilder sb = new StringBuilder(configuratorPost.Name);
-            List<string> configIds = new List<string>();
-            foreach(string language in languages)
-            {
-                configIds.AddRange(AValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
-            }
+            //StringBuilder sb = new StringBuilder(configuratorPost.Name);
+            //List<string> configIds = new List<string>();
+            //foreach(string language in languages)
+            //{
+            //    configIds.AddRange(AValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
+            //}
 
-            sb.Replace(' ', '_');
-            sb.Append("_").Append(postLanguage);
+            //sb.Replace(' ', '_');
+            //sb.Append("_").Append(postLanguage);
 
-            int i = 1;
-            while(configIds.Contains(sb.ToString()))
-            {
-                if (sb.ToString().Contains('#'))
-                    sb.Remove(sb.ToString().IndexOf('#'), 5);
-                sb.Append('#').Append(i++.ToString().PadLeft(4, '0'));
-            }
+            //int i = 1;
+            //while(configIds.Contains(sb.ToString()))
+            //{
+            //    if (sb.ToString().Contains('#'))
+            //        sb.Remove(sb.ToString().IndexOf('#'), 5);
+            //    sb.Append('#').Append(i++.ToString().PadLeft(4, '0'));
+            //}
 
-            return sb.ToString();
+            //return sb.ToString();
+            return null;
         }
     }
 }

@@ -9,6 +9,6 @@ namespace Model.Indexes
     public class LanguageIndex
     {
         public string Id { get; set; }
-        public List<string> Options { get; set; } = new List<string>();
+        public List<string> OptionIds { get; set; } = new List<string>();
     }
 }

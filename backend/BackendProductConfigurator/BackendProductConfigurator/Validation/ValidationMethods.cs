@@ -61,7 +61,7 @@ namespace BackendProductConfigurator.Validation
         }
         public static EValidationResult ValidateConfigurator(Configurator configurator)
         {
-            if(configurator.Rules.Models.Select(x => x.Name).Count() != configurator.Rules.Models.Select(x => x.Name).Distinct().Count())
+            if(configurator.Rules.Models.Select(x => x.Id).Count() != configurator.Rules.Models.Select(x => x.Id).Distinct().Count())
                 return EValidationResult.ConfiguratorInvalid;
 
             return EValidationResult.ValidationPassed;
@@ -70,7 +70,7 @@ namespace BackendProductConfigurator.Validation
         {
             try
             {
-                List<string> modelList = configurator.Rules.Models.Where(x => x.Name == configuredProduct.Model).Select(x => x.Options).First();
+                List<string> modelList = configurator.Rules.Models.Where(x => x.Id == configuredProduct.Model).Select(x => x.OptionIds).First();
 
                 if (modelList.Intersect(configuredProduct.Options).Count() >= modelList.Count())
                     return EValidationResult.ModelSelectionInvalid;
