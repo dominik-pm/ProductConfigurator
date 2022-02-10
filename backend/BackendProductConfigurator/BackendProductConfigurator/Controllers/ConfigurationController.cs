@@ -34,7 +34,7 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public void Post([FromBody] ConfiguratorPost value)
         {
-            Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value, GetAccLang(Request));
+            Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
 
             //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configurator);
             //if (validationResult == EValidationResult.ValidationPassed)

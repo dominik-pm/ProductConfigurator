@@ -270,30 +270,15 @@ namespace BackendProductConfigurator.Controllers
 
             return account;
         }
-        public static Dictionary<string, Configurator> GenerateConfigurator(ConfiguratorPost configuratorPost, string language)
+        public static Dictionary<string, Configurator> GenerateConfigurator(ConfiguratorPost configuratorPost)
         {
-            //Configurator configurator = configuratorPost as ConfiguratorSlim as Configurator;
-            //configurator.ConfigId = GenerateConfigId(configuratorPost, language);
-            //configuratorPost.OptionGroups = AdaptOptionGroup(configuratorPost);
-
-            //foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
-            //{
-            //    if(oge.Replacement)
-            //    {
-            //        configurator.Rules.ReplacementGroups.Add(oge.Id, oge.OptionIds);
-            //    }
-            //    configurator.OptionGroups.Add(oge as OptionGroup);
-            //}
-
-            //return configurator;
-
             Dictionary<string, Configurator> configs = new Dictionary<string, Configurator>();
 
             foreach(KeyValuePair<string, LanguageVariant> languageDict in configuratorPost.Languages)
             {
                 Configurator temp = new Configurator()
                 {
-                    ConfigId = configuratorPost.ConfigId,
+                    ConfigId = GenerateConfigId(configuratorPost.Languages["en"]),
                     Images = configuratorPost.Images,
                     Rules = configuratorPost.Rules as Rules as RulesExtended,
                     Name = languageDict.Value.Name,
@@ -384,28 +369,26 @@ namespace BackendProductConfigurator.Controllers
 
             return configurator.OptionGroups;
         }
-        private static string GenerateConfigId(ConfiguratorPost configuratorPost, string postLanguage)
+        private static string GenerateConfigId(LanguageVariant languageVariant)
         {
-            //StringBuilder sb = new StringBuilder(configuratorPost.Name);
-            //List<string> configIds = new List<string>();
-            //foreach(string language in languages)
-            //{
-            //    configIds.AddRange(AValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
-            //}
+            StringBuilder sb = new StringBuilder(languageVariant.Name);
+            List<string> configIds = new List<string>();
+            foreach (string language in languages)
+            {
+                configIds.AddRange(AValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
+            }
 
-            //sb.Replace(' ', '_');
-            //sb.Append("_").Append(postLanguage);
+            sb.Replace(' ', '_');
 
-            //int i = 1;
-            //while(configIds.Contains(sb.ToString()))
-            //{
-            //    if (sb.ToString().Contains('#'))
-            //        sb.Remove(sb.ToString().IndexOf('#'), 5);
-            //    sb.Append('#').Append(i++.ToString().PadLeft(4, '0'));
-            //}
+            int i = 1;
+            while (configIds.Contains(sb.ToString()))
+            {
+                if (sb.ToString().Contains('#'))
+                    sb.Remove(sb.ToString().IndexOf('#'), 5);
+                sb.Append('#').Append(i++.ToString().PadLeft(4, '0'));
+            }
 
-            //return sb.ToString();
-            return null;
+            return sb.ToString();
         }
     }
 }
