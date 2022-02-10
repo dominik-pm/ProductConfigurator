@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Model.Languages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,8 @@ namespace Model
 {
     public class ConfiguratorPost : ConfiguratorBase
     {
-        public Rules Rules { get; set; }
+        public RulesLanguages Rules { get; set; }
         public List<OptionGroupExtended> OptionGroups { get; set; }
+        public Dictionary<string, LanguageVariant> Languages { get; set; }
     }
 }

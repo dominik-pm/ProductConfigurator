@@ -15,5 +15,6 @@ namespace Model
         public List<Option> Options { get; set; }
         public List<OptionSectionVerbal> OptionSections { get; set; }
         public List<OptionGroupVerbal> OptionGroups { get; set; }
+        public List<ModelTypeVerbal> Models { get; set; }
     }
 }

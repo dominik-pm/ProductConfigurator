@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Model.Languages
 {
-    public class ModelTypeVerbal : INameable, IDescribable
+    public class ModelTypeVerbal : IIndexable, INameable, IDescribable
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }
