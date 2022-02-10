@@ -289,25 +289,61 @@ namespace BackendProductConfigurator.Controllers
 
             Dictionary<string, Configurator> configs = new Dictionary<string, Configurator>();
 
-            foreach(KeyValuePair<string, LanguageVariant> languageVariant in configuratorPost.Languages)
+            foreach(KeyValuePair<string, LanguageVariant> languageDict in configuratorPost.Languages)
             {
                 Configurator temp = new Configurator()
                 {
                     ConfigId = configuratorPost.ConfigId,
                     Images = configuratorPost.Images,
                     Rules = configuratorPost.Rules as Rules as RulesExtended,
-                    Name = languageVariant.Value.Name,
-                    Description = languageVariant.Value.Description,
-                    OptionGroups = ,
-                    Options = GetOptionsFromLanguage(configuratorPost, languageVariant.Value),
-                    OptionSections = 
+                    Name = languageDict.Value.Name,
+                    Description = languageDict.Value.Description,
+                    OptionGroups = GetOptionGroupsFromLanguage(configuratorPost, languageDict.Value),
+                    Options = GetOptionsFromLanguage(configuratorPost, languageDict.Value),
+                    OptionSections = GetOptionSectionsFromLanguage(configuratorPost, languageDict.Value),
                 };
-                temp.Rules.Models = GetModelsFromLanguage(configuratorPost, languageVariant.Value);
+                temp.Rules.Models = GetModelsFromLanguage(configuratorPost, languageDict.Value);
 
-                configs.Add(languageVariant.Key, temp);
+                configs.Add(languageDict.Key, temp);
             }
 
             return configs;
+        }
+        private static List<OptionSection> GetOptionSectionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        {
+            List<OptionSection> optionSections = new List<OptionSection>();
+
+            foreach(LanguageIndex optionSection in configuratorPost.OptionSections)
+            {
+                NamedIndex currentOptionSection = languageVariant.OptionSections.Where(x => x.Id == optionSection.Id).First();
+                optionSections.Add(new OptionSection()
+                {
+                    Id = optionSection.Id,
+                    Name = currentOptionSection.Name,
+                    OptionGroupIds = optionSection.OptionIds
+                });
+            }
+
+            return optionSections;
+        }
+        private static List<OptionGroup> GetOptionGroupsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        {
+            List<OptionGroup> optionGroups = new List<OptionGroup>();
+
+            foreach(OptionGroupIndex optionGroup in configuratorPost.OptionGroups)
+            {
+                DescribedIndex currentOptionGroup = languageVariant.OptionGroups.Where(x => x.Id == optionGroup.Id).First();
+                optionGroups.Add(new OptionGroup()
+                {
+                    Id = optionGroup.Id,
+                    Name = currentOptionGroup.Name,
+                    Description = currentOptionGroup.Description,
+                    OptionIds = optionGroup.OptionIds,
+                    Required = optionGroup.Required
+                });
+            }
+
+            return optionGroups;
         }
         private static List<Option> GetOptionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
         {
