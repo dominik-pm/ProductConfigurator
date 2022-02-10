@@ -15,7 +15,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
+        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
         private static string serverAddress = "http://andifined.ddns.net:5129";
         private static List<string> languages = new List<string>() { "de", "en", "fr" };
 
@@ -280,7 +280,7 @@ namespace BackendProductConfigurator.Controllers
                 {
                     ConfigId = GenerateConfigId(configuratorPost.Languages["en"]),
                     Images = configuratorPost.Images,
-                    Rules = configuratorPost.Rules as Rules as RulesExtended,
+                    Rules = configuratorPost.Rules.ConvertToExtended(),
                     Name = languageDict.Value.Name,
                     Description = languageDict.Value.Description,
                     OptionGroups = GetOptionGroupsFromLanguage(configuratorPost, languageDict.Value),
