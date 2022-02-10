@@ -296,8 +296,8 @@ namespace BackendProductConfigurator.Controllers
                     ConfigId = configuratorPost.ConfigId,
                     Images = configuratorPost.Images,
                     Rules = configuratorPost.Rules as Rules as RulesExtended,
-                    Name = ,
-                    Description = ,
+                    Name = languageVariant.Value.Name,
+                    Description = languageVariant.Value.Description,
                     OptionGroups = ,
                     Options = ,
                     OptionSections = 
@@ -307,7 +307,11 @@ namespace BackendProductConfigurator.Controllers
                 configs.Add(languageVariant.Key, temp);
             }
 
-            return null;
+            return configs;
+        }
+        private static string GetNameFromLanguage(LanguageVariant languageVariant)
+        {
+            return languageVariant.Name;
         }
         private static List<ModelType> GetModelsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
         {
