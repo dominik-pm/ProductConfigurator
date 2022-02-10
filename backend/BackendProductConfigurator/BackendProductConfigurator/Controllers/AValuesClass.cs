@@ -375,15 +375,14 @@ namespace BackendProductConfigurator.Controllers
 
             return models;
         }
-        private static List<OptionGroupExtended> AdaptOptionGroup(ConfiguratorPost configuratorPost)
+        private static List<OptionGroup> AdaptOptionGroup(Configurator configurator)
         {
-            //foreach(OptionGroupExtended oge in configuratorPost.OptionGroups)
-            //{
-            //    oge.OptionIds.ForEach(optionId => optionId = $"{optionId}_{configuratorPost.ConfigId}");
-            //}
+            foreach (OptionGroup og in configurator.OptionGroups)
+            {
+                og.OptionIds.ForEach(optionId => optionId = $"{optionId}_{configurator.ConfigId}");
+            }
 
-            //return configuratorPost.OptionGroups;
-            return null;
+            return configurator.OptionGroups;
         }
         private static string GenerateConfigId(ConfiguratorPost configuratorPost, string postLanguage)
         {
