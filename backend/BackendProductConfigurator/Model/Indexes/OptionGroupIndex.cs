@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Languages
+namespace Model.Indexes
 {
     public class OptionGroupIndex : OptionGroupBase
     {

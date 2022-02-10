@@ -1,5 +1,5 @@
-﻿using Model.Interfaces;
-using Model.Languages;
+﻿using Model.Indexes;
+using Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
