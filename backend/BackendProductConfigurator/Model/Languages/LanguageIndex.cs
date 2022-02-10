@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model.Languages
 {
-    public class ModelTypeIndex
+    public class LanguageIndex
     {
         public string Id { get; set; }
         public List<string> Options { get; set; } = new List<string>();

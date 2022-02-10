@@ -1,4 +1,5 @@
-﻿using Model.Languages;
+﻿using Model.Interfaces;
+using Model.Languages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +8,12 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ConfiguratorPost : ConfiguratorBase
+    public class ConfiguratorPost : ConfiguratorSlim
     {
-        public RulesLanguages Rules { get; set; }
+        public List<IIndexable> Options { get; set; }
+        public List<LanguageIndex> OptionSections { get; set; }
         public List<OptionGroupExtended> OptionGroups { get; set; }
+        public RulesLanguages Rules { get; set; }
         public Dictionary<string, LanguageVariant> Languages { get; set; }
     }
 }

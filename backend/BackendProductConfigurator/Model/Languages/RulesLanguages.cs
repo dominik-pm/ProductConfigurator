@@ -8,6 +8,6 @@ namespace Model.Languages
 {
     public class RulesLanguages : Rules
     {
-        public List<ModelTypeIndex> Models { get; set; } = new List<ModelTypeIndex>();
+        public List<LanguageIndex> Models { get; set; } = new List<LanguageIndex>();
     }
 }
