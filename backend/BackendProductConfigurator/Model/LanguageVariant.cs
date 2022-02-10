@@ -15,7 +15,7 @@ namespace Model
         public string Description { get; set; }
         public List<Option> Options { get; set; }
         public List<NamedIndex> OptionSections { get; set; }
-        public List<OptionGroupVerbal> OptionGroups { get; set; }
-        public List<ModelTypeVerbal> Models { get; set; }
+        public List<DescribedIndex> OptionGroups { get; set; }
+        public List<DescribedIndex> Models { get; set; }
     }
 }
