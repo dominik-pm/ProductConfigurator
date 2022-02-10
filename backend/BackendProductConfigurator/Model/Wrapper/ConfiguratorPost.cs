@@ -1,6 +1,7 @@
 ﻿using Model.Indexes;
 using Model.Interfaces;
 using Model.Languages;
+using Model.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace Model
 {
     public class ConfiguratorPost : ConfiguratorIndex
     {
-        public List<IIndexable> Options { get; set; }
+        public List<IdWrapper> Options { get; set; }
         public List<LanguageIndex> OptionSections { get; set; }
         public List<OptionGroupIndex> OptionGroups { get; set; }
         public RulesLanguages Rules { get; set; }

@@ -2,6 +2,7 @@
 using Model;
 using Model.Enumerators;
 using Model.Indexes;
+using Model.Interfaces;
 using System.Security.Claims;
 using System.Text;
 
@@ -334,7 +335,7 @@ namespace BackendProductConfigurator.Controllers
         {
             List<Option> options = new List<Option>();
 
-            foreach(Option option in configuratorPost.Options)
+            foreach(IIndexable option in configuratorPost.Options)
             {
                 Option currentOption = languageVariant.Options.Where(x => x.Id == option.Id).First();
                 options.Add(currentOption);
