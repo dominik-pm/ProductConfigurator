@@ -269,7 +269,7 @@ namespace BackendProductConfigurator.Controllers
 
             return account;
         }
-        public static Configurator GenerateConfigurator(ConfiguratorPost configuratorPost, string language)
+        public static Dictionary<string, Configurator> GenerateConfigurator(ConfiguratorPost configuratorPost, string language)
         {
             //Configurator configurator = configuratorPost as ConfiguratorSlim as Configurator;
             //configurator.ConfigId = GenerateConfigId(configuratorPost, language);
@@ -285,6 +285,20 @@ namespace BackendProductConfigurator.Controllers
             //}
 
             //return configurator;
+
+            Dictionary<string, Configurator> configs = new Dictionary<string, Configurator>();
+
+            foreach(KeyValuePair<string, LanguageVariant> languageVariant in configuratorPost.Languages)
+            {
+                Configurator temp = new Configurator()
+                {
+                    ConfigId = configuratorPost.ConfigId,
+                    Images = configuratorPost.Images,
+                    Rules = configuratorPost.Rules as Rules as RulesExtended
+                };
+                configs.Add(languageVariant.Key, temp);
+            }
+
             return null;
         }
         private static List<OptionGroupExtended> AdaptOptionGroup(ConfiguratorPost configuratorPost)
