@@ -1,15 +1,13 @@
-﻿using Model.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.Wrapper
 {
-    public  class ProductSaveSlim
+    public class SavedNameWrapper
     {
         public string SavedName { get; set; }
-        public List<string> Options { get; set; } = new List<string>();
     }
 }

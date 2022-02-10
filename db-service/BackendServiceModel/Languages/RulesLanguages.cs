@@ -1,15 +1,14 @@
 ﻿using Model.Indexes;
-using Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model
+namespace Model.Languages
 {
-    public class ModelType : LanguageIndex, IDescribable
+    public class RulesLanguages : Rules
     {
-        public string Description { get; set; }
+        public List<LanguageIndex> Models { get; set; } = new List<LanguageIndex>();
     }
 }

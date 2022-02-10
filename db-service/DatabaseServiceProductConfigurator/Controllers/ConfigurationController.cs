@@ -33,9 +33,16 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             return Ok(toReturn);
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<ProductSaveExtended> GetById( string id ) {
-            ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(id);
+        [HttpGet("{EMail}")]
+        public ActionResult<ProductSaveExtended> GetById( string EMail, [FromBody] SavedConfigWrapper wrapper ) {
+            Request.Headers.TryGetValue("Accept-Language", out var lang);
+            lang = _languageService.HandleLanguageInput(lang);
+
+            SavedConfigDeleteWrapper toSend = (SavedConfigDeleteWrapper) wrapper;
+            toSend.UserEmail = EMail;
+
+            ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(lang, toSend);
+
             if ( toReturn == null )
                 return NotFound();
             return Ok(toReturn);

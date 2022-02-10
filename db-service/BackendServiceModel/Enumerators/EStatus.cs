@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Wrapper
+namespace Model.Enumerators
 {
-    public class SavedConfigDeleteWrapper : SavedConfigWrapper
+    public enum EStatus
     {
-        public string UserEmail { get; set; }
+        ordered = 0, saved
     }
 }

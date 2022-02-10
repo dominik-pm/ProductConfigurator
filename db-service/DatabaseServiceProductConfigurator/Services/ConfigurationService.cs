@@ -2,6 +2,7 @@
 using DatabaseServiceProductConfigurator.Models;
 using Microsoft.EntityFrameworkCore;
 using Model;
+using Model.Enumerators;
 using Model.Wrapper;
 
 namespace DatabaseServiceProductConfigurator.Services {
@@ -28,17 +29,17 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region GET
 
-        public List<ModelType> GetModelsByProduct( string productNumber, string lang ) {
-            List<Configuration> temp = _context.Configurations.Where(conf => conf.ProductNumber == productNumber).ToList();
+        public List<ModelType> GetVisibleModelsByProduct( string productNumber, string lang ) {
+            List<Configuration> temp = _context.Configurations.Where(conf => conf.ProductNumber == productNumber && conf.Visible == true && conf.AccountId == null).ToList();
             List<ModelType> toReturn = new();
             temp.ForEach(
                 conf => {
                     var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang);
                     var opts = GetOptionsByConfigId(conf.Id, lang);
                     toReturn.Add(new ModelType {
-                        Name = infos.Name,
+                        Id = infos.Name,
                         Description = infos.Description,
-                        Options = opts.Options
+                        OptionIds = opts.Options
                     });
                 }
             );
@@ -74,7 +75,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             return toReturn;
         }
 
-        public ProductSaveExtended? GetConfiguredProductById( string id ) => GetConfigurations(id).FirstOrDefault();
+        public ProductSaveExtended? GetConfiguredProductById( string lang, SavedConfigDeleteWrapper wrapper ) {
+            List<ProductSaveExtended> temp = GetConfigurations(lang);
+            return temp.Where(t => t.ConfigId == wrapper.ConfigId && t.SavedName == wrapper.SavedName && t.User.UserEmail == wrapper.UserEmail).FirstOrDefault();
+        }
 
         private ConfiguredProductStruct GetOptionsByConfigId( int configId, string lang ) {
 
@@ -223,12 +227,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                     ConfigurationNavigation = temp,
                     Language = lang,
                     LanguageNavigation = _context.ELanguages.First(l => l.Language == lang),
-                    Name = model.Name,
+                    Name = model.Id,
                     Description = model.Description
                 }
             );
 
-            foreach ( var item in model.Options ) {
+            foreach ( var item in model.OptionIds ) {
                 OptionField toInsert = GetOptionfieldByProductAndOption(productNumber, item);
                 _context.ConfigurationHasOptionFields.Add(
                     new ConfigurationHasOptionField {
@@ -236,7 +240,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         Config = temp,
                         OptionFieldId = toInsert.Id,
                         OptionField = toInsert,
-                        ProductNumbers = _context.Products.Where(p => model.Options.Contains(p.ProductNumber)).ToList()
+                        ProductNumbers = _context.Products.Where(p => model.OptionIds.Contains(p.ProductNumber)).ToList()
                     }
                 );
             }
@@ -287,8 +291,27 @@ namespace DatabaseServiceProductConfigurator.Services {
             if ( config == null )
                 throw new Exception("no Config");
 
-            if ( _context.Bookings.Where(c => c.ConfigId == config.Id).Any() )
-                throw new Exception("there are Bookings");
+            DeletePrivate(config);
+
+        }
+
+        public void DeleteConfiguration( int id ) {
+            Configuration? config = _context.Configurations.Where(c => c.Id == id).FirstOrDefault();
+
+            if ( config == null )
+                throw new Exception("no Config");
+
+            DeletePrivate(config);
+        }
+
+        private void DeletePrivate(Configuration config) {
+
+            if ( _context.Bookings.Where(c => c.ConfigId == config.Id).Any() ) {
+                config.Visible = false;
+                _context.Update(config);
+                _context.SaveChanges();
+                return;
+            }
 
             // LANGUAGE
             _context.ConfigurationsHasLanguages.RemoveRange(
@@ -309,7 +332,6 @@ namespace DatabaseServiceProductConfigurator.Services {
             );
 
             _context.SaveChanges();
-
         }
 
         #endregion

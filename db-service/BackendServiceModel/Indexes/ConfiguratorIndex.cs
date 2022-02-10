@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Wrapper
+namespace Model.Indexes
 {
-    public class SavedConfigWrapper : IConfigId
+    public class ConfiguratorIndex : IConfigId, IImageable
     {
         public string ConfigId { get; set; }
-        public string SavedName { get; set; }
+        public List<string> Images { get; set; }
     }
 }

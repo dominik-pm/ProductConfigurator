@@ -47,7 +47,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 item.Options.ForEach(o => item.Rules = _ruleService.ExtendProductDependencies(item.Rules, o.Id));
                 item.OptionGroups.ForEach(o => item.Rules = _ruleService.ExtendProductDependenciesByOptionField(item.Rules, o.Id));
                 item.OptionSections.ForEach(o => item.Rules = _ruleService.ExtendProductDependenciesByOptionField(item.Rules, o.Id));
-                item.Rules.Models.AddRange(_configurationService.GetModelsByProduct(item.ConfigId, lang));
+                item.Rules.Models.AddRange(_configurationService.GetVisibleModelsByProduct(item.ConfigId, lang));
             }
 
             return temp;
@@ -113,11 +113,11 @@ namespace DatabaseServiceProductConfigurator.Services {
                 InfoStruct fieldinfos = _languageService.GetOptionsfieldWithLanguage(field.Id, lang);
 
                 sections.Add(
-                    new OptionSection(
-                        fieldinfos.Name,
-                        field.Id,
-                        options
-                    )
+                    new OptionSection { 
+                        Name = fieldinfos.Name,
+                        Id = field.Id,
+                        OptionGroupIds = options
+                    }
                 );
             }
 
@@ -884,13 +884,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Configuration> configs = _context.Configurations.Where(c => c.ProductNumber == MainProduct.ProductNumber && c.AccountId == null).ToList();
             List<ProductSaveExtended> models = _configurationService.GetConfigurations(MainProduct.ProductNumber).Where(sp => sp.ConfigId == MainProduct.ProductNumber).ToList();
             models.ForEach(m => {
-                if ( product.Rules.Models.Select(rm => rm.Name).Contains(m.Name) ) {
+                if ( product.Rules.Models.Select(rm => rm.Id).Contains(m.Name) ) {
                     _configurationService.UpdateConfiguration(m, lang, m.Name);
                 }
                 else
                     _configurationService.DeleteConfiguration(configs.Where(c => c.ConfigurationsHasLanguages.Where(l => l.Language == lang).First().Name == m.Name).First().Id);
             });
-            foreach ( var item in product.Rules.Models.Where(m => !models.Select(m => m.Name).Contains(m.Name)).ToArray() ) {
+            foreach ( var item in product.Rules.Models.Where(m => !models.Select(m => m.Name).Contains(m.Id)).ToArray() ) {
                 _configurationService.SaveModels(product.ConfigId, item, lang);
             }
 

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Model.Wrapper
+namespace Model.Indexes
 {
-    public class SavedConfigDeleteWrapper : SavedConfigWrapper
+    public class OptionGroupIndex : OptionGroupBase
     {
-        public string UserEmail { get; set; }
+        public bool Replacement { get; set; }
     }
 }

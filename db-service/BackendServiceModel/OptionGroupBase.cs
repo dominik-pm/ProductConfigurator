@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ModelType : LanguageIndex, IDescribable
+    public class OptionGroupBase : LanguageIndex
     {
-        public string Description { get; set; }
+        public bool Required { get; set; }
     }
 }

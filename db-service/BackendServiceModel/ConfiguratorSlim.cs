@@ -1,4 +1,5 @@
-﻿using Model.Interfaces;
+﻿using Model.Indexes;
+using Model.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,9 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ConfiguratorSlim : IConfigId, INameable, IDescribable, IImageable
+    public class ConfiguratorSlim : ConfiguratorIndex, INameable, IDescribable
     {
-        public string ConfigId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<string> Images { get; set; }
     }
 }

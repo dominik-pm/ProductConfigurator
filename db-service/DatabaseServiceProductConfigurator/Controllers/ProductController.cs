@@ -41,7 +41,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             Configurator? product = _productService.GetConfiguratorByProductNumber(id, lang);
             if ( product == null )
-                return NotFound();
+                return NoContent();
 
             return Ok(product);
         }
