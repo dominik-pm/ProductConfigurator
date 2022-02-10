@@ -36,12 +36,15 @@ namespace BackendProductConfigurator.Controllers
         {
             Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
 
-            //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configurator);
-            //if (validationResult == EValidationResult.ValidationPassed)
-            //{
-            //    AddConfigurator(configurator);
-            //    AValuesClass.PostValue<Configurator>(configurator, GetAccLang(Request));
-            //}
+            foreach(KeyValuePair<string, Configurator> configDict in configurators)
+            {
+                EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
+                if (validationResult == EValidationResult.ValidationPassed)
+                {
+                    AddConfigurator(configDict.Value);
+                    AValuesClass.PostValue<Configurator>(configDict.Value, GetAccLang(Request));
+                }
+            }
         }
         public override void Delete(string id)
         {
