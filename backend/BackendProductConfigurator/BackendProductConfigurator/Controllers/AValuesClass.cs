@@ -1,6 +1,7 @@
 ﻿using BackendProductConfigurator.Validation.JWT.Managers;
 using Model;
 using Model.Enumerators;
+using Model.Indexes;
 using System.Security.Claims;
 using System.Text;
 
@@ -294,12 +295,37 @@ namespace BackendProductConfigurator.Controllers
                 {
                     ConfigId = configuratorPost.ConfigId,
                     Images = configuratorPost.Images,
-                    Rules = configuratorPost.Rules as Rules as RulesExtended
+                    Rules = configuratorPost.Rules as Rules as RulesExtended,
+                    Name = ,
+                    Description = ,
+                    OptionGroups = ,
+                    Options = ,
+                    OptionSections = 
                 };
+                temp.Rules.Models = GetModelsFromLanguage(configuratorPost, languageVariant.Value);
+
                 configs.Add(languageVariant.Key, temp);
             }
 
             return null;
+        }
+        private static List<ModelType> GetModelsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        {
+            List<ModelType> models = new List<ModelType>();
+
+            foreach(LanguageIndex model in configuratorPost.Rules.Models)
+            {
+                DescribedIndex currentModel = languageVariant.Models.Where(x => x.Id == model.Id).First();
+                models.Add(new ModelType()
+                {
+                    Id = model.Id,
+                    OptionIds = model.OptionIds,
+                    Name = currentModel.Name,
+                    Description = currentModel.Description
+                }); 
+            }
+
+            return models;
         }
         private static List<OptionGroupExtended> AdaptOptionGroup(ConfiguratorPost configuratorPost)
         {

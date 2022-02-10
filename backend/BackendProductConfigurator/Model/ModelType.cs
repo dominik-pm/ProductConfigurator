@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace Model
 {
-    public class ModelType : LanguageIndex, IDescribable
+    public class ModelType : LanguageIndex, INameable, IDescribable
     {
+        public string Name { get; set; }
         public string Description { get; set; }
     }
 }
