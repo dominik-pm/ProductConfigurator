@@ -91,12 +91,12 @@ const getGroupPropertiesFromBuilderGroup = createSelector([getBuilderLanguageObj
 export const getGroupNameFromBuilderGroup = createSelector([getGroupPropertiesFromBuilderGroup], (group) => group ? group.name : '')
 export const getGroupDescriptionFromBuilderGroup = createSelector([getGroupPropertiesFromBuilderGroup], (group) => group ? group.description : '')
 
-const getModelPropertiesFromBuilderModel = createSelector([getBuilderLanguageObject, selectName], (langObj, modelName) => {
-    const model = langObj.models.find(m => m.modelNameId === modelName)
+const getModelPropertiesFromBuilderModel = createSelector([getBuilderLanguageObject, selectName], (langObj, modelObj) => {
+    const model = langObj.models.find(m => m.id === modelObj.id)
     return model || null
 })
-export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.name : '')
-export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.description : '')
+export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.name : 'c')
+export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.description : 'c')
 
 export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
 export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''

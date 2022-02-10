@@ -6,6 +6,13 @@ import ModelOptionText from './ModelOptionText'
 
 function SectionOptionList({ allOptions, selectedOptions }) {
 
+    if (!selectedOptions || !allOptions) {
+        console.log(selectedOptions)
+        return (
+            <>KAPUTT</>
+        )
+    }
+
     return (
         <>
             {allOptions.filter(o => selectedOptions.includes(o)).map(optionId => (

@@ -12,7 +12,7 @@ import EditButton from '../EditButton'
 function Model({ model, name, description, isSelected = false, allOptions, getBuilderGroupNameByOptionId, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
 
     const { options } = model
-    const modelId = model.name
+    const modelId = model.id
 
     function handleDelete() {
         openConfirmDialog(`${translate('removeModelConfirmation', language)} '${name}'?`, {}, null, () => {
@@ -113,8 +113,8 @@ function Model({ model, name, description, isSelected = false, allOptions, getBu
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    name: getModelNameFromBuilderModel(state, ownProps.model.name),
-    description: getModelDescriptionFromBuilderModel(state, ownProps.model.name),
+    name: getModelNameFromBuilderModel(state, ownProps.model),
+    description: getModelDescriptionFromBuilderModel(state, ownProps.model),
     allOptions: selectBuilderOptionsFromCurrentLanguage(state),
     getBuilderGroupNameByOptionId: (optionId) => getBuilderGroupNameByOptionId(state, optionId),
     language: selectLanguage(state)

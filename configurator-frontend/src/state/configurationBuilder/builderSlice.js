@@ -7,6 +7,7 @@ import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extr
 
 const initialState = {
     configuration: {
+        configId: '',
         images: [],
         options: [
             {
@@ -58,11 +59,11 @@ const initialState = {
             defaultModel: '',
             models: [
                 {
-                    name: 'Sport',
+                    id: 'Sport',
                     options: ['ALLOY19', 'RED'],
                 },
                 {
-                    name: 'Basic',
+                    id: 'Basic',
                     options: ['STEEL16', 'BLUE'],
                 }
             ],
@@ -135,12 +136,12 @@ const initialState = {
                 ],
                 models: [
                     {
-                        modelNameId: 'Sport',
+                        id: 'Sport',
                         name: 'Sport',
                         description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
                     },
                     {
-                        modelNameId: 'Basic',
+                        id: 'Basic',
                         name: 'Basic',
                         description: 'description, description, description, description, description, description, description, description, '
                     }
@@ -191,12 +192,12 @@ const initialState = {
                 ],
                 models: [
                     {
-                        modelNameId: 'Sport',
+                        id: 'Sport',
                         name: 'Sport',
                         description: 'Beschreibung Sport'
                     },
                     {
-                        modelNameId: 'Basic',
+                        id: 'Basic',
                         name: 'Standard',
                         description: 'Beschreibung Standard'
                     }
@@ -471,14 +472,13 @@ export const builderSlice = createSlice({
             const { modelName, options, description } = action.payload
 
             state.configuration.rules.models.push({
-                name: modelName, 
+                id: modelName, 
                 options, 
-                description
             })
 
             // add to every language
             const newModel = {
-                modelNameId: modelName,
+                id: modelName,
                 name: modelName,
                 description
             }
@@ -490,9 +490,9 @@ export const builderSlice = createSlice({
 
             // add to language
             // const models = state.configuration.languages[state.currentLanguage].models
-            // let model = models.find(m => m.name === modelName)
+            // let model = models.find(m => m.id === modelName)
             // const updatedModel = {
-            //     modelNameId: modelName,
+            //     id: modelName,
             //     name: modelName,
             //     description
             // }
@@ -502,7 +502,7 @@ export const builderSlice = createSlice({
         changeModelProperties: (state, action) => {
             const { modelName, newName, newDescription } = action.payload
 
-            const model = state.configuration.languages[state.currentLanguage].models.find(m => m.modelNameId === modelName)
+            const model = state.configuration.languages[state.currentLanguage].models.find(m => m.id === modelName)
             if (model) {
                 model.name = newName || model.name
                 model.description = newDescription || model.description
@@ -514,19 +514,19 @@ export const builderSlice = createSlice({
         setModelOptions: (state, action) => {
             const { modelName, options } = action.payload
             
-            const model = state.configuration.rules.models.find(m => m.name === modelName)
+            const model = state.configuration.rules.models.find(m => m.id === modelName)
             if (model) model.options = options
         },
         removeModel: (state, action) => {
             const { modelName } = action.payload
 
             // remove from models
-            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.name !== modelName)
+            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.id !== modelName)
 
             // remove from languages
             for (const lang in state.configuration.languages) {
                 const langObj = state.configuration.languages[lang]
-                langObj.models = langObj.models.filter(m => m.name !== modelName)
+                langObj.models = langObj.models.filter(m => m.id !== modelName)
             }
         },
         setBasePrice: (state, action) => {

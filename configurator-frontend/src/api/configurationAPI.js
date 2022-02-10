@@ -27,8 +27,9 @@ export const postConfiguration = (newConfiguration) => {
         }
 
         const data = {
-            newConfiguration
+            ...newConfiguration
         }
+        console.log(data)
         axios.post(`${baseURL}/configuration`, data)
         .then(res => {
             resolve(res.data)
