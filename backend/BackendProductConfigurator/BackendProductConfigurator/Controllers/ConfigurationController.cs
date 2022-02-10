@@ -18,8 +18,12 @@ namespace BackendProductConfigurator.Controllers
 
         private void AddConfigurator(Configurator value)
         {
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Add(value);
+            AddConfigurator(value, GetAccLang(Request));
+        }
+        private void AddConfigurator(Configurator value, string language)
+        {
+            entities[language].Add(value);
+            AValuesClass.ConfiguratorsSlim[language].Add(value);
         }
 
         // GET api/<Controller>/5
@@ -41,8 +45,8 @@ namespace BackendProductConfigurator.Controllers
                 EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
                 if (validationResult == EValidationResult.ValidationPassed)
                 {
-                    AddConfigurator(configDict.Value);
-                    AValuesClass.PostValue<Configurator>(configDict.Value, GetAccLang(Request));
+                    AddConfigurator(configDict.Value, configDict.Key);
+                    AValuesClass.PostValue<Configurator>(configDict.Value, configDict.Key);
                 }
             }
         }
