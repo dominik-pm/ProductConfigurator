@@ -27,17 +27,17 @@ namespace BackendProductConfigurator.Controllers
 
         // GET api/<Controller>/5
         [HttpGet("{id}")]
-        public override Configurator Get(string id)
+        public override ActionResult<Configurator> Get(string id)
         {
-            //try
-            //{
+            try
+            {
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 return entities[GetAccLang(Request)].Where(entity => entity.ConfigId.Equals(id)).First();
-            //}
-            //catch (Exception ex)
-            //{
-            //    return NotFound();
-            //}
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
 
         [Route("/products")]
@@ -50,39 +50,55 @@ namespace BackendProductConfigurator.Controllers
 
         // POST api/<Controller>
         [HttpPost]
-        public void Post([FromBody] ConfiguratorPost value)
+        public ActionResult Post([FromBody] ConfiguratorPost value)
         {
-            Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
-            Configurator configurator;
-
-            configurator = AValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
-            AddConfigurator(configurator, configurators.Keys.First());
-            AValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
-            configurators.Remove(configurators.Keys.First());
-
-            foreach(KeyValuePair<string, Configurator> configDict in configurators)
+            try
             {
-                configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
-                //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
-                //if (validationResult == EValidationResult.ValidationPassed)
-                //{
+                Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
+                Configurator configurator;
+
+                configurator = AValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
+                AddConfigurator(configurator, configurators.Keys.First());
+                AValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
+                configurators.Remove(configurators.Keys.First());
+
+                foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                {
+                    configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
+                    //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
+                    //if (validationResult == EValidationResult.ValidationPassed)
+                    //{
                     AddConfigurator(configDict.Value, configDict.Key);
                     AValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
-                //}
+                    //}
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
             }
         }
-        public override void Delete(string id)
+        public override ActionResult Delete(string id)
         {
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
-            AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
+            try
+            {
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
+                AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
 
         [HttpGet]
         [Route("test")]
         public Configurator Test()
         {
-            return AValuesClass.AdaptConfiguratorsOptionIds(Get("Golf"));
+            return AValuesClass.AdaptConfiguratorsOptionIds(Get("Golf").Value);
         }
     }
 }

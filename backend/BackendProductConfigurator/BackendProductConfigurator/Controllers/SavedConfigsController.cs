@@ -16,58 +16,96 @@ namespace BackendProductConfigurator.Controllers
         // GET: /account/configuration
         [Route("/account/allorderedconfigurations")]
         [HttpGet]
-        public override List<ProductSaveExtended> Get()
+        public override ActionResult<IEnumerable<ProductSaveExtended>> Get()
         {
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            try
+            {
+                Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            if (account.IsAdmin)
-                return entities[GetAccLang(Request)];
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                if (account.IsAdmin)
+                    return entities[GetAccLang(Request)];
 
-            return new List<ProductSaveExtended>();
+                throw new Exception("Not an admin");
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized();
+            }
         }
 
         // GET: /account/configuration
         [Route("/account/configurations")]
         [HttpGet]
-        public List<ProductSave> GetSavedConfigs()
+        public ActionResult<List<ProductSave>> GetSavedConfigs()
         {
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            try
+            {
+                Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized();
+            }
         }
 
         // POST: /account/configuration
         [Route("/account/configurations/{configId}")]
         [HttpPost]
-        public void Post([FromBody] ProductSaveSlim value, string configId)
+        public ActionResult Post([FromBody] ProductSaveSlim value, string configId)
         {
-            string description, name;
-            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
-            description = configurator.Description;
-            name = configurator.Name;
-            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
-            entities[GetAccLang(Request)].Add(temp);
-            AValuesClass.PostValue(temp, GetAccLang(Request));
+            try
+            {
+                string description, name;
+                Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
+                description = configurator.Description;
+                name = configurator.Name;
+                ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
+                entities[GetAccLang(Request)].Add(temp);
+                AValuesClass.PostValue(temp, GetAccLang(Request));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [NonAction]
-        public void PostOrdered(ProductSaveExtended value, HttpRequest Request)
+        public ActionResult PostOrdered(ProductSaveExtended value, HttpRequest Request)
         {
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
+            try
+            {
+                entities[GetAccLang(Request)].Add(value);
+                AValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         // DELETE api/<Controller>/5
         [Route("/account/configurations/{id}")]
         [HttpDelete]
-        public void SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
+        public ActionResult SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
         {
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            try
+            {
+                Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
-            AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail});
+                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
+                AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
     }
 }
