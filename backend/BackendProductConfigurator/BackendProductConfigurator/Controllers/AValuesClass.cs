@@ -258,14 +258,27 @@ namespace BackendProductConfigurator.Controllers
                     Description = languageDict.Value.Description,
                     OptionGroups = GetConfiguratorValues<OptionGroup, OptionGroupIndex, DescribedIndex>(configuratorPost.OptionGroups, languageDict.Value, languageDict.Value.OptionGroups),
                     Options = GetConfiguratorValues<Option, IIndexable, Option>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
-                    OptionSections = GetConfiguratorValues<OptionSection, LanguageIndexGroup, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections),
+                    OptionSections = GetConfiguratorValues<OptionSection, LanguageIndexGroup, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections)
                 };
                 temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndexOption, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
+                temp.Rules.ReplacementGroups = FillReplacementGroups(configuratorPost.OptionGroups);
 
                 configs.Add(languageDict.Key, temp);
             }
 
             return configs;
+        }
+        private static Dictionary<string, List<string>> FillReplacementGroups(List<OptionGroupIndex> optionGroups)
+        {
+            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+            foreach(OptionGroupIndex optionGroup in optionGroups)
+            {
+                if(optionGroup.Replacement)
+                {
+                    dictionary.Add(optionGroup.Id, optionGroup.OptionIds);
+                }
+            }
+            return dictionary;
         }
         private static List<T> GetConfiguratorValues<T, K, L>(List<K> startElements, LanguageVariant languageVariant, List<L> languageList) where L : IIndexable where K : IIndexable where T : class, new()
         {
