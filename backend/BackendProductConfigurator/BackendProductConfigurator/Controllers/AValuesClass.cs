@@ -267,6 +267,22 @@ namespace BackendProductConfigurator.Controllers
 
             return configs;
         }
+        private static List<T> GetConfiguratorValues<T, K, L>(List<K> startElements, LanguageVariant languageVariant, List<L> languageList) where L : IIndexable where K : IIndexable
+        {
+            List<T> elements = new List<T>();
+
+            foreach(K element in startElements)
+            {
+                L currentElement = languageList.Where(x => x.Id == element.Id).First();
+                elements.Add(GenerateValues(element, currentElement));
+            }
+
+            return elements;
+        }
+        private static OptionSection GenerateValues(LanguageIndex loopElement, NamedIndex currentElement)
+        {
+            return new OptionSection() { Id = loopElement.Id, Name = currentElement.Name, OptionGroupIds = loopElement.OptionIds };
+        }
         private static List<OptionSection> GetOptionSectionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
         {
             List<OptionSection> optionSections = new List<OptionSection>();
