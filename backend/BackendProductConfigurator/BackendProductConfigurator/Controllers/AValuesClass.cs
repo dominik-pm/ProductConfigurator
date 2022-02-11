@@ -274,7 +274,14 @@ namespace BackendProductConfigurator.Controllers
             foreach(K element in startElements)
             {
                 L currentElement = languageList.Where(x => x.Id == element.Id).First();
-                //elements.Add(GenerateValues(element, currentElement));
+                if (typeof(T) == typeof(OptionSection))
+                    GenerateValues(element as LanguageIndex, currentElement as NamedIndex);
+                else if (typeof(T) == typeof(OptionGroup))
+                    GenerateValues(element as OptionGroupIndex, currentElement as DescribedIndex);
+                else if (typeof(T) == typeof(Option))
+                    GenerateValues(element as IIndexable, currentElement as Option);
+                else if (typeof(T) == typeof(ModelType))
+                    GenerateValues(element as LanguageIndex, currentElement as DescribedIndex);
             }
 
             return elements;
