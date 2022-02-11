@@ -40,12 +40,12 @@ namespace BackendProductConfigurator.Controllers
         public static void PostValue<T>(T value, string language) where T : class
         {
             if(ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(T)], value);
+                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(T)], value).Wait();
         }
         public static void PutValue<T>(T value, string language) where T : class
         {
             if (ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PutValue(language, serverAddress, typeApis[typeof(T)], value);
+                ADBAccess<T>.PutValue(language, serverAddress, typeApis[typeof(T)], value).Wait();
         }
         public static async void DeleteValue<T>(string language, T identifier) where T : class
         {
