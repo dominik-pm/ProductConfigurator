@@ -220,7 +220,7 @@ namespace BackendProductConfigurator.Controllers
 
         public static Account FillAccountFromToken(string bearerToken)
         {
-            Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
+            Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com", IsAdmin = true };
             //JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
 
             //bearerToken = bearerToken.Replace("Bearer ", "");
@@ -349,6 +349,24 @@ namespace BackendProductConfigurator.Controllers
             }
 
             return sb.ToString();
+        }
+        public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator)
+        {
+            foreach(Option option in configurator.Options)
+            {
+                option.Id += $"_{configurator.ConfigId}";
+            }
+            foreach(LanguageIndex li in configurator.OptionGroups)
+            {
+                li.Id += $"_{configurator.ConfigId}";
+                li.OptionIds = li.OptionIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
+            }
+            foreach(OptionSection os in configurator.OptionSections)
+            {
+                os.Id += $"_{configurator.ConfigId}";
+                os.OptionGroupIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
+            }
+            return configurator;
         }
     }
 }

@@ -49,12 +49,12 @@ namespace BackendProductConfigurator.Controllers
 
             foreach(KeyValuePair<string, Configurator> configDict in configurators)
             {
-                EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
-                if (validationResult == EValidationResult.ValidationPassed)
-                {
+                //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
+                //if (validationResult == EValidationResult.ValidationPassed)
+                //{
                     AddConfigurator(configDict.Value, configDict.Key);
                     AValuesClass.PostValue<Configurator>(configDict.Value, configDict.Key);
-                }
+                //}
             }
         }
         public override void Delete(string id)
@@ -62,6 +62,12 @@ namespace BackendProductConfigurator.Controllers
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
             AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
+        }
+
+        [HttpGet]
+        public Configurator Test()
+        {
+            return AValuesClass.AdaptConfiguratorsOptionIds(Get("Golf"));
         }
     }
 }
