@@ -256,11 +256,11 @@ namespace BackendProductConfigurator.Controllers
                     Rules = configuratorPost.Rules.ConvertToExtended(),
                     Name = languageDict.Value.Name,
                     Description = languageDict.Value.Description,
-                    OptionGroups = GetOptionGroupsFromLanguage(configuratorPost, languageDict.Value),
-                    Options = GetOptionsFromLanguage(configuratorPost, languageDict.Value),
-                    OptionSections = GetOptionSectionsFromLanguage(configuratorPost, languageDict.Value),
+                    OptionGroups = GetConfiguratorValues<OptionGroup, OptionGroupIndex, DescribedIndex>(configuratorPost.OptionGroups, languageDict.Value, languageDict.Value.OptionGroups),
+                    Options = GetConfiguratorValues<Option, IIndexable, Option>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
+                    OptionSections = GetConfiguratorValues<OptionSection, LanguageIndex, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections),
                 };
-                temp.Rules.Models = GetModelsFromLanguage(configuratorPost, languageDict.Value);
+                temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndex, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
 
                 configs.Add(languageDict.Key, temp);
             }
