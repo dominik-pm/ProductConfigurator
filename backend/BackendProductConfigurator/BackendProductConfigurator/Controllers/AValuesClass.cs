@@ -15,7 +15,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; } = EValueMode.DatabaseValues;
+        private static EValueMode ValueMode { get; } = EValueMode.TestValues;
         private static readonly string serverAddress = "http://andifined.ddns.net:5129";
         private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
 
@@ -292,7 +292,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 Id = loopElement.Id,
                 Name = currentElement.Name,
-                OptionGroupIds = loopElement.OptionIds
+                OptionGroupIds = new List<string>(loopElement.OptionIds)
             };
         }
         private static OptionGroup GenerateValues(OptionGroupIndex loopElement, DescribedIndex currentElement)
@@ -302,7 +302,7 @@ namespace BackendProductConfigurator.Controllers
                 Id = loopElement.Id,
                 Name = currentElement.Name,
                 Description = currentElement.Description,
-                OptionIds = loopElement.OptionIds,
+                OptionIds = new List<string>(loopElement.OptionIds),
                 Required = loopElement.Required
             };
         }
@@ -315,7 +315,7 @@ namespace BackendProductConfigurator.Controllers
             return new ModelType()
             {
                 Id = loopElement.Id,
-                OptionIds = loopElement.OptionIds,
+                OptionIds = new List<string>(loopElement.OptionIds),
                 Name = currentElement.Name,
                 Description = currentElement.Description
             };
