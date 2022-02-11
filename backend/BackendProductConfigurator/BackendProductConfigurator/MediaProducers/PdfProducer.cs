@@ -19,7 +19,7 @@ namespace BackendProductConfigurator.MediaProducers
             PdfPage page = document.AddPage();
             XGraphics gfx = XGraphics.FromPdfPage(page); //Holt sich seitenspezifische Details für die Zeichenmethoden
             XTextFormatter tf = new XTextFormatter(gfx); //Um Text besser zu formatieren
-            Configurator configurator = AValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Find(con => con.ConfigId == configId);
+            Configurator configurator = AValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Where(con => con.ConfigId == configId).First();
             Option tempOption;
             double smallSpacing = 24;
             double mediumSpacing = 30;

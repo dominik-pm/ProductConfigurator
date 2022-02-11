@@ -30,7 +30,7 @@ namespace BackendProductConfigurator.Controllers
         public override Configurator Get(string id)
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
+            return entities[GetAccLang(Request)].Where(entity => entity.ConfigId.Equals(id)).First();
         }
 
         [Route("/products")]
@@ -60,7 +60,7 @@ namespace BackendProductConfigurator.Controllers
         public override void Delete(string id)
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
             AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
         }
     }

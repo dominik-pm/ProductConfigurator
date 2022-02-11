@@ -44,8 +44,9 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ProductSaveSlim value, string configId)
         {
             string description, name;
-            description = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Description;
-            name = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Name;
+            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
+            description = configurator.Description;
+            name = configurator.Name;
             ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = new Account() { UserName = "testUser", UserEmail = "test@user.com" } };
             entities[GetAccLang(Request)].Add(temp);
             AValuesClass.PostValue(temp, GetAccLang(Request));
@@ -65,7 +66,7 @@ namespace BackendProductConfigurator.Controllers
         {
             Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
             AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail});
         }
     }

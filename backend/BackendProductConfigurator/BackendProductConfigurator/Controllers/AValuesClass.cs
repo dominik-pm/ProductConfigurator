@@ -16,10 +16,10 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
         private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
-        private static string serverAddress = "http://andifined.ddns.net:5129";
-        private static List<string> languages = new List<string>() { "de", "en", "fr" };
+        private static readonly string serverAddress = "http://andifined.ddns.net:5129";
+        private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
 
-        private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
             {typeof(ProductSaveExtended), "/db/configuration"},
             {typeof(Configurator), "/db/product" }

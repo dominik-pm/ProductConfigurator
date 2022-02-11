@@ -20,7 +20,7 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             EValidationResult validationResult;
-            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId);
+            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(config => config.ConfigId == configId).First();
             validationResult = ValidationMethods.ValidateConfiguration(value, configurator);
             if (validationResult == EValidationResult.ValidationPassed)
             {
