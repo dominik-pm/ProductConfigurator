@@ -23,7 +23,6 @@ namespace BackendProductConfigurator.Controllers
         private void AddConfigurator(Configurator value, string language)
         {
             entities[language].Add(value);
-            AValuesClass.ConfiguratorsSlim[language].Add(value);
         }
 
         // GET api/<Controller>/5
@@ -62,7 +61,6 @@ namespace BackendProductConfigurator.Controllers
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
-            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Remove(AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
             AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
         }
     }

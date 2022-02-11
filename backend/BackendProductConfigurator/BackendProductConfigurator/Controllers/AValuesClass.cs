@@ -11,7 +11,6 @@ namespace BackendProductConfigurator.Controllers
     public abstract class AValuesClass
     {
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
-        public static Dictionary<string, List<ConfiguratorSlim>> ConfiguratorsSlim { get; set; } = new Dictionary<string, List<ConfiguratorSlim>>() { { "de", new List<ConfiguratorSlim>() }, { "en", new List<ConfiguratorSlim>() }, { "fr", new List<ConfiguratorSlim>() } };
         public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
@@ -53,8 +52,6 @@ namespace BackendProductConfigurator.Controllers
             foreach(string language in languages)
             {
                 Configurators[language] = ADBAccess<Configurator>.GetValues(language, serverAddress, typeApis[typeof(Configurator)]).Result;
-
-                ConfiguratorsSlim[language] = Configurators[language].Cast<ConfiguratorSlim>().ToList();
 
                 SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
             }
@@ -167,31 +164,6 @@ namespace BackendProductConfigurator.Controllers
             };
 
             ConfiguredProducts["de"] = new List<ConfiguredProduct> { p1, p2, p3 };
-
-            ConfiguratorSlim ps1 = new ConfiguratorSlim()
-            {
-                ConfigId = "BENZ1",
-                Name = "Fetter Benz",
-                Description = "Laut und groß",
-                Images = productImages
-            };
-
-            ConfiguratorSlim ps2 = new ConfiguratorSlim() {
-                ConfigId = "ALFA1",
-                Name = "Eleganter Alfa Romeo",
-                Description = "Stylisch und erweckt",
-                Images = productImages
-            };
-
-            ConfiguratorSlim ps3 = new ConfiguratorSlim()
-            {
-                ConfigId = "BENZ2",
-                Name = "Fetterer Benz",
-                Description = "Umso lauter und größer",
-                Images = productImages
-            };
-
-            ConfiguratorsSlim["de"] = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
 
             Account acc1 = new Account()
             {
