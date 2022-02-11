@@ -372,17 +372,19 @@ namespace BackendProductConfigurator.Controllers
             configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
             configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
             
-            foreach()
+            //foreach()
             
             return configurator;
         }
-        private static Dictionary<string, List<string>> AdaptIdsInDictionarys<T>(Dictionary<string, List<string>> dictionary, string configId)
+        private static Dictionary<string, T> AdaptIdsInDictionarys<T>(Dictionary<string, T> dictionary, string configId)
         {
-            Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
-            foreach (KeyValuePair<string, List<string>> dic in dictionary)
+            Dictionary<string, T> temp = new Dictionary<string, T>();
+            foreach (KeyValuePair<string, T> dic in dictionary)
             {
-                temp.Add($"+{configId}", dic.Value.Select(x => x += $"_{configId}").ToList());
-                dictionary.Remove(dic.Key);
+                if (typeof(T) == typeof(List<string>))
+                    temp.Add($"+{configId}", (dic.Value as List<string>).Select(x => x += $"_{configId}"));
+                else if (typeof(T) == typeof(float))
+                    temp.Add($"+{configId}", dic.Value);
             }
             return temp;
         }
