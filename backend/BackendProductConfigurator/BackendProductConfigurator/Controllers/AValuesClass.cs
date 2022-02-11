@@ -267,7 +267,7 @@ namespace BackendProductConfigurator.Controllers
 
             return configs;
         }
-        private static List<T> GetConfiguratorValues<T, K, L>(List<K> startElements, LanguageVariant languageVariant, List<L> languageList) where L : IIndexable where K : IIndexable
+        private static List<T> GetConfiguratorValues<T, K, L>(List<K> startElements, LanguageVariant languageVariant, List<L> languageList) where L : IIndexable where K : IIndexable where T : class, new()
         {
             List<T> elements = new List<T>();
 
@@ -275,13 +275,13 @@ namespace BackendProductConfigurator.Controllers
             {
                 L currentElement = languageList.Where(x => x.Id == element.Id).First();
                 if (typeof(T) == typeof(OptionSection))
-                    GenerateValues(element as LanguageIndex, currentElement as NamedIndex);
+                    elements.Add(GenerateValues(element as LanguageIndex, currentElement as NamedIndex) as T);
                 else if (typeof(T) == typeof(OptionGroup))
-                    GenerateValues(element as OptionGroupIndex, currentElement as DescribedIndex);
+                    elements.Add(GenerateValues(element as OptionGroupIndex, currentElement as DescribedIndex) as T);
                 else if (typeof(T) == typeof(Option))
-                    GenerateValues(element as IIndexable, currentElement as Option);
+                    elements.Add(GenerateValues(element as IIndexable, currentElement as Option) as T);
                 else if (typeof(T) == typeof(ModelType))
-                    GenerateValues(element as LanguageIndex, currentElement as DescribedIndex);
+                    elements.Add(GenerateValues(element as LanguageIndex, currentElement as DescribedIndex) as T);
             }
 
             return elements;
