@@ -19,8 +19,8 @@ function OptionGroup({group, name, description, sectionId, allGroups, groupRequi
 
     function handleAddOption() {
         const data = {
-            optionName: {name: 'name', value: '' },
-            optionDescription: {name: 'description', value: ''},
+            optionName: {name: translate('optionName', language), value: '' },
+            optionDescription: {name: translate('optionDescription', language), value: ''},
         }
         openInputDialog(translate('newOption', language), data, (data) => {
             const success = createOption(id, data.optionName.value, data.optionDescription.value)
@@ -61,7 +61,7 @@ function OptionGroup({group, name, description, sectionId, allGroups, groupRequi
                     <Typography variant="h3">
                         {name}
                         <EditButton 
-                            title={`${translate('edit', language)}`} 
+                            title={`${translate('editGroupName', language)}`}
                             propertyName={translate('groupName', language)} 
                             oldValue={name} 
                             valueChangedCallback={(newValue) => {changeGroupProperties({groupId: id, newName: newValue})}}
@@ -70,7 +70,7 @@ function OptionGroup({group, name, description, sectionId, allGroups, groupRequi
                     <Typography variant="subtitle1">
                         {description}
                         <EditButton 
-                            title={`${translate('edit', language)}`} 
+                            title={`${translate('editGroupDescription', language)}`} 
                             propertyName={translate('groupDescription', language)} 
                             oldValue={description} 
                             valueChangedCallback={(newValue) => {changeGroupProperties({groupId: id, newDescription: newValue})}}

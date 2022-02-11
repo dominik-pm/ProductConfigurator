@@ -38,13 +38,13 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
         <Box width="100%">
             <Grid container justifyContent="space-between">
 
-                <Typography variant="h3">Models</Typography>
+                <Typography variant="h3">{translate('models', language)}</Typography>
 
                 <Box sx={{ minWidth: 120 }}>
                     <FormControl variant='standard' 
                         fullWidth
                     >
-                        <InputLabel id="select-default-model-label">Default Model</InputLabel>
+                        <InputLabel id="select-default-model-label">{translate('defaultModel', language)}</InputLabel>
                         <Select
                             labelId='select-default-model-label'
                             value={selectedDefaultModel}

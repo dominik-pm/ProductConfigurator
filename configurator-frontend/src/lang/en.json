@@ -69,12 +69,21 @@
     "newOption": "New Option",
     "remove": "Remove",
     "optionName": "Option Name",
+    "editOptionName": "Edit Option Name",
     "optionDescription": "Option Description",
+    "editOptionDescription": "Edit Option Description",
     "groupName": "Group Name",
+    "editGroupName": "Edit Group Name",
     "groupDescription": "Group Description",
+    "editGroupDescription": "Edit Group Description",
     "sectionName": "Section Name",
+    "editSectionName": "edit section name",
+    "models": "Models",
+    "defaultModel": "Default Model",
     "modelName": "Model Name",
+    "editModelName": "Edit Model Name",
     "modelDescription": "Model Description",
+    "editModelDescription": "Edit Model Description",
     "options": "Options",
     "description": "Description",
     "requirements": "requirements",
@@ -83,5 +92,4 @@
     "required": "required",
     "multiselect": "multiselect",
     "edit": "Edit"
-
 }

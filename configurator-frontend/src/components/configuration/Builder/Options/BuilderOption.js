@@ -62,7 +62,7 @@ function BuilderOption({ optionId, group, option, optionPrice, allOptions, optio
                         <Typography variant="body1">
                             {name}
                             <EditButton 
-                                title={`${translate('edit', language)}`} 
+                                title={`${translate('editOptionName', language)}`}
                                 propertyName={translate('optionName', language)} 
                                 oldValue={name} 
                                 valueChangedCallback={(newValue) => {changeOptionProperties({optionId, newName: newValue})}}
@@ -71,7 +71,7 @@ function BuilderOption({ optionId, group, option, optionPrice, allOptions, optio
                         <Typography variant="body2">
                             {description}
                             <EditButton 
-                                title={`${translate('edit', language)}`} 
+                                title={`${translate('editOptionDescription', language)}`}
                                 propertyName={translate('optionDescription', language)} 
                                 oldValue={description} 
                                 valueChangedCallback={(newValue) => {changeOptionProperties({optionId, newDescription: newValue})}}

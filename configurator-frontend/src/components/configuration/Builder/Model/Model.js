@@ -43,9 +43,9 @@ function Model({ model, name, description, isSelected = false, allOptions, getBu
                     </Typography>
 
                     <EditButton 
-                        title={`${translate('edit', language)}`} 
-                        propertyName={translate('modelName', language)} 
-                        oldValue={name} 
+                        title={`${translate('editModelName', language)}`} 
+                            propertyName={translate('modelName', language)} 
+                            oldValue={name} 
                         valueChangedCallback={(newValue) => {changeModelProperties({modelName: modelId, newName: newValue})}}
                     ></EditButton>
 
@@ -53,8 +53,8 @@ function Model({ model, name, description, isSelected = false, allOptions, getBu
                 <Grid item container alignItems="center">
                     <Typography variant="body2">
                         {description}
-                        <EditButton 
-                            title={`${translate('edit', language)}`} 
+                        <EditButton
+                            title={`${translate('editModelDescription', language)}`} 
                             propertyName={translate('modelDescription', language)} 
                             oldValue={description} 
                             valueChangedCallback={(newValue) => {changeModelProperties({modelName: modelId, newDescription: newValue})}}

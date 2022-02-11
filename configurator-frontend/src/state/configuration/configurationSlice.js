@@ -54,7 +54,7 @@ export const configurationSlice = createSlice({
         loadingFailed: (state, action) => {
             console.log('configuration loading failed:', action.payload)
             state.status = 'failed'
-            state.error = action.payload
+            state.error = action.payload.toString()
             state.configuration = {}
             state.selectedOptions = []
         }

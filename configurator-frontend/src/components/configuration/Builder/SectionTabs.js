@@ -102,7 +102,7 @@ function SectionTabs({ sections, getOptionGroupsInSection, optionGroups, openInp
             <Box>
                 <Button onClick={() => handleAddGroup(sectionId)}>{translate('addOptionGroup', language)}</Button>
                 <EditButton 
-                    title={`${translate('edit', language)}`}
+                    title={`${translate('editSectionName', language)}`}
                     propertyName={translate('sectionName', language)}
                     oldValue={sectionName}
                     valueChangedCallback={(newValue) => {changeSectionProperties({sectionId, newName: newValue})}}
@@ -115,7 +115,7 @@ function SectionTabs({ sections, getOptionGroupsInSection, optionGroups, openInp
 
     return (
         <Box sx={{ width: '100%' }}>
-            <Typography variant="h3">Options</Typography>
+            <Typography variant="h3">{translate('options', language)}</Typography>
 
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs 

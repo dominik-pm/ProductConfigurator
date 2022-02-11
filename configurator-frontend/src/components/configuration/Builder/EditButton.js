@@ -10,14 +10,14 @@ function EditButton({ title, propertyName = '', oldValue = '', textButton = fals
         const data = {
             item: {name: propertyName || 'new value', value: oldValue }
         }
-        openInputDialog(`${title} ${propertyName}`, data, (data) => {
+        openInputDialog(`${title}`, data, (data) => {
             valueChangedCallback(data.item.value)
         })
     }
 
     function renderTextButton() {
         return (
-            <Button onClick={handleClick}>{`${title} ${propertyName}`}</Button>
+            <Button onClick={handleClick}>{`${title}`}</Button>
         )
     }
 
