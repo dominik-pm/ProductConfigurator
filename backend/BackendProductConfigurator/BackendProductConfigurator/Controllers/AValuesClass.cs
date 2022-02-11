@@ -274,14 +274,44 @@ namespace BackendProductConfigurator.Controllers
             foreach(K element in startElements)
             {
                 L currentElement = languageList.Where(x => x.Id == element.Id).First();
-                elements.Add(GenerateValues(element, currentElement));
+                //elements.Add(GenerateValues(element, currentElement));
             }
 
             return elements;
         }
         private static OptionSection GenerateValues(LanguageIndex loopElement, NamedIndex currentElement)
         {
-            return new OptionSection() { Id = loopElement.Id, Name = currentElement.Name, OptionGroupIds = loopElement.OptionIds };
+            return new OptionSection()
+            {
+                Id = loopElement.Id,
+                Name = currentElement.Name,
+                OptionGroupIds = loopElement.OptionIds
+            };
+        }
+        private static OptionGroup GenerateValues(OptionGroupIndex loopElement, DescribedIndex currentElement)
+        {
+            return new OptionGroup()
+            {
+                Id = loopElement.Id,
+                Name = currentElement.Name,
+                Description = currentElement.Description,
+                OptionIds = loopElement.OptionIds,
+                Required = loopElement.Required
+            };
+        }
+        private static Option GenerateValues(IIndexable loopElement, Option currentElement)
+        {
+            return currentElement;
+        }
+        private static ModelType GenerateValues(LanguageIndex loopElement, DescribedIndex currentElement)
+        {
+            return new ModelType()
+            {
+                Id = loopElement.Id,
+                OptionIds = loopElement.OptionIds,
+                Name = currentElement.Name,
+                Description = currentElement.Description
+            };
         }
         private static List<OptionSection> GetOptionSectionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
         {
