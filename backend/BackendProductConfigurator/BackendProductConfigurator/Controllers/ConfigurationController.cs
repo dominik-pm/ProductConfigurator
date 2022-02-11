@@ -34,6 +34,14 @@ namespace BackendProductConfigurator.Controllers
             return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
         }
 
+        [Route("/products")]
+        [HttpGet]
+        public List<ConfiguratorSlim> GetConfiguratorSlims()
+        {
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+            return entities[GetAccLang(Request)].Cast<ConfiguratorSlim>().ToList();
+        }
+
         // POST api/<Controller>
         [HttpPost]
         public void Post([FromBody] ConfiguratorPost value)
