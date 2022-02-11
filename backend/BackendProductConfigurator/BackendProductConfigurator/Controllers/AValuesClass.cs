@@ -366,12 +366,25 @@ namespace BackendProductConfigurator.Controllers
                 os.Id += $"_{configurator.ConfigId}";
                 os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
             }
-            foreach(KeyValuePair<string, List<string>> dic in configurator.Rules.ReplacementGroups)
-            {
-                configurator.Rules.ReplacementGroups.Add($"+{configurator.ConfigId}", dic.Value.Select(x => x += $"_{configurator.ConfigId}").ToList());
-                configurator.Rules.ReplacementGroups.Remove(dic.Key);
-            }
+            
+            configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);
+            configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
+            configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
+            configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
+            
+            foreach()
+            
             return configurator;
+        }
+        private static Dictionary<string, List<string>> AdaptIdsInDictionarys<T>(Dictionary<string, List<string>> dictionary, string configId)
+        {
+            Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
+            foreach (KeyValuePair<string, List<string>> dic in dictionary)
+            {
+                temp.Add($"+{configId}", dic.Value.Select(x => x += $"_{configId}").ToList());
+                dictionary.Remove(dic.Key);
+            }
+            return temp;
         }
     }
 }
