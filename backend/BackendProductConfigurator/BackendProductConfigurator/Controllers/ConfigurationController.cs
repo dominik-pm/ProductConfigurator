@@ -29,15 +29,15 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet("{id}")]
         public override Configurator Get(string id)
         {
-            try
-            {
+            //try
+            //{
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 return entities[GetAccLang(Request)].Where(entity => entity.ConfigId.Equals(id)).First();
-            }
-            catch (Exception ex)
-            {
-                return NotFound();
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    return NotFound();
+            //}
         }
 
         [Route("/products")]
