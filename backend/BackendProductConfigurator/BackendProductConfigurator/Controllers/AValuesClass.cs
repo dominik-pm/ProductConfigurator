@@ -364,7 +364,12 @@ namespace BackendProductConfigurator.Controllers
             foreach(OptionSection os in configurator.OptionSections)
             {
                 os.Id += $"_{configurator.ConfigId}";
-                os.OptionGroupIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
+                os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
+            }
+            foreach(KeyValuePair<string, List<string>> dic in configurator.Rules.ReplacementGroups)
+            {
+                configurator.Rules.ReplacementGroups.Add($"+{configurator.ConfigId}", dic.Value.Select(x => x += $"_{configurator.ConfigId}").ToList());
+                configurator.Rules.ReplacementGroups.Remove(dic.Key);
             }
             return configurator;
         }

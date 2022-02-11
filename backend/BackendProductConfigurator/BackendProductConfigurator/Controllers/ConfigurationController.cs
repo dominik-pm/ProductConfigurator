@@ -65,6 +65,7 @@ namespace BackendProductConfigurator.Controllers
         }
 
         [HttpGet]
+        [Route("test")]
         public Configurator Test()
         {
             return AValuesClass.AdaptConfiguratorsOptionIds(Get("Golf"));
