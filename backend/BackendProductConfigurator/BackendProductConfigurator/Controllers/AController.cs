@@ -83,13 +83,6 @@ namespace BackendProductConfigurator.Controllers
         [NonAction]
         public override void Post([FromBody] ConfiguredProduct value) { }
     }
-    public partial class ProductsController : AController<ConfiguratorSlim, string>
-    {
-        [Route("/redactedProducts")]
-        [HttpPost]
-        [NonAction]
-        public override void Post([FromBody] ConfiguratorSlim value) { }
-    }
     public partial class ConfigurationController : AController<Configurator, string>
     {
         // POST api/<Controller>
