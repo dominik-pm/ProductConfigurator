@@ -46,9 +46,11 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguratorPost value)
         {
             Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
+            Configurator configurator;
 
             foreach(KeyValuePair<string, Configurator> configDict in configurators)
             {
+                configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
                 //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
                 //if (validationResult == EValidationResult.ValidationPassed)
                 //{

@@ -354,17 +354,17 @@ namespace BackendProductConfigurator.Controllers
         {
             foreach(Option option in configurator.Options)
             {
-                option.Id += $"_{configurator.ConfigId}";
+                option.Id += $"+{configurator.ConfigId}";
             }
             foreach(LanguageIndex li in configurator.OptionGroups)
             {
-                li.Id += $"_{configurator.ConfigId}";
-                li.OptionIds = li.OptionIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
+                li.Id += $"+{configurator.ConfigId}";
+                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
             }
             foreach(OptionSection os in configurator.OptionSections)
             {
-                os.Id += $"_{configurator.ConfigId}";
-                os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"_{configurator.ConfigId}").ToList();
+                os.Id += $"+{configurator.ConfigId}";
+                os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
             }
             
             configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);
@@ -381,7 +381,7 @@ namespace BackendProductConfigurator.Controllers
             Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
             foreach (KeyValuePair<string, List<string>> dic in dictionary)
             {
-                temp.Add($"+{configId}", dic.Value.Select(x => x += $"_{configId}").ToList());
+                temp.Add($"{dic.Key}+{configId}", dic.Value.Select(x => x += $"+{configId}").ToList());
             }
             return temp;
         }
@@ -390,7 +390,7 @@ namespace BackendProductConfigurator.Controllers
             Dictionary<string, float> temp = new Dictionary<string, float>();
             foreach (KeyValuePair<string, float> dic in dictionary)
             {
-                temp.Add($"+{configId}", dic.Value);
+                temp.Add($"{dic.Key}+{configId}", dic.Value);
             }
             return temp;
         }
