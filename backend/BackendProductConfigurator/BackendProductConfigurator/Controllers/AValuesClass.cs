@@ -371,20 +371,26 @@ namespace BackendProductConfigurator.Controllers
             configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
             configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
             configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
-            
-            //foreach()
+
+            configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId);
             
             return configurator;
         }
-        private static Dictionary<string, T> AdaptIdsInDictionarys<T>(Dictionary<string, T> dictionary, string configId)
+        private static Dictionary<string, List<string>> AdaptIdsInDictionarys(Dictionary<string, List<string>> dictionary, string configId)
         {
-            Dictionary<string, T> temp = new Dictionary<string, T>();
-            foreach (KeyValuePair<string, T> dic in dictionary)
+            Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
+            foreach (KeyValuePair<string, List<string>> dic in dictionary)
             {
-                if (typeof(T) == typeof(List<string>))
-                    temp.Add($"+{configId}", (dic.Value as List<string>).Select(x => x += $"_{configId}"));
-                else if (typeof(T) == typeof(float))
-                    temp.Add($"+{configId}", dic.Value);
+                temp.Add($"+{configId}", dic.Value.Select(x => x += $"_{configId}").ToList());
+            }
+            return temp;
+        }
+        private static Dictionary<string, float> AdaptIdsInDictionarys(Dictionary<string, float> dictionary, string configId)
+        {
+            Dictionary<string, float> temp = new Dictionary<string, float>();
+            foreach (KeyValuePair<string, float> dic in dictionary)
+            {
+                temp.Add($"+{configId}", dic.Value);
             }
             return temp;
         }
