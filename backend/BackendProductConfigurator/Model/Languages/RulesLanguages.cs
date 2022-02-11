@@ -9,7 +9,7 @@ namespace Model.Languages
 {
     public class RulesLanguages : Rules
     {
-        public List<LanguageIndex> Models { get; set; } = new List<LanguageIndex>();
+        public List<LanguageIndexOption> Models { get; set; } = new List<LanguageIndexOption>();
         public RulesExtended ConvertToExtended()
         {
             RulesExtended rulesExtended = new RulesExtended()
