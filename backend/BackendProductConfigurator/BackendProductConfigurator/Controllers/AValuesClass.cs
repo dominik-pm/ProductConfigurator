@@ -15,7 +15,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.TestValues;
+        private static EValueMode ValueMode { get; } = EValueMode.DatabaseValues;
         private static readonly string serverAddress = "http://andifined.ddns.net:5129";
         private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
 
@@ -220,26 +220,26 @@ namespace BackendProductConfigurator.Controllers
 
         public static Account FillAccountFromToken(string bearerToken)
         {
-            Account account = new Account();
-            JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
+            Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
+            //JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
 
-            bearerToken = bearerToken.Replace("Bearer ", "");
+            //bearerToken = bearerToken.Replace("Bearer ", "");
 
-            foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
-            {
-                switch(claim.Type)
-                {
-                    case ClaimTypes.Name:
-                        account.UserName = claim.Value;
-                        break;
-                    case ClaimTypes.Email:
-                        account.UserEmail = claim.Value;
-                        break;
-                    case "admin":
-                        account.IsAdmin = Convert.ToBoolean(claim.Value);
-                        break;
-                }
-            }
+            //foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
+            //{
+            //    switch(claim.Type)
+            //    {
+            //        case ClaimTypes.Name:
+            //            account.UserName = claim.Value;
+            //            break;
+            //        case ClaimTypes.Email:
+            //            account.UserEmail = claim.Value;
+            //            break;
+            //        case "admin":
+            //            account.IsAdmin = Convert.ToBoolean(claim.Value);
+            //            break;
+            //    }
+            //}
 
             return account;
         }

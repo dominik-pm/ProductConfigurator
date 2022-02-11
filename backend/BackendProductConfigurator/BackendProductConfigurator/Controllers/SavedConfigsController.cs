@@ -47,7 +47,7 @@ namespace BackendProductConfigurator.Controllers
             Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
             description = configurator.Description;
             name = configurator.Name;
-            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = new Account() { UserName = "testUser", UserEmail = "test@user.com" } };
+            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
             entities[GetAccLang(Request)].Add(temp);
             AValuesClass.PostValue(temp, GetAccLang(Request));
         }
