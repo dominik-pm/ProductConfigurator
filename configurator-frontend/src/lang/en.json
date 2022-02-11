@@ -53,6 +53,7 @@
     "createConfiguration": "Create Configuration",
 
     "createNewConfiguration": "Create a new Configuration",
+    "productProperties": "Product Properties",
     "finishBuild": "Finish New Configuration",
     "resetBuild": "Reset",
     "resetBuildConfirmation": "Do you really want to reset this configuration?",

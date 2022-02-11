@@ -1,6 +1,6 @@
 import { Delete, Done } from '@mui/icons-material'
 import { FormControl, Grid, IconButton, InputLabel, ListItemText, MenuItem, OutlinedInput, Select, Tooltip, Typography } from '@mui/material'
-import React, { Component, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { languageNames, translate } from '../../../lang'
@@ -8,15 +8,17 @@ import { alertTypes, openAlert } from '../../../state/alert/alertSlice'
 import { selectBuilderError, selectBuilderInputLanguage, selectBuilderStatus } from '../../../state/configurationBuilder/builderSelectors'
 import { changeInputLanguage, finishConfigurationBuild, loadingHandled, resetBuild, saveBuilderToStorage } from '../../../state/configurationBuilder/builderSlice'
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
-import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAdmin } from '../../../state/user/userSelector'
 import ConfigurationProperties from './ConfigurationProperties'
 import CreateModel from './Model/CreateModel'
 import SectionTabs from './SectionTabs'
 
-function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openAlert, openInputDialog, openConfirmDialog, changeInputLanguage, saveBuilderToStorage, finish, reset, loadingHandled, language }) {
+function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openAlert, openConfirmDialog, changeInputLanguage, saveBuilderToStorage, finish, reset, loadingHandled, language }) {
     
+    const autoSave = false
+    const autoSaveInterval = 10000
+
     const navigate = useNavigate()
 
     // open alert and navigate to the home page if the configuration is created
@@ -47,25 +49,20 @@ function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openA
 
     // start the auto save when the component is initialized
     useEffect(() => {
+        if (!autoSave) return
+
         let saveBuilderInterval = setInterval(() => {
             console.log('Saving Builder...')
             saveBuilderToStorage()
-        }, 10000)
+        }, autoSaveInterval)
 
         // clear interval when the component is unmounted
         return () => {clearInterval(saveBuilderInterval)}
     }, [saveBuilderToStorage])
 
     const handleFinishClicked = () => {
-        const data = {
-            configurationName: {name: translate('configurationName', language), value: '' }
-        }
-        const title = translate('finishConfiguration', language)
-
-        openInputDialog(title, data, (data) => {
-            const configurationName = data.configurationName.value
-
-            finish(configurationName)
+        openConfirmDialog(translate('createConfiguration', language), {}, null, () => {
+            finish()
         })
     }
 
@@ -156,7 +153,6 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     openAlert,
-    openInputDialog: inputDialogOpen,
     openConfirmDialog: confirmDialogOpen,
     changeInputLanguage,
     saveBuilderToStorage,

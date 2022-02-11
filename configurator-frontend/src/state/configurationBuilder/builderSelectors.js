@@ -19,12 +19,22 @@ export const selectBuilderOptionRequirements = (state) =>       state.builder.co
 export const selectBuilderOptionIncompatibilities = (state) =>  state.builder.configuration.rules.incompatibilities
 export const selectBuilderGroupRequirements = (state) =>        state.builder.configuration.rules.groupRequirements || []
 
-export const selectBuilderDescription = (state) =>                      state.builder.configuration.languages[state.builder.currentLanguage].description
+const selectBuilderName = (state) =>                             state.builder.configuration.languages[state.builder.currentLanguage].name
+const selectBuilderDescription = (state) =>                      state.builder.configuration.languages[state.builder.currentLanguage].description
 export const selectBuilderOptionsFromCurrentLanguage = (state) =>       state.builder.configuration.languages[state.builder.currentLanguage].options
 export const selectBuilderGroupsFromCurrentLanguage = (state) =>        state.builder.configuration.languages[state.builder.currentLanguage].optionGroups
 export const selectBuilderSectionsFromCurrentLanguage = (state) =>      state.builder.configuration.languages[state.builder.currentLanguage].optionSections
 
-const selectName = (state, name) =>                                 name
+const selectName = (state, name) =>                             name
+
+// also updates cached value when builder language changes
+export const getBuilderName = createSelector([selectBuilderName, selectCurrentBuilderLanguage], (builderName, lang) => {
+    return builderName ? builderName : ''
+})
+// also updates cached value when builder language changes
+export const getBuilderDescription = createSelector([selectBuilderDescription, selectCurrentBuilderLanguage], (builderDescription, lang) => {
+    return builderDescription ? builderDescription : ''
+})
 
 export const getBuilderOptionById = createSelector([selectName, selectBuilderOptionsFromCurrentLanguage], (optionId, options) => {
     const option = options.find(o => o.id === optionId)
@@ -69,10 +79,6 @@ const getBuilderLanguageObject = createSelector([selectBuilderLanguages, selectC
     return languages[language]
 })
 
-// export const getBuilderModelOptions = createSelector([selectName, selectBuilderModels, selectBuilderOptions], (modelName, models, options) => {
-//     const model = models.find(m => m.modelName === modelName)
-//     return model.options
-// })
 
 export const getDoesSectionExist = createSelector([selectBuilderSections, selectName], (sections, sectionName) => {
     return sections.find(s => s.id.toUpperCase() === sectionName.toUpperCase()) ? true : false

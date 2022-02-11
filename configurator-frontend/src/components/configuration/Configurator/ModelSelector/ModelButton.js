@@ -1,7 +1,7 @@
 import { Box, ButtonBase, List, ListSubheader, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { selectOptionSections, selectSelectedOptions } from '../../../../state/configuration/configurationSelectors'
+import { extractModelDescriptionFromModel, extractModelNameFromModel, extractModelOptionsFromModel, selectOptionSections, selectSelectedOptions } from '../../../../state/configuration/configurationSelectors'
 import { setModel } from '../../../../state/configuration/configurationSlice'
 import SectionOptionList from './SectionOptionList'
 
@@ -10,7 +10,9 @@ function ModelButton({ model, isSelected = false, disabled = false, selectedOpti
     // for the custom model, dont display sections if it is not selected
     if (!model && !isSelected) sections = []
 
-    const { name, description, options } = model || { name: 'Custom', description: '', options: isSelected ? selectedOptions : [] }
+    const name = model ? extractModelNameFromModel(model) : 'Custom'
+    const description = model ? extractModelDescriptionFromModel(model) : ''
+    const options = model ? extractModelOptionsFromModel(model) : (isSelected ? selectedOptions : [])
 
     const [hover, setHover] = useState(false)
 

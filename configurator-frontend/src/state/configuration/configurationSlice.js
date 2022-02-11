@@ -89,7 +89,7 @@ const checkModel = () => (dispatch, getState) => {
     const containsAll = (arr1, arr2) => arr2.every(arr2Item => arr1.includes(arr2Item))
     const sameMembers = (arr1, arr2) => containsAll(arr1, arr2) && containsAll(arr2, arr1);
     for (const model of models) {
-        if (sameMembers(model.options, selectedOptions)) {
+        if (sameMembers(model.optionIds, selectedOptions)) {
             dispatch(setModel(model.name))
             return
         }

@@ -42,6 +42,10 @@ export const selectOptionSections = state =>            state.configuration.conf
 export const selectSelectedOptions = state =>           state.configuration.selectedOptions
 
 
+export const extractModelNameFromModel = model =>           model.name || ''
+export const extractModelDescriptionFromModel = model =>    model.description || ''
+export const extractModelOptionsFromModel = model =>        model.optionIds || []
+
 // export const getCurrentModel = createSelector([selectModels, selectSelectedModel, selectDefaultModel], (models, selectedModel, defaultModel) => {
 //     const modelName = selectedModel ? selectedModel : defaultModel
 
@@ -50,7 +54,7 @@ export const selectSelectedOptions = state =>           state.configuration.sele
 export const getModelOptions = createSelector([selectModels, selectModelName], (models, modelName) => {
     const model = models.find(m => m.name === modelName)
 
-    return model ? model.options : []
+    return model ? model.optionIds : []
 })
 
 export const getOptionsInSection = createSelector([selectSectionId, selectOptionGroups, selectOptionSections], (sectionId, groups, sections) => {

@@ -9,7 +9,7 @@ function SectionOptionList({ allOptions, selectedOptions }) {
     if (!selectedOptions || !allOptions) {
         console.log(selectedOptions)
         return (
-            <>KAPUTT</>
+            <></>
         )
     }
 

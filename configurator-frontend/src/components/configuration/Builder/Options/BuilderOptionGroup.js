@@ -93,9 +93,24 @@ function OptionGroup({group, name, description, sectionId, allGroups, groupRequi
             </Box>
 
             <Grid item container justifyContent="center">
-                {Multiselect(translate('requirements', language), name, groupRequirements, allGroups.filter(g => g.id !== id), handleSetGroupRequirements)}
-                {CheckboxInput(translate('required', language), required, (e) => handleChangeRequired(e))}
-                {CheckboxInput(translate('multiselect', language), !replacement, (e) => handleChangeMultiselect(e))}
+                <Grid 
+                    item container justifyContent="center"
+                    xs={12} xl={6}
+                >
+                    {Multiselect(translate('requirements', language), name, groupRequirements, allGroups.filter(g => g.id !== id), handleSetGroupRequirements)}
+                </Grid>
+                <Grid 
+                    item container justifyContent="center"
+                    xs={12} xl={3} 
+                >
+                    {CheckboxInput(translate('required', language), required, (e) => handleChangeRequired(e))}
+                </Grid>
+                <Grid 
+                    item container justifyContent="center"
+                    xs={12} xl={3}
+                >
+                    {CheckboxInput(translate('multiselect', language), !replacement, (e) => handleChangeMultiselect(e))}
+                </Grid>
             </Grid>
             
             <Box>

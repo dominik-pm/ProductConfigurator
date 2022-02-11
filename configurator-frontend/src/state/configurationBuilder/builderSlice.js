@@ -5,214 +5,321 @@ import { defaultLang } from '../../lang'
 import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration } from './builderSelectors'
 
 
-const initialState = {
-    configuration: {
-        configId: '',
-        images: [],
-        options: [
+const initialConfiguration = {
+    configId: '',
+    images: [],
+    options: [],
+    optionSections: [],
+    optionGroups: [],
+    rules: {
+        basePrice: 0,
+        defaultModel: '',
+        models: [],
+        groupRequirements: {
+            // PANORAMATYPE_GROUP: ['PANORAMA_GROUP']
+        },
+        requirements: {
+            // BLUE: ['STEEL16'],
+        },
+        incompatibilities: {
+            // PANORAMAROOF: ['PETROL']
+        },
+        priceList: {
+            // BLUE: 200
+        }
+    },
+    languages: {
+        // en: {
+        //     name: '',
+        //     description: '',
+        //     options: [
+        //         {
+        //             id: 'ALLOY19',
+        //             name: '19 inch Alloy',
+        //             description: 'description',
+        //         }
+        //     ],
+        //     optionSections: [
+        //         {
+        //             id: 'EXTERIOR2',
+        //             name: 'Exterior'
+        //         }
+        //     ],
+        //     optionGroups: [
+        //         {
+        //             id: 'WHEELS2',
+        //             name: 'WHEELS2',
+        //             description: 'round stuff'
+        //         }
+        //     ],
+        //     models: [
+        //         {
+        //             id: 'Sport',
+        //             name: 'Sport',
+        //             description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
+        //         }
+        //     ]
+        // }
+    }
+}
+
+const testConfiguration = {
+    configId: 'TestNeueKonfig_-_ENTitle',
+    images: [],
+    options: [
+        {
+            id: 'ALLOY19',
+            groupId: 'WHEELS2'
+        },
+        {
+            id: 'STEEL16',
+            groupId: 'WHEELS2'
+        },
+        {
+            id: 'RED',
+            groupId: 'COLOR_GROUP2'
+        },
+        {
+            id: 'BLUE222',
+            groupId: 'COLOR_GROUP2'
+        }
+    ],
+    optionSections: [
+        {
+            id: 'EXTERIOR2',
+            optionGroupIds: [
+                'WHEELS2', 'COLOR_GROUP2'
+            ]
+        }
+    ],
+    optionGroups: [
+        {
+            id: 'WHEELS2',
+            optionIds: [
+                'ALLOY19', 'STEEL16'
+            ],
+            required: true,
+            replacement: true
+        },
+        {
+            id: 'COLOR_GROUP2',
+            optionIds: [
+                'BLUE222', 'RED'
+            ],
+            required: false,
+            replacement: false
+        }
+    ],
+    rules: {
+        basePrice: 500,
+        defaultModel: '',
+        models: [
             {
-                id: 'ALLOY19',
-                groupId: 'WHEELS'
+                id: 'Sport',
+                options: ['ALLOY19', 'RED'],
             },
             {
-                id: 'STEEL16',
-                groupId: 'WHEELS'
-            },
-            {
-                id: 'RED',
-                groupId: 'COLOR_GROUP'
-            },
-            {
-                id: 'BLUE',
-                groupId: 'COLOR_GROUP'
+                id: 'Basic',
+                options: ['STEEL16', 'BLUE222'],
             }
         ],
-        optionSections: [
-            {
-                id: 'EXTERIOR',
-                optionGroupIds: [
-                    'WHEELS', 'COLOR_GROUP'
-                ]
-            }
-        ],
-        optionGroups: [
-            {
-                id: 'WHEELS',
-                optionIds: [
-                    'ALLOY19', 'STEEL16'
-                ],
-                required: true,
-                replacement: true
-            },
-            {
-                id: 'COLOR_GROUP',
-                optionIds: [
-                    'BLUE', 'RED'
-                ],
-                required: false,
-                replacement: false
-            }
-        ],
-        rules: {
-            basePrice: 500,
-            // defaultOptions: [/*BLUE*/],
-            defaultModel: '',
+        // replacementGroups: {
+        //     // COLOR_GROUP2: [
+        //     //     'BLUE222'
+        //     // ]
+        // },
+        groupRequirements: {
+            // PANORAMATYPE_GROUP: ['PANORAMA_GROUP']
+            COLOR_GROUP2: ['WHEELS2'],
+            WHEELS2: ['COLOR_GROUP2']
+        },
+        requirements: {
+            BLUE222: ['STEEL16'],
+            ALLOY19: ['RED']
+        },
+        incompatibilities: {
+            // PANORAMAROOF: ['PETROL']
+            BLUE222: ['ALLOY19'],
+            STEEL16: ['RED']
+        },
+        priceList: {
+            'BLUE222': 200
+        }
+    },
+    languages: {
+        en: {
+            name: 'TestNeueKonfig - ENTitle',
+            description: 'test en desc',
+            options: [
+                {
+                    id: 'ALLOY19',
+                    name: '19 inch Alloy',
+                    description: 'description',
+                },
+                {
+                    id: 'STEEL16',
+                    name: '16 inch Steel',
+                    description: 'description',
+                },
+                {
+                    id: 'RED',
+                    name: 'red',
+                    description: 'Farbe rot',
+                },
+                {
+                    id: 'BLUE222',
+                    name: 'blue',
+                    description: 'Farbe blau',
+                }
+            ],
+            optionSections: [
+                {
+                    id: 'EXTERIOR2',
+                    name: 'Exterior'
+                }
+            ],
+            optionGroups: [
+                {
+                    id: 'WHEELS2',
+                    name: 'Wheels',
+                    description: 'round stuff'
+                },
+                {
+                    id: 'COLOR_GROUP2',
+                    name: 'Color',
+                    description: 'of the car',
+                }
+            ],
             models: [
                 {
                     id: 'Sport',
-                    options: ['ALLOY19', 'RED'],
+                    name: 'Sport',
+                    description: 'en description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
                 },
                 {
                     id: 'Basic',
-                    options: ['STEEL16', 'BLUE'],
+                    name: 'Basic',
+                    description: 'en description, description, description, description, description, description, description, description, '
+                }
+            ]
+        },
+        de: {
+            name: 'TestNeueKonfig - DETitle',
+            description: 'test de desc',
+            options: [
+                {
+                    id: 'ALLOY19',
+                    name: '19 zoll Alo',
+                    description: 'Beschreibung',
+                },
+                {
+                    id: 'STEEL16',
+                    name: '16 zoll Stahl',
+                    description: 'Beschreibung',
+                },
+                {
+                    id: 'RED',
+                    name: 'red',
+                    description: 'Farbe rot',
+                },
+                {
+                    id: 'BLUE222',
+                    name: 'blau',
+                    description: 'Farbe blau',
                 }
             ],
-            // replacementGroups: {
-            //     // COLOR_GROUP: [
-            //     //     'BLUE'
-            //     // ]
-            // },
-            groupRequirements: {
-                // PANORAMATYPE_GROUP: ['PANORAMA_GROUP']
-                COLOR_GROUP: ['WHEELS'],
-                WHEELS: ['COLOR_GROUP']
-            },
-            requirements: {
-                BLUE: ['STEEL16'],
-                ALLOY19: ['RED']
-            },
-            incompatibilities: {
-                // PANORAMAROOF: ['PETROL']
-                BLUE: ['ALLOY19'],
-                STEEL16: ['RED']
-            },
-            priceList: {
-                'BLUE': 200
-            }
+            optionSections: [
+                {
+                    id: 'EXTERIOR2',
+                    name: 'Außen'
+                }
+            ],
+            optionGroups: [
+                {
+                    id: 'WHEELS2',
+                    name: 'Reifen',
+                    description: 'Reifen halt'
+                },
+                {
+                    id: 'COLOR_GROUP2',
+                    name: 'Farbe',
+                    description: 'Farbe vom Auto'
+                }
+            ],
+            models: [
+                {
+                    id: 'Sport',
+                    name: 'Sport',
+                    description: 'Beschreibung Sport'
+                },
+                {
+                    id: 'Basic',
+                    name: 'Standard',
+                    description: 'Beschreibung Standard'
+                }
+            ]
         },
-        languages: {
-            en: {
-                name: '',
-                description: '',
-                options: [
-                    {
-                        id: 'ALLOY19',
-                        name: '19 inch Alloy',
-                        description: 'description',
-                    },
-                    {
-                        id: 'STEEL16',
-                        name: '16 inch Steel',
-                        description: 'description',
-                    },
-                    {
-                        id: 'RED',
-                        name: 'red',
-                        description: 'Farbe rot',
-                    },
-                    {
-                        id: 'BLUE',
-                        name: 'blue',
-                        description: 'Farbe blau',
-                    }
-                ],
-                optionSections: [
-                    {
-                        id: 'EXTERIOR',
-                        name: 'Exterior'
-                    }
-                ],
-                optionGroups: [
-                    {
-                        id: 'WHEELS',
-                        name: 'Wheels',
-                        description: 'round stuff'
-                    },
-                    {
-                        id: 'COLOR_GROUP',
-                        name: 'Color',
-                        description: 'of the car',
-                    }
-                ],
-                models: [
-                    {
-                        id: 'Sport',
-                        name: 'Sport',
-                        description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
-                    },
-                    {
-                        id: 'Basic',
-                        name: 'Basic',
-                        description: 'description, description, description, description, description, description, description, description, '
-                    }
-                ]
-            },
-            de: {
-                name: '',
-                description: '',
-                options: [
-                    {
-                        id: 'ALLOY19',
-                        name: '19 zoll Alo',
-                        description: 'Beschreibung',
-                    },
-                    {
-                        id: 'STEEL16',
-                        name: '16 zoll Stahl',
-                        description: 'Beschreibung',
-                    },
-                    {
-                        id: 'RED',
-                        name: 'red',
-                        description: 'Farbe rot',
-                    },
-                    {
-                        id: 'BLUE',
-                        name: 'blau',
-                        description: 'Farbe blau',
-                    }
-                ],
-                optionSections: [
-                    {
-                        id: 'EXTERIOR',
-                        name: 'Außen'
-                    }
-                ],
-                optionGroups: [
-                    {
-                        id: 'WHEELS',
-                        name: 'Reifen',
-                        description: 'Reifen halt'
-                    },
-                    {
-                        id: 'COLOR_GROUP',
-                        name: 'Farbe',
-                        description: 'Farbe vom Auto'
-                    }
-                ],
-                models: [
-                    {
-                        id: 'Sport',
-                        name: 'Sport',
-                        description: 'Beschreibung Sport'
-                    },
-                    {
-                        id: 'Basic',
-                        name: 'Standard',
-                        description: 'Beschreibung Standard'
-                    }
-                ]
-            },
-            fr: {
-                name: '',
-                description: '',
-                options: [],
-                optionSections: [],
-                optionGroups: [],
-                models: []
-            }
+        fr: {
+            name: 'TestNeueKonfig - FRTitle',
+            description: 'test fr desc',
+            options: [
+                {
+                    id: 'ALLOY19',
+                    name: '19 inch Alloy',
+                    description: 'description',
+                },
+                {
+                    id: 'STEEL16',
+                    name: '16 inch Steel',
+                    description: 'description',
+                },
+                {
+                    id: 'RED',
+                    name: 'red',
+                    description: 'Farbe rot',
+                },
+                {
+                    id: 'BLUE222',
+                    name: 'blue',
+                    description: 'Farbe blau',
+                }
+            ],
+            optionSections: [
+                {
+                    id: 'EXTERIOR2',
+                    name: 'Exterior'
+                }
+            ],
+            optionGroups: [
+                {
+                    id: 'WHEELS2',
+                    name: 'Wheels',
+                    description: 'round stuff'
+                },
+                {
+                    id: 'COLOR_GROUP2',
+                    name: 'Color',
+                    description: 'of the car',
+                }
+            ],
+            models: [
+                {
+                    id: 'Sport',
+                    name: 'Sport',
+                    description: 'description fr'
+                },
+                {
+                    id: 'Basic',
+                    name: 'Basic',
+                    description: 'description fr'
+                }
+            ]
         }
-    },
+    }
+}
+
+const initialState = {
+    configuration: testConfiguration,
     currentLanguage: defaultLang,
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
     error: null
@@ -541,6 +648,10 @@ export const builderSlice = createSlice({
             const name = action.payload
 
             state.configuration.languages[state.currentLanguage].name = name
+            if (!state.configuration.languages[defaultLang].name) {
+                // also set the name to the default lang if its empty
+                state.configuration.languages[defaultLang].name = name
+            }
         },
         changeInputLanguage: (state, action) => {
             const newLanguage = action.payload
@@ -697,16 +808,12 @@ export const changeModelOptions = (modelName, options) => (dispatch) => {
     }))
 }
 
-export const finishConfigurationBuild = (name = '') => async (dispatch, getState) => {
+export const finishConfigurationBuild = () => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
     let configuration = selectBuilderConfiguration(getState())
     
-    if (name) {
-        dispatch(setName(name))
-    }
-
-    writeToLocalStorage(initialState, 'builder')
+    // writeToLocalStorage(initialState, 'builder') // TODO:
 
     postConfiguration(configuration)
     .then(res => {
