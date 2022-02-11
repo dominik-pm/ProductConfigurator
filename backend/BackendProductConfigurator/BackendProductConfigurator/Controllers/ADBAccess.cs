@@ -12,6 +12,12 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
+        public static async Task<HttpResponseMessage> PutValue(string language, string address, string api, T value)
+        {
+            HttpClient Http = GenerateHttpClient(language);
+
+            return await Http.PutAsJsonAsync($"{address}{api}", value);
+        }
         public static async Task<HttpResponseMessage> PostValue(string language, string address, string api, T value)
         {
             HttpClient Http = GenerateHttpClient(language);

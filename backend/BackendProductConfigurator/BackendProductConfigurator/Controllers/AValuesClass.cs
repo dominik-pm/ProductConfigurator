@@ -15,7 +15,7 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; } = EValueMode.TestValues;
+        private static EValueMode ValueMode { get; } = EValueMode.DatabaseValues;
         private static readonly string serverAddress = "http://andifined.ddns.net:5129";
         private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
 
@@ -41,6 +41,11 @@ namespace BackendProductConfigurator.Controllers
         {
             if(ValueMode == EValueMode.DatabaseValues)
                 ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(T)], value);
+        }
+        public static void PutValue<T>(T value, string language) where T : class
+        {
+            if (ValueMode == EValueMode.DatabaseValues)
+                ADBAccess<T>.PutValue(language, serverAddress, typeApis[typeof(T)], value);
         }
         public static async void DeleteValue<T>(string language, T identifier) where T : class
         {
@@ -378,6 +383,11 @@ namespace BackendProductConfigurator.Controllers
             {
                 os.Id += $"+{configurator.ConfigId}";
                 os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+            }
+            foreach(LanguageIndex li in configurator.Rules.Models)
+            {
+                li.Id += $"+{configurator.ConfigId}";
+                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
             }
             
             configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);

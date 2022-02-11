@@ -48,6 +48,8 @@ namespace BackendProductConfigurator.Controllers
             Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
             Configurator configurator;
 
+
+
             foreach(KeyValuePair<string, Configurator> configDict in configurators)
             {
                 configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
