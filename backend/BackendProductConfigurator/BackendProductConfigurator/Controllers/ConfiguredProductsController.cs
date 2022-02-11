@@ -20,7 +20,7 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguredProduct value, string configId)
         {
             EValidationResult validationResult;
-            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId);
+            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(config => config.ConfigId == configId).First();
             validationResult = ValidationMethods.ValidateConfiguration(value, configurator);
             if (validationResult == EValidationResult.ValidationPassed)
             {
@@ -45,7 +45,6 @@ namespace BackendProductConfigurator.Controllers
             Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
             SavedConfigsController scc = new SavedConfigsController();
-            Account tempAccount = new Account() { UserName = "testUser", UserEmail = "test@user.com" };
             ProductSaveExtended temp = new ProductSaveExtended()
             {
                 Status = EStatus.ordered.ToString(),
@@ -55,7 +54,7 @@ namespace BackendProductConfigurator.Controllers
                 Description = configurator.Description,
                 Options = value.Options,
                 SavedName = value.ConfigurationName,
-                User = tempAccount
+                User = account
             };
             scc.PostOrdered(temp, Request);
         }

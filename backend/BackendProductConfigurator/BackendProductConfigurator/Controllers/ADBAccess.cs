@@ -22,10 +22,10 @@ namespace BackendProductConfigurator.Controllers
         {
             HttpClient Http = GenerateHttpClient(language);
 
-            StringBuilder sb = new StringBuilder(address).Append(api).Append("/");
+            StringBuilder sb = new StringBuilder(address).Append(api).Append('/');
             if(typeof(T) == typeof(SavedConfigWrapper))
             {
-                sb.Append((identifier as SavedConfigWrapper).ConfigId).Append("/").Append((identifier as SavedConfigWrapper).SavedName);
+                sb.Append((identifier as SavedConfigWrapper).ConfigId).Append('/').Append((identifier as SavedConfigWrapper).SavedName);
             }
             else if(typeof(T) == typeof(ConfigurationDeleteWrapper))
             {

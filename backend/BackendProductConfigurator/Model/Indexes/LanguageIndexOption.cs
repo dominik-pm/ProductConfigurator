@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace Model.Indexes
 {
-    public class LanguageIndex : IIndexable
+    public class LanguageIndexOption : IIndexable
     {
         public string Id { get; set; }
-        public List<string> OptionIds { get; set; } = new List<string>();
+
+        public List<string> Options { get; set; } = new List<string>();
     }
 }

@@ -11,16 +11,15 @@ namespace BackendProductConfigurator.Controllers
     public abstract class AValuesClass
     {
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
-        public static Dictionary<string, List<ConfiguratorSlim>> ConfiguratorsSlim { get; set; } = new Dictionary<string, List<ConfiguratorSlim>>() { { "de", new List<ConfiguratorSlim>() }, { "en", new List<ConfiguratorSlim>() }, { "fr", new List<ConfiguratorSlim>() } };
         public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; set; } = EValueMode.DatabaseValues;
-        private static string serverAddress = "http://andifined.ddns.net:5129";
-        private static List<string> languages = new List<string>() { "de", "en", "fr" };
+        private static EValueMode ValueMode { get; } = EValueMode.TestValues;
+        private static readonly string serverAddress = "http://andifined.ddns.net:5129";
+        private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
 
-        private static Dictionary<Type, string> typeApis = new Dictionary<Type, string>
+        private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
             {typeof(ProductSaveExtended), "/db/configuration"},
             {typeof(Configurator), "/db/product" }
@@ -53,8 +52,6 @@ namespace BackendProductConfigurator.Controllers
             foreach(string language in languages)
             {
                 Configurators[language] = ADBAccess<Configurator>.GetValues(language, serverAddress, typeApis[typeof(Configurator)]).Result;
-
-                ConfiguratorsSlim[language] = Configurators[language].Cast<ConfiguratorSlim>().ToList();
 
                 SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
             }
@@ -168,31 +165,6 @@ namespace BackendProductConfigurator.Controllers
 
             ConfiguredProducts["de"] = new List<ConfiguredProduct> { p1, p2, p3 };
 
-            ConfiguratorSlim ps1 = new ConfiguratorSlim()
-            {
-                ConfigId = "BENZ1",
-                Name = "Fetter Benz",
-                Description = "Laut und groß",
-                Images = productImages
-            };
-
-            ConfiguratorSlim ps2 = new ConfiguratorSlim() {
-                ConfigId = "ALFA1",
-                Name = "Eleganter Alfa Romeo",
-                Description = "Stylisch und erweckt",
-                Images = productImages
-            };
-
-            ConfiguratorSlim ps3 = new ConfiguratorSlim()
-            {
-                ConfigId = "BENZ2",
-                Name = "Fetterer Benz",
-                Description = "Umso lauter und größer",
-                Images = productImages
-            };
-
-            ConfiguratorsSlim["de"] = new List<ConfiguratorSlim> { ps1, ps2, ps3 };
-
             Account acc1 = new Account()
             {
                 UserName = "TEST-FUCHS GmbH",
@@ -248,26 +220,26 @@ namespace BackendProductConfigurator.Controllers
 
         public static Account FillAccountFromToken(string bearerToken)
         {
-            Account account = new Account();
-            JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
+            Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com", IsAdmin = true };
+            //JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
 
-            bearerToken = bearerToken.Replace("Bearer ", "");
+            //bearerToken = bearerToken.Replace("Bearer ", "");
 
-            foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
-            {
-                switch(claim.Type)
-                {
-                    case ClaimTypes.Name:
-                        account.UserName = claim.Value;
-                        break;
-                    case ClaimTypes.Email:
-                        account.UserEmail = claim.Value;
-                        break;
-                    case "admin":
-                        account.IsAdmin = Convert.ToBoolean(claim.Value);
-                        break;
-                }
-            }
+            //foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
+            //{
+            //    switch(claim.Type)
+            //    {
+            //        case ClaimTypes.Name:
+            //            account.UserName = claim.Value;
+            //            break;
+            //        case ClaimTypes.Email:
+            //            account.UserEmail = claim.Value;
+            //            break;
+            //        case "admin":
+            //            account.IsAdmin = Convert.ToBoolean(claim.Value);
+            //            break;
+            //    }
+            //}
 
             return account;
         }
@@ -281,85 +253,85 @@ namespace BackendProductConfigurator.Controllers
                 {
                     ConfigId = GenerateConfigId(configuratorPost.Languages["en"]),
                     Images = configuratorPost.Images,
-                    Rules = configuratorPost.Rules as Rules as RulesExtended,
+                    Rules = configuratorPost.Rules.ConvertToExtended(),
                     Name = languageDict.Value.Name,
                     Description = languageDict.Value.Description,
-                    OptionGroups = GetOptionGroupsFromLanguage(configuratorPost, languageDict.Value),
-                    Options = GetOptionsFromLanguage(configuratorPost, languageDict.Value),
-                    OptionSections = GetOptionSectionsFromLanguage(configuratorPost, languageDict.Value),
+                    OptionGroups = GetConfiguratorValues<OptionGroup, OptionGroupIndex, DescribedIndex>(configuratorPost.OptionGroups, languageDict.Value, languageDict.Value.OptionGroups),
+                    Options = GetConfiguratorValues<Option, IIndexable, Option>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
+                    OptionSections = GetConfiguratorValues<OptionSection, LanguageIndexGroup, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections)
                 };
-                temp.Rules.Models = GetModelsFromLanguage(configuratorPost, languageDict.Value);
+                temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndexOption, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
+                temp.Rules.ReplacementGroups = FillReplacementGroups(configuratorPost.OptionGroups);
 
                 configs.Add(languageDict.Key, temp);
             }
 
             return configs;
         }
-        private static List<OptionSection> GetOptionSectionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        private static Dictionary<string, List<string>> FillReplacementGroups(List<OptionGroupIndex> optionGroups)
         {
-            List<OptionSection> optionSections = new List<OptionSection>();
-
-            foreach(LanguageIndex optionSection in configuratorPost.OptionSections)
+            Dictionary<string, List<string>> dictionary = new Dictionary<string, List<string>>();
+            foreach(OptionGroupIndex optionGroup in optionGroups)
             {
-                NamedIndex currentOptionSection = languageVariant.OptionSections.Where(x => x.Id == optionSection.Id).First();
-                optionSections.Add(new OptionSection()
+                if(optionGroup.Replacement)
                 {
-                    Id = optionSection.Id,
-                    Name = currentOptionSection.Name,
-                    OptionGroupIds = optionSection.OptionIds
-                });
+                    dictionary.Add(optionGroup.Id, optionGroup.OptionIds);
+                }
             }
-
-            return optionSections;
+            return dictionary;
         }
-        private static List<OptionGroup> GetOptionGroupsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        private static List<T> GetConfiguratorValues<T, K, L>(List<K> startElements, LanguageVariant languageVariant, List<L> languageList) where L : IIndexable where K : IIndexable where T : class, new()
         {
-            List<OptionGroup> optionGroups = new List<OptionGroup>();
+            List<T> elements = new List<T>();
 
-            foreach(OptionGroupIndex optionGroup in configuratorPost.OptionGroups)
+            foreach(K element in startElements)
             {
-                DescribedIndex currentOptionGroup = languageVariant.OptionGroups.Where(x => x.Id == optionGroup.Id).First();
-                optionGroups.Add(new OptionGroup()
-                {
-                    Id = optionGroup.Id,
-                    Name = currentOptionGroup.Name,
-                    Description = currentOptionGroup.Description,
-                    OptionIds = optionGroup.OptionIds,
-                    Required = optionGroup.Required
-                });
+                L currentElement = languageList.Where(x => x.Id == element.Id).First();
+                if (typeof(T) == typeof(OptionSection))
+                    elements.Add(GenerateValues(element as LanguageIndexGroup, currentElement as NamedIndex) as T);
+                else if (typeof(T) == typeof(OptionGroup))
+                    elements.Add(GenerateValues(element as OptionGroupIndex, currentElement as DescribedIndex) as T);
+                else if (typeof(T) == typeof(Option))
+                    elements.Add(GenerateValues(element as IIndexable, currentElement as Option) as T);
+                else if (typeof(T) == typeof(ModelType))
+                    elements.Add(GenerateValues(element as LanguageIndexOption, currentElement as DescribedIndex) as T);
             }
 
-            return optionGroups;
+            return elements;
         }
-        private static List<Option> GetOptionsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        private static OptionSection GenerateValues(LanguageIndexGroup loopElement, NamedIndex currentElement)
         {
-            List<Option> options = new List<Option>();
-
-            foreach(IIndexable option in configuratorPost.Options)
+            return new OptionSection()
             {
-                Option currentOption = languageVariant.Options.Where(x => x.Id == option.Id).First();
-                options.Add(currentOption);
-            }
-
-            return options;
+                Id = loopElement.Id,
+                Name = currentElement.Name,
+                OptionGroupIds = loopElement.OptionGroupIds
+            };
         }
-        private static List<ModelType> GetModelsFromLanguage(ConfiguratorPost configuratorPost, LanguageVariant languageVariant)
+        private static OptionGroup GenerateValues(OptionGroupIndex loopElement, DescribedIndex currentElement)
         {
-            List<ModelType> models = new List<ModelType>();
-
-            foreach(LanguageIndex model in configuratorPost.Rules.Models)
+            return new OptionGroup()
             {
-                DescribedIndex currentModel = languageVariant.Models.Where(x => x.Id == model.Id).First();
-                models.Add(new ModelType()
-                {
-                    Id = model.Id,
-                    OptionIds = model.OptionIds,
-                    Name = currentModel.Name,
-                    Description = currentModel.Description
-                }); 
-            }
-
-            return models;
+                Id = loopElement.Id,
+                Name = currentElement.Name,
+                Description = currentElement.Description,
+                OptionIds = loopElement.OptionIds,
+                Required = loopElement.Required
+            };
+        }
+        private static Option GenerateValues(IIndexable loopElement, Option currentElement)
+        {
+            return currentElement;
+        }
+        private static ModelType GenerateValues(LanguageIndexOption loopElement, DescribedIndex currentElement)
+        {
+            return new ModelType()
+            {
+                Id = loopElement.Id,
+                OptionIds = loopElement.Options,
+                Name = currentElement.Name,
+                Description = currentElement.Description
+            };
         }
         private static List<OptionGroup> AdaptOptionGroup(Configurator configurator)
         {
@@ -390,6 +362,50 @@ namespace BackendProductConfigurator.Controllers
             }
 
             return sb.ToString();
+        }
+        public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator)
+        {
+            foreach(Option option in configurator.Options)
+            {
+                option.Id += $"+{configurator.ConfigId}";
+            }
+            foreach(LanguageIndex li in configurator.OptionGroups)
+            {
+                li.Id += $"+{configurator.ConfigId}";
+                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+            }
+            foreach(OptionSection os in configurator.OptionSections)
+            {
+                os.Id += $"+{configurator.ConfigId}";
+                os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+            }
+            
+            configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);
+            configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
+            configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
+            configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
+
+            configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId);
+            
+            return configurator;
+        }
+        private static Dictionary<string, List<string>> AdaptIdsInDictionarys(Dictionary<string, List<string>> dictionary, string configId)
+        {
+            Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
+            foreach (KeyValuePair<string, List<string>> dic in dictionary)
+            {
+                temp.Add($"{dic.Key}+{configId}", dic.Value.Select(x => x += $"+{configId}").ToList());
+            }
+            return temp;
+        }
+        private static Dictionary<string, float> AdaptIdsInDictionarys(Dictionary<string, float> dictionary, string configId)
+        {
+            Dictionary<string, float> temp = new Dictionary<string, float>();
+            foreach (KeyValuePair<string, float> dic in dictionary)
+            {
+                temp.Add($"{dic.Key}+{configId}", dic.Value);
+            }
+            return temp;
         }
     }
 }

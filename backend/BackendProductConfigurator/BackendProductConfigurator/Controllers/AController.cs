@@ -35,7 +35,7 @@ namespace BackendProductConfigurator.Controllers
         public virtual T Get(K id)
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id));
+            return entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First();
         }
 
         // POST api/<Controller>
@@ -60,13 +60,13 @@ namespace BackendProductConfigurator.Controllers
         public virtual void Delete(K id)
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First());
         }
 
         public static string GetAccLang(HttpRequest request)
         {
-            if(request.Headers.AcceptLanguage.ToString().Contains("-"))
-                return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split("-")[0];
+            if(request.Headers.AcceptLanguage.ToString().Contains('-'))
+                return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
             else
                 return request.Headers.AcceptLanguage.ToString();
         }
@@ -82,13 +82,6 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         [NonAction]
         public override void Post([FromBody] ConfiguredProduct value) { }
-    }
-    public partial class ProductsController : AController<ConfiguratorSlim, string>
-    {
-        [Route("/redactedProducts")]
-        [HttpPost]
-        [NonAction]
-        public override void Post([FromBody] ConfiguratorSlim value) { }
     }
     public partial class ConfigurationController : AController<Configurator, string>
     {
@@ -114,7 +107,7 @@ namespace BackendProductConfigurator.Controllers
         [NonAction]
         public override void Delete(string id)
         {
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.SavedName.Equals(id)).First());
         }
     }
 

@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace BackendProductConfigurator.Validation.JWT.Managers
 {
@@ -75,7 +76,7 @@ namespace BackendProductConfigurator.Validation.JWT.Managers
         }
         private SecurityKey GetSymmetricSecurityKey()
         {
-            byte[] symmerticKey = Convert.FromBase64String(SecretKey);
+            byte[] symmerticKey = Encoding.UTF8.GetBytes(SecretKey);
             return new SymmetricSecurityKey(symmerticKey);
         }
 

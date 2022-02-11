@@ -23,7 +23,6 @@ namespace BackendProductConfigurator.Controllers
         private void AddConfigurator(Configurator value, string language)
         {
             entities[language].Add(value);
-            AValuesClass.ConfiguratorsSlim[language].Add(value);
         }
 
         // GET api/<Controller>/5
@@ -31,7 +30,15 @@ namespace BackendProductConfigurator.Controllers
         public override Configurator Get(string id)
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
+            return entities[GetAccLang(Request)].Where(entity => entity.ConfigId.Equals(id)).First();
+        }
+
+        [Route("/products")]
+        [HttpGet]
+        public List<ConfiguratorSlim> GetConfiguratorSlims()
+        {
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+            return entities[GetAccLang(Request)].Cast<ConfiguratorSlim>().ToList();
         }
 
         // POST api/<Controller>
@@ -39,23 +46,31 @@ namespace BackendProductConfigurator.Controllers
         public void Post([FromBody] ConfiguratorPost value)
         {
             Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
+            Configurator configurator;
 
             foreach(KeyValuePair<string, Configurator> configDict in configurators)
             {
-                EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
-                if (validationResult == EValidationResult.ValidationPassed)
-                {
+                configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
+                //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
+                //if (validationResult == EValidationResult.ValidationPassed)
+                //{
                     AddConfigurator(configDict.Value, configDict.Key);
                     AValuesClass.PostValue<Configurator>(configDict.Value, configDict.Key);
-                }
+                //}
             }
         }
         public override void Delete(string id)
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
-            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Remove(AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Find(entity => (entity as IConfigId).ConfigId.Equals(id)));
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
             AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
+        }
+
+        [HttpGet]
+        [Route("test")]
+        public Configurator Test()
+        {
+            return AValuesClass.AdaptConfiguratorsOptionIds(Get("Golf"));
         }
     }
 }
