@@ -3,7 +3,7 @@ import { fetchId } from '../../api/configurationAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { alertTypes, openAlert } from '../alert/alertSlice'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
-import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectModels, selectSelectedOptions } from './configurationSelectors'
+import { extractModelNameFromModel, extractModelOptionsFromModel, getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectModels, selectSelectedOptions } from './configurationSelectors'
 
 // const openDialog = useConfirmationDialog.open
 
@@ -81,16 +81,22 @@ export const fetchConfiguration = (id) => async (dispatch, getState) => {
     })
 }
 
+const containsAll = (arr1, arr2) => arr2.every(arr2Item => arr1.includes(arr2Item))
+const sameMembers = (arr1, arr2) => containsAll(arr1, arr2) && containsAll(arr2, arr1)
 const checkModel = () => (dispatch, getState) => {
     const selectedOptions = selectSelectedOptions(getState())
     const models = selectModels(getState())
+    
+    if (selectedOptions.length == 0) {
+        // no option is selected -> unset model
+        dispatch(setModel(''))
+        return
+    }
 
     // check if the selected options are part of a model and then set this model as the current one
-    const containsAll = (arr1, arr2) => arr2.every(arr2Item => arr1.includes(arr2Item))
-    const sameMembers = (arr1, arr2) => containsAll(arr1, arr2) && containsAll(arr2, arr1);
     for (const model of models) {
-        if (sameMembers(model.optionIds, selectedOptions)) {
-            dispatch(setModel(model.name))
+        if (sameMembers(extractModelOptionsFromModel(model), selectedOptions)) {
+            dispatch(setModel(extractModelNameFromModel(model)))
             return
         }
     }

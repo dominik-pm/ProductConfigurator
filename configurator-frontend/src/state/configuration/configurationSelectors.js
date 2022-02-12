@@ -39,12 +39,12 @@ export const selectConfigurationImages = state =>       state.configuration.conf
 export const selectOptions = state =>                   state.configuration.configuration.options
 export const selectOptionGroups = state =>              state.configuration.configuration.optionGroups
 export const selectOptionSections = state =>            state.configuration.configuration.optionSections
-export const selectSelectedOptions = state =>           state.configuration.selectedOptions
+export const selectSelectedOptions = state =>           state.configuration.selectedOptions || []
 
 
 export const extractModelNameFromModel = model =>           model.name || ''
 export const extractModelDescriptionFromModel = model =>    model.description || ''
-export const extractModelOptionsFromModel = model =>        model.optionIds || []
+export const extractModelOptionsFromModel = model =>        model.options || []
 
 // export const getCurrentModel = createSelector([selectModels, selectSelectedModel, selectDefaultModel], (models, selectedModel, defaultModel) => {
 //     const modelName = selectedModel ? selectedModel : defaultModel
@@ -53,8 +53,10 @@ export const extractModelOptionsFromModel = model =>        model.optionIds || [
 // })
 export const getModelOptions = createSelector([selectModels, selectModelName], (models, modelName) => {
     const model = models.find(m => m.name === modelName)
+    console.log('model: ', model)
+    console.log('model options: ', model.options)
 
-    return model ? model.optionIds : []
+    return model ? model.options : []
 })
 
 export const getOptionsInSection = createSelector([selectSectionId, selectOptionGroups, selectOptionSections], (sectionId, groups, sections) => {
