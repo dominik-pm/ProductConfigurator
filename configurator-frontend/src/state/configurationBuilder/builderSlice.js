@@ -29,37 +29,30 @@ const initialConfiguration = {
         }
     },
     languages: {
-        // en: {
-        //     name: '',
-        //     description: '',
-        //     options: [
-        //         {
-        //             id: 'ALLOY19',
-        //             name: '19 inch Alloy',
-        //             description: 'description',
-        //         }
-        //     ],
-        //     optionSections: [
-        //         {
-        //             id: 'EXTERIOR2',
-        //             name: 'Exterior'
-        //         }
-        //     ],
-        //     optionGroups: [
-        //         {
-        //             id: 'WHEELS2',
-        //             name: 'WHEELS2',
-        //             description: 'round stuff'
-        //         }
-        //     ],
-        //     models: [
-        //         {
-        //             id: 'Sport',
-        //             name: 'Sport',
-        //             description: 'description, description, description, description, description, description, description, description, description, description, description, description, description, description, description, description,'
-        //         }
-        //     ]
-        // }
+        en: {
+            name: '',
+            description: '',
+            options: [],
+            optionSections: [],
+            optionGroups: [],
+            models: []
+        },
+        de: {
+            name: '',
+            description: '',
+            options: [],
+            optionSections: [],
+            optionGroups: [],
+            models: []
+        },
+        fr: {
+            name: '',
+            description: '',
+            options: [],
+            optionSections: [],
+            optionGroups: [],
+            models: []
+        }
     }
 }
 
@@ -319,7 +312,7 @@ const testConfiguration = {
 }
 
 const initialState = {
-    configuration: testConfiguration,
+    configuration: initialConfiguration, // testConfiguration
     currentLanguage: defaultLang,
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
     error: null
@@ -607,9 +600,9 @@ export const builderSlice = createSlice({
             // else models.push(updatedModel)
         },
         changeModelProperties: (state, action) => {
-            const { modelName, newName, newDescription } = action.payload
+            const { modelId, newName, newDescription } = action.payload
 
-            const model = state.configuration.languages[state.currentLanguage].models.find(m => m.id === modelName)
+            const model = state.configuration.languages[state.currentLanguage].models.find(m => m.id === modelId)
             if (model) {
                 model.name = newName || model.name
                 model.description = newDescription || model.description
@@ -619,21 +612,21 @@ export const builderSlice = createSlice({
             state.configuration.rules.defaultModel = action.payload
         },
         setModelOptions: (state, action) => {
-            const { modelName, options } = action.payload
+            const { modelId, options } = action.payload
             
-            const model = state.configuration.rules.models.find(m => m.id === modelName)
+            const model = state.configuration.rules.models.find(m => m.id === modelId)
             if (model) model.options = options
         },
         removeModel: (state, action) => {
-            const { modelName } = action.payload
+            const modelId  = action.payload
 
             // remove from models
-            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.id !== modelName)
+            state.configuration.rules.models = state.configuration.rules.models.filter(m => m.id !== modelId)
 
             // remove from languages
             for (const lang in state.configuration.languages) {
                 const langObj = state.configuration.languages[lang]
-                langObj.models = langObj.models.filter(m => m.id !== modelName)
+                langObj.models = langObj.models.filter(m => m.id !== modelId)
             }
         },
         setBasePrice: (state, action) => {
@@ -769,9 +762,8 @@ export const deleteOption = (groupId, name) => (dispatch, getState) => {
     // remove option from models
     const models = selectBuilderModels(getState())
     models.forEach(model => {
-        const modelName = extractModelNameFromBuilderModel(model)
-        const newOptions = extractModelOptionsFromBuilderModel(model).filter(optionId => optionId !== name)
-        dispatch(changeModelOptions(modelName, newOptions))
+        const newOptions = extractModelOptionsFromBuilderModel(model).filter(optionId => optionId !== name) // get the models options and filter out the option that gets removed
+        dispatch(changeModelOptions(model.id, newOptions))
     })
 
     // remove option from other requirements
@@ -791,7 +783,7 @@ export const deleteOption = (groupId, name) => (dispatch, getState) => {
     dispatch(removeOption({groupId, optionId: name}))
 }
 
-export const createModel = (modelName, options, description) => (dispatch) => {
+export const createModel = (modelName, description, options = []) => (dispatch) => {
     dispatch(addModel({
         modelName,
         options,
@@ -801,9 +793,9 @@ export const createModel = (modelName, options, description) => (dispatch) => {
 export const createDefaultModel = (modelName) => (dispatch) => {
     dispatch(setDefaultModel(modelName))
 }
-export const changeModelOptions = (modelName, options) => (dispatch) => {
+export const changeModelOptions = (modelId, options) => (dispatch) => {
     dispatch(setModelOptions({
-        modelName,
+        modelId,
         options
     }))
 }
@@ -813,7 +805,7 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
     let configuration = selectBuilderConfiguration(getState())
     
-    // writeToLocalStorage(initialState, 'builder') // TODO:
+    writeToLocalStorage(initialState, 'builder')
 
     postConfiguration(configuration)
     .then(res => {

@@ -64,9 +64,9 @@ function SectionTabs({ sections, getOptionGroupsInSection, optionGroups, openInp
 
     const handleAddSection = () => {
         const data = {
-            sectionName: {name: 'name', value: '' }
+            sectionName: {name: translate('sectionName', language), value: '' }
         }
-        openInputDialog('New Section', data, (data) => {
+        openInputDialog(translate('newSection', language), data, (data) => {
             const success = createSection(data.sectionName.value)
             if (!success) {
                 openAlert('Section already exists!', alertTypes.ERROR)
@@ -83,10 +83,10 @@ function SectionTabs({ sections, getOptionGroupsInSection, optionGroups, openInp
 
     const handleAddGroup = (sectionId) => {
         const data = {
-            groupName: {name: 'name', value: '' },
-            groupDescription: {name: 'description', value: ''},
-            groupIsRequired: {name: 'is required', value: false, isCheckBox: true},
-            groupIsMultiselect: {name: 'multiselect', value: true, isCheckBox: true}
+            groupName: {name: translate('groupName', language), value: '' },
+            groupDescription: {name: translate('groupDescription', language), value: ''},
+            groupIsRequired: {name: translate('required', language), value: false, isCheckBox: true},
+            groupIsMultiselect: {name: translate('multiselect', language), value: true, isCheckBox: true}
         }
         openInputDialog(translate('newGroup', language), data, (data) => {
             const isReplacementGroup = !data.groupIsMultiselect.value   // is replacement group if its not a multiselect

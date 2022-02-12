@@ -16,7 +16,7 @@ import SectionTabs from './SectionTabs'
 
 function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openAlert, openConfirmDialog, changeInputLanguage, saveBuilderToStorage, finish, reset, loadingHandled, language }) {
     
-    const autoSave = false
+    const autoSave = true
     const autoSaveInterval = 10000
 
     const navigate = useNavigate()

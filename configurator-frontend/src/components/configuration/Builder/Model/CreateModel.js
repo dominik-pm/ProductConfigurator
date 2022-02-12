@@ -25,7 +25,7 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
             const name = data.modelName.value
             const description = data.modelDesc.value
             
-            createModel(name, [], description)
+            createModel(name, description)
 
         })
     }

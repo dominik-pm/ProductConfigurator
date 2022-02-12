@@ -6,17 +6,20 @@ import { connect } from 'react-redux'
 import { translate } from '../../../../lang'
 import { getBuilderGroupNameByOptionId, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionRequirementsByOptionId, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import { changeOptionProperties, deleteOption, setOptionIncompatibilities, setOptionPrice, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
+import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 import EditButton from '../EditButton'
 
-function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, getBuilderGroupNameByOptionId, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties }) {
+function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, getBuilderGroupNameByOptionId, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties, openConfirmDialog }) {
 
     const { name, description } = option
 
     const [priceError, setPriceError] = useState(false)
 
     function handleDelete() {
-        remove(group.id, optionId)
+        openConfirmDialog(`${translate('removeOptionConfigrmation', language)}: '${name}'?`, {}, null, () => {
+            remove(group.id, optionId)
+        })
     }
 
     const arrayFromMultiSelect = (event) => {
@@ -158,7 +161,8 @@ const mapDispatchToProps = {
     setOptionRequirements,
     setOptionIncompatibilities,
     setOptionPrice,
-    changeOptionProperties
+    changeOptionProperties,
+    openConfirmDialog: confirmDialogOpen
 }
 export default connect(
     mapStateToProps, 

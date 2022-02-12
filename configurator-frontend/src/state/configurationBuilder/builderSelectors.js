@@ -19,11 +19,11 @@ export const selectBuilderOptionRequirements = (state) =>       state.builder.co
 export const selectBuilderOptionIncompatibilities = (state) =>  state.builder.configuration.rules.incompatibilities
 export const selectBuilderGroupRequirements = (state) =>        state.builder.configuration.rules.groupRequirements || []
 
-const selectBuilderName = (state) =>                             state.builder.configuration.languages[state.builder.currentLanguage].name
-const selectBuilderDescription = (state) =>                      state.builder.configuration.languages[state.builder.currentLanguage].description
-export const selectBuilderOptionsFromCurrentLanguage = (state) =>       state.builder.configuration.languages[state.builder.currentLanguage].options
-export const selectBuilderGroupsFromCurrentLanguage = (state) =>        state.builder.configuration.languages[state.builder.currentLanguage].optionGroups
-export const selectBuilderSectionsFromCurrentLanguage = (state) =>      state.builder.configuration.languages[state.builder.currentLanguage].optionSections
+const selectBuilderName = (state) =>                                    state.builder.configuration.languages[state.builder.currentLanguage].name || ''
+const selectBuilderDescription = (state) =>                             state.builder.configuration.languages[state.builder.currentLanguage].description || ''
+export const selectBuilderOptionsFromCurrentLanguage = (state) =>       state.builder.configuration.languages[state.builder.currentLanguage].options || []
+export const selectBuilderGroupsFromCurrentLanguage = (state) =>        state.builder.configuration.languages[state.builder.currentLanguage].optionGroups || []
+export const selectBuilderSectionsFromCurrentLanguage = (state) =>      state.builder.configuration.languages[state.builder.currentLanguage].optionSections || []
 
 const selectName = (state, name) =>                             name
 

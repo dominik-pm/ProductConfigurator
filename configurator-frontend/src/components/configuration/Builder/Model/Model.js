@@ -9,14 +9,14 @@ import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { getBuilderGroupNameByOptionId, getModelDescriptionFromBuilderModel, getModelNameFromBuilderModel, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import EditButton from '../EditButton'
 
-function Model({ model, name, description, isSelected = false, allOptions, getBuilderGroupNameByOptionId, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
+function Model({ model, name, description, allOptions, getBuilderGroupNameByOptionId, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
 
     const { options } = model
     const modelId = model.id
 
     function handleDelete() {
-        openConfirmDialog(`${translate('removeModelConfirmation', language)} '${name}'?`, {}, null, () => {
-            removeModel(name)
+        openConfirmDialog(`${translate('removeModelConfirmation', language)}: '${name}'?`, {}, null, () => {
+            removeModel(modelId)
         })
     }
 
@@ -46,7 +46,7 @@ function Model({ model, name, description, isSelected = false, allOptions, getBu
                         title={`${translate('editModelName', language)}`} 
                             propertyName={translate('modelName', language)} 
                             oldValue={name} 
-                        valueChangedCallback={(newValue) => {changeModelProperties({modelName: modelId, newName: newValue})}}
+                        valueChangedCallback={(newValue) => {changeModelProperties({modelId, newName: newValue})}}
                     ></EditButton>
 
                 </Grid>
@@ -57,7 +57,7 @@ function Model({ model, name, description, isSelected = false, allOptions, getBu
                             title={`${translate('editModelDescription', language)}`} 
                             propertyName={translate('modelDescription', language)} 
                             oldValue={description} 
-                            valueChangedCallback={(newValue) => {changeModelProperties({modelName: modelId, newDescription: newValue})}}
+                            valueChangedCallback={(newValue) => {changeModelProperties({modelId, newDescription: newValue})}}
                         ></EditButton>
                     </Typography>
 

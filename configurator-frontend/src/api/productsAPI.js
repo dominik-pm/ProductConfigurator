@@ -28,6 +28,7 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
 
         if (LOCAL_DATA) {
             reject('Ordering not available in test mode!')
+            // resolve()
         }
         
 

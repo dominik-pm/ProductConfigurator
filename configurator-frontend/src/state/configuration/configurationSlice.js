@@ -87,7 +87,7 @@ const checkModel = () => (dispatch, getState) => {
     const selectedOptions = selectSelectedOptions(getState())
     const models = selectModels(getState())
     
-    if (selectedOptions.length == 0) {
+    if (selectedOptions.length === 0) {
         // no option is selected -> unset model
         dispatch(setModel(''))
         return
