@@ -40,7 +40,7 @@ function AccountView({ username, email, isLoggedIn, isAdmin, getSavedConfigurati
 
     function renderUserDetails() {
         return (
-            <Box className="userdetails" display="flex" flexDirection="column" alignItems="center">
+            <Box className="userdetails" paddingTop={2} paddingBottom={4} display="flex" flexDirection="column" alignItems="center">
                 <Typography variant="h2">{username}</Typography>
                 <Typography variant="body1">{email}</Typography>
             </Box>

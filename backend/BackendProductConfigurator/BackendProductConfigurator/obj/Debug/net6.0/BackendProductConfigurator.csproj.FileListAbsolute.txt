@@ -411,7 +411,6 @@ D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\D
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\BackendProductConfigurator.deps.json
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\BackendProductConfigurator.runtimeconfig.json
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\BackendProductConfigurator.dll
-D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\ref\BackendProductConfigurator.dll
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\BackendProductConfigurator.pdb
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\refs\Microsoft.AspNetCore.Antiforgery.dll
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\refs\Microsoft.AspNetCore.Authentication.Abstractions.dll
@@ -761,3 +760,4 @@ D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\D
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\Debug\net6.0\scopedcss\bundle\BackendProductConfigurator.styles.css
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\Debug\net6.0\BackendProductConfigurator.csproj.CopyComplete
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\Debug\net6.0\BackendProductConfigurator.genruntimeconfig.cache
+D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\obj\Debug\net6.0\refint\BackendProductConfigurator.dll

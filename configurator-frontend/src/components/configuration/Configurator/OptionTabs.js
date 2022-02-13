@@ -32,8 +32,15 @@ TabPanel.propTypes = {
     value: PropTypes.number.isRequired
 }
 
+function a11yProps(index) {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    }
+}
+
 export default function OptionTabs() {
-    // const dispatch = useDispatch()
+
     const {configuration} = useSelector(state => state.configuration)
 
     const [value, setValue] = useState(0)
@@ -41,51 +48,45 @@ export default function OptionTabs() {
     const handleChange = (event, newValue) => {
         setValue(newValue)
     }
-
-    function render() {
-        return (
-            <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs value={value} onChange={handleChange} aria-label="sectiontabs">
-                        {/* <Tab label="Item One" {...a11yProps(0)} />
-                        <Tab label="Item Two" {...a11yProps(1)} />
-                        <Tab label="Item Three" {...a11yProps(2)} /> */}
-                        {configuration.optionSections.map((section, index) => (
-                            <Tab key={section.id} label={section.name} {...a11yProps(index)} />
-                        ))}
-                    </Tabs>
-                </Box>
-                {configuration.optionSections.map((section, index) => (
-                    <TabPanel key={section.id} value={value} index={index}>
-                        {configuration.optionGroups
-                            .filter(group => section.optionGroupIds.includes(group.id))
-                            .map((group, index) => (
-                                <OptionGroup key={group.id} group={group}></OptionGroup>
-                            ))}
-                    </TabPanel>
-                ))}
-                {/* <TabPanel value={value} index={0}>
-                    Item One 111
-                </TabPanel>
-                <TabPanel value={value} index={1}>
-                    Item Two
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    Item Three
-                </TabPanel> */}
-            </Box>
-        )
-    }
-
+    
     return (
-        render()
+        <Box sx={{ width: '100%' }}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs 
+                    value={value} 
+                    scrollButtons="auto"
+                    allowScrollButtonsMobile
+                    variant="scrollable" 
+                    onChange={handleChange} 
+                    aria-label="sectiontabs"
+                >
+                    {/* <Tab label="Item One" {...a11yProps(0)} />
+                    <Tab label="Item Two" {...a11yProps(1)} />
+                    <Tab label="Item Three" {...a11yProps(2)} /> */}
+
+                    {configuration.optionSections.map((section, index) => (
+                        <Tab key={section.id} label={section.name} wrapped {...a11yProps(index)} />
+                    ))}
+                </Tabs>
+            </Box>
+            {configuration.optionSections.map((section, index) => (
+                <TabPanel key={section.id} value={value} index={index}>
+                    {configuration.optionGroups
+                        .filter(group => section.optionGroupIds.includes(group.id))
+                        .map((group, index) => (
+                            <OptionGroup key={group.id} group={group}></OptionGroup>
+                        ))}
+                </TabPanel>
+            ))}
+            {/* <TabPanel value={value} index={0}>
+                Item One 111
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+                Item Two
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                Item Three
+            </TabPanel> */}
+        </Box>
     )
-}
-
-
-function a11yProps(index) {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    }
 }

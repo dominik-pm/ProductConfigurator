@@ -18,6 +18,9 @@
 - ``npm install @emotion/styled``
 - ``npm install @mui/icons-material``
 
+**SweetAlert2 - Alerts**
+- ``npm install sweetalert2``
+
 
 ## Folder structure
 - api
@@ -484,6 +487,156 @@ export const inputDialogSetData = (data) => (dispatch) => {
 export const { show, close, setData } = inputDialogSlice.actions
 
 export default inputDialogSlice.reducer
+```
+
+*Alert State*
+> state/alert/alertSlice.js
+```javascript
+import { createSlice } from '@reduxjs/toolkit'
+
+export const alertStatus = {
+    CLOSED: 'closed',
+    OPEN: 'open'
+}
+
+export const alertTypes = {
+    ERROR: 'error',
+    WARNING: 'warning',
+    INFO: 'info',
+    SUCCESS: 'success'
+}
+
+const initialState = {
+    status: alertStatus.CLOSED,
+    alerts: [ // can be multiple -> when 1. closed, 2nd pops up
+        // {message: '', type: alertTypes.INFO}
+    ]
+}
+
+export const alertSlice = createSlice({
+    name: 'alert',
+    initialState,
+    reducers: {
+        addAlert: (state, action) => {
+            state.status = alertStatus.OPEN
+            state.alerts.push(action.payload)
+        },
+        closeAlert: (state) => {
+            state.alerts.shift()
+
+            // set the status to closed, when all alerts are gone
+            if (state.alerts.length === 0) {
+                state.status = alertStatus.CLOSED
+            }
+        }
+    }
+})
+
+export const openAlert = (message, type) => async (dispatch) => {
+    dispatch(addAlert({ message, type }))
+}
+
+// Action creators are generated for each case reducer function
+export const { addAlert, closeAlert } = alertSlice.actions
+
+export default alertSlice.reducer
+```
+
+*Builder State*
+> state/builder/builderSlice.js
+```javascript
+const initialState = {
+    configuration: {
+        name: '',
+        description: '',
+        images: [],
+        options: [],
+        optionSections: [],
+        optionGroups: [],
+        rules: {
+            basePrice: 0,
+            defaultOptions: [],
+            replacementGroups: {},
+            groupRequirements: {},
+            requirements: {},
+            incompatibilites: {},
+            priceList: {}
+        }
+    },
+    status: 'idle', // | 'loading' | 'succeeded' | 'failed'
+    error: null
+}
+
+export const builderSlice = createSlice({
+    name: 'builder',
+    initialState,
+    reducers: {
+        addSection: (state, action) => {
+            state.configuration.optionSections.push({
+                id: action.payload,
+                name: action.payload,
+                optionGroupIds: []
+            })
+        },
+        addOptionGroup: (state, action) => {
+            const { sectionId, name, description, required } = action.payload
+
+            state.configuration.optionGroups.push({
+                id: name,
+                name: name,
+                description: description,
+                required: required,
+                optionIds: []
+            })
+
+            const section = state.configuration.optionSections.find(s => s.id === sectionId)
+            if (section) section.optionGroupIds.push(name)
+        },
+        addOption: (state, action) => {
+            console.log('adding option...')
+        },
+        resetBuild: (state, action) => {
+            state.configuration = {}
+        }
+    }
+})
+
+export const createSection = (sectionName) => (dispatch, getState) => {
+    // check if section doesn't already exist
+    const sectionExists = getDoesSectionExist(getState(), sectionName)
+    if (sectionExists) {
+        return false
+    }
+
+    dispatch(addSection(sectionName))
+    return true
+}
+
+export const createGroup = (sectionId, name, description, required) => (dispatch, getState) => {
+    // check if section doesn't already exist
+    const groupExists = getDoesGroupdExist(getState(), name)
+    if (groupExists) {
+        return false
+    }
+
+    dispatch(addOptionGroup({sectionId, name, description, required}))
+    return true
+}
+
+export const finishConfigurationBuild = () => async (dispatch, getState) => {
+    const configuration = selectConfiguration(getState())
+
+    postConfiguration(configuration)
+    .then(res => {})
+    .catch(error => {})
+}
+
+
+
+// Action creators are generated for each case reducer function
+export const { addSection, addOptionGroup, addOption, resetBuild } = builderSlice.actions
+
+export default builderSlice.reducer
 ```
 
 **Creating Selectors**

@@ -12,14 +12,14 @@ namespace BackendProductConfigurator.MediaProducers
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
         }
-        public static void GeneratePDF(ConfiguredProduct product, string configId)
+        public static void GeneratePDF(ConfiguredProduct product, string configId, HttpRequest request)
         {
             InitiatePdfProducer();
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
             XGraphics gfx = XGraphics.FromPdfPage(page); //Holt sich seitenspezifische Details für die Zeichenmethoden
             XTextFormatter tf = new XTextFormatter(gfx); //Um Text besser zu formatieren
-            Configurator configurator = AValuesClass.Configurators.Find(con => con.ConfigId == configId);
+            Configurator configurator = AValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Find(con => con.ConfigId == configId);
             double smallSpacing = 24;
             double mediumSpacing = 30;
             double largeSpacing = 50;
@@ -50,7 +50,7 @@ namespace BackendProductConfigurator.MediaProducers
 
             yPosition += smallSpacing;
 
-            PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Basispreis:", configurator.Dependencies.BasePrice);
+            PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Basispreis:", configurator.Rules.BasePrice);
 
             yPosition += smallSpacing;
 
@@ -67,7 +67,7 @@ namespace BackendProductConfigurator.MediaProducers
             yPosition += smallSpacing;
             foreach(Option option in product.Options)
             {
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option.Name}", configurator.Dependencies.PriceList[option.Id]);
+                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option.Name}", configurator.Rules.PriceList[option.Id]);
                 yPosition += smallSpacing;
             }
 

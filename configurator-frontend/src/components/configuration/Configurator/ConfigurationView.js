@@ -2,12 +2,12 @@ import { Typography } from '@mui/material'
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { translate } from '../../lang'
-import { fetchConfiguration } from '../../state/configuration/configurationSlice'
-import { selectLanguage } from '../../state/language/languageSelectors'
-import Configurator from './Configurator/Configurator'
+import { translate } from '../../../lang'
+import { fetchConfiguration } from '../../../state/configuration/configurationSlice'
+import { selectLanguage } from '../../../state/language/languageSelectors'
+import Configurator from './Configurator'
 
-function ConfigurationView({fetchConfiguration, status, error, language }) {
+function ConfigurationView({ fetchConfiguration, status, error, language }) {
 
     const navigate = useNavigate()
 

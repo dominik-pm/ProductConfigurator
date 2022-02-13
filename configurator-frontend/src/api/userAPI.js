@@ -87,7 +87,10 @@ export const requestLogin = (username, password) => {
 // A mock function to mimic making an async request for the login
 function loginTest(username, password) {
     return new Promise((resolve, reject) => {
-        // reject('INVALID CREDENTIALS)
+        if (username !== 'admin' && username !== 'user') {
+            reject('INVALID CREDENTIALS')
+        }
+        
         setTimeout(() => {
             // user token
             let token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3R1c2VyIiwiZW1haWwiOiJ0ZXN0dXNlckB0ZXN0LWZ1Y2hzLmNvbSIsImFkbWluIjpmYWxzZSwiaWF0IjoxNjE3NDQ5MDIyfQ.qi6WUK7Pct6WjBZfm-J5f8cDmE4M1oagEJaxOHntFSs'

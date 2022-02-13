@@ -7,8 +7,11 @@ import { saveConfigurationToStorage } from '../../state/configuration/configurat
 import Summary from '../configuration/Configurator/SidePanel/Summary'
 import { confirmDialogOpen } from '../../state/confirmationDialog/confirmationSlice'
 import { requestDeleteSavedConfiguration } from '../../api/userAPI'
+import { alertTypes, openAlert } from '../../state/alert/alertSlice'
+import { translate } from '../../lang'
+import { selectLanguage } from '../../state/language/languageSelectors'
 
-function ConfigurationList({ configurations, openConfirm, isOrdered = false, isAdminView = false }) {
+function ConfigurationList({ configurations, openConfirm, isOrdered = false, isAdminView = false, openAlert, language }) {
 
     const navigate = useNavigate()
 
@@ -20,11 +23,12 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
     function handleDeleteClicked(id, name) {
         requestDeleteSavedConfiguration(id, name)
         .then(res => {
+            openAlert(`${translate('successfullyRemoved', language)} ${name}!`, alertTypes.SUCCESS)
             // refresh
             navigate(`/account/saved`)
         })
         .catch(err => {
-            console.log('error while trying to delete saved configuration:', err)
+            openAlert(`Error: ${err}`, alertTypes.ERROR)
         })
     }
 
@@ -73,10 +77,11 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
 }
 
 const mapStateToProps = (state) => ({
-    
+    language: selectLanguage(state)
 })
 const mapDispatchToProps = {
-    openConfirm: confirmDialogOpen
+    openConfirm: confirmDialogOpen,
+    openAlert: openAlert
 }
 export default connect(
     mapStateToProps, 
