@@ -1,0 +1,13 @@
+/* .OptionGroup {
+    margin-bottom: 50px;
+} */
+
+.OptionContainer {
+    /* display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;  */
+
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+}
