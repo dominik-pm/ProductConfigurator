@@ -15,7 +15,12 @@
       "ProjectGuid": "74b86fe5-8f1e-49a4-a179-ec8c2b9cd9e9",
       "DisplayName": "BackendProductConfigurator",
       "ColorIndex": 1
+    },
+    "b33d8c63-1287-4c28-a73f-013441790e5a": {
+      "ProjectGuid": "b33d8c63-1287-4c28-a73f-013441790e5a",
+      "DisplayName": "FrontendProductConfigurator",
+      "ColorIndex": 2
     }
   },
-  "NextColorIndex": 2
+  "NextColorIndex": 3
 }
