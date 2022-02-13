@@ -6,6 +6,13 @@ using System.Text.Json.Serialization;
 
 namespace DatabaseServiceProductConfigurator.Services {
 
+    internal struct DBStruct {
+        public List<ProductsHasOptionField> ProductHasOptionField { get; set; }
+        public List<OptionFieldsHasOptionField> OptionFieldsHasOptionField { get; set; }
+        public List<ProductHasLanguage> LangListProduct { get; set; }
+        public List<OptionFieldHasLanguage> LangListOptionField { get; set; }
+    }
+
     public class ProductService : IProductService {
 
         private readonly ConfiguratorContext _context;
@@ -22,32 +29,41 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region GET
         private List<Configurator> GetConfigurators( string lang ) {
-
+            DBStruct thisDbStruct = new() {
+                ProductHasOptionField = _context.ProductsHasOptionFields.ToList(),
+                OptionFieldsHasOptionField = _context.OptionFieldsHasOptionFields.ToList(),
+                LangListProduct = _context.ProductHasLanguages.ToList(),
+                LangListOptionField = _context.OptionFieldHasLanguages.ToList(),
+            };
+            List<ProductsHasProduct> dbProductHasProduct = _context.ProductsHasProducts.ToList();
+            List<OptionFieldsHasOptionField> dbOptionFieldHasOptionField = _context.OptionFieldsHasOptionFields.ToList();
+            List<Configuration> dbConfigurations = _context.Configurations.ToList();
+            List<ConfigurationsHasLanguage> dbconfigurationsHasLanguages = _context.ConfigurationsHasLanguages.ToList();
             List<Product> products = _context.Products.ToList();
 
             List<Configurator> temp = new();
             products.ForEach(
                 p => {
                     var depen = new RulesExtended { BasePrice = p.Price };
-                    var infos = _languageService.GetProductWithLanguage(p.ProductNumber, lang);
+                    var infos = _languageService.GetProductWithLanguage(p.ProductNumber, lang, thisDbStruct.LangListProduct);
                     temp.Add(new Configurator {
                         ConfigId = p.ProductNumber,
                         Name = infos.Name,
                         Description = infos.Description,
                         Images = ( from pic in _context.Pictures where pic.ProductNumber == p.ProductNumber select pic.Url ).ToList(),
-                        Options = GetOptionsByProductNumber(p.ProductNumber, lang),
-                        OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang),
-                        OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang),
+                        Options = GetOptionsByProductNumber(p.ProductNumber, lang, thisDbStruct),
+                        OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang, thisDbStruct),
+                        OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang, thisDbStruct),
                         Rules = depen,
                     });
                 }
             );
 
             foreach ( var item in temp ) {
-                item.Options.ForEach(o => item.Rules = _ruleService.ExtendProductDependencies(item.Rules, o.Id));
-                item.OptionGroups.ForEach(o => item.Rules = _ruleService.ExtendProductDependenciesByOptionField(item.Rules, o.Id));
-                item.OptionSections.ForEach(o => item.Rules = _ruleService.ExtendProductDependenciesByOptionField(item.Rules, o.Id));
-                item.Rules.Models.AddRange(_configurationService.GetVisibleModelsByProduct(item.ConfigId, lang));
+                item.Options.ForEach(o => item.Rules = _ruleService.ExtendProductDependencies(item.Rules, o.Id, products, thisDbStruct.ProductHasOptionField, dbProductHasProduct));
+                item.OptionGroups.ForEach(o => item.Rules = _ruleService.ExtendProductDependenciesByOptionField(item.Rules, o.Id, thisDbStruct.ProductHasOptionField, dbOptionFieldHasOptionField));
+                item.OptionSections.ForEach(o => item.Rules = _ruleService.ExtendProductDependenciesByOptionField(item.Rules, o.Id, thisDbStruct.ProductHasOptionField, dbOptionFieldHasOptionField));
+                item.Rules.Models.AddRange(_configurationService.GetVisibleModelsByProduct(item.ConfigId, lang, dbconfigurationsHasLanguages, dbConfigurations));
             }
 
             return temp;
@@ -64,7 +80,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         public Configurator? GetConfiguratorByProductNumber( string productNumber, string lang ) => GetConfigurators(lang).Where(c => c.ConfigId == productNumber).FirstOrDefault();
 
-        private List<OptionSection> GetOptionSectionByProductNumber( string productNumber, string lang ) {
+        private List<OptionSection> GetOptionSectionByProductNumber( string productNumber, string lang, DBStruct thisDb ) {
 
             List<OptionSection> sections = new();
 
@@ -73,7 +89,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             rawFields.AddRange(
                 (
-                    from of in _context.ProductsHasOptionFields
+                    from of in thisDb.ProductHasOptionField
                     where of.ProductNumber == productNumber && of.DependencyType == "PARENT"
                     select of.OptionFieldsNavigation
                 )
@@ -90,7 +106,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     if ( field.Type == "PARENT" ) {
                         toAdd.AddRange(
                             (
-                                from ofo in _context.OptionFieldsHasOptionFields
+                                from ofo in thisDb.OptionFieldsHasOptionField
                                 where field.Id == ofo.Base && !rawFields.Select(r => r.Id).Contains(ofo.OptionField)
                                 select ofo.OptionFieldNavigation
                             ).ToList()
@@ -105,15 +121,15 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
-                    from ofo in _context.OptionFieldsHasOptionFields
+                    from ofo in thisDb.OptionFieldsHasOptionField
                     where ofo.Base == field.Id && ofo.DependencyType == "CHILD"
                     select ofo.OptionField.ToString()
                 ).ToList();
 
-                InfoStruct fieldinfos = _languageService.GetOptionsfieldWithLanguage(field.Id, lang);
+                InfoStruct fieldinfos = _languageService.GetOptionsfieldWithLanguage(field.Id, lang, thisDb.LangListOptionField);
 
                 sections.Add(
-                    new OptionSection { 
+                    new OptionSection {
                         Name = fieldinfos.Name,
                         Id = field.Id,
                         OptionGroupIds = options
@@ -124,7 +140,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             return sections;
         }
 
-        private List<OptionGroup> GetOptionGroupsByProductNumber( string productNumber, string lang ) {
+        private List<OptionGroup> GetOptionGroupsByProductNumber( string productNumber, string lang, DBStruct thisDb ) {
 
             List<OptionGroup> optionGroups = new();
 
@@ -133,7 +149,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             rawFields.AddRange(
                 (
-                    from of in _context.ProductsHasOptionFields
+                    from of in thisDb.ProductHasOptionField
                     where of.ProductNumber == productNumber && of.DependencyType == "PARENT"
                     select of.OptionFieldsNavigation
                 )
@@ -150,7 +166,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     if ( field.Type == "PARENT" ) {
                         toAdd.AddRange(
                             (
-                                from ofo in _context.OptionFieldsHasOptionFields
+                                from ofo in thisDb.OptionFieldsHasOptionField
                                 where field.Id == ofo.Base && !rawFields.Select(r => r.Id).Contains(ofo.OptionField)
                                 select ofo.OptionFieldNavigation
                             ).ToList()
@@ -167,13 +183,13 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             foreach ( var field in cookedFields ) {
                 List<string> options = (
-                    from pof in _context.ProductsHasOptionFields
+                    from pof in thisDb.ProductHasOptionField
                     where pof.OptionFields == field.Id && pof.DependencyType == "CHILD"
-                    let infos = _languageService.GetProductWithLanguage(pof.ProductNumber, lang)
+                    let infos = _languageService.GetProductWithLanguage(pof.ProductNumber, lang, thisDb.LangListProduct)
                     select pof.ProductNumber
                 ).ToList();
 
-                InfoStruct fieldinfos = _languageService.GetOptionsfieldWithLanguage(field.Id, lang);
+                InfoStruct fieldinfos = _languageService.GetOptionsfieldWithLanguage(field.Id, lang, thisDb.LangListOptionField);
 
                 optionGroups.Add(
                     new OptionGroup {
@@ -189,12 +205,12 @@ namespace DatabaseServiceProductConfigurator.Services {
             return optionGroups;
         }
 
-        private List<Option> GetOptionsByProductNumber( string productNumber, string lang ) {
+        private List<Option> GetOptionsByProductNumber( string productNumber, string lang, DBStruct thisDb ) {
 
             List<Option> options = new();
 
             List<OptionField> fields = (
-                from pof in _context.ProductsHasOptionFields
+                from pof in thisDb.ProductHasOptionField
                 where pof.ProductNumber == productNumber && pof.DependencyType == "PARENT"
                 select pof.OptionFieldsNavigation
             ).ToList();
@@ -206,7 +222,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 foreach ( var item in fields ) {
                     toAdd.AddRange(
                         (
-                            from of in _context.OptionFieldsHasOptionFields
+                            from of in thisDb.OptionFieldsHasOptionField
                             where of.Base == item.Id && !fields.Select(p => p.Id).Contains(of.OptionField)
                             select of.OptionFieldNavigation
                         ).ToList()
@@ -217,14 +233,14 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             foreach ( var item in fields ) {
                 List<ProductsHasOptionField> temp = (
-                    from opt in _context.ProductsHasOptionFields
+                    from opt in thisDb.ProductHasOptionField
                     where opt.OptionFields == item.Id && opt.DependencyType == "CHILD"
                     select opt
                 ).ToList();
                 List<Option> toAdd = new();
                 temp.ForEach(
                     opt => {
-                        var infos = _languageService.GetProductWithLanguage(opt.ProductNumber, lang);
+                        var infos = _languageService.GetProductWithLanguage(opt.ProductNumber, lang, thisDb.LangListProduct);
                         toAdd.Add(new Option {
                             Id = opt.ProductNumber,
                             Name = infos.Name,
@@ -245,29 +261,31 @@ namespace DatabaseServiceProductConfigurator.Services {
         public void SaveConfigurator( Configurator config, string lang ) {
 
             // MAIN PRODUCT
-            _context.Products.Add(
-                new Product {
+            Product MainProduct =
+                new() {
                     ProductNumber = config.ConfigId,
                     Price = config.Rules.BasePrice,
                     Buyable = true
-                }
-            );
+                };
+            MainProduct = _context.Products.Add(MainProduct).Entity;
 
             // OPTION PRODUCTS
+            List<Product> OptionProducts = new();
             foreach ( var item in config.Options ) {
                 bool priceAvailable = config.Rules.PriceList.TryGetValue(item.Id, out float price);
 
-                _context.Products.Add(
-                    new Product {
-                        ProductNumber = item.Id,
-                        Price = priceAvailable ? price : 0,
-                        Buyable = false
-                    }
-                );
-            }
+                Product temp = new() {
+                    ProductNumber = item.Id,
+                    Price = priceAvailable ? price : 0,
+                    Buyable = false
+                };
 
-            var products = _context.Products;
-            var dependencyTypes = _context.EDependencyTypes;
+                OptionProducts.Add(temp);
+            }
+            _context.Products.AddRange(OptionProducts);
+
+            //var products = _context.Products.ToList();
+            var dependencyTypes = _context.EDependencyTypes.ToList();
 
             // REQUIREMENTS
             foreach ( var item in config.Rules.Requirements ) {
@@ -275,9 +293,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.ProductsHasProducts.Add(
                         new ProductsHasProduct {
                             BaseProduct = item.Key,
-                            BaseProductNavigation = products.Where(p => p.ProductNumber == item.Key).First(),
+                            BaseProductNavigation = OptionProducts.Where(p => p.ProductNumber == item.Key).First(),
                             OptionProduct = reqitem,
-                            OptionProductNavigation = products.Where(p => p.ProductNumber == reqitem).First(),
+                            OptionProductNavigation = OptionProducts.Where(p => p.ProductNumber == reqitem).First(),
                             DependencyType = "REQUIRED",
                             DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "REQUIRED").First()
                         }
@@ -291,9 +309,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.ProductsHasProducts.Add(
                         new ProductsHasProduct {
                             BaseProduct = item.Key,
-                            BaseProductNavigation = products.Where(p => p.ProductNumber == item.Key).First(),
+                            BaseProductNavigation = OptionProducts.Where(p => p.ProductNumber == item.Key).First(),
                             OptionProduct = reqitem,
-                            OptionProductNavigation = products.Where(p => p.ProductNumber == reqitem).First(),
+                            OptionProductNavigation = OptionProducts.Where(p => p.ProductNumber == reqitem).First(),
                             DependencyType = "EXCLUDING",
                             DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "EXCLUDING").First()
                         }
@@ -303,7 +321,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // OPTION SECTIONS
             List<OptionField> optionFields = new();
-            var optionTypes = _context.EOptionTypes;
+            var optionTypes = _context.EOptionTypes.ToList();
 
             foreach ( var item in config.OptionSections ) {
                 OptionField tempSave = new() {
@@ -313,7 +331,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                     Required = false
                 };
                 optionFields.Add(tempSave);
-                _context.OptionFields.Add(tempSave);
             }
 
             // OPTION GROUPS
@@ -333,10 +350,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                     Required = item.Required
                 };
                 optionFields.Add(tempSave);
-                _context.OptionFields.Add(tempSave);
             }
 
-            var dbOptionFields = _context.OptionFields;
+            _context.OptionFields.AddRange(optionFields);
 
             // OPTIONFIELD HAS OPTIONFIELD
             foreach ( var item in config.OptionSections ) {
@@ -344,9 +360,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.OptionFieldsHasOptionFields.Add(
                         new OptionFieldsHasOptionField {
                             Base = item.Id,
-                            BaseNavigation = dbOptionFields.Where(of => of.Id == item.Id).First(),
+                            BaseNavigation = optionFields.Where(of => of.Id == item.Id).First(),
                             OptionField = field,
-                            OptionFieldNavigation = dbOptionFields.Where(of => of.Id == field).First(),
+                            OptionFieldNavigation = optionFields.Where(of => of.Id == field).First(),
                             DependencyType = "CHILD",
                             DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "CHILD").First()
                         }
@@ -360,9 +376,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                     _context.ProductsHasOptionFields.Add(
                         new ProductsHasOptionField {
                             ProductNumber = field,
-                            ProductNumberNavigation = products.Where(p => p.ProductNumber == field).First(),
+                            ProductNumberNavigation = OptionProducts.Where(p => p.ProductNumber == field).First(),
                             OptionFields = item.Id,
-                            OptionFieldsNavigation = dbOptionFields.Where(o => o.Id == item.Id).First(),
+                            OptionFieldsNavigation = optionFields.Where(o => o.Id == item.Id).First(),
                             DependencyType = "CHILD",
                             DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "CHILD").First()
                         }
@@ -375,9 +391,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.ProductsHasOptionFields.Add(
                     new ProductsHasOptionField {
                         ProductNumber = config.ConfigId,
-                        ProductNumberNavigation = products.Where(p => p.ProductNumber == config.ConfigId).First(),
+                        ProductNumberNavigation = MainProduct,
                         OptionFields = item.Id,
-                        OptionFieldsNavigation = dbOptionFields.Where(o => o.Id == item.Id).First(),
+                        OptionFieldsNavigation = optionFields.Where(o => o.Id == item.Id).First(),
                         DependencyType = "PARENT",
                         DependencyTypeNavigation = dependencyTypes.Where(d => d.Type == "PARENT").First()
                     }
@@ -389,22 +405,22 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.Pictures.Add(
                     new Picture {
                         ProductNumber = config.ConfigId,
-                        ProductNumberNavigation = products.Where(p => p.ProductNumber == config.ConfigId).First(),
+                        ProductNumberNavigation = MainProduct,
                         Url = item
                     }
                 );
             }
 
-            var languages = _context.ELanguages;
+            var language = _context.ELanguages.Where(l => l.Language == lang).First();
 
             //LANGUAGE FOR PRODUCTS
             foreach ( var item in config.Options ) {
                 _context.ProductHasLanguages.Add(
                     new ProductHasLanguage {
-                        ProductNumber = config.ConfigId,
-                        ProductNumberNavigation = products.Where(p => p.ProductNumber == config.ConfigId).First(),
+                        ProductNumber = item.Id,
+                        ProductNumberNavigation = OptionProducts.Where(p => p.ProductNumber == item.Id).First(),
                         Language = lang,
-                        LanguageNavigation = languages.Where(l => l.Language == lang).First(),
+                        LanguageNavigation = language,
                         Name = item.Name,
                         Description = item.Description
                     }
@@ -416,9 +432,9 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.OptionFieldHasLanguages.Add(
                     new OptionFieldHasLanguage {
                         OptionFieldId = item.Id,
-                        OptionField = dbOptionFields.Where(o => o.Id == item.Id).First(),
+                        OptionField = optionFields.Where(o => o.Id == item.Id).First(),
                         Language = lang,
-                        LanguageNavigation = languages.Where(l => l.Language == lang).First(),
+                        LanguageNavigation = language,
                         Name = item.Name,
                         Description = item.Description
                     }
@@ -429,18 +445,20 @@ namespace DatabaseServiceProductConfigurator.Services {
                 _context.OptionFieldHasLanguages.Add(
                     new OptionFieldHasLanguage {
                         OptionFieldId = item.Id,
-                        OptionField = dbOptionFields.Where(o => o.Id == item.Id).First(),
+                        OptionField = optionFields.Where(o => o.Id == item.Id).First(),
                         Language = lang,
-                        LanguageNavigation = languages.Where(l => l.Language == lang).First(),
+                        LanguageNavigation = language,
                         Name = item.Name,
                         Description = ""
                     }
                 );
             }
 
+            _context.SaveChanges();
+
             // MODELS
             foreach ( var item in config.Rules.Models ) {
-                _configurationService.SaveModels(config.ConfigId, item, lang);
+                _configurationService.SaveModels(MainProduct, item, lang);
             }
 
             _context.SaveChanges();
@@ -545,19 +563,31 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         public void UpdateProduct( Configurator product, string lang ) {
             // Update Main Product
-            var MainProduct = _context.Products.Where(p => p.ProductNumber == product.ConfigId).First();
+            Product MainProduct = _context.Products.Where(p => p.ProductNumber == product.ConfigId).First();
             MainProduct.Price = product.Rules.BasePrice;
-            _context.Update(MainProduct);
+            MainProduct = _context.Products.Update(MainProduct).Entity;
 
             //Updating Language
             var MainProductHasLanguage = (
                                             from p in _context.ProductHasLanguages
                                             where p.ProductNumber == product.ConfigId && p.Language == lang
                                             select p
-                                        ).First();
-            MainProductHasLanguage.Name = product.Name;
-            MainProductHasLanguage.Description = product.Description;
-            _context.Update(MainProductHasLanguage);
+                                        ).FirstOrDefault();
+            if ( MainProductHasLanguage != null ) {
+                MainProductHasLanguage.Name = product.Name;
+                MainProductHasLanguage.Description = product.Description;
+                _context.ProductHasLanguages.Update(MainProductHasLanguage);
+            }
+            else {
+                _context.ProductHasLanguages.Add(new ProductHasLanguage {
+                    ProductNumber = MainProduct.ProductNumber,
+                    ProductNumberNavigation = MainProduct,
+                    Language = lang,
+                    LanguageNavigation = _context.ELanguages.Where(l => l.Language == lang).First(),
+                    Name = product.Name,
+                    Description = product.Description
+                });
+            }
 
             // Update Images
             _context.RemoveRange(_context.Pictures.Where(p => p.ProductNumber == product.ConfigId));
@@ -660,12 +690,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Product> productsToUpdate = _context.Products.Where(p => product.Options.Select(o => o.Id).Contains(p.ProductNumber)).ToList();
             productsToUpdate.ForEach(p => {
                 Option theOption = product.Options.Where(o => o.Id == p.ProductNumber).First();
-                p.Price = product.Rules.PriceList[p.ProductNumber];
+                product.Rules.PriceList.TryGetValue(p.ProductNumber, out float price);
+                p.Price = price;
                 ProductHasLanguage? temp = dbProductHasLanguage.Where(l => p.ProductNumber == l.ProductNumber && l.Language == lang).FirstOrDefault();
                 if ( temp != null ) {
                     temp.Name = theOption.Name;
                     temp.Description = theOption.Description;
-                    _context.Update(temp);
+                    _context.ProductHasLanguages.Update(temp);
                 }
                 else {
                     p.ProductHasLanguages.Add(
@@ -680,14 +711,15 @@ namespace DatabaseServiceProductConfigurator.Services {
                     );
                 }
             });
-            _context.Update(productsToUpdate);
+            _context.Products.UpdateRange(productsToUpdate);
 
             // Inserting new Products
             List<Product> productsToInsert = new();
             foreach ( var item in product.Options.Where(p => !productsToUpdate.Select(t => t.ProductNumber).Contains(p.Id)) ) {
+                product.Rules.PriceList.TryGetValue(item.Id, out float price);
                 Product toAdd = new() {
                     ProductNumber = item.Id,
-                    Price = product.Rules.PriceList[item.Id],
+                    Price = price,
                     Buyable = false
                 };
                 toAdd.ProductHasLanguages.Add(
@@ -716,7 +748,8 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<OptionField> optionGroupToUpdate = _context.OptionFields.Where(o => product.OptionGroups.Select(o => o.Id).Contains(o.Id)).ToList();
             optionGroupToUpdate.ForEach(o => {
                 OptionGroup temp = product.OptionGroups.Where(og => og.Id == o.Id).First();
-                o.Type = product.Rules.ReplacementGroups[o.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                bool inDic = product.Rules.ReplacementGroups.ContainsKey(o.Id);
+                o.Type = inDic ? "SINGLE_SELECT" : "MULTI_SELECT";
                 o.TypeNavigation = eOptionTypes.Where(e => e.Type == o.Type).First();
                 o.Required = temp.Required;
                 OptionFieldHasLanguage? ofhl = dbOFhasLanguage.Where(dbofhl => dbofhl.OptionFieldId == o.Id).FirstOrDefault();
@@ -735,7 +768,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 else {
                     ofhl.Name = temp.Name;
                     ofhl.Description = temp.Description;
-                    _context.Update(ofhl);
+                    _context.OptionFieldHasLanguages.Update(ofhl);
                 }
                 foreach ( var item in temp.OptionIds ) {
                     o.ProductsHasOptionFields.Add(new ProductsHasOptionField {
@@ -748,7 +781,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     });
                 }
             });
-            _context.Update(optionGroupToUpdate);
+            _context.OptionFields.UpdateRange(optionGroupToUpdate);
 
             // Inserting new OptionFields
             List<OptionField> optionGroupToInsert = new();
@@ -791,7 +824,8 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<OptionField> optionSectionsToUpdate = _context.OptionFields.Where(o => product.OptionSections.Select(os => os.Id).Contains(o.Id)).ToList();
             optionSectionsToUpdate.ForEach(o => {
                 OptionSection temp = product.OptionSections.Where(og => og.Id == o.Id).First();
-                o.Type = product.Rules.ReplacementGroups[o.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                bool inDic = product.Rules.ReplacementGroups.ContainsKey(o.Id);
+                o.Type = inDic ? "SINGLE_SELECT" : "MULTI_SELECT";
                 o.TypeNavigation = eOptionTypes.Where(e => e.Type == o.Type).First();
                 o.Required = false;
                 OptionFieldHasLanguage? ofhl = dbOFhasLanguage.Where(dbofhl => dbofhl.OptionFieldId == o.Id).FirstOrDefault();
@@ -810,7 +844,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 else {
                     ofhl.Name = temp.Name;
                     ofhl.Description = "";
-                    _context.Update(ofhl);
+                    _context.OptionFieldHasLanguages.Update(ofhl);
                 }
                 foreach ( var item in temp.OptionGroupIds ) {
                     o.OptionFieldsHasOptionFieldBaseNavigations.Add(new OptionFieldsHasOptionField {
@@ -865,6 +899,26 @@ namespace DatabaseServiceProductConfigurator.Services {
             optionFields.AddRange(optionGroups);
             optionFields.AddRange(optionSections);
 
+            //Deleting Rules
+            _context.RemoveRange(
+                _context.ProductsHasProducts.Where(p =>
+                    productOptions.Select(po => po.ProductNumber).Contains(p.BaseProduct)
+                    || productOptions.Select(po => po.ProductNumber).Contains(p.OptionProduct)
+                ).ToList()
+            );
+            _context.RemoveRange(
+                _context.ProductsHasOptionFields.Where(p =>
+                   productOptions.Select(po => po.ProductNumber).Contains(p.ProductNumber)
+                   || optionFields.Select(o => o.Id).Contains(p.OptionFields)
+                )
+            );
+            _context.RemoveRange(
+                _context.OptionFieldsHasOptionFields.Where(p =>
+                   optionFields.Select(o => o.Id).Contains(p.Base)
+                   || optionFields.Select(o => o.Id).Contains(p.OptionField)
+                )
+            );
+
             // Creating dependencies from Main Product to OptionSections
             List<ProductsHasOptionField> ProductToOptionSection = new();
             optionSections.ForEach(os => {
@@ -879,22 +933,10 @@ namespace DatabaseServiceProductConfigurator.Services {
                     }
                 );
             });
-
-            // Update Models
-            List<Configuration> configs = _context.Configurations.Where(c => c.ProductNumber == MainProduct.ProductNumber && c.AccountId == null).ToList();
-            List<ProductSaveExtended> models = _configurationService.GetConfigurations(MainProduct.ProductNumber).Where(sp => sp.ConfigId == MainProduct.ProductNumber).ToList();
-            models.ForEach(m => {
-                if ( product.Rules.Models.Select(rm => rm.Id).Contains(m.Name) ) {
-                    _configurationService.UpdateConfiguration(m, lang, m.Name);
-                }
-                else
-                    _configurationService.DeleteConfiguration(configs.Where(c => c.ConfigurationsHasLanguages.Where(l => l.Language == lang).First().Name == m.Name).First().Id);
-            });
-            foreach ( var item in product.Rules.Models.Where(m => !models.Select(m => m.Name).Contains(m.Id)).ToArray() ) {
-                _configurationService.SaveModels(product.ConfigId, item, lang);
-            }
+            _context.ProductsHasOptionFields.AddRange(ProductToOptionSection);
 
             //-------------------------RULES
+
             List<ProductsHasProduct> productDependencies = new();
             // Requirements
             foreach ( var baseP in product.Rules.Requirements.Keys ) {
@@ -939,6 +981,29 @@ namespace DatabaseServiceProductConfigurator.Services {
                 }
             }
             _context.OptionFieldsHasOptionFields.AddRange(optionFieldDependencies);
+
+            _context.SaveChanges();
+
+            // Update Models
+            List<Configuration> configs = _context.Configurations.Where(c => c.ProductNumber == MainProduct.ProductNumber && c.AccountId == null).ToList();
+            List<ProductSaveExtended> models = _configurationService.GetConfigurations(MainProduct.ProductNumber).Where(sp => sp.ConfigId == MainProduct.ProductNumber).ToList();
+            models.ForEach(m => {
+                if ( product.Rules.Models.Select(rm => rm.Id).Contains(m.Name) ) {
+                    _configurationService.UpdateConfiguration(m, lang, m.Name);
+                }
+                else {
+                    Configuration? temp = configs.Where(c => c.ConfigurationsHasLanguages.Where(l => l.Language == lang).FirstOrDefault() != null
+                    && c.ConfigurationsHasLanguages.Where(l => l.Language == lang).First().Name == m.Name).FirstOrDefault();
+                    if ( temp != null )
+                        _configurationService.DeleteConfiguration(temp.Id);
+                }
+
+            });
+            foreach ( var item in product.Rules.Models.Where(m => !models.Select(m => m.Name).Contains(m.Id)).ToArray() ) {
+                _configurationService.SaveModels(MainProduct, item, lang);
+            }
+
+            _context.SaveChanges();
         }
 
         #endregion

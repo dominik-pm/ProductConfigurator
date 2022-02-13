@@ -26,8 +26,8 @@ namespace DatabaseServiceProductConfigurator.Services {
             _context = context;
         }
 
-        public InfoStruct GetProductWithLanguage( string productNumber, string language ) {
-            List<ProductHasLanguage> infos = _context.ProductHasLanguages.Where(c => c.ProductNumber == productNumber).ToList();
+        public InfoStruct GetProductWithLanguage( string productNumber, string language, List<ProductHasLanguage> dbList ) {
+            List<ProductHasLanguage> infos = dbList.Where(c => c.ProductNumber == productNumber).ToList();
 
             ProductHasLanguage temp;
 
@@ -43,8 +43,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 return new InfoStruct();
         }
 
-        public InfoStruct GetOptionsfieldWithLanguage( string id, string language ) {
-            List<OptionFieldHasLanguage> infos = _context.OptionFieldHasLanguages.Where(c => c.OptionFieldId == id).ToList();
+        public InfoStruct GetOptionsfieldWithLanguage( string id, string language, List<OptionFieldHasLanguage> dbList ) {
+            List<OptionFieldHasLanguage> infos = dbList.Where(c => c.OptionFieldId == id).ToList();
 
             OptionFieldHasLanguage temp;
 
@@ -60,8 +60,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 return new InfoStruct();
         }
 
-        public InfoStruct GetConfigurationWithLanguage( int id, string language ) {
-            List<ConfigurationsHasLanguage> infos = _context.ConfigurationsHasLanguages.Where(c => c.Configuration == id).ToList();
+        public InfoStruct GetConfigurationWithLanguage( int id, string language, List<ConfigurationsHasLanguage> dbList ) {
+            List<ConfigurationsHasLanguage> infos = dbList.Where(c => c.Configuration == id).ToList();
 
             ConfigurationsHasLanguage temp;
 
@@ -87,15 +87,29 @@ namespace DatabaseServiceProductConfigurator.Services {
                 return default_lang;
 
             string[] dbLangs = GetAllLanguages().ToArray();
-            string country = input;
 
-            if ( input.Contains('-') )
-                country = input.Split('-')[0];
+            input = CleanLang(input);
 
-            if ( dbLangs.Contains(country) )
-                return country;
+            if ( dbLangs.Contains(input) )
+                return input;
 
             return default_lang;
+        }
+
+        public string HandleLanguageInputCreate( string input ) {
+            input = CleanLang(input);
+            string lang = HandleLanguageInput(input);
+            if ( lang != input) {
+                _context.ELanguages.Add(new ELanguage { Language = input });
+                _context.SaveChanges();
+            }
+            return input;
+        }
+
+        private static string CleanLang(string input) {
+            if ( input.Contains('-') )
+                input = input.Split('-')[0];
+            return input;
         }
 
     }

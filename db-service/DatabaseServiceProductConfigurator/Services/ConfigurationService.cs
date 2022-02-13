@@ -29,15 +29,17 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         #region GET
 
-        public List<ModelType> GetVisibleModelsByProduct( string productNumber, string lang ) {
-            List<Configuration> temp = _context.Configurations.Where(conf => conf.ProductNumber == productNumber && conf.Visible == true && conf.AccountId == null).ToList();
+        public List<ModelType> GetVisibleModelsByProduct( string productNumber, string lang, List<ConfigurationsHasLanguage> langListConfiguration, List<Configuration> configs ) {
+            List<Configuration> temp = configs.Where(conf => conf.ProductNumber == productNumber && conf.Visible == true && conf.AccountId == null).ToList();
+
             List<ModelType> toReturn = new();
             temp.ForEach(
                 conf => {
-                    var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang);
+                    var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang, langListConfiguration);
                     var opts = GetOptionsByConfigId(conf.Id, lang);
                     toReturn.Add(new ModelType {
                         Id = infos.Name,
+                        Name = infos.Name,
                         Description = infos.Description,
                         OptionIds = opts.Options
                     });
@@ -47,14 +49,17 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         public List<ProductSaveExtended> GetConfigurations( string lang ) {
+            List<ProductHasLanguage> langListProduct = _context.ProductHasLanguages.ToList();
+            List<ConfigurationsHasLanguage> langListConfiguration = _context.ConfigurationsHasLanguages.ToList();
+
             List<Configuration> temp = _context.Configurations.Where(c => c.AccountId == null).ToList();
 
             List<ProductSaveExtended> toReturn = new();
             temp.ForEach(
                 conf => {
                     var opts = GetOptionsByConfigId(conf.Id, lang);
-                    var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang);
-                    var productInfo = _languageService.GetProductWithLanguage(conf.ProductNumber, lang);
+                    var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang, langListConfiguration);
+                    var productInfo = _languageService.GetProductWithLanguage(conf.ProductNumber, lang, langListProduct);
                     var ordered = _context.Bookings.Where(b => b.ConfigId == conf.Id && b.AccountId == conf.AccountId).Any();
                     var customer = _context.Accounts.Where(ac => ac.Id == conf.AccountId).FirstOrDefault();
                     toReturn.Add(new ProductSaveExtended {
@@ -81,6 +86,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         private ConfiguredProductStruct GetOptionsByConfigId( int configId, string lang ) {
+            List<ProductHasLanguage> langListProduct = _context.ProductHasLanguages.ToList();
 
             List<ConfigurationHasOptionField> fields = new();
             foreach ( var item in (
@@ -99,7 +105,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 foreach ( var el in item.ProductNumbers ) {
                     price += el.Price;
 
-                    InfoStruct infos = _languageService.GetProductWithLanguage(el.ProductNumber, lang);
+                    InfoStruct infos = _languageService.GetProductWithLanguage(el.ProductNumber, lang, langListProduct);
                     toReturn.Add(
                         el.ProductNumber
                     );
@@ -209,12 +215,12 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
         }
 
-        public void SaveModels( string productNumber, ModelType model, string lang ) {
+        public void SaveModels( Product product, ModelType model, string lang ) {
             Configuration temp = _context.Configurations.Add(
                 new Configuration {
                     Id = 0,
-                    ProductNumber = productNumber,
-                    ProductNumberNavigation = _context.Products.First(p => p.ProductNumber == productNumber),
+                    ProductNumber = product.ProductNumber,
+                    ProductNumberNavigation = product,
                     AccountId = null,
                     Account = null,
                     Date = DateTime.Now
@@ -233,7 +239,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             );
 
             foreach ( var item in model.OptionIds ) {
-                OptionField toInsert = GetOptionfieldByProductAndOption(productNumber, item);
+                OptionField toInsert = GetOptionfieldByProductAndOption(product.ProductNumber, item);
                 _context.ConfigurationHasOptionFields.Add(
                     new ConfigurationHasOptionField {
                         ConfigId = temp.Id,
@@ -245,7 +251,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                 );
             }
 
-            _context.SaveChanges();
         }
 
         private OptionField GetOptionfieldByProductAndOption( string productNumber, string option ) {

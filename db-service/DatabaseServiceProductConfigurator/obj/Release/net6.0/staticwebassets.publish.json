@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "CTPycNtPz0zW030jX951OR3V/dryJt/ZcClPxQOjnZg=",
+  "Source": "DatabaseServiceProductConfigurator",
+  "BasePath": "_content/DatabaseServiceProductConfigurator",
+  "Mode": "Default",
+  "ManifestType": "Publish",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

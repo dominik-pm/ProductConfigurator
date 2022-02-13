@@ -28,20 +28,15 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             List<ProductSaveExtended> toReturn = _configurationService.GetConfigurations(lang);
 
-            if ( !toReturn.Any() )
-                return NoContent();
             return Ok(toReturn);
         }
 
-        [HttpGet("{EMail}")]
-        public ActionResult<ProductSaveExtended> GetById( string EMail, [FromBody] SavedConfigWrapper wrapper ) {
+        [HttpGet("byWrapper")]
+        public ActionResult<ProductSaveExtended> GetById( SavedConfigDeleteWrapper wrapper ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
             lang = _languageService.HandleLanguageInput(lang);
 
-            SavedConfigDeleteWrapper toSend = (SavedConfigDeleteWrapper) wrapper;
-            toSend.UserEmail = EMail;
-
-            ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(lang, toSend);
+            ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(lang, wrapper);
 
             if ( toReturn == null )
                 return NotFound();
@@ -51,28 +46,28 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpPost]
         public ActionResult Post( [FromBody] ProductSaveExtended config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = _languageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInputCreate(lang);
 
             _configurationService.SaveConfiguration(config, lang);
 
-            return Accepted();
+            return Ok();
         }
 
         [HttpDelete]
         public ActionResult Delete( SavedConfigDeleteWrapper wrapper ) {
             _configurationService.DeleteConfiguration(wrapper);
 
-            return Accepted();
+            return Ok();
         }
 
         [HttpPut("{savedName}")]
         public ActionResult Put( [FromBody] ProductSaveExtended config, string savedName ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = _languageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInputCreate(lang);
 
             _configurationService.UpdateConfiguration(config, lang, savedName);
 
-            return Accepted();
+            return Ok();
         }
 
     }

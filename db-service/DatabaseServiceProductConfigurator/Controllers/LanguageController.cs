@@ -20,8 +20,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         [HttpGet]
         public ActionResult<List<string>> Get() {
             List<string> list = _languageService.GetAllLanguages();
-            if ( list.Count == 0 )
-                return NoContent();
+
             return Ok(list);
         }
 
