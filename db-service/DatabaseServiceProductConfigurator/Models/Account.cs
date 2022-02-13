@@ -14,6 +14,7 @@ namespace DatabaseServiceProductConfigurator.Models
         public int Id { get; set; }
         public string Email { get; set; } = null!;
         public string Username { get; set; } = null!;
+        public bool IsAdmin { get; set; }
 
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual ICollection<Configuration> Configurations { get; set; }

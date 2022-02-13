@@ -19,7 +19,9 @@ namespace DatabaseServiceProductConfigurator.Models
         public string ProductNumber { get; set; } = null!;
         public float Price { get; set; }
         public bool Buyable { get; set; }
+        public int? BaseModel { get; set; }
 
+        public virtual Configuration? BaseModelNavigation { get; set; }
         public virtual ICollection<Configuration> Configurations { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<ProductHasLanguage> ProductHasLanguages { get; set; }

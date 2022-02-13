@@ -72,7 +72,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                         Date = conf.Date,
                         User = new Model.Account {
                             UserName = customer != null ? customer.Username : "",
-                            UserEmail = customer != null ? customer.Email : ""
+                            UserEmail = customer != null ? customer.Email : "",
+                            IsAdmin = customer != null && customer.IsAdmin,
                         }
                     });
                 }
@@ -215,22 +216,23 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
         }
 
-        public void SaveModels( Product product, ModelType model, string lang ) {
-            Configuration temp = _context.Configurations.Add(
-                new Configuration {
+        public Configuration SaveModels( Product product, ModelType model, string lang ) {
+            Configuration toReturn =
+                new() {
                     Id = 0,
                     ProductNumber = product.ProductNumber,
                     ProductNumberNavigation = product,
                     AccountId = null,
                     Account = null,
                     Date = DateTime.Now
-                }
-            ).Entity;
+                };
+
+            toReturn = _context.Configurations.Add(toReturn).Entity;
 
             _context.ConfigurationsHasLanguages.Add(
                 new ConfigurationsHasLanguage {
-                    Configuration = temp.Id,
-                    ConfigurationNavigation = temp,
+                    Configuration = toReturn.Id,
+                    ConfigurationNavigation = toReturn,
                     Language = lang,
                     LanguageNavigation = _context.ELanguages.First(l => l.Language == lang),
                     Name = model.Id,
@@ -242,15 +244,15 @@ namespace DatabaseServiceProductConfigurator.Services {
                 OptionField toInsert = GetOptionfieldByProductAndOption(product.ProductNumber, item);
                 _context.ConfigurationHasOptionFields.Add(
                     new ConfigurationHasOptionField {
-                        ConfigId = temp.Id,
-                        Config = temp,
+                        ConfigId = toReturn.Id,
+                        Config = toReturn,
                         OptionFieldId = toInsert.Id,
                         OptionField = toInsert,
                         ProductNumbers = _context.Products.Where(p => model.OptionIds.Contains(p.ProductNumber)).ToList()
                     }
                 );
             }
-
+            return toReturn;
         }
 
         private OptionField GetOptionfieldByProductAndOption( string productNumber, string option ) {
@@ -326,11 +328,15 @@ namespace DatabaseServiceProductConfigurator.Services {
             );
 
             // OPTIONS
-            _context.ConfigurationHasOptionFields.RemoveRange(
-                from cho in _context.ConfigurationHasOptionFields
-                where cho.ConfigId == config.Id
-                select cho
-            );
+            List<ConfigurationHasOptionField> toRemove = (from cho in _context.ConfigurationHasOptionFields
+                                                         where cho.ConfigId == config.Id
+                                                         select cho).ToList();
+
+            toRemove.ForEach(t => t.ProductNumbers = new List<Product>());
+            _context.UpdateRange(toRemove);
+            //_context.SaveChanges();
+
+            _context.ConfigurationHasOptionFields.RemoveRange(toRemove);
 
             _context.Configurations.RemoveRange(
                 _context.Configurations.Where(c => c.Id == config.Id)

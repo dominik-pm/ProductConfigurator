@@ -1,8 +1,9 @@
 use product_configurator;
 
-INSERT IGNORE INTO account(id, email, username)
-VALUES (1, 't.scherzer@htlkrems.at', 'sqrt3'),
-       (2, 's.leutgeb@htlkrems.at', 'andifined');
+INSERT IGNORE INTO account(id, email, username, isAdmin)
+VALUES (1, 'test@user.com', 'sqrt3', 1),
+       (2, 'configurator-admin@test-fuchs.com', 'andifined', 0),
+       (3, 'testuser@test-fuchs.com', 'testfuchs', 1);
 
 INSERT IGNORE INTO products (product_number, price, buyable)
 VALUES ('Golf', 10000, 1),
@@ -158,9 +159,9 @@ VALUES ('6', '1', 'CHILD'),
        ('3', '2', 'REQUIRED');
 
 
-INSERT IGNORE INTO configurations (id, product_number, Date, ACCOUNT_id)
-VALUES (1, 'Golf', CURRENT_DATE, 1),
-       (2, 'Golf', CURRENT_DATE, null);
+INSERT IGNORE INTO configurations (id, product_number, Date, ACCOUNT_id, visible)
+VALUES (1, 'Golf', CURRENT_DATE, 1, 1),
+       (2, 'Golf', CURRENT_DATE, null, 1);
 
 INSERT IGNORE INTO configurations_has_language (configuration, language, name, description)
 VALUES (1, 'en', 'Basic', 'It is a basic configuration of a Golf.'),

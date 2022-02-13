@@ -8,7 +8,6 @@ namespace DatabaseServiceProductConfigurator.Context
 {
     public partial class ConfiguratorContext : DbContext
     {
-
         public ConfiguratorContext(DbContextOptions<ConfiguratorContext> options)
             : base(options)
         {
@@ -46,13 +45,16 @@ namespace DatabaseServiceProductConfigurator.Context
                 entity.HasIndex(e => e.Id, "id_UNIQUE")
                     .IsUnique();
 
+                entity.HasIndex(e => e.Username, "username_UNIQUE")
+                    .IsUnique();
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Email).HasColumnName("email");
 
-                entity.Property(e => e.Username)
-                    .HasMaxLength(255)
-                    .HasColumnName("username");
+                entity.Property(e => e.IsAdmin).HasColumnName("isAdmin");
+
+                entity.Property(e => e.Username).HasColumnName("username");
             });
 
             modelBuilder.Entity<Booking>(entity =>
@@ -389,16 +391,25 @@ namespace DatabaseServiceProductConfigurator.Context
 
                 entity.ToTable("products");
 
+                entity.HasIndex(e => e.BaseModel, "fk_PRODUCTS_CONFIGURATIONS1_idx");
+
                 entity.HasIndex(e => e.ProductNumber, "product_number_UNIQUE")
                     .IsUnique();
 
                 entity.Property(e => e.ProductNumber).HasColumnName("product_number");
+
+                entity.Property(e => e.BaseModel).HasColumnName("base_model");
 
                 entity.Property(e => e.Buyable).HasColumnName("buyable");
 
                 entity.Property(e => e.Price)
                     .HasColumnType("float(12,2)")
                     .HasColumnName("price");
+
+                entity.HasOne(d => d.BaseModelNavigation)
+                    .WithMany(p => p.Products)
+                    .HasForeignKey(d => d.BaseModel)
+                    .HasConstraintName("fk_PRODUCTS_CONFIGURATIONS1");
             });
 
             modelBuilder.Entity<ProductHasLanguage>(entity =>

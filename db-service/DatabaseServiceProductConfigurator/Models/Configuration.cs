@@ -10,6 +10,7 @@ namespace DatabaseServiceProductConfigurator.Models
             Bookings = new HashSet<Booking>();
             ConfigurationHasOptionFields = new HashSet<ConfigurationHasOptionField>();
             ConfigurationsHasLanguages = new HashSet<ConfigurationsHasLanguage>();
+            Products = new HashSet<Product>();
         }
 
         public int Id { get; set; }
@@ -23,5 +24,6 @@ namespace DatabaseServiceProductConfigurator.Models
         public virtual ICollection<Booking> Bookings { get; set; }
         public virtual ICollection<ConfigurationHasOptionField> ConfigurationHasOptionFields { get; set; }
         public virtual ICollection<ConfigurationsHasLanguage> ConfigurationsHasLanguages { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

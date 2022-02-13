@@ -44,7 +44,8 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Configurator> temp = new();
             products.ForEach(
                 p => {
-                    var depen = new RulesExtended { BasePrice = p.Price };
+                    var depen = new RulesExtended { BasePrice = p.Price,
+                        DefaultModel = p.BaseModel != null ? _languageService.GetConfigurationWithLanguage((int)p.BaseModel, lang, dbconfigurationsHasLanguages).Name : "" };
                     var infos = _languageService.GetProductWithLanguage(p.ProductNumber, lang, thisDbStruct.LangListProduct);
                     temp.Add(new Configurator {
                         ConfigId = p.ProductNumber,
@@ -458,7 +459,12 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             // MODELS
             foreach ( var item in config.Rules.Models ) {
-                _configurationService.SaveModels(MainProduct, item, lang);
+                Configuration temp = _configurationService.SaveModels(MainProduct, item, lang);
+                if ( item.Id == config.Rules.DefaultModel ) {
+                    MainProduct.BaseModel = temp.Id;
+                    MainProduct.BaseModelNavigation = temp;
+                    _context.Products.Update(MainProduct);
+                }
             }
 
             _context.SaveChanges();
@@ -512,15 +518,17 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
 
             // OPTIONFIELDS
+            List<OptionField> toRemoveFromList = new();
             foreach ( var item in removeOptionField ) {
                 if ( !_context.ProductsHasOptionFields.Where(p => p.ProductNumber != configurator.ConfigId).Select(p => p.OptionFields).Contains(item.Id) ) {
                     List<OptionFieldsHasOptionField> temp = _context.OptionFieldsHasOptionFields.ToList();
                     foreach ( var ofo in temp ) {
                         if ( !removeOptionFieldID.Contains(ofo.Base) || !removeOptionFieldID.Contains(ofo.OptionField) )
-                            removeOptionField.Remove(item);
+                            toRemoveFromList.Add(item);
                     }
                 }
             }
+            toRemoveFromList.ForEach(t => removeOptionField.Remove(t));
 
             // OPTIONS
             foreach ( var item in removeProductID ) {
@@ -1000,10 +1008,29 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             });
             foreach ( var item in product.Rules.Models.Where(m => !models.Select(m => m.Name).Contains(m.Id)).ToArray() ) {
-                _configurationService.SaveModels(MainProduct, item, lang);
+                Configuration tempModel = _configurationService.SaveModels(MainProduct, item, lang);
+            }
+
+            if( product.Rules.DefaultModel != null && product.Rules.DefaultModel != "" ) {
+                Configuration defaultModel = GetConfigurationByNameAndProductNumber(MainProduct.ProductNumber, lang, product.Rules.DefaultModel);
+                MainProduct.BaseModel = defaultModel.Id;
+                MainProduct.BaseModelNavigation = defaultModel;
+                _context.Products.Update(MainProduct);
             }
 
             _context.SaveChanges();
+        }
+
+        private Configuration GetConfigurationByNameAndProductNumber( string productNumber, string lang, string name ) {
+            List<ConfigurationsHasLanguage> dbConfigurationsHasLanguage = _context.ConfigurationsHasLanguages
+                .Where(c => c.ConfigurationNavigation.ProductNumber == productNumber && c.Name == name )
+                .Include(c => c.ConfigurationNavigation)
+                .ToList();
+
+            Configuration? temp = dbConfigurationsHasLanguage.Where(c => c.Language == lang).Select(c => c.ConfigurationNavigation).FirstOrDefault();
+            if ( temp == null )
+                return dbConfigurationsHasLanguage.Select(t => t.ConfigurationNavigation).First();
+            return temp;
         }
 
         #endregion

@@ -18,7 +18,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
     public class LanguageService : ILanguageService {
 
-        static readonly string default_lang = "en";
+        public static readonly string default_lang = "en";
 
         private readonly ConfiguratorContext _context;
 

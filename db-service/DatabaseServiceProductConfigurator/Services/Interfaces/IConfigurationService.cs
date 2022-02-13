@@ -13,7 +13,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         void SaveConfiguration( ProductSaveExtended toSave, string lang );
 
-        void SaveModels( Product product, ModelType model, string lang );
+        Configuration SaveModels( Product product, ModelType model, string lang );
 
         void DeleteConfiguration( SavedConfigDeleteWrapper wrapper );
         public void DeleteConfiguration( int id );
