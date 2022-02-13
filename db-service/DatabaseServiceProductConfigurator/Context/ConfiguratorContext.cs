@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
+using DatabaseServiceProductConfigurator.Models;
 
-namespace DatabaseServiceProductConfigurator.Models {
-    public partial class Product_configuratorContext : DbContext {
+namespace DatabaseServiceProductConfigurator.Context
+{
+    public partial class ConfiguratorContext : DbContext
+    {
 
-        public Product_configuratorContext() {
+        public ConfiguratorContext(DbContextOptions<ConfiguratorContext> options)
+            : base(options)
+        {
         }
 
-        public Product_configuratorContext( DbContextOptions<Product_configuratorContext> options )
-            : base(options) {
-        }
-
+        public virtual DbSet<Account> Accounts { get; set; } = null!;
         public virtual DbSet<Booking> Bookings { get; set; } = null!;
         public virtual DbSet<Configuration> Configurations { get; set; } = null!;
         public virtual DbSet<ConfigurationHasOptionField> ConfigurationHasOptionFields { get; set; } = null!;
@@ -21,7 +22,6 @@ namespace DatabaseServiceProductConfigurator.Models {
         public virtual DbSet<EDependencyType> EDependencyTypes { get; set; } = null!;
         public virtual DbSet<ELanguage> ELanguages { get; set; } = null!;
         public virtual DbSet<EOptionType> EOptionTypes { get; set; } = null!;
-        public virtual DbSet<EProductCategory> EProductCategories { get; set; } = null!;
         public virtual DbSet<OptionField> OptionFields { get; set; } = null!;
         public virtual DbSet<OptionFieldHasLanguage> OptionFieldHasLanguages { get; set; } = null!;
         public virtual DbSet<OptionFieldsHasOptionField> OptionFieldsHasOptionFields { get; set; } = null!;
@@ -31,18 +31,35 @@ namespace DatabaseServiceProductConfigurator.Models {
         public virtual DbSet<ProductsHasOptionField> ProductsHasOptionFields { get; set; } = null!;
         public virtual DbSet<ProductsHasProduct> ProductsHasProducts { get; set; } = null!;
 
-        protected override void OnConfiguring( DbContextOptionsBuilder optionsBuilder ) {
-            if ( !optionsBuilder.IsConfigured ) {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseMySql("server=localhost;database=product_configurator;port=3306;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
-            }
-        }
-        protected override void OnModelCreating( ModelBuilder modelBuilder ) {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
             modelBuilder.UseCollation("utf8_general_ci")
-                            .HasCharSet("utf8");
+                .HasCharSet("utf8");
 
-            modelBuilder.Entity<Booking>(entity => {
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.ToTable("account");
+
+                entity.HasIndex(e => e.Email, "email_UNIQUE")
+                    .IsUnique();
+
+                entity.HasIndex(e => e.Id, "id_UNIQUE")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Email).HasColumnName("email");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(255)
+                    .HasColumnName("username");
+            });
+
+            modelBuilder.Entity<Booking>(entity =>
+            {
                 entity.ToTable("bookings");
+
+                entity.HasIndex(e => e.AccountId, "fk_BOOKINGS_ACCOUNT1_idx");
 
                 entity.HasIndex(e => e.ConfigId, "fk_BOOKINGS_CONFIGURATIONS1_idx");
 
@@ -51,7 +68,15 @@ namespace DatabaseServiceProductConfigurator.Models {
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.AccountId).HasColumnName("ACCOUNT_id");
+
                 entity.Property(e => e.ConfigId).HasColumnName("config_id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Bookings)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("fk_BOOKINGS_ACCOUNT1");
 
                 entity.HasOne(d => d.Config)
                     .WithMany(p => p.Bookings)
@@ -60,14 +85,28 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_BOOKINGS_CONFIGURATIONS1");
             });
 
-            modelBuilder.Entity<Configuration>(entity => {
+            modelBuilder.Entity<Configuration>(entity =>
+            {
                 entity.ToTable("configurations");
 
                 entity.HasIndex(e => e.ProductNumber, "fk_BOOKINGS_PRODUCTS1_idx");
 
+                entity.HasIndex(e => e.AccountId, "fk_CONFIGURATIONS_ACCOUNT1_idx");
+
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.AccountId).HasColumnName("ACCOUNT_id");
+
+                entity.Property(e => e.Date).HasColumnType("datetime");
+
                 entity.Property(e => e.ProductNumber).HasColumnName("product_number");
+
+                entity.Property(e => e.Visible).HasColumnName("visible");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Configurations)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("fk_CONFIGURATIONS_ACCOUNT1");
 
                 entity.HasOne(d => d.ProductNumberNavigation)
                     .WithMany(p => p.Configurations)
@@ -76,7 +115,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_BOOKINGS_PRODUCTS1");
             });
 
-            modelBuilder.Entity<ConfigurationHasOptionField>(entity => {
+            modelBuilder.Entity<ConfigurationHasOptionField>(entity =>
+            {
                 entity.HasKey(e => new { e.ConfigId, e.OptionFieldId })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -120,7 +160,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                         "ConfigurationHasSelectedOption",
                         l => l.HasOne<Product>().WithMany().HasForeignKey("ProductNumber").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_BOOKINGS_has_OPTION_FIELDS_has_PRODUCTS_PRODUCTS1"),
                         r => r.HasOne<ConfigurationHasOptionField>().WithMany().HasForeignKey("ConfigId", "OptionFieldId").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("fk_BOOKINGS_has_OPTION_FIELDS_has_PRODUCTS_BOOKINGS_has_OPTIO1"),
-                        j => {
+                        j =>
+                        {
                             j.HasKey("ConfigId", "OptionFieldId", "ProductNumber").HasName("PRIMARY").HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
 
                             j.ToTable("configuration_has_selected_options");
@@ -137,7 +178,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                         });
             });
 
-            modelBuilder.Entity<ConfigurationsHasLanguage>(entity => {
+            modelBuilder.Entity<ConfigurationsHasLanguage>(entity =>
+            {
                 entity.HasKey(e => new { e.Configuration, e.Language })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -175,7 +217,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_CONFIGURATIONS_has_E_LANGUAGES_E_LANGUAGES1");
             });
 
-            modelBuilder.Entity<EDependencyType>(entity => {
+            modelBuilder.Entity<EDependencyType>(entity =>
+            {
                 entity.HasKey(e => e.Type)
                     .HasName("PRIMARY");
 
@@ -187,7 +230,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                 entity.Property(e => e.Type).HasColumnName("type");
             });
 
-            modelBuilder.Entity<ELanguage>(entity => {
+            modelBuilder.Entity<ELanguage>(entity =>
+            {
                 entity.HasKey(e => e.Language)
                     .HasName("PRIMARY");
 
@@ -201,7 +245,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasColumnName("language");
             });
 
-            modelBuilder.Entity<EOptionType>(entity => {
+            modelBuilder.Entity<EOptionType>(entity =>
+            {
                 entity.HasKey(e => e.Type)
                     .HasName("PRIMARY");
 
@@ -213,19 +258,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                 entity.Property(e => e.Type).HasColumnName("type");
             });
 
-            modelBuilder.Entity<EProductCategory>(entity => {
-                entity.HasKey(e => e.Category)
-                    .HasName("PRIMARY");
-
-                entity.ToTable("e_product_category");
-
-                entity.HasIndex(e => e.Category, "category_UNIQUE")
-                    .IsUnique();
-
-                entity.Property(e => e.Category).HasColumnName("category");
-            });
-
-            modelBuilder.Entity<OptionField>(entity => {
+            modelBuilder.Entity<OptionField>(entity =>
+            {
                 entity.ToTable("option_fields");
 
                 entity.HasIndex(e => e.Type, "fk_OPTION_FIELD_E_OPTION_TYPES1_idx");
@@ -246,7 +280,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_OPTION_FIELD_E_OPTION_TYPES1");
             });
 
-            modelBuilder.Entity<OptionFieldHasLanguage>(entity => {
+            modelBuilder.Entity<OptionFieldHasLanguage>(entity =>
+            {
                 entity.HasKey(e => new { e.OptionFieldId, e.Language })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -284,7 +319,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_ELANGUAGES_has_OPTION_FIELDS_OPTION_FIELDS1");
             });
 
-            modelBuilder.Entity<OptionFieldsHasOptionField>(entity => {
+            modelBuilder.Entity<OptionFieldsHasOptionField>(entity =>
+            {
                 entity.HasKey(e => new { e.Base, e.OptionField })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -322,7 +358,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_OPTION_FIELDS_has_OPTION_FIELDS_OPTION_FIELDS2");
             });
 
-            modelBuilder.Entity<Picture>(entity => {
+            modelBuilder.Entity<Picture>(entity =>
+            {
                 entity.ToTable("pictures");
 
                 entity.HasIndex(e => e.ProductNumber, "fk_Picture_PRODUCTS1_idx");
@@ -345,13 +382,12 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_Picture_PRODUCTS1");
             });
 
-            modelBuilder.Entity<Product>(entity => {
+            modelBuilder.Entity<Product>(entity =>
+            {
                 entity.HasKey(e => e.ProductNumber)
                     .HasName("PRIMARY");
 
                 entity.ToTable("products");
-
-                entity.HasIndex(e => e.Category, "fk_PRODUCTS_E_PRODUCT_CATEGORY1_idx");
 
                 entity.HasIndex(e => e.ProductNumber, "product_number_UNIQUE")
                     .IsUnique();
@@ -360,20 +396,13 @@ namespace DatabaseServiceProductConfigurator.Models {
 
                 entity.Property(e => e.Buyable).HasColumnName("buyable");
 
-                entity.Property(e => e.Category).HasColumnName("category");
-
                 entity.Property(e => e.Price)
                     .HasColumnType("float(12,2)")
                     .HasColumnName("price");
-
-                entity.HasOne(d => d.CategoryNavigation)
-                    .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.Category)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("fk_PRODUCTS_E_PRODUCT_CATEGORY1");
             });
 
-            modelBuilder.Entity<ProductHasLanguage>(entity => {
+            modelBuilder.Entity<ProductHasLanguage>(entity =>
+            {
                 entity.HasKey(e => new { e.ProductNumber, e.Language })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -411,7 +440,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_PRODUCTS_has_ELANGUAGES_PRODUCTS1");
             });
 
-            modelBuilder.Entity<ProductsHasOptionField>(entity => {
+            modelBuilder.Entity<ProductsHasOptionField>(entity =>
+            {
                 entity.HasKey(e => new { e.ProductNumber, e.OptionFields })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -449,7 +479,8 @@ namespace DatabaseServiceProductConfigurator.Models {
                     .HasConstraintName("fk_PRODUCTS_has_OPTION_FIELDS_PRODUCTS1");
             });
 
-            modelBuilder.Entity<ProductsHasProduct>(entity => {
+            modelBuilder.Entity<ProductsHasProduct>(entity =>
+            {
                 entity.HasKey(e => new { e.BaseProduct, e.OptionProduct })
                     .HasName("PRIMARY")
                     .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
@@ -488,20 +519,8 @@ namespace DatabaseServiceProductConfigurator.Models {
             });
 
             OnModelCreatingPartial(modelBuilder);
-
-            OnModelCreatingPartial(modelBuilder);
-            MyThings(modelBuilder);
         }
 
-        private static void MyThings( ModelBuilder modelBuilder ) {
-            modelBuilder.Entity<Product>().Navigation(e => e.ProductHasLanguages).AutoInclude();
-            modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.OptionFieldsNavigation).AutoInclude();
-            modelBuilder.Entity<ProductsHasOptionField>().Navigation(e => e.ProductNumberNavigation).AutoInclude();
-            modelBuilder.Entity<OptionField>().Navigation(e => e.OptionFieldHasLanguages).AutoInclude();
-            modelBuilder.Entity<Product>().Navigation(e => e.Pictures).AutoInclude();
-            modelBuilder.Entity<ConfigurationHasOptionField>().Navigation(e => e.ProductNumbers).AutoInclude();
-        }
-
-        partial void OnModelCreatingPartial( ModelBuilder modelBuilder );
+        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

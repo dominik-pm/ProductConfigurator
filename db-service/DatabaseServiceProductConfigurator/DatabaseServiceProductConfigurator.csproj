@@ -25,10 +25,4 @@
     <ProjectReference Include="..\BackendServiceModel\Model.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Model">
-      <HintPath>lib\Model.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

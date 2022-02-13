@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace DatabaseServiceProductConfigurator.Models
 {
@@ -19,22 +18,15 @@ namespace DatabaseServiceProductConfigurator.Models
 
         public string ProductNumber { get; set; } = null!;
         public float Price { get; set; }
-        public string Category { get; set; } = null!;
         public bool Buyable { get; set; }
 
-        [JsonIgnore]
-        public virtual EProductCategory CategoryNavigation { get; set; } = null!;
-        [JsonIgnore]
         public virtual ICollection<Configuration> Configurations { get; set; }
         public virtual ICollection<Picture> Pictures { get; set; }
         public virtual ICollection<ProductHasLanguage> ProductHasLanguages { get; set; }
         public virtual ICollection<ProductsHasOptionField> ProductsHasOptionFields { get; set; }
-        [JsonIgnore]
         public virtual ICollection<ProductsHasProduct> ProductsHasProductBaseProductNavigations { get; set; }
-        [JsonIgnore]
         public virtual ICollection<ProductsHasProduct> ProductsHasProductOptionProductNavigations { get; set; }
 
-        [JsonIgnore]
         public virtual ICollection<ConfigurationHasOptionField> ConfigurationHasOptionFields { get; set; }
     }
 }

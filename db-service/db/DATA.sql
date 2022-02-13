@@ -1,29 +1,26 @@
 use product_configurator;
 
-INSERT IGNORE INTO e_product_category(category)
-VALUES ('CAR'),
-       ('COLOR'),
-       ('ENGINE'),
-       ('PANORAMA_ROOF'),
-       ('');
+INSERT IGNORE INTO account(id, email, username)
+VALUES (1, 't.scherzer@htlkrems.at', 'sqrt3'),
+       (2, 's.leutgeb@htlkrems.at', 'andifined');
 
-INSERT IGNORE INTO products (product_number, price, category, buyable)
-VALUES ('Golf', 10000, 'CAR', 1),
-       ('BLUE', 0, 'COLOR', 0),
-       ('YELLOW', 200, 'COLOR', 0),
-       ('GREEN', 500, 'COLOR', 0),
-       ('D150', 8000, 'ENGINE', 0),
-       ('D250', 11000, 'ENGINE', 0),
-       ('P220', 9000, 'ENGINE', 0),
-       ('P450', 16000, 'ENGINE', 0),
-       ('PANORAMASMALL', 0, 'PANORAMA_ROOF', 0),
-       ('PANORAMALARGE', 500, 'PANORAMA_ROOF', 0),
-       ('PANORAMAROOF', 2000, 'PANORAMA_ROOF', 0),
-       ('DIESEL', 0, 'ENGINE', 0),
-       ('PETROL', 0, 'ENGINE', 0),
-       ('HEATED_SEATS', 500, '', 0),
-       ('HIGH_QUALITY_SOUND_SYSTEM', 250, '', 0),
-       ('DRIVE_ASSISTANCE', 1500, '', 0);
+INSERT IGNORE INTO products (product_number, price, buyable)
+VALUES ('Golf', 10000, 1),
+       ('BLUE', 0, 0),
+       ('YELLOW', 200, 0),
+       ('GREEN', 500, 0),
+       ('D150', 8000, 0),
+       ('D250', 11000, 0),
+       ('P220', 9000, 0),
+       ('P450', 16000, 0),
+       ('PANORAMASMALL', 0, 0),
+       ('PANORAMALARGE', 500, 0),
+       ('PANORAMAROOF', 2000, 0),
+       ('DIESEL', 0, 0),
+       ('PETROL', 0, 0),
+       ('HEATED_SEATS', 500, 0),
+       ('HIGH_QUALITY_SOUND_SYSTEM', 250, 0),
+       ('DRIVE_ASSISTANCE', 1500, 0);
 
 INSERT IGNORE INTO e_languages (language)
 VALUES ('en'),
@@ -161,9 +158,9 @@ VALUES ('6', '1', 'CHILD'),
        ('3', '2', 'REQUIRED');
 
 
-INSERT IGNORE INTO configurations (id, product_number)
-VALUES (1, 'Golf'),
-       (2, 'Golf');
+INSERT IGNORE INTO configurations (id, product_number, Date, ACCOUNT_id)
+VALUES (1, 'Golf', CURRENT_DATE, 1),
+       (2, 'Golf', CURRENT_DATE, null);
 
 INSERT IGNORE INTO configurations_has_language (configuration, language, name, description)
 VALUES (1, 'en', 'Basic', 'It is a basic configuration of a Golf.'),
@@ -172,10 +169,9 @@ VALUES (1, 'en', 'Basic', 'It is a basic configuration of a Golf.'),
        (1, 'de', 'Basic', 'Eine einfache Konfiguration.'),
        (2, 'de', 'Sport', 'Eine sportliche Konfiguration');
 
-INSERT IGNORE INTO bookings (Customer, config_id)
+INSERT IGNORE INTO bookings (ACCOUNT_id, config_id)
 VALUES (1, 1),
-       (2, 1),
-       (1, 2);
+       (2, 2);
 
 INSERT IGNORE INTO configuration_has_option_fields (config_id, option_field_id, parent_config_id, parent_option_field_id)
 VALUES (1, '6', null, null),

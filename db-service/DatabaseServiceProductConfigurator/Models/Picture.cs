@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace DatabaseServiceProductConfigurator.Models
 {
@@ -10,7 +9,6 @@ namespace DatabaseServiceProductConfigurator.Models
         public string ProductNumber { get; set; } = null!;
         public string Url { get; set; } = null!;
 
-        [JsonIgnore]
         public virtual Product ProductNumberNavigation { get; set; } = null!;
     }
 }

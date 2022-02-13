@@ -14,39 +14,31 @@ namespace DatabaseServiceProductConfigurator.Controllers {
     [ApiController]
     public class ProductController : ControllerBase {
 
-        static Product_configuratorContext context = new();
+        private readonly IProductService _productService;
+        private readonly ILanguageService _languageService;
 
-        //[HttpGet("GetBuyableProduct")]
-        //public IActionResult GetBuyableProducts() {
-        //    Request.Headers.TryGetValue("Accept-Language", out var lang);
-        //    lang = LanguageService.HandleLanguageInput(lang);
-
-        //    List<object> products = ProductService.GetBuyableProducts(lang);
-
-        //    if ( products.Count == 0 )
-        //        return NoContent();
-
-        //    return Ok(products);
-        //}
+        public ProductController(IProductService productService, ILanguageService languageService) {
+            _productService = productService;
+            _languageService = languageService;
+        }
 
         [HttpGet]
-        public IActionResult GetAllProducts() {
+        public ActionResult<List<Configurator>> GetAllProducts() {
             Request.Headers.TryGetValue("Accept-Language", out var lang);
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            List<Configurator> products = ProductService.GetAllConfigurators(lang);
-            if ( products.Count == 0 )
-                return NoContent();
+            List<Configurator> products = _productService.GetAllConfigurators(lang);
 
             return Ok(products);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get( string id ) {
+        public ActionResult<Configurator> Get( string id ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInput(lang);
 
-            object? product = ProductService.GetConfiguratorByProductNumber(id, lang);
+            Configurator? product = _productService.GetConfiguratorByProductNumber(id, lang);
+
             if ( product == null )
                 return NotFound();
 
@@ -54,14 +46,31 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         }
 
         [HttpPost]
-        public IActionResult Post( [FromBody] Configurator config ) {
+        public ActionResult Post( [FromBody] Configurator config ) {
             Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
-            lang = LanguageService.HandleLanguageInput(lang);
+            lang = _languageService.HandleLanguageInputCreate(lang);
 
-            bool worked = ProductService.SaveConfigurator(config, lang);
-            if ( !worked )
-                return BadRequest();
-            return Accepted();
+            _productService.SaveConfigurator(config, lang);
+
+            return Ok();
         }
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete( string id ) {
+            _productService.DeleteConfigurator(id);
+
+            return Ok();
+        }
+
+        [HttpPut]
+        public ActionResult Put( [FromBody] Configurator product ) {
+            Request.Headers.TryGetValue("Accept-Language", out var lang);   // Get the wanted language out of the Header
+            lang = _languageService.HandleLanguageInputCreate(lang);
+
+            _productService.UpdateProduct(product, lang);
+
+            return Ok();
+        }
+
     }
 }
