@@ -19,7 +19,8 @@ namespace BackendProductConfigurator.MediaProducers
             PdfPage page = document.AddPage();
             XGraphics gfx = XGraphics.FromPdfPage(page); //Holt sich seitenspezifische Details für die Zeichenmethoden
             XTextFormatter tf = new XTextFormatter(gfx); //Um Text besser zu formatieren
-            Configurator configurator = AValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Find(con => con.ConfigId == configId);
+            Configurator configurator = AValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Where(con => con.ConfigId == configId).First();
+            Option tempOption;
             double smallSpacing = 24;
             double mediumSpacing = 30;
             double largeSpacing = 50;
@@ -65,9 +66,10 @@ namespace BackendProductConfigurator.MediaProducers
                            new XRect(page.Width * 0.2, yPosition, page.Width * 0.6, 20));
 
             yPosition += smallSpacing;
-            foreach(Option option in product.Options)
+            foreach(string optionId in product.Options)
             {
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {option.Name}", configurator.Rules.PriceList[option.Id]);
+                tempOption = configurator.Options.Where(o => o.Id == optionId).First();
+                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {tempOption.Name}", configurator.Rules.PriceList[tempOption.Id]);
                 yPosition += smallSpacing;
             }
 

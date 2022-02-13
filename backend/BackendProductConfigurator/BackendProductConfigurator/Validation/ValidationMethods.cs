@@ -1,35 +1,84 @@
 ﻿using BackendProductConfigurator.MediaProducers;
 using Model;
+using Model.Enumerators;
+using System.Linq;
 
 namespace BackendProductConfigurator.Validation
 {
     public static class ValidationMethods
     {
-        public static EValidationResult ValidatePrice (ConfiguredProduct product, Rules dependencies)
+        public static EValidationResult ValidatePrice (ConfiguredProduct product, RulesExtended dependencies)
         {
             float endPrice = dependencies.BasePrice;
             for(int i = 0; i < product.Options.Count; i++)
             {
-                endPrice += dependencies.PriceList[product.Options[i].Id];
+                try
+                {
+                    endPrice += dependencies.PriceList[product.Options[i]];
+                }
+                catch { }
             }
             return (product.Price == endPrice) ? EValidationResult.ValidationPassed : EValidationResult.PriceInvalid;
         }
-        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, List<OptionGroup> optionsGroups)
+        public static EValidationResult ValidateConfiguration (ConfiguredProduct product, Configurator configurator)
         {
             EValidationResult validationResult = EValidationResult.ValidationPassed;
-            foreach (var group in optionsGroups)
+            List<string> allowedOptions = new List<string>();
+            bool requiredValid;
+            foreach (var group in configurator.OptionGroups)
             {
-                if(group.Required == true)
+                if (group.Required)
                 {
-                    validationResult = product.Options.Select(productOption => productOption.Id).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
-                    if (validationResult == EValidationResult.ConfigurationInvalid)
+                    requiredValid = false;
+                    try
                     {
-                        break;
+                        foreach (string optionGroupId in configurator.Rules.GroupRequirements[group.Id])
+                        {
+                            if (configurator.OptionGroups.Where(x => x.Id == optionGroupId).First().OptionIds.Select(x => x).Intersect(product.Options).Any())
+                                requiredValid = true;
+                        }
+                    }
+                    catch { requiredValid = true; }
+                    if(requiredValid)
+                    {
+                        try
+                        {
+                            validationResult = product.Options.Select(productOption => productOption).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
+                        }
+                        catch
+                        {
+
+                        }
+                        if (validationResult == EValidationResult.ConfigurationInvalid)
+                        {
+                            break;
+                        }
                     }
                 }
             }
 
             return validationResult;
+        }
+        public static EValidationResult ValidateConfigurator(Configurator configurator)
+        {
+            if(configurator.Rules.Models.Select(x => x.Id).Count() != configurator.Rules.Models.Select(x => x.Id).Distinct().Count())
+                return EValidationResult.ConfiguratorInvalid;
+
+            return EValidationResult.ValidationPassed;
+        }
+        public static EValidationResult ValidateSelectedModel(ConfiguredProduct configuredProduct, Configurator configurator)
+        {
+            try
+            {
+                List<string> modelList = configurator.Rules.Models.Where(x => x.Id == configuredProduct.Model).Select(x => x.OptionIds).First();
+
+                if (modelList.Intersect(configuredProduct.Options).Count() >= modelList.Count())
+                    return EValidationResult.ModelSelectionInvalid;
+            }
+            catch
+            { }
+
+            return EValidationResult.ValidationPassed;
         }
     }
 }

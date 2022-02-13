@@ -2,12 +2,13 @@
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
+using Model.Enumerators;
 using Model.Interfaces;
+using Model.Wrapper;
 using System.Net;
 
 namespace BackendProductConfigurator.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
     public abstract class AController<T, K> : ControllerBase where T : class
     {
@@ -15,18 +16,17 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(AValuesClass.Configurators["de-DE"].Count == 0)
+            if(AValuesClass.Configurators["de"].Count == 0)
             {
                 AValuesClass.SetValues();
             }
         }
 
-
         // GET: api/<Controller>
         [HttpGet]
-        public virtual List<T> Get()
+        public virtual IEnumerable<T> Get()
         {
-            Response.Headers["Accept-Language"] = Request.Headers.AcceptLanguage; //Richtige Sprache holen
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
         }
 
@@ -34,16 +34,17 @@ namespace BackendProductConfigurator.Controllers
         [HttpGet("{id}")]
         public virtual T Get(K id)
         {
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id));
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+            return entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First();
         }
-        
+
         // POST api/<Controller>
         [HttpPost]
         public virtual void Post([FromBody] T value)
         {
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<T>(value);
+            AValuesClass.PostValue<T>(value, GetAccLang(Request));
         }
 
         // PUT api/<Controller>/5
@@ -58,146 +59,16 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete("{id}")]
         public virtual void Delete(K id)
         {
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => (entity as IIndexable).Id.Equals(id)));
+            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First());
         }
 
         public static string GetAccLang(HttpRequest request)
         {
-            return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{');
-        }
-    }
-
-    public class configurationController : AController<Configurator, string>
-    {
-        public configurationController() : base()
-        {
-            entities = AValuesClass.Configurators;
-        }
-
-        private void AddConfigurator(Configurator value)
-        {
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.ConfiguratorsSlim[GetAccLang(Request)].Add(value);
-        }
-
-        // GET api/<Controller>/5
-        [HttpGet("{id}")]
-        public override Configurator Get(string id)
-        {
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities[GetAccLang(Request)].Find(entity => entity.ConfigId.Equals(id));
-        }
-
-        // POST api/<Controller>
-        [HttpPost]
-        public override void Post([FromBody] Configurator value)
-        {
-            AddConfigurator(value);
-            AValuesClass.PostValue<Configurator>(value);
-        }
-    }
-    public partial class productsController : AController<ConfiguratorSlim, string>
-    {
-        public productsController() : base()
-        {
-            entities = AValuesClass.ConfiguratorsSlim;
-        }
-        
-        // GET: /products
-        [HttpGet]
-        public override List<ConfiguratorSlim> Get()
-        {
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities[GetAccLang(Request)];
-        }
-    }
-    public partial class configuredProductsController : AController<ConfiguredProduct, string>
-    {
-        public configuredProductsController() : base()
-        {
-            entities = AValuesClass.ConfiguredProducts;
-        }
-
-        // POST: /products
-        [Route("/products/{configId}")]
-        [HttpPost]
-        public void Post([FromBody] ConfiguredProduct value, string configId)
-        {
-            EValidationResult validationResult;
-            validationResult = ValidationMethods.ValidateConfiguration(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).OptionGroups);
-            if (validationResult == EValidationResult.ValidationPassed)
-            {
-                validationResult = ValidationMethods.ValidatePrice(value, AValuesClass.Configurators[GetAccLang(Request)].Find(config => config.ConfigId == configId).Rules);
-            }
-            new Thread(() =>
-            {
-                EmailProducer.SendEmail(value, validationResult);
-            }).Start();
-            new Thread(() =>
-            {
-                if(validationResult == EValidationResult.ValidationPassed)
-                    PdfProducer.GeneratePDF(value, configId, Request);
-            }).Start();
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<ConfiguredProduct>(value);
-        }
-    }
-    public class accountController : AController<Account, int>
-    {
-        public accountController() : base()
-        {
-            entities = AValuesClass.Accounts;
-        }
-
-        // POST /account
-        [HttpPost]
-        public override void Post([FromBody] Account value)
-        {
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<Account>(value);
-        }
-    }
-    public partial class savedConfigsController : AController<ProductSaveExtended, string>
-    {
-        public savedConfigsController() : base()
-        {
-            entities = AValuesClass.SavedProducts;
-        }
-
-        // GET: /account/configuration
-        [Route("/account/allorderedconfigurations")]
-        [HttpGet]
-        public override List<ProductSaveExtended> Get()
-        {
-            Response.Headers["Accept-Language"] = Request.Headers.ContentLanguage; //Richtige Sprache holen
-            return entities[GetAccLang(Request)];
-        }
-
-        // GET: /account/configuration
-        [Route("/account/configuration")]
-        [HttpGet]
-        public List<ProductSave> GetSavedConfigs()
-        {
-            Response.Headers["Accept-Language"] = Request.Headers.AcceptLanguage; //Richtige Sprache holen
-            return entities.Cast<ProductSave>().ToList();
-        }
-
-        // POST: /account/configuration
-        [Route("/account/configuration/{configId}")]
-        [HttpPost]
-        public void Post([FromBody] ProductSaveSlim value, string configId)
-        {
-            string description, name;
-            description = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Description;
-            name = AValuesClass.Configurators[GetAccLang(Request)].Find(con => con.ConfigId == configId).Name;
-            entities[GetAccLang(Request)].Add(new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.Ordered.ToString(), User = new Account() { UserName = "scherzert", UserEmail="test@now.com"} });
-        }
-
-        // DELETE api/<Controller>/5
-        [HttpDelete("{id}")]
-        public override void Delete(string id)
-        {
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Find(entity => entity.SavedName.Equals(id)));
+            if(request.Headers.AcceptLanguage.ToString().Contains('-'))
+                return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
+            else
+                return request.Headers.AcceptLanguage.ToString();
         }
     }
 
@@ -205,18 +76,40 @@ namespace BackendProductConfigurator.Controllers
 
     //Um APIs für eine andere Methoden frei zu machen führen diese Methoden ins nichts
 
-    public partial class configuredProductsController : AController<ConfiguredProduct, string>
+    public partial class ConfiguredProductsController : AController<ConfiguredProduct, string>
     {
         [Route("/redactedConfiguredProducts")]
         [HttpPost]
+        [NonAction]
         public override void Post([FromBody] ConfiguredProduct value) { }
     }
-    public partial class productsController : AController<ConfiguratorSlim, string>
+    public partial class ConfigurationController : AController<Configurator, string>
     {
-        [Route("/redactedProducts")]
+        // POST api/<Controller>
+        [Route("/redactedConfigurator")]
         [HttpPost]
-        public override void Post([FromBody] ConfiguratorSlim value) { }
+        [NonAction]
+        public override void Post([FromBody] Configurator value)
+        {
+            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
+            if (validationResult == EValidationResult.ValidationPassed)
+            {
+                AddConfigurator(value);
+                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
+            }
+        }
+    }
+    public partial class SavedConfigsController : AController<ProductSaveExtended, string>
+    {
+        // DELETE api/<Controller>/5
+        [Route("/redactedSavedConfigsController")]
+        [HttpDelete]
+        [NonAction]
+        public override void Delete(string id)
+        {
+            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.SavedName.Equals(id)).First());
+        }
     }
 
-        #endregion
-    }
+    #endregion
+}

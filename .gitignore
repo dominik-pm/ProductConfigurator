@@ -1,0 +1,8 @@
+backend/**/*.pdf
+backend/**/*.cache
+backend/**/*.sou
+backend/**/*.editorconfig
+backend/**/*.sou
+backend/**/*cache*.*
+backend/*.docx
+backend/**/*.png
