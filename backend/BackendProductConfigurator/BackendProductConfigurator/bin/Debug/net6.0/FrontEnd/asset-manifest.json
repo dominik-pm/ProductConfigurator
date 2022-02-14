@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/static/css/main.634c0a0e.chunk.css",
+    "main.js": "/static/js/main.f89ac7aa.chunk.js",
+    "main.js.map": "/static/js/main.f89ac7aa.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.167f2410.js",
+    "runtime-main.js.map": "/static/js/runtime-main.167f2410.js.map",
+    "static/css/2.e72d8011.chunk.css": "/static/css/2.e72d8011.chunk.css",
+    "static/js/2.fc475645.chunk.js": "/static/js/2.fc475645.chunk.js",
+    "static/js/2.fc475645.chunk.js.map": "/static/js/2.fc475645.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.e72d8011.chunk.css.map": "/static/css/2.e72d8011.chunk.css.map",
+    "static/css/main.634c0a0e.chunk.css.map": "/static/css/main.634c0a0e.chunk.css.map",
+    "static/js/2.fc475645.chunk.js.LICENSE.txt": "/static/js/2.fc475645.chunk.js.LICENSE.txt",
+    "static/media/Computer0.jpg": "/static/media/Computer0.e2b016a9.jpg",
+    "static/media/Watch0.jpg": "/static/media/Watch0.e6eda55c.jpg",
+    "static/media/notfound.jpg": "/static/media/notfound.b2542792.jpg",
+    "static/media/vw-golf-r-2021--.jpg": "/static/media/vw-golf-r-2021--.b97934f0.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.167f2410.js",
+    "static/css/2.e72d8011.chunk.css",
+    "static/js/2.fc475645.chunk.js",
+    "static/css/main.634c0a0e.chunk.css",
+    "static/js/main.f89ac7aa.chunk.js"
+  ]
+}

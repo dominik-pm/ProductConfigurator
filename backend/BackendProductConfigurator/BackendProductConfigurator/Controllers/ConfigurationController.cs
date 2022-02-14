@@ -65,12 +65,14 @@ namespace BackendProductConfigurator.Controllers
                 foreach (KeyValuePair<string, Configurator> configDict in configurators)
                 {
                     configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
-                    //EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
-                    //if (validationResult == EValidationResult.ValidationPassed)
-                    //{
-                    AddConfigurator(configDict.Value, configDict.Key);
-                    AValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
-                    //}
+                    EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
+                    if (validationResult == EValidationResult.ValidationPassed)
+                    {
+                        AddConfigurator(configDict.Value, configDict.Key);
+                        AValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
+                    }
+                    else
+                        return ValidationProblem();
                 }
                 return Ok();
             }
