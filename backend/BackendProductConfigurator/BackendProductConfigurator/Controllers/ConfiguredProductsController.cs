@@ -34,13 +34,21 @@ namespace BackendProductConfigurator.Controllers
                 }
                 new Thread(() =>
                 {
-                    EmailProducer.SendEmail(value, validationResult);
+                    try
+                    {
+                        EmailProducer.SendEmail(value, validationResult);
+                    }
+                    catch { }
                 }).Start();
                 new Thread(() =>
                 {
-                    validationResult = EValidationResult.ValidationPassed;
-                    if (validationResult == EValidationResult.ValidationPassed)
-                        PdfProducer.GeneratePDF(value, configId, Request);
+                    try
+                    {
+                        validationResult = EValidationResult.ValidationPassed;
+                        if (validationResult == EValidationResult.ValidationPassed)
+                            PdfProducer.GeneratePDF(value, configId, Request);
+                    }
+                    catch { }
                 }).Start();
                 entities[GetAccLang(Request)].Add(value);
 
