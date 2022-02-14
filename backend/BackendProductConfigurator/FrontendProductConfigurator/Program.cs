@@ -21,9 +21,8 @@ app.UseRouting();
 
 app.UseFileServer(new FileServerOptions
 {
-    FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(), "ClientApp")),
-    RequestPath = "/ClientApp"
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "/ClientApp")),
+    RequestPath = Path.Combine(Directory.GetCurrentDirectory(), "/ClientApp")
 });
 
 
