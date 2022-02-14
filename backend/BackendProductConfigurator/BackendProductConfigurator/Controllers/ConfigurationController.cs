@@ -58,21 +58,24 @@ namespace BackendProductConfigurator.Controllers
                 Configurator configurator;
 
                 configurator = AValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
+
+                foreach(KeyValuePair<string, Configurator> configDict in configurators)
+                {
+                    EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
+                    if (validationResult == EValidationResult.ConfiguratorInvalid)
+                    {
+                        return ValidationProblem();
+                    }
+                }
+
                 AddConfigurator(configurator, configurators.Keys.First());
                 AValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
                 configurators.Remove(configurators.Keys.First());
 
                 foreach (KeyValuePair<string, Configurator> configDict in configurators)
                 {
-                    configurator = AValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
-                    EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
-                    if (validationResult == EValidationResult.ValidationPassed)
-                    {
-                        AddConfigurator(configDict.Value, configDict.Key);
-                        AValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
-                    }
-                    else
-                        return ValidationProblem();
+                    AddConfigurator(configDict.Value, configDict.Key);
+                    AValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
                 }
                 return Ok();
             }
