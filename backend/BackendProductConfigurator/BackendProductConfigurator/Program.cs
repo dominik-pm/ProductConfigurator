@@ -1,5 +1,6 @@
 using BackendProductConfigurator.App_Code;
 using Microsoft.Extensions.FileProviders;
+using Model.Enumerators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
+GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueMode");
+GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
 
 app.UseFileServer(
     new FileServerOptions

@@ -1,4 +1,5 @@
-﻿using Model.Wrapper;
+﻿using BackendProductConfigurator.App_Code;
+using Model.Wrapper;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -44,13 +45,15 @@ namespace BackendProductConfigurator.Controllers
         {
             HttpClientHandler handler = new HttpClientHandler();
 
-            //deactivate to use SSL
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) =>
-                {
-                    return true;
-                };
+            if(GlobalValues.Secure)
+            {
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) =>
+                    {
+                        return true;
+                    };
+            }
 
             HttpClient Http = new HttpClient(handler);
 
