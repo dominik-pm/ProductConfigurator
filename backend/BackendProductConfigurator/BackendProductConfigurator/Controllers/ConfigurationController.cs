@@ -74,8 +74,8 @@ namespace BackendProductConfigurator.Controllers
 
                 foreach (KeyValuePair<string, Configurator> configDict in configurators)
                 {
-                    AddConfigurator(configDict.Value, configDict.Key);
-                    ValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
+                    AddConfigurator(ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value), configDict.Key);
+                    ValuesClass.PutValue<Configurator>(ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value), configDict.Key);
                 }
                 return Ok();
             }
