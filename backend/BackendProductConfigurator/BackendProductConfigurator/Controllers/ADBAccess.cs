@@ -44,6 +44,7 @@ namespace BackendProductConfigurator.Controllers
         {
             HttpClientHandler handler = new HttpClientHandler();
 
+            //deactivate to use SSL
             handler.ClientCertificateOptions = ClientCertificateOption.Manual;
             handler.ServerCertificateCustomValidationCallback =
                 (httpRequestMessage, cert, cetChain, policyErrors) =>
