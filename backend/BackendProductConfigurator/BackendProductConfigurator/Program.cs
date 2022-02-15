@@ -1,3 +1,4 @@
+using BackendProductConfigurator.App_Code;
 using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +34,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
 
 app.UseFileServer(
     new FileServerOptions

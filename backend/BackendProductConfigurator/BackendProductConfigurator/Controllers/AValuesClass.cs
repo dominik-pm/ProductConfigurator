@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.Validation.JWT.Managers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.Validation.JWT.Managers;
 using Model;
 using Model.Enumerators;
 using Model.Indexes;
@@ -15,8 +16,6 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static EValueMode ValueMode { get; } = EValueMode.DatabaseValues;
-        private static readonly string serverAddress = "http://andifined.ddns.net:5129";
         private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
 
         private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
@@ -27,7 +26,7 @@ namespace BackendProductConfigurator.Controllers
 
         public static void SetValues()
         {
-            switch(ValueMode)
+            switch(GlobalValues.ValueMode)
             {
                 case EValueMode.TestValues:
                     SetStaticValues();
@@ -39,18 +38,18 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void PostValue<T>(T value, string language) where T : class
         {
-            if(ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PostValue(language, serverAddress, typeApis[typeof(T)], value).Wait();
+            if(GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                ADBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
         }
         public static void PutValue<T>(T value, string language) where T : class
         {
-            if (ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PutValue(language, serverAddress, typeApis[typeof(T)], value).Wait();
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                ADBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
         }
         public static async void DeleteValue<T>(string language, T identifier) where T : class
         {
-            if (ValueMode == EValueMode.DatabaseValues)
-                await ADBAccess<T>.DeleteValue(language, serverAddress, typeApis[typeof(T)], identifier);
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                await ADBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
         }
         public static void SetDBValues()
         {
@@ -58,9 +57,9 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    Configurators[language] = ADBAccess<Configurator>.GetValues(language, serverAddress, typeApis[typeof(Configurator)]).Result;
+                    Configurators[language] = ADBAccess<Configurator>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]).Result;
 
-                    SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, serverAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+                    SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]).Result;
                 }
                 catch { }
             }
