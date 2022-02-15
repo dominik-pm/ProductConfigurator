@@ -9,7 +9,7 @@ using System.Text;
 
 namespace BackendProductConfigurator.Controllers
 {
-    public abstract class AValuesClass
+    public static class ValuesClass
     {
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
         public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
@@ -356,7 +356,7 @@ namespace BackendProductConfigurator.Controllers
             List<string> configIds = new List<string>();
             foreach (string language in languages)
             {
-                configIds.AddRange(AValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
+                configIds.AddRange(ValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
             }
 
             sb.Replace(' ', '_');

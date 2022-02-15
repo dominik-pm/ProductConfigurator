@@ -13,7 +13,7 @@ namespace BackendProductConfigurator.Controllers
     {
         public ConfigurationController() : base()
         {
-            entities = AValuesClass.Configurators;
+            entities = ValuesClass.Configurators;
         }
 
         private void AddConfigurator(Configurator value)
@@ -54,10 +54,10 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                Dictionary<string, Configurator> configurators = AValuesClass.GenerateConfigurator(value);
+                Dictionary<string, Configurator> configurators = ValuesClass.GenerateConfigurator(value);
                 Configurator configurator;
 
-                configurator = AValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
+                configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
 
                 foreach(KeyValuePair<string, Configurator> configDict in configurators)
                 {
@@ -69,13 +69,13 @@ namespace BackendProductConfigurator.Controllers
                 }
 
                 AddConfigurator(configurator, configurators.Keys.First());
-                AValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
+                ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
                 configurators.Remove(configurators.Keys.First());
 
                 foreach (KeyValuePair<string, Configurator> configDict in configurators)
                 {
                     AddConfigurator(configDict.Value, configDict.Key);
-                    AValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
+                    ValuesClass.PutValue<Configurator>(configDict.Value, configDict.Key);
                 }
                 return Ok();
             }
@@ -90,7 +90,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
-                AValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
+                ValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
                 return Ok();
             }
             catch (Exception ex)
@@ -103,7 +103,7 @@ namespace BackendProductConfigurator.Controllers
         [Route("test")]
         public Configurator Test()
         {
-            return AValuesClass.AdaptConfiguratorsOptionIds(Get("Golf").Value);
+            return ValuesClass.AdaptConfiguratorsOptionIds(Get("Golf").Value);
         }
     }
 }

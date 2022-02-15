@@ -8,7 +8,7 @@ namespace BackendProductConfigurator.Controllers
     {
         public AccountController() : base()
         {
-            entities = AValuesClass.Accounts;
+            entities = ValuesClass.Accounts;
         }
     }
 }

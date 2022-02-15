@@ -16,9 +16,9 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(AValuesClass.Configurators["de"].Count == 0)
+            if(ValuesClass.Configurators["de"].Count == 0)
             {
-                AValuesClass.SetValues();
+                ValuesClass.SetValues();
             }
         }
 
@@ -53,7 +53,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 entities[GetAccLang(Request)].Add(value);
-                AValuesClass.PostValue<T>(value, GetAccLang(Request));
+                ValuesClass.PostValue<T>(value, GetAccLang(Request));
                 return Ok();
             }
             catch (Exception ex)

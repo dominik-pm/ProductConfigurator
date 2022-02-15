@@ -10,7 +10,7 @@ namespace BackendProductConfigurator.Controllers
     {
         public SavedConfigsController() : base()
         {
-            entities = AValuesClass.SavedProducts;
+            entities = ValuesClass.SavedProducts;
         }
 
         // GET: /account/configuration
@@ -20,7 +20,7 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+                Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 if (account.IsAdmin)
@@ -41,7 +41,7 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+                Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
@@ -60,12 +60,12 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 string description, name;
-                Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
+                Configurator configurator = ValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
                 description = configurator.Description;
                 name = configurator.Name;
-                ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
+                ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
                 entities[GetAccLang(Request)].Add(temp);
-                AValuesClass.PostValue(temp, GetAccLang(Request));
+                ValuesClass.PostValue(temp, GetAccLang(Request));
                 return Ok();
             }
             catch (Exception ex)
@@ -80,7 +80,7 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 entities[GetAccLang(Request)].Add(value);
-                AValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
+                ValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
                 return Ok();
             }
             catch (Exception ex)
@@ -96,10 +96,10 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+                Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
                 entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
-                AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
+                ValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
                 return Ok();
             }
             catch (Exception ex)
