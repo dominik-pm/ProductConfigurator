@@ -30,7 +30,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         #region GET
 
         public List<ModelType> GetVisibleModelsByProduct( string productNumber, string lang, List<ConfigurationsHasLanguage> langListConfiguration, List<Configuration> configs ) {
-            List<Configuration> temp = configs.Where(conf => conf.ProductNumber == productNumber && conf.Visible == true && conf.AccountId == null).ToList();
+            List<Configuration> temp = configs.Where(conf => conf.ProductNumber == productNumber && conf.Visible == true && conf.ModelId != null).ToList();
 
             List<ModelType> toReturn = new();
             temp.ForEach(
@@ -38,7 +38,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                     var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang, langListConfiguration);
                     var opts = GetOptionsByConfigId(conf.Id, lang);
                     toReturn.Add(new ModelType {
-                        Id = infos.Name,
+                        Id = conf.ModelId ?? "",
                         Name = infos.Name,
                         Description = infos.Description,
                         OptionIds = opts.Options
@@ -217,17 +217,33 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         public Configuration SaveModels( Product product, ModelType model, string lang ) {
-            Configuration toReturn =
-                new() {
-                    Id = 0,
-                    ProductNumber = product.ProductNumber,
-                    ProductNumberNavigation = product,
-                    AccountId = null,
-                    Account = null,
-                    Date = DateTime.Now
-                };
 
-            toReturn = _context.Configurations.Add(toReturn).Entity;
+            Configuration? toReturn = _context.Configurations.Where(c => c.ProductNumber == product.ProductNumber && c.ModelId == model.Id).FirstOrDefault();
+
+            if ( toReturn == null ) {
+                toReturn =
+                    new() {
+                        Id = 0,
+                        ModelId = model.Id,
+                        ProductNumber = product.ProductNumber,
+                        ProductNumberNavigation = product,
+                        AccountId = null,
+                        Account = null,
+                        Date = DateTime.Now,
+                        Visible = true
+                    };
+
+                toReturn = _context.Configurations.Add(toReturn).Entity;
+            }
+            else {
+                toReturn.Visible = true;
+                toReturn.Date = DateTime.Now;
+                _context.Configurations.Update(toReturn);
+            }
+
+            _context.ConfigurationsHasLanguages.RemoveRange(
+                _context.ConfigurationsHasLanguages.Where(c => c.Configuration == toReturn.Id && c.Language == lang).ToList()
+            );
 
             _context.ConfigurationsHasLanguages.Add(
                 new ConfigurationsHasLanguage {
@@ -235,23 +251,44 @@ namespace DatabaseServiceProductConfigurator.Services {
                     ConfigurationNavigation = toReturn,
                     Language = lang,
                     LanguageNavigation = _context.ELanguages.First(l => l.Language == lang),
-                    Name = model.Id,
+                    Name = model.Name,
                     Description = model.Description
                 }
             );
 
+            // Deleting Options
+            foreach (var item in _context.ConfigurationHasOptionFields.Where(c => c.ConfigId == toReturn.Id).ToList() ) {
+                item.ProductNumbers = new List<Product>();
+                _context.ConfigurationHasOptionFields.Update(item);
+                _context.ConfigurationHasOptionFields.Remove(item);
+            }
+            _context.SaveChanges();
+
+            List<Product> products = _context.Products.ToList();
+
+            Dictionary<OptionField, List<string>> ofDic = new();
             foreach ( var item in model.OptionIds ) {
-                OptionField toInsert = GetOptionfieldByProductAndOption(product.ProductNumber, item);
+                OptionField temp = GetOptionfieldByProductAndOption(product.ProductNumber, item);
+                if ( !ofDic.ContainsKey(temp) ) {
+                    ofDic.Add(temp, new List<string>());
+                }
+                ofDic[temp].Add(item);
+            }
+
+            foreach(var item in ofDic ) {
                 _context.ConfigurationHasOptionFields.Add(
                     new ConfigurationHasOptionField {
                         ConfigId = toReturn.Id,
                         Config = toReturn,
-                        OptionFieldId = toInsert.Id,
-                        OptionField = toInsert,
-                        ProductNumbers = _context.Products.Where(p => model.OptionIds.Contains(p.ProductNumber)).ToList()
+                        OptionFieldId = item.Key.Id,
+                        OptionField = item.Key,
+                        ProductNumbers = products.Where(p => item.Value.Contains(p.ProductNumber)).ToList()
                     }
                 );
             }
+
+            _context.SaveChanges();
+
             return toReturn;
         }
 
@@ -292,11 +329,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         #region DELETE
 
         public void DeleteConfiguration( SavedConfigDeleteWrapper wrapper ) {
-
             Configuration? config = GetConfigurationByWrapper(wrapper);
-
-            if ( config == null )
-                throw new Exception("no Config");
 
             DeletePrivate(config);
 
@@ -305,16 +338,17 @@ namespace DatabaseServiceProductConfigurator.Services {
         public void DeleteConfiguration( int id ) {
             Configuration? config = _context.Configurations.Where(c => c.Id == id).FirstOrDefault();
 
-            if ( config == null )
-                throw new Exception("no Config");
-
             DeletePrivate(config);
         }
 
-        private void DeletePrivate(Configuration config) {
+        private void DeletePrivate( Configuration? config ) {
+
+            if ( config == null )
+                throw new NullReferenceException();
 
             if ( _context.Bookings.Where(c => c.ConfigId == config.Id).Any() ) {
                 config.Visible = false;
+                config.ModelId = null;
                 _context.Update(config);
                 _context.SaveChanges();
                 return;
@@ -328,9 +362,9 @@ namespace DatabaseServiceProductConfigurator.Services {
             );
 
             // OPTIONS
-            List<ConfigurationHasOptionField> toRemove = (from cho in _context.ConfigurationHasOptionFields
-                                                         where cho.ConfigId == config.Id
-                                                         select cho).ToList();
+            List<ConfigurationHasOptionField> toRemove = ( from cho in _context.ConfigurationHasOptionFields
+                                                           where cho.ConfigId == config.Id
+                                                           select cho ).ToList();
 
             toRemove.ForEach(t => t.ProductNumbers = new List<Product>());
             _context.UpdateRange(toRemove);

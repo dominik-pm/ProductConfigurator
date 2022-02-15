@@ -91,6 +91,9 @@ namespace DatabaseServiceProductConfigurator.Context
             {
                 entity.ToTable("configurations");
 
+                entity.HasIndex(e => e.ModelId, "MODEL_ID_UNIQUE")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.ProductNumber, "fk_BOOKINGS_PRODUCTS1_idx");
 
                 entity.HasIndex(e => e.AccountId, "fk_CONFIGURATIONS_ACCOUNT1_idx");
@@ -100,6 +103,8 @@ namespace DatabaseServiceProductConfigurator.Context
                 entity.Property(e => e.AccountId).HasColumnName("ACCOUNT_id");
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
+
+                entity.Property(e => e.ModelId).HasColumnName("MODEL_ID");
 
                 entity.Property(e => e.ProductNumber).HasColumnName("product_number");
 

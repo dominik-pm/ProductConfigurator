@@ -159,9 +159,9 @@ VALUES ('6', '1', 'CHILD'),
        ('3', '2', 'REQUIRED');
 
 
-INSERT IGNORE INTO configurations (id, product_number, Date, ACCOUNT_id, visible)
-VALUES (1, 'Golf', CURRENT_DATE, 1, 1),
-       (2, 'Golf', CURRENT_DATE, null, 1);
+INSERT IGNORE INTO configurations (id, product_number, Date, ACCOUNT_id, visible, MODEL_ID)
+VALUES (1, 'Golf', CURRENT_DATE, 1, 1, 'GOLF-BASIC'),
+       (2, 'Golf', CURRENT_DATE, null, 1, 'GOLF-SPORT');
 
 INSERT IGNORE INTO configurations_has_language (configuration, language, name, description)
 VALUES (1, 'en', 'Basic', 'It is a basic configuration of a Golf.'),

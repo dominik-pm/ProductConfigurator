@@ -261,6 +261,8 @@ namespace DatabaseServiceProductConfigurator.Services {
 
         public void SaveConfigurator( Configurator config, string lang ) {
 
+            var language = _context.ELanguages.Where(l => l.Language == lang).First();
+
             // MAIN PRODUCT
             Product MainProduct =
                 new() {
@@ -268,6 +270,16 @@ namespace DatabaseServiceProductConfigurator.Services {
                     Price = config.Rules.BasePrice,
                     Buyable = true
                 };
+            MainProduct.ProductHasLanguages.Add(
+                new ProductHasLanguage {
+                    ProductNumber = MainProduct.ProductNumber,
+                    ProductNumberNavigation = MainProduct,
+                    Language = lang,
+                    LanguageNavigation = language,
+                    Name = config.Name,
+                    Description = config.Description
+                }
+            );
             MainProduct = _context.Products.Add(MainProduct).Entity;
 
             // OPTION PRODUCTS
@@ -412,7 +424,6 @@ namespace DatabaseServiceProductConfigurator.Services {
                 );
             }
 
-            var language = _context.ELanguages.Where(l => l.Language == lang).First();
 
             //LANGUAGE FOR PRODUCTS
             foreach ( var item in config.Options ) {
@@ -554,6 +565,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             );
 
             // REMOVE ALL OPTION FIELDS
+            _context.OptionFieldHasLanguages.RemoveRange(_context.OptionFieldHasLanguages.Where(o => removeOptionField.Select(ro => ro.Id).Contains(o.OptionFieldId)).ToList());
             _context.OptionFields.RemoveRange(removeOptionField);
 
             // MAIN PRODUCT
@@ -648,7 +660,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 if ( item.ConfigurationHasOptionFields.Count == 0
                     && item.ProductsHasOptionFields.Count == 0
                     && item.OptionFieldsHasOptionFieldOptionFieldNavigations.Count == 0
-                    && item.OptionFieldsHasOptionFieldBaseNavigations.Count == 0 ) { toRemoveOptionField.Add(item); }
+                    && item.OptionFieldsHasOptionFieldBaseNavigations.Count == 0
+                    && item.ConfigurationHasOptionFields.Count == 0 ) { toRemoveOptionField.Add(item); }
             }
 
             _context.OptionFieldHasLanguages.RemoveRange(_context.OptionFieldHasLanguages.Where(l => toRemoveOptionField.Select(o => o.Id).Contains(l.OptionFieldId)));
@@ -685,7 +698,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             // Remove Options
             _context.Products.RemoveRange(toRemoveProduct);
             // Remove OptionFields
-            _context.OptionFields.RemoveRange(fields);
+            _context.OptionFieldHasLanguages.RemoveRange(
+                _context.OptionFieldHasLanguages.Where(o => toRemoveOptionField.Select(f => f.Id).Contains(o.OptionFieldId)).ToList()
+            );
+            _context.OptionFields.RemoveRange(toRemoveOptionField);
 
 
             // ------------------------------Inserting new Options and Fields and Updating older Options and Fields
@@ -870,7 +886,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             // Inserting new OptionFields
             List<OptionField> optionSectionToInsert = new();
             foreach ( var item in product.OptionSections.Where(og => !optionSectionsToUpdate.Select(of => of.Id).Contains(og.Id)) ) {
-                string type = product.Rules.ReplacementGroups[item.Id].FirstOrDefault() == null ? "MULTI_SELECT" : "SINGLE_SELECT";
+                string type = !product.Rules.ReplacementGroups.ContainsKey(item.Id) ? "MULTI_SELECT" : "SINGLE_SELECT";
                 OptionField toAdd = new() {
                     Id = item.Id,
                     Type = type,
@@ -895,7 +911,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         OptionFieldNavigation = optionGroups.Where(og => og.Id == opt).First()
                     });
                 }
-                optionGroupToInsert.Add(toAdd);
+                optionSectionToInsert.Add(toAdd);
             }
             _context.OptionFields.AddRange(optionSectionToInsert);
 
@@ -1011,8 +1027,10 @@ namespace DatabaseServiceProductConfigurator.Services {
                 Configuration tempModel = _configurationService.SaveModels(MainProduct, item, lang);
             }
 
+            _context.SaveChanges();
+
             if( product.Rules.DefaultModel != null && product.Rules.DefaultModel != "" ) {
-                Configuration defaultModel = GetConfigurationByNameAndProductNumber(MainProduct.ProductNumber, lang, product.Rules.DefaultModel);
+                Configuration defaultModel = GetConfigurationByProductNumberAndID(MainProduct.ProductNumber, product.Rules.DefaultModel);
                 MainProduct.BaseModel = defaultModel.Id;
                 MainProduct.BaseModelNavigation = defaultModel;
                 _context.Products.Update(MainProduct);
@@ -1021,16 +1039,13 @@ namespace DatabaseServiceProductConfigurator.Services {
             _context.SaveChanges();
         }
 
-        private Configuration GetConfigurationByNameAndProductNumber( string productNumber, string lang, string name ) {
-            List<ConfigurationsHasLanguage> dbConfigurationsHasLanguage = _context.ConfigurationsHasLanguages
-                .Where(c => c.ConfigurationNavigation.ProductNumber == productNumber && c.Name == name )
-                .Include(c => c.ConfigurationNavigation)
-                .ToList();
+        private Configuration GetConfigurationByProductNumberAndID( string productNumber, string ModelID ) {
+            Configuration? config = _context.Configurations.Where(c => c.ProductNumber == productNumber && c.ModelId == ModelID ).FirstOrDefault();
 
-            Configuration? temp = dbConfigurationsHasLanguage.Where(c => c.Language == lang).Select(c => c.ConfigurationNavigation).FirstOrDefault();
-            if ( temp == null )
-                return dbConfigurationsHasLanguage.Select(t => t.ConfigurationNavigation).First();
-            return temp;
+            if ( config == null )
+                throw new NullReferenceException();
+
+            return config;
         }
 
         #endregion
