@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.MediaProducers;
+﻿using BackendProductConfigurator.Exceptions;
+using BackendProductConfigurator.MediaProducers;
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -40,6 +41,7 @@ namespace BackendProductConfigurator.Controllers
                     }
                     catch { }
                 }).Start();
+                throw new InvalidConfiguratorException("Posted configurator failed the validation");
                 new Thread(() =>
                 {
                     try
@@ -54,7 +56,6 @@ namespace BackendProductConfigurator.Controllers
 
                 Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-                SavedConfigsController scc = new SavedConfigsController();
                 ProductSaveExtended temp = new ProductSaveExtended()
                 {
                     Status = EStatus.ordered.ToString(),
@@ -66,11 +67,15 @@ namespace BackendProductConfigurator.Controllers
                     SavedName = value.ConfigurationName,
                     User = account
                 };
-                return scc.PostOrdered(temp, Request);
+                return new SavedConfigsController().PostOrdered(temp, Request);
+            }
+            catch (InvalidConfiguratorException e)
+            {
+                return ValidationProblem(e.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }
