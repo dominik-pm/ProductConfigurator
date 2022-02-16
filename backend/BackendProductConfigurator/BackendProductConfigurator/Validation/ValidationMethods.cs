@@ -45,10 +45,7 @@ namespace BackendProductConfigurator.Validation
                         {
                             validationResult = product.Options.Select(productOption => productOption).Intersect(group.OptionIds).Any() == false ? EValidationResult.ConfigurationInvalid : EValidationResult.ValidationPassed;
                         }
-                        catch
-                        {
-
-                        }
+                        catch { }
                         if (validationResult == EValidationResult.ConfigurationInvalid)
                         {
                             break;
