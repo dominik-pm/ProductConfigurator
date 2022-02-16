@@ -15,7 +15,6 @@ namespace BackendProductConfigurator.Controllers
             entities = ValuesClass.ConfiguredProducts;
         }
 
-        // POST: /products
         [Route("/products/{configId}")]
         [HttpPost]
         public ActionResult Post([FromBody] ConfiguredProduct value, string configId)

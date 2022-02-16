@@ -25,7 +25,6 @@ namespace BackendProductConfigurator.Controllers
             entities[language].Add(value);
         }
 
-        // GET api/<Controller>/5
         [HttpGet("{id}")]
         public override ActionResult<Configurator> Get(string id)
         {
@@ -48,7 +47,6 @@ namespace BackendProductConfigurator.Controllers
             return entities[GetAccLang(Request)].Cast<ConfiguratorSlim>().ToList();
         }
 
-        // POST api/<Controller>
         [HttpPost]
         public ActionResult Post([FromBody] ConfiguratorPost value)
         {
@@ -64,7 +62,7 @@ namespace BackendProductConfigurator.Controllers
                     EValidationResult validationResult = ValidationMethods.ValidateConfigurator(configDict.Value);
                     if (validationResult == EValidationResult.ConfiguratorInvalid)
                     {
-                        return ValidationProblem();
+                        return ValidationProblem("One or more errors found in the posted configurator");
                     }
                 }
 
@@ -98,13 +96,6 @@ namespace BackendProductConfigurator.Controllers
             {
                 return NotFound();
             }
-        }
-
-        [HttpGet]
-        [Route("test")]
-        public Configurator Test()
-        {
-            return ValuesClass.AdaptConfiguratorsOptionIds(Get("Golf").Value);
         }
     }
 }

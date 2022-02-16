@@ -13,7 +13,6 @@ namespace BackendProductConfigurator.Controllers
             entities = ValuesClass.SavedProducts;
         }
 
-        // GET: /account/configuration
         [Route("/account/allorderedconfigurations")]
         [HttpGet]
         public override ActionResult<IEnumerable<ProductSaveExtended>> Get()
@@ -34,7 +33,6 @@ namespace BackendProductConfigurator.Controllers
             }
         }
 
-        // GET: /account/configuration
         [Route("/account/configurations")]
         [HttpGet]
         public ActionResult<List<ProductSave>> GetSavedConfigs()
@@ -52,7 +50,6 @@ namespace BackendProductConfigurator.Controllers
             }
         }
 
-        // POST: /account/configuration
         [Route("/account/configurations/{configId}")]
         [HttpPost]
         public ActionResult Post([FromBody] ProductSaveSlim value, string configId)
@@ -89,7 +86,6 @@ namespace BackendProductConfigurator.Controllers
             }
         }
 
-        // DELETE api/<Controller>/5
         [Route("/account/configurations/{id}")]
         [HttpDelete]
         public ActionResult SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
