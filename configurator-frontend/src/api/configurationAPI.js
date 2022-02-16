@@ -66,90 +66,90 @@ function fetchApiTest(configId) {
 const configurations = [
     {
         configId: '0',
-        name: 'Car',
-        description: 'automobile',
+        name: 'Auto',
+        description: 'Das Auto der nächsten Generation',
         images: [], // 'vw-golf-r-2021.jpg', 'vw-golf-r-2021.jpg', 'vw-golf-r-2021.jpg'
         options: [
             {
                 id: 'BLUE',
-                name: 'Blue',
-                description: 'A blue color',
+                name: 'Blau',
+                description: 'Blaue Außenfarbe',
             },
             {
                 id: 'YELLOW',
-                name: 'Yellow',
-                description: 'A yellow color',
+                name: 'Gelb',
+                description: 'Gelbe Außenfarbe',
             },
             {
                 id: 'GREEN',
-                name: 'Green',
-                description: 'A green color',
+                name: 'Grün',
+                description: 'Grüne Außenfarbe',
             },
             {
                 id: 'DIESEL',
-                name: 'Diesel Motor',
-                description: 'a motor driven by diesel fuel',
+                name: 'Dieselmotor',
+                description: 'Motor mit Diesel Treibstoff',
             },
             {
                 id: 'PETROL',
-                name: 'Petrol Motor',
-                description: 'a motor driven by petrol fuel',
+                name: 'Benzinmotor',
+                description: 'Motor mit Benzin Treibstoff',
             },
             {
                 id: 'D150',
-                name: '150 PS Diesel Motor',
-                description: 'a diesel V4 motor with 150 PS',
+                name: '150 PS Dieselmotor',
+                description: 'Ein V4 Dieselmotor mit 150 PS',
             },
             {
                 id: 'D250',
                 name: '250 PS Diesel Motor',
-                description: 'a diesel V6 motor with 250 PS',
+                description: 'Ein V6 Dieselmotor mit 250 PS',
             },
             {
                 id: 'P220',
                 name: '220 PS Petrol Motor',
-                description: 'a petrol V6 motor with 220 PS',
+                description: 'Ein V6 Benzinmotor mit 220 PS',
             },
             {
                 id: 'P450',
                 name: '450 PS Petrol Motor',
-                description: 'a petrol V8 motor with 450 PS',
+                description: 'Ein V8 Benzinmotor mit 450 PS',
             },
             {
                 id: 'PANORAMAROOF',
-                name: 'Panoramic Roof',
-                description: 'a glass roof for an open feeling',
+                name: 'Panoramadach',
+                description: 'Panoramadach',
             },
             {
                 id: 'PANORAMASMALL',
-                name: 'Small Panorama',
-                description: 'a small glass roof',
+                name: 'Panorama Klein',
+                description: 'Ein kleines Glasdach',
             },
             {
                 id: 'PANORAMALARGE',
-                name: 'Large Panorama',
-                description: 'a large glass roof for an amazing open feeling',
+                name: 'Panorama Groß',
+                description: 'Ein großes Glasdach',
             },
             {
                 id: 'HEATED_SEATS',
-                name: 'Heated Seats',
-                description: 'the two seats in the front can be heated',
+                name: 'Sitzheitzung',
+                description: 'Vordersitze sind beheizt',
             }, 
             {
                 id:  'HIGH_QUALITY_SOUND_SYSTEM',
-                name: 'High Quality Sound System',
-                description: 'premium sound system with high res audio',
+                name: 'Premium Soundsystem',
+                description: 'Premium Soundsystem',
             }, 
             {
                 id: 'DRIVE_ASSISTENCE',
-                name: 'Drive Assistence',
-                description: 'extra driving assistence including cruise control, adaptive cruise control and a lane keeping assistent',
+                name: 'Fahrassistenz',
+                description: 'Extra Fahrassistenz inklusive cruise control, adaptive Tempomat und Spurhalteassistent',
             }
         ],
         optionSections: [
             {
                 id: 'EXTERIOR',
-                name: 'Exterior',
+                name: 'Außenbereich',
                 optionGroupIds: [
                     'COLOR_GROUP'
                 ]
@@ -179,8 +179,8 @@ const configurations = [
         optionGroups: [
             {
                 id: 'COLOR_GROUP',
-                name: 'Color',
-                description: 'the exterior color of the car',
+                name: 'Farbe',
+                description: 'Die Außenfarbe des Autos',
                 optionIds: [
                     'BLUE', 'YELLOW', 'GREEN'
                 ],
@@ -188,8 +188,8 @@ const configurations = [
             },
             {
                 id: 'MOTORTYPE_GROUP',
-                name: 'Motor type',
-                description: 'type of your motor',
+                name: 'Motortyp',
+                description: 'Art des Motors',
                 optionIds: [
                     'DIESEL', 'PETROL'
                 ],
@@ -198,7 +198,7 @@ const configurations = [
             {
                 id: 'MOTOR_GROUP',
                 name: 'Motor',
-                description: 'specific motor',
+                description: 'Spezifischer Motor',
                 optionIds: [
                     'D150', 'D250', 'P220', 'P450'
                 ],
@@ -206,8 +206,8 @@ const configurations = [
             },
             {
                 id: 'PANORAMA_GROUP',
-                name: 'Panoramic Roof',
-                description: 'a glass roof for an open feeling',
+                name: 'Panoramadach',
+                description: '',
                 optionIds: [
                     'PANORAMAROOF'
                 ],
@@ -215,8 +215,8 @@ const configurations = [
             },
             {
                 id: 'PANORAMATYPE_GROUP',
-                name: 'Panoramic Roof type',
-                description: 'size of your panorama roof',
+                name: 'Panoramadachgröße',
+                description: 'Art und Größe des Panoramadachs',
                 optionIds: [
                     'PANORAMASMALL', 'PANORAMALARGE'
                 ],
@@ -225,29 +225,192 @@ const configurations = [
             {
                 id: 'EXTRAS_GROUP',
                 name: 'Extras',
-                description: 'Additional Features For Your Car',
+                description: 'Besonderheiten für dein individuelles Auto',
                 optionIds: [
                     'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM', 'DRIVE_ASSISTENCE'
                 ],
                 required: false
             }
         ],
+        // options: [
+        //     {
+        //         id: 'BLUE',
+        //         name: 'Blue',
+        //         description: 'A blue color',
+        //     },
+        //     {
+        //         id: 'YELLOW',
+        //         name: 'Yellow',
+        //         description: 'A yellow color',
+        //     },
+        //     {
+        //         id: 'GREEN',
+        //         name: 'Green',
+        //         description: 'A green color',
+        //     },
+        //     {
+        //         id: 'DIESEL',
+        //         name: 'Diesel Motor',
+        //         description: 'a motor driven by diesel fuel',
+        //     },
+        //     {
+        //         id: 'PETROL',
+        //         name: 'Petrol Motor',
+        //         description: 'a motor driven by petrol fuel',
+        //     },
+        //     {
+        //         id: 'D150',
+        //         name: '150 PS Diesel Motor',
+        //         description: 'a diesel V4 motor with 150 PS',
+        //     },
+        //     {
+        //         id: 'D250',
+        //         name: '250 PS Diesel Motor',
+        //         description: 'a diesel V6 motor with 250 PS',
+        //     },
+        //     {
+        //         id: 'P220',
+        //         name: '220 PS Petrol Motor',
+        //         description: 'a petrol V6 motor with 220 PS',
+        //     },
+        //     {
+        //         id: 'P450',
+        //         name: '450 PS Petrol Motor',
+        //         description: 'a petrol V8 motor with 450 PS',
+        //     },
+        //     {
+        //         id: 'PANORAMAROOF',
+        //         name: 'Panoramic Roof',
+        //         description: 'a glass roof for an open feeling',
+        //     },
+        //     {
+        //         id: 'PANORAMASMALL',
+        //         name: 'Small Panorama',
+        //         description: 'a small glass roof',
+        //     },
+        //     {
+        //         id: 'PANORAMALARGE',
+        //         name: 'Large Panorama',
+        //         description: 'a large glass roof for an amazing open feeling',
+        //     },
+        //     {
+        //         id: 'HEATED_SEATS',
+        //         name: 'Heated Seats',
+        //         description: 'the two seats in the front can be heated',
+        //     }, 
+        //     {
+        //         id:  'HIGH_QUALITY_SOUND_SYSTEM',
+        //         name: 'High Quality Sound System',
+        //         description: 'premium sound system with high res audio',
+        //     }, 
+        //     {
+        //         id: 'DRIVE_ASSISTENCE',
+        //         name: 'Drive Assistence',
+        //         description: 'extra driving assistence including cruise control, adaptive cruise control and a lane keeping assistent',
+        //     }
+        // ],
+        // optionSections: [
+        //     {
+        //         id: 'EXTERIOR',
+        //         name: 'Exterior',
+        //         optionGroupIds: [
+        //             'COLOR_GROUP'
+        //         ]
+        //     },
+        //     {
+        //         id: 'MOTOR_SECTION',
+        //         name: 'Motor',
+        //         optionGroupIds: [
+        //             'MOTORTYPE_GROUP', 'MOTOR_GROUP'
+        //         ]
+        //     },
+        //     {
+        //         id: 'PANORAMA_SECTION',
+        //         name: 'Panorama',
+        //         optionGroupIds: [
+        //             'PANORAMA_GROUP', 'PANORAMATYPE_GROUP'
+        //         ]
+        //     },
+        //     {
+        //         id: 'EXTRAS',
+        //         name: 'Extras',
+        //         optionGroupIds: [
+        //             'EXTRAS_GROUP'
+        //         ]
+        //     }
+        // ],
+        // optionGroups: [
+        //     {
+        //         id: 'COLOR_GROUP',
+        //         name: 'Color',
+        //         description: 'the exterior color of the car',
+        //         optionIds: [
+        //             'BLUE', 'YELLOW', 'GREEN'
+        //         ],
+        //         required: true
+        //     },
+        //     {
+        //         id: 'MOTORTYPE_GROUP',
+        //         name: 'Motor type',
+        //         description: 'type of your motor',
+        //         optionIds: [
+        //             'DIESEL', 'PETROL'
+        //         ],
+        //         required: true
+        //     },
+        //     {
+        //         id: 'MOTOR_GROUP',
+        //         name: 'Motor',
+        //         description: 'specific motor',
+        //         optionIds: [
+        //             'D150', 'D250', 'P220', 'P450'
+        //         ],
+        //         required: true
+        //     },
+        //     {
+        //         id: 'PANORAMA_GROUP',
+        //         name: 'Panoramic Roof',
+        //         description: 'a glass roof for an open feeling',
+        //         optionIds: [
+        //             'PANORAMAROOF'
+        //         ],
+        //         required: false
+        //     },
+        //     {
+        //         id: 'PANORAMATYPE_GROUP',
+        //         name: 'Panoramic Roof type',
+        //         description: 'size of your panorama roof',
+        //         optionIds: [
+        //             'PANORAMASMALL', 'PANORAMALARGE'
+        //         ],
+        //         required: true
+        //     },
+        //     {
+        //         id: 'EXTRAS_GROUP',
+        //         name: 'Extras',
+        //         description: 'Additional Features For Your Car',
+        //         optionIds: [
+        //             'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM', 'DRIVE_ASSISTENCE'
+        //         ],
+        //         required: false
+        //     }
+        // ],
         rules: {
             basePrice: 10000,
             // defaultOptions: [],
             // defaultOptions: ['BLUE', 'DIESEL', 'D150'],
 
-            defaultModel: 'Golf',
+            defaultModel: 'Basic',
             models: [
                 {
-                    name: 'Golf',
-                    options: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE'],
-                    description: "base model of this car"
+                    name: 'Basic',
+                    optionIds: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE'],
+                    description: "Standardmodell"
                 },
                 {
-                    name: 'Golf GTI',
-                    options: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM'],
-                    description: "advanced model"
+                    name: 'Sport',
+                    optionIds: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM'],
+                    description: "Erweitertes Modell mit großer Leistung"
                 }
             ],
             replacementGroups: {
@@ -379,7 +542,7 @@ const configurations = [
             // },
             groupRequirements: {
                 // PANORAMATYPE_GROUP: ['PANORAMA_GROUP']
-                COLOR_GROUP: ['WHEELS'],
+                // COLOR_GROUP: ['WHEELS'],
                 WHEELS: ['COLOR_GROUP']
             },
             requirements: {

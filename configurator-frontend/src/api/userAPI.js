@@ -1,9 +1,11 @@
 import axios from 'axios'
-import { baseURL } from './general'
+import { baseURL, LOCAL_DATA } from './general'
 import jwt from 'jsonwebtoken'
 
 export const requestSaveConfiguration = (configurationId, name, selectedOptions) => {
-    // return saveConfigTest(name, selectedOptions)
+    if (LOCAL_DATA) {
+        return saveConfigTest(name, selectedOptions)
+    }
 
     return new Promise((resolve, reject) => {
         const data = {
@@ -36,7 +38,9 @@ export const requestDeleteSavedConfiguration = (configurationId, name) => {
     })
 }
 export const fetchSavedConfigurations = () => {
-    // return fetchConfigsTest()
+    if (LOCAL_DATA) {
+        return fetchConfigsTest()
+    }
 
     return new Promise((resolve, reject) => {
         axios.get(`${baseURL}/account/configurations/`)
@@ -49,7 +53,9 @@ export const fetchSavedConfigurations = () => {
     })
 }
 export const fetchAllOrderedConfigurations = () => {
-    // return fetchOrderedConfigsTest()
+    if (LOCAL_DATA) {
+        return fetchOrderedConfigsTest()
+    }
 
     return new Promise((resolve, reject) => {
         axios.get(`${baseURL}/account/allorderedconfigurations/`)
@@ -117,41 +123,41 @@ function fetchConfigsTest() {
     return new Promise((resolve, reject) => {
         const data = [
             {
-                savedName: "TestConfig",
+                savedName: "Testspeicher",
                 status: "saved", // or "ordered"
-                date: new Date().toISOString(),
-                id: 0,
-                name: "Car",
-                description: "This is a car",
+                date: new Date(1644407751516).toISOString(),
+                configId: 0,
+                name: "Auto",
+                description: "Das Auto der nächsten Generation",
                 options: ['YELLOW']
             },
+            // {
+            //     savedName: "TestConfig2",
+            //     status: "saved",
+            //     date: new Date().toISOString(),
+            //     configId: 0,
+            //     name: "Car",
+            //     description: "This is a car",
+            //     options: ['BLUE', 'DIESEL', 'D150']
+            // },
             {
-                savedName: "TestConfig2",
-                status: "saved",
-                date: new Date().toISOString(),
-                id: 0,
-                name: "Car",
-                description: "This is a car",
-                options: ['BLUE', 'DIESEL', 'D150']
-            },
-            {
-                savedName: "TestOrderedConfig",
+                savedName: "Persönliche Konfiguration 1",
                 status: "ordered",
-                date: new Date().toISOString(),
-                id: 0,
-                name: "Car",
-                description: "This is a car",
+                date: new Date(1644407751516).toISOString(),
+                configId: 0,
+                name: "Auto",
+                description: "Das Auto der nächsten Generation",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
             },
-            {
-                savedName: "TestOrderedConfig2",
-                status: "ordered",
-                date: new Date().toISOString(),
-                id: 0,
-                name: "Car",
-                description: "This is a car",
-                options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
-            }
+            // {
+            //     savedName: "TestOrderedConfig2",
+            //     status: "ordered",
+            //     date: new Date().toISOString(),
+            //     configId: 0,
+            //     name: "Car",
+            //     description: "This is a car",
+            //     options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
+            // }
         ]
         resolve(data)
     })
@@ -164,7 +170,7 @@ function fetchOrderedConfigsTest() {
                 userName: "admin",
                 userEmail: "configurator-admin@test-fuchs.com",
                 date: new Date().toISOString(),
-                id: 0,
+                configId: 0,
                 name: "Car",
                 description: "This is a car",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
@@ -175,7 +181,7 @@ function fetchOrderedConfigsTest() {
                 userEmail: "configurator-admin@test-fuchs.com",
                 status: "ordered",
                 date: new Date().toISOString(),
-                id: 0,
+                configId: 0,
                 name: "Car",
                 description: "This is a car",
                 options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']

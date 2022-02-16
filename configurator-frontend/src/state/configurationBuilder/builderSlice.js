@@ -109,11 +109,11 @@ const testConfiguration = {
         models: [
             {
                 id: 'Sport',
-                options: ['ALLOY19', 'RED'],
+                optionIds: ['ALLOY19', 'RED'],
             },
             {
                 id: 'Basic',
-                options: ['STEEL16', 'BLUE222'],
+                optionIds: ['STEEL16', 'BLUE222'],
             }
         ],
         // replacementGroups: {
@@ -615,7 +615,7 @@ export const builderSlice = createSlice({
             const { modelId, options } = action.payload
             
             const model = state.configuration.rules.models.find(m => m.id === modelId)
-            if (model) model.options = options
+            if (model) model.optionIds = options
         },
         removeModel: (state, action) => {
             const modelId  = action.payload
@@ -652,7 +652,7 @@ export const builderSlice = createSlice({
             state.currentLanguage = newLanguage
         },
         resetBuild: (state, action) => {
-            state.configuration = initialState
+            state.configuration = initialConfiguration
         },
         loadingStarted: (state) => {
             state.status = 'loading'
@@ -805,7 +805,9 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
     let configuration = selectBuilderConfiguration(getState())
     
-    writeToLocalStorage(initialState, 'builder')
+    // writeToLocalStorage(initialConfiguration, 'builder')
+
+    // TODO: updateconfiguration (not post new one), when there is a config id set
 
     postConfiguration(configuration)
     .then(res => {

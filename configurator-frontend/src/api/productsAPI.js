@@ -63,38 +63,38 @@ function fetchApiTest(amount = products.length) {
 const products = [
     {
         configId: '0',
-        name: 'Car',
-        description: 'a next generation automobile',
+        name: 'Auto',
+        description: 'Das Auto der nächsten Generation',
         images: ['vw-golf-r-2021.jpg']
     },
-    {
-        configId: 1,
-        name: 'Computer',
-        description: 'high end computer',
-        images: ['Computer0.jpg']
-    },
-    {
-        configId: 2,
-        name: 'watch',
-        description: 'entry level watch',
-        images: ['Watch0.jpg']
-    },
-    {
-        configId: 3,
-        name: 'watch',
-        description: 'entry level watch',
-        images: ['Watch0.jpg']
-    },
-    {
-        configId: 4,
-        name: 'watch',
-        description: 'entry level watch',
-        images: ['Watch0.jpg']
-    },
-    {
-        configId: 5,
-        name: 'Computer',
-        description: 'high end computer',
-        images: ['Computer0123.jpg']
-    }
+    // {
+    //     configId: 1,
+    //     name: 'Computer',
+    //     description: 'high end computer',
+    //     images: ['Computer0.jpg']
+    // },
+    // {
+    //     configId: 2,
+    //     name: 'watch',
+    //     description: 'entry level watch',
+    //     images: ['Watch0.jpg']
+    // },
+    // {
+    //     configId: 3,
+    //     name: 'watch',
+    //     description: 'entry level watch',
+    //     images: ['Watch0.jpg']
+    // },
+    // {
+    //     configId: 4,
+    //     name: 'watch',
+    //     description: 'entry level watch',
+    //     images: ['Watch0.jpg']
+    // },
+    // {
+    //     configId: 5,
+    //     name: 'Computer',
+    //     description: 'high end computer',
+    //     images: ['Computer0123.jpg']
+    // }
 ]

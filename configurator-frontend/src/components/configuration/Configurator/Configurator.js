@@ -158,7 +158,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                 </Grid>
 
                 {/* Images */}
-                <Box mb={4}>
+                {/* <Box mb={4}>
                     <Slide easing="ease">
                         {configurationImages.map((image, index) => (
                             <div key={index} className="each-slide">
@@ -173,7 +173,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                             </div>
                         ))}
                     </Slide>
-                </Box>
+                </Box> */}
 
                 {/* <ImageList sx={{ width: '100%', height: '350px' }} cols={{sm: 1, lg: 4}} rowHeight={350}>
                     {[...configurationImages, ...configurationImages, ...configurationImages].map((item) => (

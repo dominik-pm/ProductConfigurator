@@ -82,7 +82,7 @@ export const fetchConfiguration = (id) => async (dispatch, getState) => {
 }
 
 const containsAll = (arr1, arr2) => arr2.every(arr2Item => arr1.includes(arr2Item))
-const sameMembers = (arr1, arr2) => containsAll(arr1, arr2) && containsAll(arr2, arr1)
+const sameMembers = (arr1, arr2) => arr1 && arr1.length > 0 && containsAll(arr1, arr2) && containsAll(arr2, arr1)
 const checkModel = () => (dispatch, getState) => {
     const selectedOptions = selectSelectedOptions(getState())
     const models = selectModels(getState())
@@ -95,9 +95,12 @@ const checkModel = () => (dispatch, getState) => {
 
     // check if the selected options are part of a model and then set this model as the current one
     for (const model of models) {
-        if (sameMembers(extractModelOptionsFromModel(model), selectedOptions)) {
-            dispatch(setModel(extractModelNameFromModel(model)))
-            return
+        const modelOptions = extractModelOptionsFromModel(model)
+        if (modelOptions) {
+            if (sameMembers(modelOptions, selectedOptions)) {
+                dispatch(setModel(extractModelNameFromModel(model)))
+                return
+            }
         }
     }
 
