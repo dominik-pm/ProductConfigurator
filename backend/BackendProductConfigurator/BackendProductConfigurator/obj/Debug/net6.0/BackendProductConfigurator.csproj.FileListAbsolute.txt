@@ -1131,4 +1131,3 @@ D:\DA\ProductConfigurator\backend\BackendProductConfigurator\BackendProductConfi
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\FrontEnd\manifest.json
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\FrontEnd\asset-manifest.json
 D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\FrontEnd\manifest.json
-D:\Schule\DA\backend\BackendProductConfigurator\BackendProductConfigurator\bin\Debug\net6.0\FrontEnd\package-lock.json
