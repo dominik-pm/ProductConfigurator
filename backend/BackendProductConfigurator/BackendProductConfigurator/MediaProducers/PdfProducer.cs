@@ -104,7 +104,7 @@ namespace BackendProductConfigurator.MediaProducers
             {
                 image = XImage.FromFile(imgLoc);
             }
-            catch (Exception)
+            catch
             {
                 throw new FileNotFoundException($"Image of file doesn't exist on path: {imgLoc}");
             }

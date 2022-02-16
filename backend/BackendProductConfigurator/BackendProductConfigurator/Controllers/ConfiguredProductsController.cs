@@ -49,7 +49,10 @@ namespace BackendProductConfigurator.Controllers
                         if (validationResult == EValidationResult.ValidationPassed)
                             PdfProducer.GeneratePDF(value, configId, Request);
                     }
-                    catch { }
+                    catch (FileNotFoundException e)
+                    {
+                        //do something when image is not found
+                    }
                 }).Start();
                 entities[GetAccLang(Request)].Add(value);
 
