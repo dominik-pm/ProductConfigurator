@@ -40,7 +40,10 @@ namespace BackendProductConfigurator.Controllers
                     }
                     catch { }
                 }).Start();
-                throw new InvalidConfiguratorException("Posted configurator failed the validation");
+                if(validationResult != EValidationResult.ValidationPassed)
+                {
+                    throw new InvalidConfiguratorException($"Posted configurator failed the validation. Error: {validationResult.ToString()}");
+                }
                 new Thread(() =>
                 {
                     try
