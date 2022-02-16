@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.634c0a0e.chunk.css",
-    "main.js": "/static/js/main.0c634260.chunk.js",
-    "main.js.map": "/static/js/main.0c634260.chunk.js.map",
+    "main.js": "/static/js/main.4ce0e2ec.chunk.js",
+    "main.js.map": "/static/js/main.4ce0e2ec.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.167f2410.js",
     "runtime-main.js.map": "/static/js/runtime-main.167f2410.js.map",
     "static/css/2.e72d8011.chunk.css": "/static/css/2.e72d8011.chunk.css",
@@ -15,13 +15,13 @@
     "static/media/Computer0.jpg": "/static/media/Computer0.e2b016a9.jpg",
     "static/media/Watch0.jpg": "/static/media/Watch0.e6eda55c.jpg",
     "static/media/notfound.jpg": "/static/media/notfound.b2542792.jpg",
-    "static/media/vw-golf-r-2021--.jpg": "/static/media/vw-golf-r-2021--.b97934f0.jpg"
+    "static/media/vw-golf-r-2021.jpg": "/static/media/vw-golf-r-2021.b97934f0.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.167f2410.js",
     "static/css/2.e72d8011.chunk.css",
     "static/js/2.b6da2bda.chunk.js",
     "static/css/main.634c0a0e.chunk.css",
-    "static/js/main.0c634260.chunk.js"
+    "static/js/main.4ce0e2ec.chunk.js"
   ]
 }

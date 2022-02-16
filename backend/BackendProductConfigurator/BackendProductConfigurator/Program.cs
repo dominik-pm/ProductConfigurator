@@ -38,7 +38,6 @@ if (app.Environment.IsDevelopment())
 GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
 GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueMode");
 GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
-GlobalValues.Ports = builder.Configuration.GetValue<int[]>("Ports");
 
 app.UseFileServer(
     new FileServerOptions

@@ -45,7 +45,7 @@ namespace BackendProductConfigurator.Controllers
         {
             HttpClientHandler handler = new HttpClientHandler();
 
-            if(GlobalValues.Secure)
+            if(!GlobalValues.Secure)
             {
                 handler.ClientCertificateOptions = ClientCertificateOption.Manual;
                 handler.ServerCertificateCustomValidationCallback =

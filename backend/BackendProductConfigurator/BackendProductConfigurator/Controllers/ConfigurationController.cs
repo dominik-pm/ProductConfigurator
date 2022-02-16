@@ -82,7 +82,7 @@ namespace BackendProductConfigurator.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
         public override ActionResult Delete(string id)
