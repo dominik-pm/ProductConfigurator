@@ -26,11 +26,11 @@ namespace BackendProductConfigurator.Controllers
                 if (account.IsAdmin)
                     return entities[GetAccLang(Request)];
 
-                throw new Exception("Not an admin");
+                throw new Exception("User from JWT is not an admin");
             }
             catch (Exception ex)
             {
-                return Unauthorized();
+                return Unauthorized(ex.Message);
             }
         }
 
@@ -48,7 +48,7 @@ namespace BackendProductConfigurator.Controllers
             }
             catch (Exception ex)
             {
-                return Unauthorized();
+                return Unauthorized(ex.Message);
             }
         }
 
@@ -70,7 +70,7 @@ namespace BackendProductConfigurator.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -85,7 +85,7 @@ namespace BackendProductConfigurator.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
 
@@ -104,7 +104,7 @@ namespace BackendProductConfigurator.Controllers
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex.Message);
             }
         }
     }
