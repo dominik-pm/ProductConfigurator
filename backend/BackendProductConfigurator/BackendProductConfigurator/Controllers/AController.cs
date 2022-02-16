@@ -74,17 +74,28 @@ namespace BackendProductConfigurator.Controllers
         [HttpDelete("{id}")]
         public virtual ActionResult Delete(K id)
         {
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First());
-            return Ok();
+            try
+            {
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First());
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         public static string GetAccLang(HttpRequest request)
         {
-            if(request.Headers.AcceptLanguage.ToString().Contains('-'))
-                return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
-            else
-                return request.Headers.AcceptLanguage.ToString();
+            try
+            {
+                if (request.Headers.AcceptLanguage.ToString().Contains('-'))
+                    return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
+                else
+                    return request.Headers.AcceptLanguage.ToString();
+            }
+            catch { return "en"; }
         }
     }
 
