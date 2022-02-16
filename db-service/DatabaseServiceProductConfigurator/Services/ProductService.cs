@@ -45,7 +45,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             products.ForEach(
                 p => {
                     var depen = new RulesExtended { BasePrice = p.Price,
-                        DefaultModel = p.BaseModel != null ? _languageService.GetConfigurationWithLanguage((int)p.BaseModel, lang, dbconfigurationsHasLanguages).Name : "" };
+                        DefaultModel = p.BaseModelNavigation != null && p.BaseModelNavigation.ModelId != null ? p.BaseModelNavigation.ModelId : "" };
                     var infos = _languageService.GetProductWithLanguage(p.ProductNumber, lang, thisDbStruct.LangListProduct);
                     temp.Add(new Configurator {
                         ConfigId = p.ProductNumber,
@@ -848,8 +848,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<OptionField> optionSectionsToUpdate = _context.OptionFields.Where(o => product.OptionSections.Select(os => os.Id).Contains(o.Id)).ToList();
             optionSectionsToUpdate.ForEach(o => {
                 OptionSection temp = product.OptionSections.Where(og => og.Id == o.Id).First();
-                bool inDic = product.Rules.ReplacementGroups.ContainsKey(o.Id);
-                o.Type = inDic ? "SINGLE_SELECT" : "MULTI_SELECT";
+                o.Type = "PARENT";
                 o.TypeNavigation = eOptionTypes.Where(e => e.Type == o.Type).First();
                 o.Required = false;
                 OptionFieldHasLanguage? ofhl = dbOFhasLanguage.Where(dbofhl => dbofhl.OptionFieldId == o.Id).FirstOrDefault();
@@ -886,7 +885,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             // Inserting new OptionFields
             List<OptionField> optionSectionToInsert = new();
             foreach ( var item in product.OptionSections.Where(og => !optionSectionsToUpdate.Select(of => of.Id).Contains(og.Id)) ) {
-                string type = !product.Rules.ReplacementGroups.ContainsKey(item.Id) ? "MULTI_SELECT" : "SINGLE_SELECT";
+                string type = "PARENT";
                 OptionField toAdd = new() {
                     Id = item.Id,
                     Type = type,
