@@ -268,7 +268,7 @@ namespace BackendProductConfigurator.Controllers
                     Options = GetConfiguratorValues<Option, IIndexable, Option>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
                     OptionSections = GetConfiguratorValues<OptionSection, LanguageIndexGroup, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections)
                 };
-                temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndexOption, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
+                temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndex, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
                 temp.Rules.ReplacementGroups = FillReplacementGroups(configuratorPost.OptionGroups);
 
                 configs.Add(languageDict.Key, temp);
@@ -302,7 +302,7 @@ namespace BackendProductConfigurator.Controllers
                 else if (typeof(T) == typeof(Option))
                     elements.Add(GenerateValues(element as IIndexable, currentElement as Option) as T);
                 else if (typeof(T) == typeof(ModelType))
-                    elements.Add(GenerateValues(element as LanguageIndexOption, currentElement as DescribedIndex) as T);
+                    elements.Add(GenerateValues(element as LanguageIndex, currentElement as DescribedIndex) as T);
             }
 
             return elements;
@@ -331,12 +331,12 @@ namespace BackendProductConfigurator.Controllers
         {
             return currentElement;
         }
-        private static ModelType GenerateValues(LanguageIndexOption loopElement, DescribedIndex currentElement)
+        private static ModelType GenerateValues(LanguageIndex loopElement, DescribedIndex currentElement)
         {
             return new ModelType()
             {
                 Id = loopElement.Id,
-                OptionIds = loopElement.Options,
+                OptionIds = loopElement.OptionIds,
                 Name = currentElement.Name,
                 Description = currentElement.Description
             };
