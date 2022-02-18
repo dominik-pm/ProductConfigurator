@@ -53,7 +53,10 @@
     "createConfiguration": "Konfiguration erstellen",
 
     "createNewConfiguration": "Neue Konfiguration erstellen",
+    "editConfiguration": "Konfiguration bearbeiten",
     "productProperties": "Produkt Eigenschaften",
+    "images": "Bilder",
+    "productImages": "Produktbilder",
     "finishBuild": "Neue Konfiguration fertigstellen",
     "resetBuild": "Zurücksetzen",
     "resetBuildConfirmation": "Wollen Sie diese Konfiguration wirklich zurücksetzen?",

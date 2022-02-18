@@ -11,6 +11,7 @@ import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmatio
 import { selectLanguage } from '../../../state/language/languageSelectors'
 import { selectIsAdmin } from '../../../state/user/userSelector'
 import ConfigurationProperties from './ConfigurationProperties'
+import ImageSelect from './ImageSelect'
 import CreateModel from './Model/CreateModel'
 import SectionTabs from './SectionTabs'
 
@@ -81,6 +82,7 @@ function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openA
         return (
             <Grid container direction="column" gap={2}>
                 <ConfigurationProperties></ConfigurationProperties>
+                <ImageSelect></ImageSelect>
                 <CreateModel></CreateModel>
                 <SectionTabs></SectionTabs>
             </Grid>

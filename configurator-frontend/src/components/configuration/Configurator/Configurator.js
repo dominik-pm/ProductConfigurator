@@ -1,5 +1,5 @@
-import { Done, RestartAlt, SaveAs } from '@mui/icons-material'
-import { Box, Grid, IconButton, ImageList, ImageListItem, Tooltip, Typography } from '@mui/material'
+import { Done, Edit, RestartAlt, SaveAs } from '@mui/icons-material'
+import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -13,7 +13,7 @@ import { resetActiveConfiguration } from '../../../state/configuration/configura
 import { confirmDialogOpen } from '../../../state/confirmationDialog/confirmationSlice'
 import { inputDialogOpen } from '../../../state/inputDialog/inputDialogSlice'
 import { selectLanguage } from '../../../state/language/languageSelectors'
-import { selectIsAuthenticated } from '../../../state/user/userSelector'
+import { selectIsAdmin, selectIsAuthenticated } from '../../../state/user/userSelector'
 import { openLogInDialog } from '../../header/LoginButton'
 import { Slide } from 'react-slideshow-image'
 import Loader from '../../Loader'
@@ -22,27 +22,17 @@ import ModelSelector from './ModelSelector/ModelSelector'
 import OptionTabs from './OptionTabs'
 import Summary from './SidePanel/Summary'
 import 'react-slideshow-image/dist/styles.css'
-// import Summary from './SidePanel/Summary'
+import { editConfiguration } from '../../../state/configurationBuilder/builderSlice'
 
 
-/*
-
-optionGroups: [
-    {
-        id: 'COLOR_GROUP',
-        name: 'Color',
-        description: 'the exterior color of the car',
-        optionIds: [
-            'BLUE', 'YELLOW', 'GREEN'
-        ]
-    }
-]
-
-*/
-
-function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationImages, configurationId, selectedOptions, price, model, isLoading, resetConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
+function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationImages, configurationId, selectedOptions, isAdmin, price, model, isLoading, resetConfig, editConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
 
     const navigate = useNavigate()
+
+    function handleEditClicked() {
+        navigate('/create')
+        editConfig(configurationId)
+    }
 
     function handleSaveClicked() {
         if (!isLoggedIn) {
@@ -128,11 +118,24 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                     </Box>
 
                     <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
+
+                        {/* show an edit button if the user is an admin -> not implemented */}
+                        {isAdmin && false ? 
+                        <Tooltip title={translate('editConfiguration', language)}>
+                            <IconButton 
+                                variant="contained" 
+                                onClick={handleEditClicked}
+                                >
+                                <Edit />
+                            </IconButton>
+                        </Tooltip>
+                        : ''}
+
                         <Tooltip title={translate('saveConfiguration', language)}>
                             <IconButton 
                                 variant="contained" 
                                 onClick={handleSaveClicked}
-                                >
+                            >
                                 <SaveAs />
                             </IconButton>
                         </Tooltip>
@@ -150,7 +153,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                             <IconButton 
                                 variant="contained" 
                                 onClick={handleFinishClicked}
-                                >
+                            >
                                 <Done />
                             </IconButton>
                         </Tooltip>
@@ -158,7 +161,8 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                 </Grid>
 
                 {/* Images */}
-                {/* <Box mb={4}>
+                {configurationImages.length > 0 ? 
+                <Box mb={4}>
                     <Slide easing="ease">
                         {configurationImages.map((image, index) => (
                             <div key={index} className="each-slide">
@@ -173,21 +177,8 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
                             </div>
                         ))}
                     </Slide>
-                </Box> */}
-
-                {/* <ImageList sx={{ width: '100%', height: '350px' }} cols={{sm: 1, lg: 4}} rowHeight={350}>
-                    {[...configurationImages, ...configurationImages, ...configurationImages].map((item) => (
-                        <ImageListItem key={item}>
-                            <img
-                                {...srcset(getImageSource(item), '100%', 350, 1, 1)}
-                                //src={`${getImageSource(item)}`}
-                                //srcSet={`${getImageSource(item)}`}
-                                alt={configurationName}
-                                loading="lazy"
-                            />
-                        </ImageListItem>
-                    ))}
-                </ImageList> */}
+                </Box>
+                : ''}
 
                 {/* Models */}
                 <ModelSelector></ModelSelector>
@@ -220,6 +211,7 @@ const mapStateToProps = (state) => ({
     configurationImages: selectConfigurationImages(state),
     configurationId: selectConfigurationId(state),
     selectedOptions: selectSelectedOptions(state),
+    isAdmin: selectIsAdmin(state),
     price: getCurrentPrice(state),
     model: selectSelectedModel(state),
     language: selectLanguage(state),
@@ -227,6 +219,7 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     resetConfig: resetActiveConfiguration,
+    editConfig: editConfiguration,
     openConfirm: confirmDialogOpen,
     openInputDialog: inputDialogOpen,
     openLogInDialog: openLogInDialog,

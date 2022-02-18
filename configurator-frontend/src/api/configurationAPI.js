@@ -68,7 +68,7 @@ const configurations = [
         configId: '0',
         name: 'Auto',
         description: 'Das Auto der nächsten Generation',
-        images: [], // 'vw-golf-r-2021.jpg', 'vw-golf-r-2021.jpg', 'vw-golf-r-2021.jpg'
+        images: ['car.png', 'car.png'],
         options: [
             {
                 id: 'BLUE',
@@ -455,107 +455,6 @@ const configurations = [
                 HEATED_SEATS: 500, 
                 HIGH_QUALITY_SOUND_SYSTEM: 250,
                 DRIVE_ASSISTENCE: 1500
-            }
-        }
-    },
-    {
-        configId: '1',
-        images: [],
-        options: [
-            {
-                id: 'ALLOY19',
-                name: 'ALLOY19',
-                description: 'ALLOY19',
-                groupId: 'WHEELS'
-            },
-            {
-                id: 'STEEL16',
-                name: 'STEEL16',
-                description: 'STEEL16',
-                groupId: 'WHEELS'
-            },
-            {
-                id: 'RED',
-                name: 'RED',
-                description: 'RED',
-                groupId: 'COLOR_GROUP'
-            },
-            {
-                id: 'BLUE',
-                name: 'BLUE',
-                description: 'RED',
-                groupId: 'COLOR_GROUP'
-            }
-        ],
-        optionSections: [
-            {
-                id: 'EXTERIOR',
-                optionGroupIds: [
-                    'WHEELS', 'COLOR_GROUP'
-                ]
-            }
-        ],
-        optionGroups: [
-            {
-                id: 'WHEELS',
-                name: 'WHEELS',
-                description: 'WHEELS',
-                optionIds: [
-                    'ALLOY19', 'STEEL16'
-                ],
-                required: true,
-                replacement: true
-            },
-            {
-                id: 'COLOR_GROUP',
-                name: 'COLOR_GROUP',
-                description: 'Desc',
-                optionIds: [
-                    'BLUE', 'RED'
-                ],
-                required: false,
-                replacement: false
-            }
-        ],
-        rules: {
-            basePrice: 500,
-            // defaultOptions: [/*BLUE*/],
-            defaultModel: '',
-            models: [
-                {
-                    id: 'Sport',
-                    name: 'Sport',
-                    description: 'Desc',
-                    options: ['ALLOY19', 'RED'],
-                },
-                {
-                    id: 'Basic',
-                    name: 'Basic',
-                    description: 'Desc',
-                    options: ['STEEL16', 'BLUE'],
-                }
-            ],
-            // replacementGroups: {
-            //     // COLOR_GROUP: [
-            //     //     'BLUE'
-            //     // ]
-            // },
-            groupRequirements: {
-                // PANORAMATYPE_GROUP: ['PANORAMA_GROUP']
-                // COLOR_GROUP: ['WHEELS'],
-                WHEELS: ['COLOR_GROUP']
-            },
-            requirements: {
-                BLUE: ['STEEL16'],
-                ALLOY19: ['RED']
-            },
-            incompatibilities: {
-                // PANORAMAROOF: ['PETROL']
-                BLUE: ['ALLOY19'],
-                STEEL16: ['RED']
-            },
-            priceList: {
-                'BLUE': 200
             }
         }
     }

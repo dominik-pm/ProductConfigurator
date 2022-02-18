@@ -1,6 +1,29 @@
 import axios from 'axios'
 import { baseURL, LOCAL_DATA } from './general'
 
+export const fetchAvailableImages = () => {
+    return new Promise((resolve, reject) => {
+        if (LOCAL_DATA) {
+            resolve(['car.jpg', 'watch.png', 'computer.jpg'])
+            return
+        }
+        
+        axios.get(`${baseURL}/images`)
+        .then(res => {
+            if (!res.data) {
+                console.log('no response data')
+                resolve([])
+            }
+            console.log('loaded images: ', res.data)
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err.toString())
+            reject(err.toString())
+        })
+    })
+}
+
 export const fetchAll = () => {
     if (LOCAL_DATA) {
         return fetchApiTest()
@@ -65,36 +88,18 @@ const products = [
         configId: '0',
         name: 'Auto',
         description: 'Das Auto der nächsten Generation',
-        images: ['vw-golf-r-2021.jpg']
+        images: ['car.png']
     },
-    // {
-    //     configId: 1,
-    //     name: 'Computer',
-    //     description: 'high end computer',
-    //     images: ['Computer0.jpg']
-    // },
-    // {
-    //     configId: 2,
-    //     name: 'watch',
-    //     description: 'entry level watch',
-    //     images: ['Watch0.jpg']
-    // },
-    // {
-    //     configId: 3,
-    //     name: 'watch',
-    //     description: 'entry level watch',
-    //     images: ['Watch0.jpg']
-    // },
-    // {
-    //     configId: 4,
-    //     name: 'watch',
-    //     description: 'entry level watch',
-    //     images: ['Watch0.jpg']
-    // },
-    // {
-    //     configId: 5,
-    //     name: 'Computer',
-    //     description: 'high end computer',
-    //     images: ['Computer0123.jpg']
-    // }
+    {
+        configId: 1,
+        name: 'Computer',
+        description: 'high end computer',
+        images: ['computer.jpg']
+    },
+    {
+        configId: 2,
+        name: 'watch',
+        description: 'entry level watch',
+        images: ['watch.png']
+    }
 ]

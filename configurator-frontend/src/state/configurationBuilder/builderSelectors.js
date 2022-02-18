@@ -7,7 +7,9 @@ export const selectBuilderConfiguration = (state) =>            state.builder.co
 export const selectBuilderStatus = (state) =>                   state.builder.status
 export const selectBuilderError = (state) =>                    state.builder.error
 export const selectBuilderInputLanguage = (state) =>            state.builder.currentLanguage
+export const selectBuilderAvailableImages = (state) =>          state.builder.availableImages
 
+export const selectBuilderImages = (state) =>                   state.builder.configuration.images
 export const selectBuilderSections = (state) =>                 state.builder.configuration.optionSections
 export const selectBuilderGroups = (state) =>                   state.builder.configuration.optionGroups
 export const selectBuilderOptions = (state) =>                  state.builder.configuration.options
@@ -109,5 +111,5 @@ export const extractGroupNameFromBuilderGroupId = (group) =>        group.name |
 
 export const extractOptionsFromBuilderGroup = (group) =>            group.optionIds || []
 export const extractGroupsFromBuilderSection = (section) =>         section.optionGroupIds || []
-export const extractModelOptionsFromBuilderModel = (model) =>       model.options || []
+export const extractModelOptionsFromBuilderModel = (model) =>       model.optionIds || []
 export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''

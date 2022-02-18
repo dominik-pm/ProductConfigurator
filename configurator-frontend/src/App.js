@@ -15,6 +15,7 @@ import AccountView from './components/account/AccountView'
 import ConfigurationBuilderView from './components/configuration/Builder/ConfigurationBuilderView'
 import ConfigurationView from './components/configuration/Configurator/ConfigurationView'
 import theme from './Theme'
+import { baseURL, LOCAL_DATA } from './api/general'
 
 function App() {
     return (
@@ -61,8 +62,11 @@ function App() {
 export function getImageSource(image) {
     let imageSource = ''
 
+    let basePath = baseURL
+    if (LOCAL_DATA) basePath = './assets/img'
+
     try {
-        const src = require(`./assets/img/${image.replace('./', '')}`)
+        const src = require(`${basePath}/${image.replace('./', '')}`)
         imageSource = src.default
     } catch (err) {
         console.log(`image '${image}' no found!`)

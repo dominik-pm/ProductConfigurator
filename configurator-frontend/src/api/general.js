@@ -6,7 +6,7 @@ export const baseURL = `http://sqrt3.ddns.net:5187`
 // export const baseURL = `http://localhost:5187`
 // export const baseURL = ``
 
-export const LOCAL_DATA = false
+export const LOCAL_DATA = true
 
 axios.defaults.timeout = 5000
 

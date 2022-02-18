@@ -76,7 +76,6 @@ export const fetchConfiguration = (id) => async (dispatch, getState) => {
         dispatch(checkModel())
     })
     .catch(error => {
-        dispatch(openAlert(error, alertTypes.ERROR))
         dispatch(loadingFailed(error))
     })
 }

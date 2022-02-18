@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { postConfiguration } from '../../api/configurationAPI'
+import { fetchAvailableImages } from '../../api/productsAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { defaultLang } from '../../lang'
-import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration } from './builderSelectors'
+import { selectLanguage } from '../language/languageSelectors'
+import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration, selectBuilderInputLanguage } from './builderSelectors'
 
 
 const initialConfiguration = {
@@ -314,6 +316,7 @@ const testConfiguration = {
 const initialState = {
     configuration: initialConfiguration, // testConfiguration
     currentLanguage: defaultLang,
+    availableImages: [],
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
     error: null
 }
@@ -325,6 +328,12 @@ export const builderSlice = createSlice({
         configuration: readFromLocalStorage('builder') || initialState.configuration
     },
     reducers: {
+        setImages: (state, action) => {
+            state.configuration.images = action.payload
+        },
+        setAvailableImages: (state, action) => {
+            state.availableImages = action.payload
+        },
         addSection: (state, action) => {
             const name = action.payload
 
@@ -654,6 +663,19 @@ export const builderSlice = createSlice({
         resetBuild: (state, action) => {
             state.configuration = initialConfiguration
         },
+        setConfigurationToEdit: (state, action) => {
+            const { configId, images, options, optionSections, optionGroups, rules, language, languagePack } = action.payload
+
+            state.configuration = initialConfiguration
+            state.configuration.configId = configId
+            state.configuration.images = images
+            state.configuration.options = options
+            state.configuration.optionSections = optionSections
+            state.configuration.optionGroups = optionGroups
+            // state.configuration.rules = rules
+            state.currentLanguage = language
+            // state.configuration.languages[state.currentLanguage] = languagePack
+        },
         loadingStarted: (state) => {
             state.status = 'loading'
         },
@@ -675,6 +697,16 @@ export const builderSlice = createSlice({
     //         })
     // }
 })
+
+export const loadImages = () => async (dispatch, getState) => {
+    fetchAvailableImages()
+    .then(images => {
+        dispatch(setAvailableImages(images))
+    })
+    .catch(err => {
+        dispatch(loadingFailed(err))
+    })
+}
 
 export const saveBuilderToStorage = () => (dispatch, getState) => {
     writeToLocalStorage(selectBuilderConfiguration(getState()), 'builder')
@@ -800,6 +832,23 @@ export const changeModelOptions = (modelId, options) => (dispatch) => {
     }))
 }
 
+export const editConfiguration = (configId) => async (dispatch, getState) => {
+    // not implemented
+
+    const c = {
+        configId,
+        images: [],
+        options: [],
+        optionSections: [],
+        optionGroups: [],
+        rules: {}, 
+        language: selectLanguage(getState()), 
+        languagePack: {}
+    }
+
+    dispatch(setConfigurationToEdit(c))
+}
+
 export const finishConfigurationBuild = () => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
@@ -822,12 +871,13 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
 // Action creators are generated for each case reducer function
 export const { 
+    setImages, setAvailableImages,
     addSection, changeSectionProperties, removeSection,
     addOptionGroup, changeGroupProperties, setGroupRequirements, setGroupIsRequired, setGroupIsReplacement, removeOptionGroup,
     addOption, changeOptionProperties, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, removeOption,
     addModel, changeModelProperties, setDefaultModel, setModelOptions, removeModel,
     setBasePrice, setDescription, setName, changeInputLanguage,
-    resetBuild,
+    resetBuild, setConfigurationToEdit,
     loadingStarted, loadingSucceeded, loadingFailed, loadingHandled
 } = builderSlice.actions
 
