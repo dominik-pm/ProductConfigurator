@@ -30,13 +30,11 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 byte[] imageData = System.IO.File.ReadAllBytes(@$"..\images\{location}");
-                Response.Headers.ContentType = "image/jpg";
-                Response.Headers.ContentLength = imageData.Length;
-                return imageData;
+                return new FileContentResult(imageData, "image/jpg");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return NotFound();
+                return NotFound(ex);
             }
         }
     }
