@@ -11,7 +11,7 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                List<string> images = Directory.GetFiles("../images", "*.jpg").ToList();
+                List<string> images = Directory.GetFiles(@"../images", "*.jpg").ToList().Select(name => name.Replace(@"\", "/")).ToList();
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 return images;
