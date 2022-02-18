@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -11,7 +12,7 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                List<string> images = Directory.GetFiles(@"../images", "*.jpg").ToList().Select(name => name.Replace(@"\", "/")).ToList();
+                List<string> images = Directory.GetFiles(@"../images", "*.jpg").ToList().Select(name => name.Replace(@"/", "\\").Replace("../images/", "")).ToList();
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 return images;
@@ -19,6 +20,20 @@ namespace BackendProductConfigurator.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
+            }
+        }
+
+        [Route("/images/")]
+        [HttpGet("{location}")]
+        public ActionResult<byte[]> GetImageData(string location)
+        {
+            try
+            {
+                return System.IO.File.ReadAllBytes(location);
+            }
+            catch (Exception)
+            {
+                return NotFound();
             }
         }
     }
