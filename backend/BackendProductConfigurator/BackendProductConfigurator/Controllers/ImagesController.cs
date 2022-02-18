@@ -12,15 +12,24 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                List<string> images = Directory.GetFiles(@"../images", "*.jpg").ToList().Select(name => name.Replace(@"/", "\\").Replace("../images/", "")).ToList();
-
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-                return images;
+                return GetImagesRec(@"../images");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+        }
+        private List<string> GetImagesRec(string path)
+        {
+            List<string> images = Directory.GetFiles(path, "*.jpg").ToList().Select(name => name.Replace(@"../images\", "").Replace('/', '*').Replace(@"\", "*")).ToList();
+
+            foreach(var folder in Directory.GetDirectories(path))
+            {
+                images.AddRange(GetImagesRec($"{folder}"));
+            }
+
+            return images;
         }
 
         [Route("/images/{location}")]
@@ -29,12 +38,12 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                byte[] imageData = System.IO.File.ReadAllBytes(@$"..\images\{location}");
+                byte[] imageData = System.IO.File.ReadAllBytes(@$"../images/{location.Replace('*', '/')}");
                 return new FileContentResult(imageData, "image/jpg");
             }
             catch (Exception ex)
             {
-                return NotFound(ex);
+                return NotFound();
             }
         }
     }
