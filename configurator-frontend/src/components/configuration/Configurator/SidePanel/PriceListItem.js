@@ -1,4 +1,5 @@
 import { Typography } from '@mui/material'
+import { Box } from '@mui/system'
 import React from 'react'
 // import { useSelector } from 'react-redux'
 import { connect } from 'react-redux'
@@ -15,9 +16,16 @@ function PriceListItem({state, optionId, name, price}) {
     }
     
     return (
-        <Typography variant="body2">
-            {name}{price ? `: ${price}€` : ''}
-        </Typography>
+        <Box display="flex" justifyContent="space-between" sx={{width: '100%'}}>
+            <Typography variant="body2">
+                {name}{/* {{price ? `: ${price}€` : ''}} */}
+            </Typography>
+            {price ? 
+            <Typography variant="body2">
+                {price}€
+            </Typography>
+            : ''}
+        </Box>
     )
 }
 

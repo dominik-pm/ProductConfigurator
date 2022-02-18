@@ -126,7 +126,7 @@ function fetchConfigsTest() {
                 savedName: "Testspeicher",
                 status: "saved", // or "ordered"
                 date: new Date(1644407751516).toISOString(),
-                configId: 0,
+                configId: '0',
                 name: "Auto",
                 description: "Das Auto der nächsten Generation",
                 options: ['YELLOW']
@@ -144,7 +144,7 @@ function fetchConfigsTest() {
                 savedName: "Persönliche Konfiguration 1",
                 status: "ordered",
                 date: new Date(1644407751516).toISOString(),
-                configId: 0,
+                configId: '0',
                 name: "Auto",
                 description: "Das Auto der nächsten Generation",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
@@ -170,7 +170,7 @@ function fetchOrderedConfigsTest() {
                 userName: "admin",
                 userEmail: "configurator-admin@test-fuchs.com",
                 date: new Date().toISOString(),
-                configId: 0,
+                configId: '0',
                 name: "Car",
                 description: "This is a car",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
@@ -181,7 +181,7 @@ function fetchOrderedConfigsTest() {
                 userEmail: "configurator-admin@test-fuchs.com",
                 status: "ordered",
                 date: new Date().toISOString(),
-                configId: 0,
+                configId: '0',
                 name: "Car",
                 description: "This is a car",
                 options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
