@@ -23,13 +23,16 @@ namespace BackendProductConfigurator.Controllers
             }
         }
 
-        [Route("/images/")]
-        [HttpGet("{location}")]
+        [Route("/images/{location}")]
+        [HttpGet]
         public ActionResult<byte[]> GetImageData(string location)
         {
             try
             {
-                return System.IO.File.ReadAllBytes(location);
+                byte[] imageData = System.IO.File.ReadAllBytes(@$"..\images\{location}");
+                Response.Headers.ContentType = "image/jpg";
+                Response.Headers.ContentLength = imageData.Length;
+                return imageData;
             }
             catch (Exception)
             {
