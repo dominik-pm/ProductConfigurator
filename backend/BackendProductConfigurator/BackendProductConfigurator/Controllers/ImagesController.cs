@@ -22,7 +22,7 @@ namespace BackendProductConfigurator.Controllers
         }
         private List<string> GetImagesRec(string path)
         {
-            List<string> images = Directory.GetFiles(path, "*.jpg").ToList().Select(name => name.Replace(@"../images\", "").Replace('/', '*').Replace(@"\", "*")).ToList();
+            List<string> images = Directory.GetFiles(path, "*.jpg").ToList().Select(name => name.Replace(@"../images\", "").Replace('/', '*').Replace('\\', '*')).ToList();
 
             foreach(var folder in Directory.GetDirectories(path))
             {
