@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.MediaProducers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.MediaProducers;
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -16,7 +17,7 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(ValuesClass.Configurators["de"].Count == 0)
+            if(ValuesClass.Configurators["de"].Count == 0 || DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes > GlobalValues.MinutesBetweenFetches)
             {
                 ValuesClass.SetValues();
             }

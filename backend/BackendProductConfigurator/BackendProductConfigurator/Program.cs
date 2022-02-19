@@ -38,6 +38,7 @@ if (app.Environment.IsDevelopment())
 GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
 GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueMode");
 GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
+GlobalValues.MinutesBetweenFetches = builder.Configuration.GetValue<int>("MinutesBetweenFetches");
 
 app.UseFileServer(
     new FileServerOptions

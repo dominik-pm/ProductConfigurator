@@ -17,5 +17,6 @@ namespace BackendProductConfigurator.App_Code
         private static string serverAddress;
         public static bool Secure { get; set; }
         public static int[] Ports { get; set; } = { 7129, 5129 };
+        public static int MinutesBetweenFetches { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace BackendProductConfigurator.Controllers
 {
     public static class ValuesClass
     {
+        public static DateTime LastDBFetch;
         public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
         public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
@@ -254,12 +255,20 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, Configurator> GenerateConfigurator(ConfiguratorPost configuratorPost)
         {
             Dictionary<string, Configurator> configs = new Dictionary<string, Configurator>();
-
-            foreach(KeyValuePair<string, LanguageVariant> languageDict in configuratorPost.Languages)
+            LanguageVariant lv;
+            try
+            {
+                lv = configuratorPost.Languages["en"];
+            }
+            catch (KeyNotFoundException)
+            {
+                lv = configuratorPost.Languages[configuratorPost.Languages.Keys.First()];
+            }
+            foreach (KeyValuePair<string, LanguageVariant> languageDict in configuratorPost.Languages)
             {
                 Configurator temp = new Configurator()
                 {
-                    ConfigId = GenerateConfigId(configuratorPost.Languages["en"]),
+                    ConfigId = GenerateConfigId(lv),
                     Images = configuratorPost.Images,
                     Rules = configuratorPost.Rules.ConvertToExtended(),
                     Name = languageDict.Value.Name,
