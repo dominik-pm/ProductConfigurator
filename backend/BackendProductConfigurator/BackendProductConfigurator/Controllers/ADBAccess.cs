@@ -40,12 +40,13 @@ namespace BackendProductConfigurator.Controllers
             {
                 sb.Append((identifier as SavedConfigWrapper).ConfigId).Append('/').Append((identifier as SavedConfigWrapper).SavedName);
             }
-            else if(typeof(T) == typeof(ConfigurationDeleteWrapper))
+            else if(typeof(T) == typeof(ConfigurationDeleteWrapper) || typeof(T) == typeof(ConfigurationDeleteWrapper))
             {
                 sb.Append((identifier as ConfigurationDeleteWrapper).ConfigId);
             }
 
-            if((int)Http.DeleteAsync(sb.ToString()).Result.StatusCode != 200)
+            int code = (int)Http.DeleteAsync(sb.ToString()).Result.StatusCode;
+            if (code != 200)
             {
                 throw new Exception("Deletion failed");
             }

@@ -20,7 +20,7 @@ namespace BackendProductConfigurator.MediaProducers
             PdfPage page = document.AddPage();
             XGraphics gfx = XGraphics.FromPdfPage(page);
             XTextFormatter tf = new XTextFormatter(gfx);
-            Configurator configurator = ValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Where(con => con.ConfigId == configId).First();
+            Configurator configurator = ValuesClass.Configurators["de"].Where(con => con.ConfigId == configId).First();
             Option tempOption;
             double smallSpacing = 24;
             double mediumSpacing = 30;
@@ -129,7 +129,7 @@ namespace BackendProductConfigurator.MediaProducers
             tf.DrawString(leftText,
                        font,
                        XBrushes.Black,
-                       new XRect(x1, y, page.Width * 0.2, 20));
+                       new XRect(x1, y, page.Width * 0.5, 20));
 
             tf.Alignment = XParagraphAlignment.Right;
             tf.DrawString($"{price}€",

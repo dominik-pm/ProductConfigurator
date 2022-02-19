@@ -25,7 +25,7 @@ namespace BackendProductConfigurator.Controllers
         {
             {typeof(ProductSaveExtended), "/db/configuration"},
             {typeof(Configurator), "/db/product" },
-            {typeof(ConfigurationDeleteWrapper), "/db/configuration" }
+            {typeof(ConfigurationDeleteWrapper), "/db/product" }
         };
 
         public static void SetValues()
