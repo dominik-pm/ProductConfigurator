@@ -40,17 +40,22 @@ GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueM
 GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
 GlobalValues.MinutesBetweenFetches = builder.Configuration.GetValue<int>("MinutesBetweenFetches");
 
-app.UseFileServer(
-    new FileServerOptions
-    {
-        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "FrontEnd")),
-        RequestPath = ""
-    }
+string[] requests = { "", "/user/*", "/configurator/*", "/create" };
+
+app.MapControllers();
+
+foreach (string req in requests)
+{
+    app.UseFileServer(
+        new FileServerOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "FrontEnd")),
+            RequestPath = new PathString(req)
+        }
     );
+}
 
 app.UseAuthorization();
 app.UseAuthentication();
-
-app.MapControllers();
 
 app.Run();
