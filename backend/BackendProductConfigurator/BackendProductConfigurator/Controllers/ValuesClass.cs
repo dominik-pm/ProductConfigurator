@@ -1,9 +1,11 @@
 ﻿using BackendProductConfigurator.App_Code;
 using BackendProductConfigurator.Validation.JWT.Managers;
+using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Enumerators;
 using Model.Indexes;
 using Model.Interfaces;
+using Model.Wrapper;
 using System.Security.Claims;
 using System.Text;
 
@@ -22,7 +24,8 @@ namespace BackendProductConfigurator.Controllers
         private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
             {typeof(ProductSaveExtended), "/db/configuration"},
-            {typeof(Configurator), "/db/product" }
+            {typeof(Configurator), "/db/product" },
+            {typeof(ConfigurationDeleteWrapper), "/db/configuration" }
         };
 
         public static void SetValues()
@@ -39,18 +42,39 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void PostValue<T>(T value, string language) where T : class
         {
-            if(GlobalValues.ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
+            try
+            {
+                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                    ADBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public static void PutValue<T>(T value, string language) where T : class
         {
-            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
-                ADBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
+            try
+            {
+                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                    ADBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        public static async void DeleteValue<T>(string language, T identifier) where T : class
+        public static void DeleteValue<T>(string language, T identifier) where T : class
         {
-            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
-                await ADBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
+            try
+            {
+                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                    ADBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         public static void SetDBValues()
         {

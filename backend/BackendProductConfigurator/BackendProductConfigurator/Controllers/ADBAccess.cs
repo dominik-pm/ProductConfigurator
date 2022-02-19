@@ -13,19 +13,25 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
-        public static async Task<HttpResponseMessage> PutValue(string language, string address, string api, T value)
+        public static async void PutValue(string language, string address, string api, T value)
         {
             HttpClient Http = GenerateHttpClient(language);
 
-            return await Http.PutAsJsonAsync($"{address}{api}", value);
+            if ((int)Http.PutAsJsonAsync($"{address}{api}", value).Result.StatusCode != 200)
+            {
+                throw new Exception("Deletion failed");
+            }
         }
-        public static async Task<HttpResponseMessage> PostValue(string language, string address, string api, T value)
+        public static async void PostValue(string language, string address, string api, T value)
         {
             HttpClient Http = GenerateHttpClient(language);
 
-            return await Http.PostAsJsonAsync($"{address}{api}", value);
+            if ((int)Http.PostAsJsonAsync($"{address}{api}", value).Result.StatusCode != 200)
+            {
+                throw new Exception("Deletion failed");
+            }
         }
-        public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, T identifier)
+        public static async void DeleteValue(string language, string address, string api, T identifier)
         {
             HttpClient Http = GenerateHttpClient(language);
 
@@ -39,7 +45,10 @@ namespace BackendProductConfigurator.Controllers
                 sb.Append((identifier as ConfigurationDeleteWrapper).ConfigId);
             }
 
-            return await Http.DeleteAsync(sb.ToString());
+            if((int)Http.DeleteAsync(sb.ToString()).Result.StatusCode != 200)
+            {
+                throw new Exception("Deletion failed");
+            }
         }
         private static HttpClient GenerateHttpClient(string language)
         {
