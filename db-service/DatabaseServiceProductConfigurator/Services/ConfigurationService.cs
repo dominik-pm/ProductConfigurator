@@ -51,6 +51,8 @@ namespace DatabaseServiceProductConfigurator.Services {
         public List<ProductSaveExtended> GetConfigurations( string lang ) {
             List<ProductHasLanguage> langListProduct = _context.ProductHasLanguages.ToList();
             List<ConfigurationsHasLanguage> langListConfiguration = _context.ConfigurationsHasLanguages.ToList();
+            List<Models.Account> dbAccounts = _context.Accounts.ToList();
+            List<Booking> dbBookings = _context.Bookings.ToList();
 
             List<Configuration> temp = _context.Configurations.Where(c => c.AccountId == null).ToList();
 
@@ -60,8 +62,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                     var opts = GetOptionsByConfigId(conf.Id, lang);
                     var infos = _languageService.GetConfigurationWithLanguage(conf.Id, lang, langListConfiguration);
                     var productInfo = _languageService.GetProductWithLanguage(conf.ProductNumber, lang, langListProduct);
-                    var ordered = _context.Bookings.Where(b => b.ConfigId == conf.Id && b.AccountId == conf.AccountId).Any();
-                    var customer = _context.Accounts.Where(ac => ac.Id == conf.AccountId).FirstOrDefault();
+                    var ordered = dbBookings.Where(b => b.ConfigId == conf.Id && b.AccountId == conf.AccountId).Any();
+                    var customer = dbAccounts.Where(ac => ac.Id == conf.AccountId).FirstOrDefault();
                     toReturn.Add(new ProductSaveExtended {
                         SavedName = infos.Name,
                         Options = opts.Options,

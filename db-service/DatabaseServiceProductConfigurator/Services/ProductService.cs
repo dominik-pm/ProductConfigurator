@@ -40,6 +40,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Configuration> dbConfigurations = _context.Configurations.ToList();
             List<ConfigurationsHasLanguage> dbconfigurationsHasLanguages = _context.ConfigurationsHasLanguages.ToList();
             List<Product> products = _context.Products.ToList();
+            List<Picture> dbPictures = _context.Pictures.ToList();
 
             List<Configurator> temp = new();
             products.ForEach(
@@ -51,7 +52,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         ConfigId = p.ProductNumber,
                         Name = infos.Name,
                         Description = infos.Description,
-                        Images = ( from pic in _context.Pictures where pic.ProductNumber == p.ProductNumber select pic.Url ).ToList(),
+                        Images = ( from pic in dbPictures where pic.ProductNumber == p.ProductNumber select pic.Url ).ToList(),
                         Options = GetOptionsByProductNumber(p.ProductNumber, lang, thisDbStruct),
                         OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang, thisDbStruct),
                         OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang, thisDbStruct),
