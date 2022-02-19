@@ -1,4 +1,4 @@
-import { Done, Edit, RestartAlt, SaveAs } from '@mui/icons-material'
+import { Delete, Done, Edit, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -23,15 +23,24 @@ import OptionTabs from './OptionTabs'
 import Summary from './SidePanel/Summary'
 import 'react-slideshow-image/dist/styles.css'
 import { editConfiguration } from '../../../state/configurationBuilder/builderSlice'
+import { deleteConfiguration } from '../../../api/configurationAPI'
 
 
 function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationImages, configurationId, selectedOptions, isAdmin, price, model, isLoading, resetConfig, editConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
 
     const navigate = useNavigate()
 
-    function handleEditClicked() {
-        navigate('/create')
-        editConfig(configurationId)
+    function handleDeleteClicked() {
+        openConfirm(translate('deleteConfigurationPrompt', language), {}, null, () => {
+            deleteConfiguration(configurationId)
+            .then(res => {
+                openAlert(translate('successConfigurationDeleted'), alertTypes.SUCCESS)
+            })
+            .catch(err => {
+                openAlert(`${err}`, alertTypes.ERROR)
+            })
+            navigate('/')
+        })
     }
 
     function handleSaveClicked() {
@@ -119,14 +128,14 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 
                     <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
 
-                        {/* show an edit button if the user is an admin -> not implemented */}
-                        {isAdmin && false ? 
-                        <Tooltip title={translate('editConfiguration', language)}>
+                        {/* show a delete button if the user is an admin */}
+                        {isAdmin ? 
+                        <Tooltip title={translate('deleteConfiguration', language)}>
                             <IconButton 
                                 variant="contained" 
-                                onClick={handleEditClicked}
+                                onClick={handleDeleteClicked}
                                 >
-                                <Edit />
+                                <Delete />
                             </IconButton>
                         </Tooltip>
                         : ''}

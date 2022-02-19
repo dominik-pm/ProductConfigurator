@@ -854,9 +854,9 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
     let configuration = selectBuilderConfiguration(getState())
     
-    // writeToLocalStorage(initialConfiguration, 'builder')
+    // writeToLocalStorage(initialConfiguration, 'builder') // TODO: uncomment
 
-    // TODO: updateconfiguration (not post new one), when there is a config id set
+    // call put configuration (not post new one), when there is a config id set
 
     postConfiguration(configuration)
     .then(res => {

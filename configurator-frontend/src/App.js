@@ -21,7 +21,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <Container sx={{padding: 0}} maxWidth="xl" className="App">
-                <Router>
+                <Router basename='configurator'>
                     <Header></Header>
                     <ConfirmationOptionSelect></ConfirmationOptionSelect>
                     <InputDialog></InputDialog>
@@ -62,12 +62,14 @@ function App() {
 export function getImageSource(image) {
     let imageSource = ''
 
-    let basePath = baseURL
+    let basePath = `${baseURL}/images`
     if (LOCAL_DATA) basePath = './assets/img'
 
     try {
-        const src = require(`${basePath}/${image.replace('./', '')}`)
-        imageSource = src.default
+        const path = `${basePath}/${image.replace('./', '')}`
+        imageSource = path
+        // const src = require(path)
+        // imageSource = src.default
     } catch (err) {
         console.log(`image '${image}' no found!`)
         const src = require(`./assets/img/notfound.jpg`)

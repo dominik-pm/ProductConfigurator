@@ -16,6 +16,9 @@
     "noProductsFound": "No products found",
     "invalidProductId": "Invalid Product Id",
 
+    "successConfigurationCreated": "Successfully created a new configuration!",
+    "successConfigurationDeleted": "Successfully deleted the configuration!",
+
     "confirmationPrompt": "Confirmation Prompt",
     "cancel": "cancel",
     "confirm": "confirm",
@@ -31,6 +34,7 @@
     "resetConfiguration": "Reset Configuration",
     "finishConfiguration": "Order Configuration",
     "resetConfigurationPrompt": "Do you really want to reset your current configuration?",
+    "deleteConfigurationPrompt": "Do you really want to delete this configurator? It will not be possible to make any more configurations with this product!",
 
     "youWantToSelect": "You want to select",
     "youWantToRemove": "You want to remove",

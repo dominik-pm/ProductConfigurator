@@ -41,6 +41,26 @@ export const postConfiguration = (newConfiguration) => {
     })
 }
 
+export const deleteConfiguration = (configId) => {
+    return new Promise((resolve, reject) => {
+        if (LOCAL_DATA) {
+            reject('Deleting a configuration not available in test mode!')
+            return
+        }
+
+        const data = {}
+        console.log(data)
+        axios.delete(`${baseURL}/configuration/${configId}`, data)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+            reject('Api unreachable')
+        })
+    })
+}
+
 // A mock api request function to mimic making an async request for data
 const testDelay = 0;
 function fetchApiTest(configId) {

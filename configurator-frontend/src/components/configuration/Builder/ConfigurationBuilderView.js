@@ -26,7 +26,7 @@ function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openA
     useEffect(() => {
         if (status === 'succeeded') {
             loadingHandled()
-            openAlert(`Successfully created a new configuration!`, alertTypes.SUCCESS)
+            openAlert(translate('successConfigurationCreated', language), alertTypes.SUCCESS)
             navigate('/')
         }
     }, [status, navigate, loadingHandled, openAlert])

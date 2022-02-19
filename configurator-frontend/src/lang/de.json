@@ -15,6 +15,9 @@
     "loadingProducts": "Loading Products",
     "noProductsFound": "No products found",
     "invalidProductId": "Product Id ungültig",
+
+    "successConfigurationCreated": "Konfiguration erfolgreich erstellt!",
+    "successConfigurationDeleted": "Konfiguration erfolgreich gelöscht!",
     
     "confirmationPrompt": "Überprüfen",
     "cancel": "Abbrechen",
@@ -31,6 +34,7 @@
     "resetConfiguration": "Konfiguration Zurücksetzen",
     "finishConfiguration": "Konfiguration Bestellen",
     "resetConfigurationPrompt": "Möchtest du wirklich die Konfiguration zurücksetzen?",
+    "deleteConfigurationPrompt": "Möchtest du wirklich diesen Konfigurator löschen? Dieses Produkt kann dann nicht mehr konfiguriert werden!",
 
     "youWantToSelect": "Du möchtest diese Option auswählen",
     "youWantToRemove": "Du möchtest diese Option entfernen",

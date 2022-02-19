@@ -41,14 +41,14 @@ function ImageSelect({ selectedImages, allImages, loadImages, setImages, languag
                         onChange={handleChangeImageSelection}
                         input={<OutlinedInput label={translate('images', language)} />}
                         renderValue={(selectedImages) => {
-                                return selectedImages.join(', ')
+                                return selectedImages.join(', ').replace('*', '/')
                             }
                         }
                     >
                         {allImages.map((image) => (
                             <MenuItem key={image} value={image}>
                                 <Checkbox checked={selectedImages.indexOf(image) > -1} />
-                                <ListItemText primary={`${image}`} />
+                                <ListItemText primary={`${image.replace('*', '/')}`} />
                             </MenuItem>
                         ))}
                     </Select>
