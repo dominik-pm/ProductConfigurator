@@ -798,7 +798,7 @@ export default function Product({product}) {
     const navigate = useNavigate()
 
     function handleClick(id) {
-        navigate(`/configuration/${id}`)
+        navigate(`/configurator/${id}`)
     }
 
 }

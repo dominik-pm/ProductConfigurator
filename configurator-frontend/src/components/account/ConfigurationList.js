@@ -17,7 +17,7 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
     const navigate = useNavigate()
 
     function handleEditClick(id, options) {
-        navigate(`/configuration/${id}`)
+        navigate(`/configurator/${id}`)
         saveConfigurationToStorage(id, options)
     }
 
@@ -26,7 +26,7 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
         .then(res => {
             openAlert(`${translate('successfullyRemoved', language)} ${name}!`, alertTypes.SUCCESS)
             // refresh
-            navigate(`/account/saved`)
+            navigate(`/user/saved`)
         })
         .catch(err => {
             openAlert(`Error: ${err}`, alertTypes.ERROR)

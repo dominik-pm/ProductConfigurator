@@ -98,7 +98,7 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
             .then(res => {
                 openAlert(`${translate('successOrderedConfiguration', language)}!`, alertTypes.SUCCESS)
                 console.log(res)
-                navigate('/account/ordered')
+                navigate('/user/ordered')
             })
             .catch(err => {
                 openAlert(`Error: ${err}`, alertTypes.ERROR)

@@ -21,7 +21,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <Container sx={{padding: 0}} maxWidth="xl" className="App">
-                <Router basename='configurator'>
+                <Router>
                     <Header></Header>
                     <ConfirmationOptionSelect></ConfirmationOptionSelect>
                     <InputDialog></InputDialog>
@@ -34,10 +34,10 @@ function App() {
                         }>
                         </Route>
 
-                        <Route exact path="/account/:tab" element={<AccountView></AccountView>}></Route>
-                        <Route exact path="/account" element={<AccountView></AccountView>}></Route>
+                        <Route exact path="/user/:tab" element={<AccountView></AccountView>}></Route>
+                        <Route exact path="/user" element={<AccountView></AccountView>}></Route>
 
-                        <Route exact path="/configuration/:id" element={
+                        <Route exact path="/configurator/:id" element={
                             <ConfigurationView></ConfigurationView>
                         }>
                         </Route>
