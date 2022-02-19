@@ -77,6 +77,18 @@ namespace BackendProductConfigurator.Controllers
                                                       },
                                                       new Option()
                                                       {
+                                                          Id = "DIESEL",
+                                                          Name = "Diesel fuel",
+                                                          Description = "Diesel Motor"
+                                                      },
+                                                      new Option()
+                                                      {
+                                                          Id = "PETROL",
+                                                          Name = "Benzina",
+                                                          Description = "Geiler Motor"
+                                                      },
+                                                      new Option()
+                                                      {
                                                           Id = "D200",
                                                           Name = "D200",
                                                           Description = "Fetter Diesel Motor"
@@ -95,18 +107,24 @@ namespace BackendProductConfigurator.Controllers
                                                       },
                                                       new Option()
                                                       {
+                                                          Id = "P500",
+                                                          Name = "P500",
+                                                          Description = "Very strong engine"
+                                                      },
+                                                      new Option()
+                                                      {
                                                           Id = "GREEN",
                                                           Name = "Green demon",
                                                           Description = "Green like the grinch"
                                                       }};
 
-            List<string> productImages = new List<string> { "./Alfa_159_grey.jpg" };
+            List<string> productImages = new List<string> { "Alfa_159_grey.jpg" };
 
             List<OptionGroup> optionGroups = new List<OptionGroup>
             {
-                new OptionGroup() { Id = "COLOR_GROUP", Name = "Color", Description = "What color you want", OptionIds = new List<string>(){ "RED", "WHITE", "GREEN"}, Required = true },
-                new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "A motor fuel type", Description = "What motor fuel", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = true },
-                new OptionGroup() { Id = "MOTOR_GROUP", Name = "A motor power", Description = "The motor power", OptionIds = new List<string>(){ "D150", "D200", "D250"}, Required = true }
+                new OptionGroup() { Id = "COLOR_GROUP", Name = "Color", Description = "What color you want", OptionIds = new List<string>(){ "RED", "GREEN"}, Required = false },
+                new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "A motor fuel type", Description = "What motor fuel", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = false },
+                new OptionGroup() { Id = "MOTOR_GROUP", Name = "A motor power", Description = "The motor power", OptionIds = new List<string>(){ "D150", "D200", "D250", "P500"}, Required = false }
             };
 
             List<OptionSection> optionSections = new List<OptionSection>
@@ -120,14 +138,16 @@ namespace BackendProductConfigurator.Controllers
                 BasePrice = 50000f,
                 Models = new List<ModelType> { new ModelType { Id = "Ti", Description = "Sportliche Version", OptionIds = new List<string>() { "RED", "DIESEL", "D150" }, Name = "Ti" } },
                 DefaultModel = "TI",
-                ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
-                Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
-                Incompatibilities = new Dictionary<string, List<string>> { { "D150", new List<string> { "PETROL" } } },
-                GroupRequirements = new Dictionary<string, List<string>> { { "PANORAMATYPE_GROUP", new List<string> { "PANORAMAROOF" } } },
+                ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "RED", "GREEN" } }, { "MOTORTYPE_GROUP", new List<string> { "DIESEL", "PETROL" } }, { "MOTOR_GROUP", new List<string> { "D150", "D200", "D250" } } },
+                Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } }, { "D200", new List<string> { "DIESEL" } }, { "D250", new List<string> { "DIESEL" } } },
+                Incompatibilities = new Dictionary<string, List<string>> { { "P500", new List<string> { "DIESEL" } } },
+                GroupRequirements = new Dictionary<string, List<string>> {  },
                 PriceList = new Dictionary<string, float> { { "D150", 1500f },
                                                 { "RED", 250f },
                                                 { "DIESEL", 150f} }
             };
+
+            Configurators["de"].RemoveAll(x => true);
 
             Configurators["de"].Add(new Configurator()
             {

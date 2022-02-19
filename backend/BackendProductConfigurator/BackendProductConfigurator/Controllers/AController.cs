@@ -20,6 +20,7 @@ namespace BackendProductConfigurator.Controllers
             if(ValuesClass.Configurators["de"].Count == 0 || DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes > GlobalValues.MinutesBetweenFetches)
             {
                 ValuesClass.SetValues();
+                ValuesClass.LastDBFetch = DateTime.Now;
             }
         }
 

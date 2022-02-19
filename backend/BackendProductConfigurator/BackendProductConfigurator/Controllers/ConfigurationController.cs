@@ -83,6 +83,7 @@ namespace BackendProductConfigurator.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpDelete("{id}")]
         public override ActionResult Delete(string id)
         {
             try
