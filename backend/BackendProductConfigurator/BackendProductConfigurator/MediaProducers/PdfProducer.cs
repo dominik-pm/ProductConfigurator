@@ -67,10 +67,19 @@ namespace BackendProductConfigurator.MediaProducers
                            new XRect(page.Width * 0.2, yPosition, page.Width * 0.6, 20));
 
             yPosition += smallSpacing;
+            float price;
             foreach(string optionId in product.Options)
             {
                 tempOption = configurator.Options.Where(o => o.Id == optionId).First();
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {tempOption.Name}", configurator.Rules.PriceList[tempOption.Id]);
+                try
+                {
+                    price = configurator.Rules.PriceList[tempOption.Id];
+                }
+                catch
+                {
+                    price = 0f;
+                }
+                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {tempOption.Name}", price);
                 yPosition += smallSpacing;
             }
 
@@ -83,7 +92,7 @@ namespace BackendProductConfigurator.MediaProducers
             DateTime dateTime = DateTime.Now;
 
             StringBuilder saveName = new StringBuilder("./Product");
-            saveName.Append(configId).Append('_');
+            saveName.Append('_').Append(configId).Append('_');
             saveName.Append(dateTime.Year);
             saveName.Append(dateTime.Month.ToString().PadLeft(2, '0'));
             saveName.Append(dateTime.Day.ToString().PadLeft(2, '0'));

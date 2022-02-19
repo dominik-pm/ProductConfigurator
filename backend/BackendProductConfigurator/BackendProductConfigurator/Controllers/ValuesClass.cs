@@ -117,7 +117,7 @@ namespace BackendProductConfigurator.Controllers
             RulesExtended productDependencies = new RulesExtended()
             {
                 BasePrice = 50000f,
-                Models = new List<ModelType> { new ModelType { Id = "TI", Description = "Sportliche Version", OptionIds = new List<string>() { "RED", "DIESEL", "D150" } } },
+                Models = new List<ModelType> { new ModelType { Id = "Ti", Description = "Sportliche Version", OptionIds = new List<string>() { "RED", "DIESEL", "D150" }, Name = "Ti" } },
                 DefaultModel = "TI",
                 ReplacementGroups = new Dictionary<string, List<string>> { { "COLOR_GROUP", new List<string> { "ey", "wos" } } },
                 Requirements = new Dictionary<string, List<string>> { { "D150", new List<string> { "DIESEL" } } },
