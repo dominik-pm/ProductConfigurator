@@ -15,7 +15,7 @@ const languages = {
     'fr': fr
 }
 
-export const translate = (key, language) => {
+export const translate = (key, language = defaultLang) => {
     let langData = languages[language]
 
     if (!langData) {

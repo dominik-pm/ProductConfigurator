@@ -11,6 +11,8 @@
   - the toolkit to create write redux code more efficiently 
 - ``npm install react-router-dom@6``
   - react router version 6 for browser paths
+- ``npm install react-slideshow-image``
+  - to create an imageview as a slideshow
 
 **Adding Material UI**
 - ``npm install @mui/material``
@@ -594,6 +596,7 @@ export const builderSlice = createSlice({
         },
         addOption: (state, action) => {
             console.log('adding option...')
+            // TODO: optionname_optiongroup_configid
         },
         resetBuild: (state, action) => {
             state.configuration = {}
@@ -711,7 +714,7 @@ function ProductView({ products, status, error, fetchProducts, language }) {
             <div className="ProductContainer">
                 {
                     products.map(product => (
-                        <Product key={product.id} product={product}></Product>
+                        <Product key={product.configId} product={product}></Product>
                     ))
                 }
             </div>
@@ -1155,7 +1158,7 @@ export default connect(
 ```
 
 
-## Configurator Logic
+### Configurator Logic
 **Groups**
 - a group can be a replacement group
   - only one option in this group can be selected
@@ -1167,3 +1170,46 @@ export default connect(
     - the configuration is valid if none of the two groups are selected or both (if the required group is selected -> this group also has to be selected because it is required)
   - if both groups are required
     - the configuration is only in a valid state if both are selected (the required parent group is first selected then the group itself)
+
+## Image Slideshow
+**Using the slideshow**
+
+> conponents/configuration/Configurator/Configurator.js
+```javascript
+import { Slide } from 'react-slideshow-image'
+import 'react-slideshow-image/dist/styles.css'
+
+<Slide easing="ease">
+    {IMAGES.map((image, index) => (
+        <div key={index} className="each-slide">
+            <div style={{
+                height: '60vw',
+                maxHeight: '600px', 
+                backgroundImage: `url(${getImageSource(image)})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+            }}>
+            </div>
+        </div>
+    ))}
+</Slide>
+```
+
+**Helper function for getting the images**
+> App.js
+```javascript
+export function getImageSource(image) {
+    let imageSource = ''
+
+    try {
+        const src = require(`./assets/img/${image.replace('./', '')}`)
+        imageSource = src.default
+    } catch (err) {
+        // image not found -> return default image
+        const src = require(`./assets/img/notfound.jpg`)
+        imageSource = src.default
+    } finally {
+        return imageSource
+    }
+}
+```

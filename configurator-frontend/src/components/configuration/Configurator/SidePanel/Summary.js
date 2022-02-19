@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Box } from '@mui/system'
-import { Accordion, AccordionDetails, AccordionSummary, Divider, Stack, Typography } from '@mui/material'
+import { Accordion, AccordionDetails, AccordionSummary, Divider, List, ListItem, ListItemText, ListSubheader, Stack, Typography } from '@mui/material'
 import PriceListItem from './PriceListItem'
 import { getCurrentPrice, selectBasePrice, selectConfigurationId, selectConfigurationStatus, selectOptionGroups, selectOptions, selectOptionSections } from '../../../../state/configuration/configurationSelectors'
 import { translate } from '../../../../lang'
@@ -20,38 +20,57 @@ function Summary({ configurationId, selectedOptions, status, loadedConfiguration
     useEffect(() => {
         if (configurationId !== loadedConfigurationId) {
             // no configuration or a different configuration is loaded -> load correct configuration
-            console.log('summary: fetching configuration')
+            console.log('summary: fetching configuration ', configurationId)
             fetchConfiguration(configurationId)
         }
     }, [configurationId, loadedConfigurationId, fetchConfiguration])
 
 
     function renderSectionContent(section) {
+        let sectionOptions = []
         const sectionGroups = groups.filter(g => section.optionGroupIds.includes(g.id))
-        const groupOptions = (group) => selectedOptions.filter(o => group.optionIds.includes(o))
+        sectionGroups.forEach(g => {
+            const groupOptions = selectedOptions.filter(o => g.optionIds.includes(o))
+            sectionOptions.push(...groupOptions)
+        })
 
         return (
-            sectionGroups.map((group, index) => (
-                <Box key={index}>
-                    {groupOptions(group).length > 0 ?
-                        <>
-                            <Typography vairant="body1">{group.name}</Typography>
-                            
-                            {groupOptions(group).map((option, index) => (
-                                <PriceListItem
-                                key={index}
-                                optionId={option}
-                                >
-                                </PriceListItem>
-                            ))}
-        
-                            <Divider sx={{marginTop: 1, marginBottom: 1}} />
-
-                        </> : ''
-                    }
-                </Box>
+            sectionOptions.map(optionId => (
+                <ListItem sx={{paddingBottom: 0, paddingTop: 0}} key={optionId}>
+                    <PriceListItem
+                        key={optionId}
+                        optionId={optionId}
+                    >
+                    </PriceListItem>
+                </ListItem>
             ))
         )
+
+        // const optionGroups = groups.filter(g => section.optionGroupIds.includes(g.id))
+        // const groupOptions = (group) => selectedOptions.filter(o => group.optionIds.includes(o))
+
+        // return (
+        //     optionGroups.map((group, index) => (
+        //         <Box key={index}>
+        //             {groupOptions(group).length > 0 ?
+        //                 <>
+        //                     <Typography vairant="body1">{group.name}</Typography>
+                            
+        //                     {groupOptions(group).map((option, index) => (
+        //                         <PriceListItem
+        //                         key={index}
+        //                         optionId={option}
+        //                         >
+        //                         </PriceListItem>
+        //                     ))}
+        
+        //                     <Divider sx={{marginTop: 1, marginBottom: 1}} />
+
+        //                 </> : ''
+        //             }
+        //         </Box>
+        //     ))
+        // )
     }
 
     function renderSummary() {
@@ -66,13 +85,49 @@ function Summary({ configurationId, selectedOptions, status, loadedConfiguration
                 </Typography>
 
                 <Stack spacing={1}>
-                    <PriceListItem
+                    {/* <PriceListItem
                         name={translate('basePrice', language)}
                         price={basePrice}
-                    >
-                    </PriceListItem>
+                        >
+                    </PriceListItem> */}
 
-                    {sections.map((section, index) => (
+                    <Box>
+                        <List
+                            dense={true}
+                            sx={{
+                                position: 'relative',
+                                overflow: 'auto',
+                                maxHeight: 300,
+                                '& ul': { padding: 0 },
+                            }}
+                            subheader={<li />}
+                        >
+                            <li>
+                                <ul>
+                                    <ListSubheader>{translate('basePrice', language)}</ListSubheader>
+
+                                    <ListItem sx={{paddingBottom: 0, paddingTop: 0}}>
+                                        <PriceListItem
+                                            name={translate('basePrice', language)}
+                                            price={basePrice}
+                                            >
+                                        </PriceListItem>
+                                    </ListItem>
+                                </ul>
+                            </li>
+
+                            {sections.map(section => (
+                                <li key={section.id}>
+                                    <ul>
+                                        <ListSubheader>{section.name}</ListSubheader>
+
+                                        {renderSectionContent(section)}
+                                    </ul>
+                                </li>
+                            ))}
+                        </List>
+                    </Box>
+                    {/* {sections.map((section, index) => (
                         <Accordion key={index}>
                             <AccordionSummary
                                 expandIcon={<ExpandMoreOutlined />}
@@ -85,39 +140,6 @@ function Summary({ configurationId, selectedOptions, status, loadedConfiguration
                                 {renderSectionContent(section)}
                             </AccordionDetails>
                         </Accordion>
-                    ))}
-                        {/* <Box key={index}>
-                            <Typography variant="h4">{section.name}</Typography>
-                            {groups.filter(g => section.optionGroupIds.includes(g.id)).map((group, index) => (
-                                <Box key={index}>
-                                    <Typography vairant="body1">{group.name}</Typography>
-
-                                    {selectedOptions.filter(o => group.optionIds.includes(o)).map((option, index) => (
-                                        <PriceListItem
-                                            key={index}
-                                            optionId={option}
-                                        >
-                                        </PriceListItem>
-                                    ))}
-                                </Box>
-                            ))}
-                        </Box> */}
-                    
-                    {/* <Typography>{translate('priceList', language)}</Typography>
-                    <PriceListItem
-                        name='Base Price'
-                        price={basePrice}
-                    >
-                    </PriceListItem>
-
-                    {selectedOptions.map((optionId, index) => (
-                        <PriceListItem
-                            key={index}
-                            optionId={optionId}
-                            name={optionId}
-                            price={0}
-                        >
-                        </PriceListItem>
                     ))} */}
                 </Stack>
             </Box>
