@@ -1,4 +1,4 @@
-import { Delete, Done, Edit, RestartAlt, SaveAs } from '@mui/icons-material'
+import { Delete, Done, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -18,7 +18,6 @@ import { openLogInDialog } from '../../header/LoginButton'
 import { Slide } from 'react-slideshow-image'
 import Loader from '../../Loader'
 import ModelSelector from './ModelSelector/ModelSelector'
-
 import OptionTabs from './OptionTabs'
 import Summary from './SidePanel/Summary'
 import 'react-slideshow-image/dist/styles.css'
