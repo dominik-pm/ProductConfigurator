@@ -57,6 +57,7 @@
     "createConfiguration": "Konfiguration erstellen",
 
     "createNewConfiguration": "Neue Konfiguration erstellen",
+    "deleteConfiguration": "Konfiguration löschen",
     "editConfiguration": "Konfiguration bearbeiten",
     "productProperties": "Produkt Eigenschaften",
     "images": "Bilder",

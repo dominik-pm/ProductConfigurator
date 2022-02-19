@@ -582,7 +582,7 @@ export const builderSlice = createSlice({
 
             state.configuration.rules.models.push({
                 id: modelName, 
-                options, 
+                optionIds: options, 
             })
 
             // add to every language

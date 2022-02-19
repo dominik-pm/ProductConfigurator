@@ -77,8 +77,8 @@ function ConfirmationOptionSelect({ isOpen, message, content, optionsToSelect, o
                         }
                     </Typography>
                     <Grid container direction="row" justifyContent="center" alignItems="center">
-                        {options.map(optionId => (
-                            <OptionListItem key={optionId} optionId={optionId} highlight={selected ? 'add' : 'remove'}></OptionListItem>
+                        {options.map((optionId, index) => (
+                            <OptionListItem key={index} optionId={optionId} highlight={selected ? 'add' : 'remove'}></OptionListItem>
                         ))}
                     </Grid>
                 </Box>
