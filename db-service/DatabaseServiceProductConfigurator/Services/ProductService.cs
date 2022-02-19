@@ -45,8 +45,10 @@ namespace DatabaseServiceProductConfigurator.Services {
             List<Configurator> temp = new();
             products.ForEach(
                 p => {
-                    var depen = new RulesExtended { BasePrice = p.Price,
-                        DefaultModel = p.BaseModelNavigation != null && p.BaseModelNavigation.ModelId != null ? p.BaseModelNavigation.ModelId : "" };
+                    var depen = new RulesExtended {
+                        BasePrice = p.Price,
+                        DefaultModel = p.BaseModelNavigation != null && p.BaseModelNavigation.ModelId != null ? p.BaseModelNavigation.ModelId : ""
+                    };
                     var infos = _languageService.GetProductWithLanguage(p.ProductNumber, lang, thisDbStruct.LangListProduct);
                     temp.Add(new Configurator {
                         ConfigId = p.ProductNumber,
@@ -491,23 +493,44 @@ namespace DatabaseServiceProductConfigurator.Services {
             Configurator? configurator = GetConfiguratorByProductNumber(productNumber, "");
 
             if ( configurator == null )
-                return;
+                throw new NullReferenceException();
+
+            List<Configuration> configs = _context.Configurations.Where(c => c.ProductNumber == productNumber).Include(c => c.Bookings).ToList();
+            Product thisProduct = _context.Products.Where(p => p.ProductNumber == productNumber).First();
+            List<ConfigurationHasOptionField> parentConfigOptionFields = _context.ConfigurationHasOptionFields.Include(c => c.ProductNumbers).ToList();
+
+            foreach ( var c in configs ) {
+                if ( c.Bookings.Any() ) {
+                    thisProduct.Buyable = false;
+                    _context.Products.Update(thisProduct);
+                    _context.SaveChanges();
+                    return;
+                }
+            }
+            foreach(var c in parentConfigOptionFields ) {
+                if ( c.ProductNumbers.Contains(thisProduct) ) {
+                    thisProduct.Buyable = false;
+                    _context.Products.Update(thisProduct);
+                    _context.SaveChanges();
+                    return;
+                }
+            }
 
             // PICTURES
             _context.Pictures.RemoveRange(
                 from p in _context.Pictures
-                where p.ProductNumber.Equals(configurator.ConfigId)
+                where p.ProductNumber.Equals(productNumber)
                 select p
             );
 
             // LANGUAGE
             _context.ProductHasLanguages.RemoveRange(
                 from pol in _context.ProductHasLanguages
-                where pol.ProductNumber.Equals(configurator.ConfigId)
+                where pol.ProductNumber.Equals(productNumber)
                 select pol
             );
 
-            // MODELS
+            // CONFIGURATIONS
             _context.Configurations.Where(c => c.ProductNumber.Equals(productNumber))
             .ToList().ForEach(item => _configurationService.DeleteConfiguration(item.Id));
 
@@ -542,11 +565,6 @@ namespace DatabaseServiceProductConfigurator.Services {
             }
             toRemoveFromList.ForEach(t => removeOptionField.Remove(t));
 
-            // OPTIONS
-            foreach ( var item in removeProductID ) {
-                DeleteConfigurator(item);
-            }
-
             // RULES
             _context.ProductsHasProducts.RemoveRange(
                 from php in _context.ProductsHasProducts
@@ -565,14 +583,38 @@ namespace DatabaseServiceProductConfigurator.Services {
                 select ofho
             );
 
+            // OPTIONS
+            foreach ( var item in removeProductID ) {
+                DeleteConfigurator(item);
+            }
+
             // REMOVE ALL OPTION FIELDS
+            List<string> ConfigsHaveOptionFields = _context.ConfigurationHasOptionFields.Select(c => c.OptionFieldId).ToList();
+            List<OptionField> toRemoveFromRemoveList = new();
+            removeOptionField.ForEach(of => {
+                if ( ConfigsHaveOptionFields.Contains(of.Id) ) {
+                    toRemoveFromRemoveList.Add(of);
+                }
+            });
+            toRemoveFromRemoveList.ForEach(t => removeOptionField.Remove(t));
+
             _context.OptionFieldHasLanguages.RemoveRange(_context.OptionFieldHasLanguages.Where(o => removeOptionField.Select(ro => ro.Id).Contains(o.OptionFieldId)).ToList());
             _context.OptionFields.RemoveRange(removeOptionField);
 
+            // Remove from Configurations
+            //List<ConfigurationHasOptionField> configsToRemove = (
+            //    from p in _context.ConfigurationHasOptionFields
+            //    where p.ProductNumbers.Contains(thisProduct)
+            //    select p ).ToList();
+            //configsToRemove.ForEach(t => {
+            //    t.ProductNumbers.Remove(thisProduct);
+            //});
+            //_context.ConfigurationHasOptionFields.UpdateRange(configsToRemove);
+
+            _context.SaveChanges();
+
             // MAIN PRODUCT
-            _context.Products.RemoveRange(
-                _context.Products.Where(p => p.ProductNumber.Equals(configurator.ConfigId))
-            );
+            _context.Products.Remove(thisProduct);
 
             _context.SaveChanges();
 
@@ -1029,7 +1071,7 @@ namespace DatabaseServiceProductConfigurator.Services {
 
             _context.SaveChanges();
 
-            if( product.Rules.DefaultModel != null && product.Rules.DefaultModel != "" ) {
+            if ( product.Rules.DefaultModel != null && product.Rules.DefaultModel != "" ) {
                 Configuration defaultModel = GetConfigurationByProductNumberAndID(MainProduct.ProductNumber, product.Rules.DefaultModel);
                 MainProduct.BaseModel = defaultModel.Id;
                 MainProduct.BaseModelNavigation = defaultModel;
@@ -1040,7 +1082,7 @@ namespace DatabaseServiceProductConfigurator.Services {
         }
 
         private Configuration GetConfigurationByProductNumberAndID( string productNumber, string ModelID ) {
-            Configuration? config = _context.Configurations.Where(c => c.ProductNumber == productNumber && c.ModelId == ModelID ).FirstOrDefault();
+            Configuration? config = _context.Configurations.Where(c => c.ProductNumber == productNumber && c.ModelId == ModelID).FirstOrDefault();
 
             if ( config == null )
                 throw new NullReferenceException();
