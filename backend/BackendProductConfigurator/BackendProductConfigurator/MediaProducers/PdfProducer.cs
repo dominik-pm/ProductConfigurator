@@ -102,11 +102,11 @@ namespace BackendProductConfigurator.MediaProducers
             XImage image;
             try
             {
-                image = XImage.FromFile(imgLoc);
+                image = XImage.FromFile($"../images/{imgLoc.Replace('*', '/')}");
             }
             catch
             {
-                throw new FileNotFoundException($"Image of file doesn't exist on path: {imgLoc}");
+                throw new FileNotFoundException($"Image of file doesn't exist on path: {imgLoc.Replace('*', '/')}");
             }
             double width = page.Width * 0.5;
             double height = (image.Height / image.Width) * width;

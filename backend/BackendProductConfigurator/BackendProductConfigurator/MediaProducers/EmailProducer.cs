@@ -60,14 +60,14 @@ namespace BackendProductConfigurator.MediaProducers
             Email.DefaultRenderer = new RazorRenderer();
         }
 
-        public static void SendEmail(ConfiguredProduct product, EValidationResult validationResult)
+        public static void SendEmail(ConfiguredProduct product, EValidationResult validationResult, Account account)
         {
             InitiateSender();
             InitiateRendering(validationResult);
             var email = Email
-                .From("tobias.scherzer31@gmail.com")
-                .To("tobias.scherzer31@gmail.com")
-                .Subject("Supa")
+                .From("noreply@test-fuchs.com")
+                .To(account.UserEmail)
+                .Subject(product.ConfigurationName)
                 .UsingTemplate(Template.ToString(), product)
                 .Send();
         }
