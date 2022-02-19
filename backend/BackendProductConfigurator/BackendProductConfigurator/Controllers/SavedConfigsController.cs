@@ -23,7 +23,7 @@ namespace BackendProductConfigurator.Controllers
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 if (account.IsAdmin)
-                    return entities["en"];
+                    return entities["en"].Where(x => x.Status == "ordered").ToList();
 
                 throw new Exception("User from JWT is not an admin");
             }
