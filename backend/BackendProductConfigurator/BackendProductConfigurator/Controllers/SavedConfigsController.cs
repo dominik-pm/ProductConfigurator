@@ -23,7 +23,7 @@ namespace BackendProductConfigurator.Controllers
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 if (account.IsAdmin)
-                    return entities[GetAccLang(Request)];
+                    return entities["en"];
 
                 throw new Exception("User from JWT is not an admin");
             }
@@ -42,7 +42,7 @@ namespace BackendProductConfigurator.Controllers
                 Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-                return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
+                return entities["en"].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
             }
             catch (Exception ex)
             {
@@ -57,12 +57,12 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 string description, name;
-                Configurator configurator = ValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
+                Configurator configurator = ValuesClass.Configurators["en"].Where(con => con.ConfigId == configId).First();
                 description = configurator.Description;
                 name = configurator.Name;
                 ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
-                entities[GetAccLang(Request)].Add(temp);
-                ValuesClass.PostValue(temp, GetAccLang(Request));
+                entities["en"].Add(temp);
+                ValuesClass.PostValue(temp, "en");
                 return Ok();
             }
             catch (Exception ex)
@@ -76,8 +76,8 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                entities[GetAccLang(Request)].Add(value);
-                ValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
+                entities["en"].Add(value);
+                ValuesClass.PostValue<ProductSaveExtended>(value, "en");
                 return Ok();
             }
             catch (Exception ex)
@@ -94,8 +94,8 @@ namespace BackendProductConfigurator.Controllers
             {
                 Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
-                ValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
+                entities["en"].Remove(entities["en"].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
+                ValuesClass.DeleteValue<SavedConfigWrapper>("en", new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
                 return Ok();
             }
             catch (Exception ex)

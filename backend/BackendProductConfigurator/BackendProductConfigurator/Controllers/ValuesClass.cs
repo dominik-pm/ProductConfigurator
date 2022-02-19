@@ -426,7 +426,8 @@ namespace BackendProductConfigurator.Controllers
             configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
             configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
             configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
-            configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
+            if(configurator.Rules.DefaultModel != "")
+                configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
 
             configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId);
             

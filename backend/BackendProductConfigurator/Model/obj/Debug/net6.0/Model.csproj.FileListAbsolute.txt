@@ -45,4 +45,3 @@ D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.dll
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\ref\Model.dll
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.pdb
-D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.csproj.AssemblyReference.cache

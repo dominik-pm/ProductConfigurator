@@ -20,7 +20,17 @@
       "ProjectGuid": "b33d8c63-1287-4c28-a73f-013441790e5a",
       "DisplayName": "FrontendProductConfigurator",
       "ColorIndex": 2
+    },
+    "b27fde7a-9bf5-420f-910d-7827ef82471d": {
+      "ProjectGuid": "b27fde7a-9bf5-420f-910d-7827ef82471d",
+      "DisplayName": "FrontEnd",
+      "ColorIndex": 3
+    },
+    "cb615d5e-2f25-4e2b-98a7-48d624a3dcf1": {
+      "ProjectGuid": "cb615d5e-2f25-4e2b-98a7-48d624a3dcf1",
+      "DisplayName": "FrontEnd",
+      "ColorIndex": 4
     }
   },
-  "NextColorIndex": 3
+  "NextColorIndex": 5
 }

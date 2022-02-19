@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -40,21 +40,19 @@ GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueM
 GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
 GlobalValues.MinutesBetweenFetches = builder.Configuration.GetValue<int>("MinutesBetweenFetches");
 
-//string[] requests = { "", "/user/*.", "/configurator/*.", "/create" };
+string[] requests = { "", "/user/ordered", "/user/saved", "/user/allordered", "/create" };
 
 
-//foreach (string req in requests)
-//{
-//    app.UseFileServer(
-//        new FileServerOptions
-//        {
-//            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "FrontEnd")),
-//            EnableDirectoryBrowsing = true,
-//            RequestPath = new PathString(req).ToUriComponent()
-//        }
-//    );
-//}
-
+foreach (string req in requests)
+{
+    app.UseFileServer(
+        new FileServerOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+            RequestPath = new PathString(req).ToUriComponent()
+        }
+    );
+}
 
 app.UseAuthorization();
 app.UseAuthentication();
