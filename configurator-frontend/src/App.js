@@ -68,8 +68,11 @@ export function getImageSource(image) {
     try {
         const path = `${basePath}/${image.replace('./', '')}`
         imageSource = path
-        // const src = require(path)
-        // imageSource = src.default
+        
+        if (LOCAL_DATA) {
+            const src = require(path)
+            imageSource = src.default
+        }
     } catch (err) {
         console.log(`image '${image}' no found!`)
         const src = require(`./assets/img/notfound.jpg`)

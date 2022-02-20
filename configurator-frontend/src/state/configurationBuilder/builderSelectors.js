@@ -106,10 +106,13 @@ const getModelPropertiesFromBuilderModel = createSelector([getBuilderLanguageObj
 export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.name : 'c')
 export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.description : 'c')
 
+
+export const extractModelIdFromBuilderModel = (model) =>            model.id || ''
 export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
-export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''
+export const extractModelOptionsFromBuilderModel = (model) =>       model.optionIds || []
 
 export const extractOptionsFromBuilderGroup = (group) =>            group.optionIds || []
+export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''
+
 export const extractGroupsFromBuilderSection = (section) =>         section.optionGroupIds || []
-export const extractModelOptionsFromBuilderModel = (model) =>       model.optionIds || []
 export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''

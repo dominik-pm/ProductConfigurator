@@ -6,13 +6,13 @@ import { Delete } from '@mui/icons-material'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
-import { getBuilderGroupNameByOptionId, getModelDescriptionFromBuilderModel, getModelNameFromBuilderModel, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
+import { extractModelIdFromBuilderModel, extractModelOptionsFromBuilderModel, getBuilderGroupNameByOptionId, getModelDescriptionFromBuilderModel, getModelNameFromBuilderModel, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import EditButton from '../EditButton'
 
 function Model({ model, name, description, allOptions, getBuilderGroupNameByOptionId, removeModel, changeModelProperties, setModelOptions, openConfirmDialog, language }) {
 
-    const { options } = model
-    const modelId = model.id
+    const options = extractModelOptionsFromBuilderModel(model)
+    const modelId = extractModelIdFromBuilderModel(model)
 
     function handleDelete() {
         openConfirmDialog(`${translate('removeModelConfirmation', language)}: '${name}'?`, {}, null, () => {

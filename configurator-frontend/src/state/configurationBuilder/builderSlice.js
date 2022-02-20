@@ -329,7 +329,13 @@ export const builderSlice = createSlice({
     },
     reducers: {
         setImages: (state, action) => {
-            state.configuration.images = action.payload
+            // only add to images if it is available (the set image could be from local storage and the available images could have changed)
+            state.configuration.images = []
+            action.payload.forEach(newImage => {
+                if (state.availableImages.includes(newImage)) {
+                    state.configuration.images.push(newImage)
+                }
+            })
         },
         setAvailableImages: (state, action) => {
             state.availableImages = action.payload

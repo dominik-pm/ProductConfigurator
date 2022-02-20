@@ -79,69 +79,49 @@ function Summary({ configurationId, selectedOptions, status, loadedConfiguration
         }
 
         return (
-            <Box>
+            <Box display="flex" alignItems="center" flexDirection="column">
                 <Typography variant="h3">
                     {translate('price', language)}: {currentPrice}€
                 </Typography>
 
-                <Stack spacing={1}>
-                    {/* <PriceListItem
-                        name={translate('basePrice', language)}
-                        price={basePrice}
-                        >
-                    </PriceListItem> */}
+                <Box width="100%">
+                    <List
+                        dense={true}
+                        sx={{
+                            position: 'relative',
+                            overflow: 'auto',
+                            maxHeight: 300,
+                            '& ul': { padding: 0 },
+                        }}
+                        subheader={<li />}
+                    >
+                        <li>
+                            <ul>
+                                <ListSubheader sx={{textAlign: 'center'}}>{translate('basePrice', language)}</ListSubheader>
 
-                    <Box>
-                        <List
-                            dense={true}
-                            sx={{
-                                position: 'relative',
-                                overflow: 'auto',
-                                maxHeight: 300,
-                                '& ul': { padding: 0 },
-                            }}
-                            subheader={<li />}
-                        >
-                            <li>
+                                <ListItem sx={{paddingBottom: 0, paddingTop: 0}}>
+                                    <PriceListItem
+                                        name={translate('basePrice', language)}
+                                        price={basePrice}
+                                        >
+                                    </PriceListItem>
+                                </ListItem>
+                            </ul>
+                        </li>
+                        <Divider sx={{marginX: 4, marginTop: 2}} />
+
+                        {sections.map(section => (
+                            <li key={section.id}>
                                 <ul>
-                                    <ListSubheader>{translate('basePrice', language)}</ListSubheader>
+                                    <ListSubheader sx={{textAlign: 'center'}}>{section.name}</ListSubheader>
 
-                                    <ListItem sx={{paddingBottom: 0, paddingTop: 0}}>
-                                        <PriceListItem
-                                            name={translate('basePrice', language)}
-                                            price={basePrice}
-                                            >
-                                        </PriceListItem>
-                                    </ListItem>
+                                    {renderSectionContent(section)}
                                 </ul>
+                                <Divider sx={{marginX: 4, marginTop: 2}} />
                             </li>
-
-                            {sections.map(section => (
-                                <li key={section.id}>
-                                    <ul>
-                                        <ListSubheader>{section.name}</ListSubheader>
-
-                                        {renderSectionContent(section)}
-                                    </ul>
-                                </li>
-                            ))}
-                        </List>
-                    </Box>
-                    {/* {sections.map((section, index) => (
-                        <Accordion key={index}>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreOutlined />}
-                                aria-controls="panel1a-content"
-                                id="panel1a-header"
-                            >
-                                <Typography variant="h4">{section.name}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                {renderSectionContent(section)}
-                            </AccordionDetails>
-                        </Accordion>
-                    ))} */}
-                </Stack>
+                        ))}
+                    </List>
+                </Box>
             </Box>
         )
     }
