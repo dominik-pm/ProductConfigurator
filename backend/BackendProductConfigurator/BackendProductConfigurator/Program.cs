@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(options => options.EnableEndpointRouting = false);
+builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -50,10 +50,12 @@ foreach (string req in requests)
         new FileServerOptions
         {
             FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-            RequestPath = new PathString(req)
+            RequestPath = new PathString(req),
+            EnableDefaultFiles = true
         }
     );
 }
+
 
 app.UseAuthorization();
 app.UseAuthentication();
