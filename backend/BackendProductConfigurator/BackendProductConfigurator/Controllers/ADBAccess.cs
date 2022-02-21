@@ -13,13 +13,13 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
-        public static async void PutValue(string language, string address, string api, T value)
+        public static async Task PutValue(string language, string address, string api, T value)
         {
             HttpClient Http = GenerateHttpClient(language);
 
             if ((int)Http.PutAsJsonAsync($"{address}{api}", value).Result.StatusCode != 200)
             {
-                throw new Exception("Deletion failed");
+                throw new Exception("Put failed");
             }
         }
         public static async void PostValue(string language, string address, string api, T value)
@@ -28,10 +28,10 @@ namespace BackendProductConfigurator.Controllers
 
             if ((int)Http.PostAsJsonAsync($"{address}{api}", value).Result.StatusCode != 200)
             {
-                throw new Exception("Deletion failed");
+                throw new Exception("Post failed");
             }
         }
-        public static async void DeleteValue(string language, string address, string api, T identifier)
+        public static async Task DeleteValue(string language, string address, string api, T identifier)
         {
             HttpClient Http = GenerateHttpClient(language);
 

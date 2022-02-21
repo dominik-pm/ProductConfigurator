@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "Oq4yCSjVGg4iI+qjvamNHUwCrFNqMnd7v4skL9g4t54=",
+  "Hash": "6yYsSwpu/un1McfZ/EkeZPVwev8Keu9ZXoc4nm6NfTc=",
   "Source": "BackendProductConfigurator",
   "BasePath": "_content/BackendProductConfigurator",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "BackendProductConfigurator\\wwwroot",
       "Source": "BackendProductConfigurator",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\asset-manifest.json",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\asset-manifest.json",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "asset-manifest.json",
       "AssetKind": "All",
@@ -34,10 +34,10 @@
       "OriginalItemSpec": "wwwroot\\asset-manifest.json"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\favicon.ico",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\favicon.ico",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "favicon.ico",
       "AssetKind": "All",
@@ -51,10 +51,10 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\index.html",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\index.html",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "index.html",
       "AssetKind": "All",
@@ -68,44 +68,10 @@
       "OriginalItemSpec": "wwwroot\\index.html"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\logo192.png",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\manifest.json",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
-      "BasePath": "_content/BackendProductConfigurator",
-      "RelativePath": "logo192.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\logo192.png"
-    },
-    {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\logo512.png",
-      "SourceId": "BackendProductConfigurator",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
-      "BasePath": "_content/BackendProductConfigurator",
-      "RelativePath": "logo512.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\logo512.png"
-    },
-    {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\manifest.json",
-      "SourceId": "BackendProductConfigurator",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "manifest.json",
       "AssetKind": "All",
@@ -119,10 +85,10 @@
       "OriginalItemSpec": "wwwroot\\manifest.json"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\robots.txt",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\robots.txt",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "robots.txt",
       "AssetKind": "All",
@@ -136,10 +102,10 @@
       "OriginalItemSpec": "wwwroot\\robots.txt"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\2.b57b7cfd.chunk.css",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\2.b57b7cfd.chunk.css",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/css/2.b57b7cfd.chunk.css",
       "AssetKind": "All",
@@ -153,10 +119,10 @@
       "OriginalItemSpec": "wwwroot\\static\\css\\2.b57b7cfd.chunk.css"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\2.b57b7cfd.chunk.css.map",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\2.b57b7cfd.chunk.css.map",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/css/2.b57b7cfd.chunk.css.map",
       "AssetKind": "All",
@@ -170,10 +136,10 @@
       "OriginalItemSpec": "wwwroot\\static\\css\\2.b57b7cfd.chunk.css.map"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\main.634c0a0e.chunk.css",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\main.634c0a0e.chunk.css",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/css/main.634c0a0e.chunk.css",
       "AssetKind": "All",
@@ -187,10 +153,10 @@
       "OriginalItemSpec": "wwwroot\\static\\css\\main.634c0a0e.chunk.css"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\main.634c0a0e.chunk.css.map",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\css\\main.634c0a0e.chunk.css.map",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/css/main.634c0a0e.chunk.css.map",
       "AssetKind": "All",
@@ -204,10 +170,10 @@
       "OriginalItemSpec": "wwwroot\\static\\css\\main.634c0a0e.chunk.css.map"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\2.08a05d8a.chunk.js",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\2.08a05d8a.chunk.js",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/2.08a05d8a.chunk.js",
       "AssetKind": "All",
@@ -221,10 +187,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\2.08a05d8a.chunk.js"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\2.08a05d8a.chunk.js.LICENSE.txt",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\2.08a05d8a.chunk.js.LICENSE.txt",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/2.08a05d8a.chunk.js.LICENSE.txt",
       "AssetKind": "All",
@@ -238,10 +204,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\2.08a05d8a.chunk.js.LICENSE.txt"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\2.08a05d8a.chunk.js.map",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\2.08a05d8a.chunk.js.map",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/2.08a05d8a.chunk.js.map",
       "AssetKind": "All",
@@ -255,10 +221,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\2.08a05d8a.chunk.js.map"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\main.eb49f6d0.chunk.js",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\main.eb49f6d0.chunk.js",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/main.eb49f6d0.chunk.js",
       "AssetKind": "All",
@@ -272,10 +238,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\main.eb49f6d0.chunk.js"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\main.eb49f6d0.chunk.js.map",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\main.eb49f6d0.chunk.js.map",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/main.eb49f6d0.chunk.js.map",
       "AssetKind": "All",
@@ -289,10 +255,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\main.eb49f6d0.chunk.js.map"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\runtime-main.167f2410.js",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\runtime-main.167f2410.js",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/runtime-main.167f2410.js",
       "AssetKind": "All",
@@ -306,10 +272,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\runtime-main.167f2410.js"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\runtime-main.167f2410.js.map",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\js\\runtime-main.167f2410.js.map",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/js/runtime-main.167f2410.js.map",
       "AssetKind": "All",
@@ -323,10 +289,10 @@
       "OriginalItemSpec": "wwwroot\\static\\js\\runtime-main.167f2410.js.map"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\media\\notfound.b2542792.jpg",
+      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\static\\media\\notfound.b2542792.jpg",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "static/media/notfound.b2542792.jpg",
       "AssetKind": "All",
