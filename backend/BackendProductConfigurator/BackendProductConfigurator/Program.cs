@@ -41,29 +41,19 @@ GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueM
 GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
 GlobalValues.MinutesBetweenFetches = builder.Configuration.GetValue<int>("MinutesBetweenFetches");
 
-//string[] requests = { "", "/user/ordered", "/user/saved", "/user/allordered", "/create" };
+string[] requests = { "", "/user/ordered", "/user/saved", "/user/allordered", "/create" };
 
 
-//foreach (string req in requests)
-//{
-//    app.UseFileServer(
-//        new FileServerOptions
-//        {
-//            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-//            RequestPath = new PathString(req).ToUriComponent()
-//        }
-//    );
-//}
-
-//app.UseFileServer(
-//        new FileServerOptions
-//        {
-//            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
-//            RequestPath = "/{*url}"
-//        }
-//    );
-
-
+foreach (string req in requests)
+{
+    app.UseFileServer(
+        new FileServerOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+            RequestPath = new PathString(req)
+        }
+    );
+}
 
 app.UseAuthorization();
 app.UseAuthentication();
