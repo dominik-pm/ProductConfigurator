@@ -12,8 +12,10 @@ export const OPTION_ERRORS = {
 // input selectors:
 const selectGroupId = (state, groupId) =>               groupId
 const selectOptionId = (state, optionId) =>             optionId
+const selectModelName = (state, modelName) =>           modelName
+const selectSectionId = (state, sectionId) =>           sectionId
 
-const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilites
+const selectAllOptionIncompatibilities = state =>       state.configuration.configuration.rules.incompatibilities
 const selectAllOptionRequirements = state =>            state.configuration.configuration.rules.requirements
 const selectReplacementGroups = state =>                state.configuration.configuration.rules.replacementGroups
 
@@ -21,18 +23,59 @@ const selectAllGroupRequirements = state =>             state.configuration.conf
 
 export const selectConfigurationStatus = state =>       state.configuration.status
 
-export const selectConfigurationId = (state) =>         state.configuration.configuration.id
+export const selectConfigurationId = (state) =>         state.configuration.configuration.configId
 
 export const selectBasePrice = state =>                 state.configuration.configuration.rules?.basePrice || 0
 export const selectPriceList = state =>                 state.configuration.configuration.rules?.priceList || []
+// export const selectDefaultOptions = state =>            state.configuration.configuration.rules?.defaultOptions || []
+export const selectDefaultModel = state =>              state.configuration.configuration.rules?.defaultModel || ''
+export const selectSelectedModel = state =>             state.configuration.selectedModel
+export const selectModels = state =>                    state.configuration.configuration.rules?.models || []
 export const selectDefaultOptions = state =>            state.configuration.configuration.rules?.defaultOptions || []
 export const selectConfigurationName = state =>         state.configuration.configuration.name
 export const selectConfigurationDescription = state =>  state.configuration.configuration.description
+export const selectConfigurationImages = state =>       state.configuration.configuration.images
 
 export const selectOptions = state =>                   state.configuration.configuration.options
 export const selectOptionGroups = state =>              state.configuration.configuration.optionGroups
 export const selectOptionSections = state =>            state.configuration.configuration.optionSections
-export const selectSelectedOptions = state =>           state.configuration.selectedOptions
+export const selectSelectedOptions = state =>           state.configuration.selectedOptions || []
+
+
+export const extractModelIdFromModel = model =>             model.id || null
+export const extractModelNameFromModel = model =>           model.name || ''
+export const extractModelDescriptionFromModel = model =>    model.description || ''
+export const extractModelOptionsFromModel = model =>        model.optionIds || []
+
+// export const getCurrentModel = createSelector([selectModels, selectSelectedModel, selectDefaultModel], (models, selectedModel, defaultModel) => {
+//     const modelName = selectedModel ? selectedModel : defaultModel
+
+//     return models.find(m => m.name === modelName)
+// })
+export const getModelOptions = createSelector([selectModels, selectModelName], (models, modelName) => {
+    const model = models.find(m => m.id === modelName)
+    console.log('model: ', model)
+    if (model) console.log('model options: ', model.optionIds)
+
+    return model ? model.optionIds : []
+})
+
+export const getOptionsInSection = createSelector([selectSectionId, selectOptionGroups, selectOptionSections], (sectionId, groups, sections) => {
+    
+    // find the specific section
+    const section = sections.find(s => s.id === sectionId)
+    
+    // get all groups in that section
+    const groupsInSection = groups.filter(g => section.optionGroupIds.includes(g.id))
+
+    // get all options from these groups
+    let options = []
+    groupsInSection.forEach(g => {
+        options.push(...g.optionIds)
+    })
+
+    return options
+})
 
 export const getOption = createSelector([selectOptions, selectOptionId], (options, id) => {
     // console.log('Option output')
@@ -64,20 +107,20 @@ export const getOptionReplacementGroup = createSelector([selectReplacementGroups
 })
 
 // -- getIsOptionSelectable -->
-const getOptionIncompatibilities = createSelector([selectAllOptionIncompatibilities, selectOptionId], (incompatibilites, optionId) => {
+const getOptionIncompatibilities = createSelector([selectAllOptionIncompatibilities, selectOptionId], (incompatibilities, optionId) => {
     // console.log('Option Incompatitbilities output')
-    return incompatibilites[optionId]
+    return incompatibilities[optionId]
 })
-const getIsOptionCompatible = createSelector([selectSelectedOptions, getOptionIncompatibilities], (selectedOptions, incompatibilites) => {
+const getIsOptionCompatible = createSelector([selectSelectedOptions, getOptionIncompatibilities], (selectedOptions, incompatibilities) => {
     // returns an array:
     //  -> 1. index: if the option is compatible or not
     //  -> 2. index: options that are incompatible
 
-    if (!incompatibilites) return [true, null]
+    if (!incompatibilities) return [true, null]
 
     let compatible = true
     let incompatibleOptions = []
-    incompatibilites.forEach(incompatibility => {
+    incompatibilities.forEach(incompatibility => {
         // if there is an incompatibility in the selected options, the option is not compatible
         if (selectedOptions.includes(incompatibility)) {
             compatible = false
@@ -207,9 +250,9 @@ export const getDependentOptionsDeselect = createSelector(
 // the options that cant be used if this option selected
 export const getDependentOptionsSelect = createSelector(
     [selectSelectedOptions, selectOptionId, selectAllOptionIncompatibilities], 
-    (selectedOptions, selectedOptionId, incompatibilites) => {
+    (selectedOptions, selectedOptionId, incompatibilities) => {
 
-    let dependencies = dependenciesFromDependencyLists(selectedOptionId, incompatibilites)
+    let dependencies = dependenciesFromDependencyLists(selectedOptionId, incompatibilities)
     
     // only get the dependencies from the selected options
     dependencies = dependencies.filter(d => selectedOptions.includes(d))

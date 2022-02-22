@@ -49,7 +49,7 @@ function ConfigurationTabs({ isAdmin, savedConfigurations, orderedConfigurations
     useEffect(() => {
         // if the dynamic path tabname does not correspond to any of tabnames array -> update route by navigating
         if (!tabName) {
-            navigate(`/account/${tabNames[0].name}`)
+            navigate(`/user/${tabNames[0].name}`)
         }
     }, [tabName, navigate])
 
@@ -61,7 +61,7 @@ function ConfigurationTabs({ isAdmin, savedConfigurations, orderedConfigurations
         const tabName = tabNames.find(t => t.value === newValue)
         if (tabName) {
             setValue(tabName.value)
-            navigate(`/account/${tabName.name}`)
+            navigate(`/user/${tabName.name}`)
         }
     }
 

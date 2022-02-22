@@ -1,13 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId } from '../../api/configurationAPI'
+import { readFromLocalStorage, writeToLocalStorage } from '../../App'
+import { alertTypes, openAlert } from '../alert/alertSlice'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
-import { getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultOptions, selectSelectedOptions } from './configurationSelectors'
+import { extractModelNameFromModel, extractModelOptionsFromModel, getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectModels, selectSelectedOptions } from './configurationSelectors'
 
 // const openDialog = useConfirmationDialog.open
 
 const initialState = {
     configuration: {},
     selectedOptions: [],
+    selectedModel: '',
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
     error: null
 }
@@ -30,6 +33,10 @@ export const configurationSlice = createSlice({
             console.log('setting selected options')
             state.selectedOptions = action.payload
         },
+        setSelectedModel: (state, action) => {
+            // console.log('setting selected model: ' + action.payload)
+            state.selectedModel = action.payload
+        },
         reset: (state, action) => {
             console.log('reset active configuration')
             state.selectedOptions = action.payload
@@ -42,33 +49,71 @@ export const configurationSlice = createSlice({
             console.log('configuration loaded:', action.payload)
             state.status = 'succeeded'
             state.configuration = action.payload
-            state.selectedOptions = loadSelectedOptionsFromStorage(state.configuration.id) || action.payload.rules.defaultOptions
+            state.selectedOptions = loadSelectedOptionsFromStorage(state.configuration.configId) || []
         },
         loadingFailed: (state, action) => {
             console.log('configuration loading failed:', action.payload)
             state.status = 'failed'
-            state.error = action.payload
+            state.error = action.payload.toString()
             state.configuration = {}
             state.selectedOptions = []
         }
     },
     extraReducers: (builder) => {
-        // builder.addCase(actionFromOtherSlice, (state, action) => {
-        //     state.status = 'succeeded'
+        // builder.addCase(selectOption, (state, action) => {
+        //     checkModel()
         // })
     }
 })
 
-export const fetchConfiguration = (id) => async (dispatch) => {
+export const fetchConfiguration = (id) => async (dispatch, getState) => {
     dispatch(loadingStarted())
 
     fetchId(id)
     .then(res => {
+        dispatch(setModel(selectDefaultModel(getState())))
         dispatch(loadingSucceeded(res))
+        dispatch(checkModel())
     })
     .catch(error => {
         dispatch(loadingFailed(error))
     })
+}
+
+const containsAll = (arr1, arr2) => arr2.every(arr2Item => arr1.includes(arr2Item))
+const sameMembers = (arr1, arr2) => arr1 && arr1.length > 0 && containsAll(arr1, arr2) && containsAll(arr2, arr1)
+const checkModel = () => (dispatch, getState) => {
+    const selectedOptions = selectSelectedOptions(getState())
+    const models = selectModels(getState())
+    
+    if (selectedOptions.length === 0) {
+        // no option is selected -> unset model
+        dispatch(setModel(''))
+        return
+    }
+
+    // check if the selected options are part of a model and then set this model as the current one
+    for (const model of models) {
+        const modelOptions = extractModelOptionsFromModel(model)
+        if (modelOptions) {
+            if (sameMembers(modelOptions, selectedOptions)) {
+                dispatch(setModel(extractModelNameFromModel(model)))
+                return
+            }
+        }
+    }
+
+    // no model matches the current configuration -> unset model
+    dispatch(setModel(''))
+
+}
+export const setModel = (modelName = '') => (dispatch, getState) => {
+    if (modelName) {
+        const modelOptions = getModelOptions(getState(), modelName)
+        dispatch(setSelectedOptions(modelOptions))
+    }
+
+    dispatch(setSelectedModel(modelName))
 }
 
 // save the currently active configuration to the local storage
@@ -92,18 +137,17 @@ export const saveConfigurationToStorage = (id, options) => {
     }
 
     // save the updated configurations to the storage
-    try {
-        const data = JSON.stringify(configurations)
-        localStorage.setItem(`configurations`, data)
-        // console.log('Saved configuration to storage!', newConfiguration)
-    } catch {
-        console.log('Can not save the configuration to the local storage!')
-    }
+    writeToLocalStorage(configurations, 'configurations')
 }
 
 // get the selected options for the specific configuration (id) from the storage
 const loadSelectedOptionsFromStorage = (id) => {
-    const configuration = loadConfigurationsFromStorage().find(config => config.id === id)
+    console.log('all stored configs:', loadConfigurationsFromStorage())
+    console.log(id)
+    const configuration = loadConfigurationsFromStorage().find(c => c.id === id)
+
+    console.log('storage loaded config:', configuration)
+
     if (!configuration) return null
 
     if (!configuration.options) return null
@@ -111,13 +155,8 @@ const loadSelectedOptionsFromStorage = (id) => {
     return configuration.options
 }
 const loadConfigurationsFromStorage = () => {
-    let configurations = []
-    try {
-        configurations = JSON.parse(localStorage.getItem(`configurations`))
-    } catch {
-        console.log('Can not load the configuration from the local storage!')
-    }
-
+    let configurations = readFromLocalStorage('configurations')
+    
     if (!configurations) return []
 
     return configurations
@@ -126,10 +165,12 @@ const loadConfigurationsFromStorage = () => {
 // reset the active confirguration
 export const resetActiveConfiguration = () => (dispatch, getState) => {
     try {
-        const defaultOptions = selectDefaultOptions(getState())
-        dispatch(reset(defaultOptions))
+        // const defaultOptions = selectDefaultOptions(getState())
+        // dispatch(reset(defaultOptions))
+        const defaultModel = selectDefaultModel(getState())
+        dispatch(setModel(defaultModel))
     } catch {
-        console.log('Can no reset -> no configuration found')
+        console.log('Can not reset -> no configuration found')
     }
 }
 
@@ -277,6 +318,10 @@ export const selectAndDeselectOptions = (optionsToSelect, optionsToDeselect) => 
 
     // after adjusting the current selection -> save the configuration
     dispatch(saveActiveConfiguration())
+
+    // check if the model changes based on the different selected options
+    dispatch(checkModel())
+
 }
 // recursive function to get all options that depend on the deselected option 
 const getDependenciesDeselect = (state, id) => {
@@ -298,6 +343,6 @@ const getDependenciesDeselect = (state, id) => {
 }
 
 // Action creators are generated for each case reducer function
-export const { selectOption, deselectOption, setSelectedOptions, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
+export const { selectOption, deselectOption, setSelectedOptions, setSelectedModel, reset, loadingStarted, loadingSucceeded, loadingFailed } = configurationSlice.actions
 
 export default configurationSlice.reducer

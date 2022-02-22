@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchAll } from '../../api/productsAPI'
+import { alertTypes, openAlert } from '../alert/alertSlice'
 
 const initialState = {
     products: [],
@@ -33,9 +34,10 @@ export const fetchProducts = () => async (dispatch) => {
 
     fetchAll()
     .then(res => {
-        dispatch(loadingSucceeded(res.products))
+        dispatch(loadingSucceeded(res))
     })
     .catch(err => {
+        dispatch(openAlert(err, alertTypes.ERROR))
         dispatch(loadingFailed(err))
     })
 }

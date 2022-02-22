@@ -45,11 +45,11 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
         if (data.isCheckBox) {
             return (
                 <FormControlLabel
+                    key={index}
                     label={data.name}
                     labelPlacement="start"
                     control={
-                        <Checkbox 
-                            key={index}
+                        <Checkbox
                             checked={localData[key].value}
                             onChange={(event) => {
                                 valuesChanged(key, !localData[key].value)
