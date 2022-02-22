@@ -1,4 +1,5 @@
-﻿using Model.Wrapper;
+﻿using BackendProductConfigurator.App_Code;
+using Model.Wrapper;
 using System.Net.Http.Json;
 using System.Text;
 
@@ -12,13 +13,25 @@ namespace BackendProductConfigurator.Controllers
 
             return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
         }
-        public static async Task<HttpResponseMessage> PostValue(string language, string address, string api, T value)
+        public static async Task PutValue(string language, string address, string api, T value)
         {
             HttpClient Http = GenerateHttpClient(language);
 
-            return await Http.PostAsJsonAsync($"{address}{api}", value);
+            if ((int)Http.PutAsJsonAsync($"{address}{api}", value).Result.StatusCode != 200)
+            {
+                throw new Exception("Put failed");
+            }
         }
-        public static async Task<HttpResponseMessage> DeleteValue(string language, string address, string api, T identifier)
+        public static async void PostValue(string language, string address, string api, T value)
+        {
+            HttpClient Http = GenerateHttpClient(language);
+
+            if ((int)Http.PostAsJsonAsync($"{address}{api}", value).Result.StatusCode != 200)
+            {
+                throw new Exception("Post failed");
+            }
+        }
+        public static async Task DeleteValue(string language, string address, string api, T identifier)
         {
             HttpClient Http = GenerateHttpClient(language);
 
@@ -27,23 +40,30 @@ namespace BackendProductConfigurator.Controllers
             {
                 sb.Append((identifier as SavedConfigWrapper).ConfigId).Append('/').Append((identifier as SavedConfigWrapper).SavedName);
             }
-            else if(typeof(T) == typeof(ConfigurationDeleteWrapper))
+            else if(typeof(T) == typeof(ConfigurationDeleteWrapper) || typeof(T) == typeof(ConfigurationDeleteWrapper))
             {
                 sb.Append((identifier as ConfigurationDeleteWrapper).ConfigId);
             }
 
-            return await Http.DeleteAsync(sb.ToString());
+            int code = (int)Http.DeleteAsync(sb.ToString()).Result.StatusCode;
+            if (code != 200)
+            {
+                throw new Exception("Deletion failed");
+            }
         }
         private static HttpClient GenerateHttpClient(string language)
         {
             HttpClientHandler handler = new HttpClientHandler();
 
-            handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            handler.ServerCertificateCustomValidationCallback =
-                (httpRequestMessage, cert, cetChain, policyErrors) =>
-                {
-                    return true;
-                };
+            if(!GlobalValues.Secure)
+            {
+                handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+                handler.ServerCertificateCustomValidationCallback =
+                    (httpRequestMessage, cert, cetChain, policyErrors) =>
+                    {
+                        return true;
+                    };
+            }
 
             HttpClient Http = new HttpClient(handler);
 

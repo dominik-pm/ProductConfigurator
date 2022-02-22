@@ -10,64 +10,98 @@ namespace BackendProductConfigurator.Controllers
     {
         public SavedConfigsController() : base()
         {
-            entities = AValuesClass.SavedProducts;
+            entities = ValuesClass.SavedProducts;
         }
 
-        // GET: /account/configuration
         [Route("/account/allorderedconfigurations")]
         [HttpGet]
-        public override List<ProductSaveExtended> Get()
+        public override ActionResult<IEnumerable<ProductSaveExtended>> Get()
         {
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            try
+            {
+                Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            if (account.IsAdmin)
-                return entities[GetAccLang(Request)];
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                if (account.IsAdmin)
+                    return entities["en"].Where(x => x.Status == "ordered").ToList();
 
-            return new List<ProductSaveExtended>();
+                throw new Exception("User from JWT is not an admin");
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
-        // GET: /account/configuration
         [Route("/account/configurations")]
         [HttpGet]
-        public List<ProductSave> GetSavedConfigs()
+        public ActionResult<List<ProductSave>> GetSavedConfigs()
         {
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            try
+            {
+                Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                return entities["en"].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized(ex.Message);
+            }
         }
 
-        // POST: /account/configuration
         [Route("/account/configurations/{configId}")]
         [HttpPost]
-        public void Post([FromBody] ProductSaveSlim value, string configId)
+        public ActionResult Post([FromBody] ProductSaveSlim value, string configId)
         {
-            string description, name;
-            Configurator configurator = AValuesClass.Configurators[GetAccLang(Request)].Where(con => con.ConfigId == configId).First();
-            description = configurator.Description;
-            name = configurator.Name;
-            ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
-            entities[GetAccLang(Request)].Add(temp);
-            AValuesClass.PostValue(temp, GetAccLang(Request));
+            try
+            {
+                string description, name;
+                Configurator configurator = ValuesClass.Configurators["en"].Where(con => con.ConfigId == configId).First();
+                description = configurator.Description;
+                name = configurator.Name;
+                ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
+                entities["en"].Add(temp);
+                ValuesClass.PostValue(temp, "en");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [NonAction]
-        public void PostOrdered(ProductSaveExtended value, HttpRequest Request)
+        public ActionResult PostOrdered(ProductSaveExtended value, HttpRequest Request)
         {
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<ProductSaveExtended>(value, GetAccLang(Request));
+            try
+            {
+                entities["en"].Add(value);
+                ValuesClass.PostValue<ProductSaveExtended>(value, "en");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // DELETE api/<Controller>/5
         [Route("/account/configurations/{id}")]
         [HttpDelete]
-        public void SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
+        public ActionResult SavedConfigDelete([FromBody] SavedNameWrapper requestBody, string id)
         {
-            Account account = AValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
+            try
+            {
+                Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
-            AValuesClass.DeleteValue<SavedConfigWrapper>(GetAccLang(Request), new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail});
+                entities["en"].Remove(entities["en"].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
+                ValuesClass.DeleteValue<SavedConfigWrapper>("en", new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

@@ -8,15 +8,7 @@ namespace BackendProductConfigurator.Controllers
     {
         public AccountController() : base()
         {
-            entities = AValuesClass.Accounts;
-        }
-
-        // POST /account
-        [HttpPost]
-        public override void Post([FromBody] Account value)
-        {
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<Account>(value, GetAccLang(Request));
+            entities = ValuesClass.Accounts;
         }
     }
 }
