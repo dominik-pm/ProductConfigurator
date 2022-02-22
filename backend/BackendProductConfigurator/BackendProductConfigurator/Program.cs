@@ -1,3 +1,8 @@
+using BackendProductConfigurator.App_Code;
+using Microsoft.Extensions.FileProviders;
+using Model.Enumerators;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -31,11 +36,31 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
+GlobalValues.ValueMode = (EValueMode)builder.Configuration.GetValue<int>("ValueMode");
+GlobalValues.Secure = builder.Configuration.GetValue<bool>("Secure");
+GlobalValues.MinutesBetweenFetches = builder.Configuration.GetValue<int>("MinutesBetweenFetches");
+
+string[] requests = { "", "/user/ordered", "/user/saved", "/user/allordered", "/create" };
+
+
+foreach (string req in requests)
+{
+    app.UseFileServer(
+        new FileServerOptions
+        {
+            FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+            RequestPath = new PathString(req),
+            EnableDefaultFiles = true
+        }
+    );
+}
+
 
 app.UseAuthorization();
 app.UseAuthentication();
-
 app.MapControllers();
+
+app.UseStaticFiles();
 
 app.Run();

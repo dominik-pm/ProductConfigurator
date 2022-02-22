@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.MediaProducers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.MediaProducers;
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -16,15 +17,16 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(AValuesClass.Configurators["de"].Count == 0)
+            if(ValuesClass.Configurators["de"].Count == 0 || DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes > GlobalValues.MinutesBetweenFetches)
             {
-                AValuesClass.SetValues();
+                ValuesClass.SetValues();
+                ValuesClass.LastDBFetch = DateTime.Now;
             }
         }
 
         // GET: api/<Controller>
         [HttpGet]
-        public virtual IEnumerable<T> Get()
+        public virtual ActionResult<IEnumerable<T>> Get()
         {
             Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
             return entities[GetAccLang(Request)];
@@ -32,43 +34,70 @@ namespace BackendProductConfigurator.Controllers
 
         // GET api/<Controller>/5
         [HttpGet("{id}")]
-        public virtual T Get(K id)
+        public virtual ActionResult<T> Get(K id)
         {
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            return entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First();
+            try
+            {
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                return entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First();
+            }
+            catch(Exception ex)
+            {
+                return NotFound();
+            }
         }
 
         // POST api/<Controller>
         [HttpPost]
-        public virtual void Post([FromBody] T value)
+        public virtual ActionResult Post([FromBody] T value)
         {
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Add(value);
-            AValuesClass.PostValue<T>(value, GetAccLang(Request));
+            try
+            {
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                entities[GetAccLang(Request)].Add(value);
+                ValuesClass.PostValue<T>(value, GetAccLang(Request));
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
         }
 
         // PUT api/<Controller>/5
         [HttpPut("{id}")]
-        public virtual void Put(K id, [FromBody] T value)
+        public virtual ActionResult Put(K id, [FromBody] T value)
         {
             Delete(id);
-            Post(value);
+            return Post(value);
         }
 
         // DELETE api/<Controller>/5
         [HttpDelete("{id}")]
-        public virtual void Delete(K id)
+        public virtual ActionResult Delete(K id)
         {
-            Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First());
+            try
+            {
+                Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
+                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IIndexable).Id.Equals(id)).First());
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         public static string GetAccLang(HttpRequest request)
         {
-            if(request.Headers.AcceptLanguage.ToString().Contains('-'))
-                return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
-            else
-                return request.Headers.AcceptLanguage.ToString();
+            try
+            {
+                if (request.Headers.AcceptLanguage.ToString().Contains('-'))
+                    return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
+                else
+                    return request.Headers.AcceptLanguage.ToString();
+            }
+            catch { return "en"; }
         }
     }
 
@@ -81,7 +110,7 @@ namespace BackendProductConfigurator.Controllers
         [Route("/redactedConfiguredProducts")]
         [HttpPost]
         [NonAction]
-        public override void Post([FromBody] ConfiguredProduct value) { }
+        public override ActionResult Post([FromBody] ConfiguredProduct value) { return NoContent(); }
     }
     public partial class ConfigurationController : AController<Configurator, string>
     {
@@ -89,15 +118,7 @@ namespace BackendProductConfigurator.Controllers
         [Route("/redactedConfigurator")]
         [HttpPost]
         [NonAction]
-        public override void Post([FromBody] Configurator value)
-        {
-            EValidationResult validationResult = ValidationMethods.ValidateConfigurator(value);
-            if (validationResult == EValidationResult.ValidationPassed)
-            {
-                AddConfigurator(value);
-                AValuesClass.PostValue<Configurator>(value, GetAccLang(Request));
-            }
-        }
+        public override ActionResult Post([FromBody] Configurator value) { return NoContent(); }
     }
     public partial class SavedConfigsController : AController<ProductSaveExtended, string>
     {
@@ -105,10 +126,7 @@ namespace BackendProductConfigurator.Controllers
         [Route("/redactedSavedConfigsController")]
         [HttpDelete]
         [NonAction]
-        public override void Delete(string id)
-        {
-            entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => entity.SavedName.Equals(id)).First());
-        }
+        public override ActionResult Delete(string id) { return NoContent(); }
     }
 
     #endregion

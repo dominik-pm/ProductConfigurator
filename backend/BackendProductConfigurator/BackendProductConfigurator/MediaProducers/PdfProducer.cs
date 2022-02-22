@@ -3,6 +3,7 @@ using Model;
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Layout;
 using PdfSharp.Pdf;
+using System.Text;
 
 namespace BackendProductConfigurator.MediaProducers
 {
@@ -17,9 +18,9 @@ namespace BackendProductConfigurator.MediaProducers
             InitiatePdfProducer();
             PdfDocument document = new PdfDocument();
             PdfPage page = document.AddPage();
-            XGraphics gfx = XGraphics.FromPdfPage(page); //Holt sich seitenspezifische Details für die Zeichenmethoden
-            XTextFormatter tf = new XTextFormatter(gfx); //Um Text besser zu formatieren
-            Configurator configurator = AValuesClass.Configurators[AController<object, object>.GetAccLang(request)].Where(con => con.ConfigId == configId).First();
+            XGraphics gfx = XGraphics.FromPdfPage(page);
+            XTextFormatter tf = new XTextFormatter(gfx);
+            Configurator configurator = ValuesClass.Configurators["de"].Where(con => con.ConfigId == configId).First();
             Option tempOption;
             double smallSpacing = 24;
             double mediumSpacing = 30;
@@ -66,10 +67,19 @@ namespace BackendProductConfigurator.MediaProducers
                            new XRect(page.Width * 0.2, yPosition, page.Width * 0.6, 20));
 
             yPosition += smallSpacing;
+            float price;
             foreach(string optionId in product.Options)
             {
                 tempOption = configurator.Options.Where(o => o.Id == optionId).First();
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {tempOption.Name}", configurator.Rules.PriceList[tempOption.Id]);
+                try
+                {
+                    price = configurator.Rules.PriceList[tempOption.Id];
+                }
+                catch
+                {
+                    price = 0f;
+                }
+                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {tempOption.Name}", price);
                 yPosition += smallSpacing;
             }
 
@@ -80,14 +90,35 @@ namespace BackendProductConfigurator.MediaProducers
             PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Summe:", product.Price);
 
             DateTime dateTime = DateTime.Now;
-            document.Save($"./Product{dateTime.Year}{dateTime.Month}{dateTime.Day}_{dateTime.Hour}{dateTime.Minute}{dateTime.Second}{dateTime.Millisecond}.pdf");
+
+            StringBuilder saveName = new StringBuilder("./Product");
+            saveName.Append('_').Append(configId).Append('_');
+            saveName.Append(dateTime.Year);
+            saveName.Append(dateTime.Month.ToString().PadLeft(2, '0'));
+            saveName.Append(dateTime.Day.ToString().PadLeft(2, '0'));
+            saveName.Append('_');
+            saveName.Append(dateTime.Hour.ToString().PadLeft(2, '0'));
+            saveName.Append(dateTime.Minute.ToString().PadLeft(2, '0'));
+            saveName.Append(dateTime.Second.ToString().PadLeft(2, '0'));
+            saveName.Append(dateTime.Millisecond.ToString().PadLeft(3, '0'));
+            saveName.Append(".pdf");
+
+            document.Save(saveName.ToString());
         }
 
         private static double DrawImage(XGraphics gfx, string imgLoc, double x, double y, PdfPage page)
         {
-            XImage image = XImage.FromFile(imgLoc);
+            XImage image;
+            try
+            {
+                image = XImage.FromFile($"../images/{imgLoc.Replace('*', '/')}");
+            }
+            catch
+            {
+                throw new FileNotFoundException($"Image of file doesn't exist on path: {imgLoc.Replace('*', '/')}");
+            }
             double width = page.Width * 0.5;
-            double height = (image.Height / image.Width) * width; //Um Bildformat nicht zu zerstören
+            double height = (image.Height / image.Width) * width;
             gfx.DrawImage(image, x, y, width, height);
             return height + 15;
         }
@@ -98,7 +129,7 @@ namespace BackendProductConfigurator.MediaProducers
             tf.DrawString(leftText,
                        font,
                        XBrushes.Black,
-                       new XRect(x1, y, page.Width * 0.2, 20));
+                       new XRect(x1, y, page.Width * 0.5, 20));
 
             tf.Alignment = XParagraphAlignment.Right;
             tf.DrawString($"{price}€",
