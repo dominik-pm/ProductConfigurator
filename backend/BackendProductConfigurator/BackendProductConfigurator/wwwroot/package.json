@@ -19,6 +19,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^6.1.0",
     "react-scripts": "4.0.3",
+    "react-slideshow-image": "^3.7.0",
     "sweetalert2": "^11.3.3",
     "web-vitals": "^1.1.2"
   },

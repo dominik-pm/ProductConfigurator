@@ -1,23 +1,81 @@
 import axios from 'axios'
+import { baseURL, LOCAL_DATA } from './general'
 
-export const fetchAll = () => {    
-    return fetchApiTest()
+export const fetchAvailableImages = () => {
+    return new Promise((resolve, reject) => {
+        if (LOCAL_DATA) {
+            resolve(['car.jpg', 'watch.png', 'computer.jpg'])
+            return
+        }
+        
+        axios.get(`${baseURL}/images`)
+        .then(res => {
+            if (!res.data) {
+                console.log('no response data')
+                resolve([])
+            }
+            console.log('loaded images: ', res.data)
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err.toString())
+            reject(err.toString())
+        })
+    })
 }
 
-export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price) => {
+export const fetchAll = () => {
+    if (LOCAL_DATA) {
+        return fetchApiTest()
+    }
+
     return new Promise((resolve, reject) => {
+        axios.get(`${baseURL}/products`)
+        .then(res => {
+            if (!res.data) {
+                console.log('no response data')
+                resolve([])
+            }
+            console.log(res.data)
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err.toString())
+            reject(err.toString())
+        })
+    })
+}
+
+export const postOrderConfiguredProduct = (configurationId, name, selectedOptions, price, model = '') => {
+    return new Promise((resolve, reject) => {
+
+        if (LOCAL_DATA) {
+            reject('Ordering not available in test mode!')
+            // resolve()
+        }
+        
 
         const data = {
             configurationName: name,
             options: selectedOptions,
-            price
+            price: price,
+            model
         }
-        axios.post(`/products/${configurationId}`, data)
+        console.log(data)
+
+        axios.post(`${baseURL}/products/${configurationId}`, data)
         .then(res => {
             resolve(res.data)
         })
         .catch(err => {
-            reject(err)
+            console.log('err:', err)
+            if (err.response) {
+                reject(err.response.data.detail)
+            } else if (err.request) {
+                console.log(err.request)
+            } else {
+                reject('Api unreachable')
+            }
         })
 
     })
@@ -28,48 +86,27 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
 function fetchApiTest(amount = products.length) {
     return new Promise((resolve, reject) =>
         // setTimeout(() => reject('AUTHENTICATION_FAILED'), 500)
-        setTimeout(() => resolve({
-            error: null,
-            products
-        }), 500)
+        setTimeout(() => resolve(products), 500)
     )
 }
 
 const products = [
     {
-        id: 0,
-        name: 'Car',
-        description: 'a next generation automobile',
-        image: 'Car0.jpg'
+        configId: '0',
+        name: 'Auto',
+        description: 'Das Auto der nächsten Generation',
+        images: ['car.png']
     },
     {
-        id: 1,
+        configId: 1,
         name: 'Computer',
         description: 'high end computer',
-        image: 'Computer0.jpg'
+        images: ['computer.jpg']
     },
     {
-        id: 2,
+        configId: 2,
         name: 'watch',
         description: 'entry level watch',
-        image: 'Watch0.jpg'
-    },
-    {
-        id: 3,
-        name: 'watch',
-        description: 'entry level watch',
-        image: 'Watch0.jpg'
-    },
-    {
-        id: 4,
-        name: 'watch',
-        description: 'entry level watch',
-        image: 'Watch0.jpg'
-    },
-    {
-        id: 5,
-        name: 'Computer',
-        description: 'high end computer',
-        image: 'Computer0123.jpg'
+        images: ['watch.png']
     }
 ]
