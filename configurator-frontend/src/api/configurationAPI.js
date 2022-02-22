@@ -36,7 +36,11 @@ export const postConfiguration = (newConfiguration) => {
         })
         .catch(err => {
             console.log(err)
-            reject('Api unreachable')
+            if (err.data) {
+                reject(err.data)
+            } else {
+                reject('Api unreachable')
+            }
         })
     })
 }

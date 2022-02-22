@@ -25,7 +25,7 @@
     
     "configureYour": "Configure your",
     "failedToLoadConfiguration": "Failed to load configuration!",
-    "price": "price",
+    "price": "Price",
     "basePrice": "Base Price",
     "priceList": "price list",
 
@@ -57,6 +57,7 @@
     "createConfiguration": "Create Configuration",
 
     "createNewConfiguration": "Create a new Configuration",
+    "deleteConfiguration": "Delete Configuration",
     "editConfiguration": "Edit the Configuration",
     "productProperties": "Product Properties",
     "images": "Images",

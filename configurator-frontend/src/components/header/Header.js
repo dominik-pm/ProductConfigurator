@@ -41,7 +41,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
                 size="large"
                 variant="contained"
                 startIcon={<AccountCircle />}
-                onClick={() => navigate('/account')}
+                onClick={() => navigate('/user')}
             >
                 <Typography variant="body1" sx={{maxWidth: '180px', overflow: 'hidden', textOverflow: 'ellipsis'}}>
                     {username}

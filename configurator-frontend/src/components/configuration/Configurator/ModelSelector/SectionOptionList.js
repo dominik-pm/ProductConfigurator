@@ -15,8 +15,8 @@ function SectionOptionList({ allOptions, selectedOptions }) {
 
     return (
         <>
-            {allOptions.filter(o => selectedOptions.includes(o)).map(optionId => (
-                <ListItem sx={{paddingBottom: 0, paddingTop: 0}} key={optionId}>
+            {allOptions.filter(o => selectedOptions.includes(o)).map((optionId, index) => (
+                <ListItem sx={{paddingBottom: 0, paddingTop: 0}} key={`${optionId}${index}`}>
                     <ModelOptionText optionId={optionId}></ModelOptionText>
                 </ListItem>
             ))}

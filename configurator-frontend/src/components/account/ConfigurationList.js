@@ -17,8 +17,10 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
     const navigate = useNavigate()
 
     function handleEditClick(id, options) {
-        navigate(`/configuration/${id}`)
         saveConfigurationToStorage(id, options)
+        setTimeout(() => {
+            navigate(`/configurator/${id}`)
+        }, 1000)
     }
 
     function handleDeleteClicked(id, name) {
@@ -26,7 +28,7 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
         .then(res => {
             openAlert(`${translate('successfullyRemoved', language)} ${name}!`, alertTypes.SUCCESS)
             // refresh
-            navigate(`/account/saved`)
+            navigate(`/user/saved`)
         })
         .catch(err => {
             openAlert(`Error: ${err}`, alertTypes.ERROR)

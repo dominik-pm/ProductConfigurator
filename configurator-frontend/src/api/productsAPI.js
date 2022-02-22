@@ -68,7 +68,14 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
             resolve(res.data)
         })
         .catch(err => {
-            reject('API not reachable')
+            console.log('err:', err)
+            if (err.response) {
+                reject(err.response.data.detail)
+            } else if (err.request) {
+                console.log(err.request)
+            } else {
+                reject('Api unreachable')
+            }
         })
 
     })

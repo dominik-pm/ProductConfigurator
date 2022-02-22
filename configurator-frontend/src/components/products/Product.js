@@ -19,7 +19,7 @@ export default function Product({ product }) {
 
     function handleClick() {
         console.log(`clicked on: ${name} (id ${configId})`)
-        navigate(`/configuration/${configId}`)
+        navigate(`/configurator/${configId}`)
     }
 
     return (
