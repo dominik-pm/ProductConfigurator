@@ -15,13 +15,13 @@ namespace BackendProductConfigurator.MediaProducers
         private static StringBuilder Template { get; set; }
         private static void InitiateSender()
         {
-            Sender = new SmtpSender(() => new SmtpClient("localhost")
+            Sender = new SmtpSender(() => new SmtpClient(GlobalValues.EmailServer)
             {
                 EnableSsl = GlobalValues.Secure,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 Port = 25
             }
-            ); //localhost ist der Empfangsserver --> Für Gmail die Adresse von Gmail einfügen
+            );
         }
 
         private static void CreateRenderContent(StringBuilder template, EValidationResult validationResult)

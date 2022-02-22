@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BackendProductConfigurator.App_Code;
+using Microsoft.AspNetCore.Mvc;
 using System.Drawing;
 
 namespace BackendProductConfigurator.Controllers
@@ -13,7 +14,7 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-                return GetImagesRec(@"./wwwroot/images");
+                return GetImagesRec(@$"{GlobalValues.ImagesFolder}");
             }
             catch (Exception ex)
             {
@@ -22,7 +23,7 @@ namespace BackendProductConfigurator.Controllers
         }
         private List<string> GetImagesRec(string path)
         {
-            List<string> images = Directory.GetFiles(path, "*.jpg").ToList().Select(name => name.Replace(@"./wwwroot/images\", "").Replace('/', '*').Replace('\\', '*')).ToList();
+            List<string> images = Directory.GetFiles(path, "*.jpg").ToList().Select(name => name.Replace(@$"{GlobalValues.ImagesFolder}\", "").Replace('/', '*').Replace('\\', '*')).ToList();
 
             foreach(var folder in Directory.GetDirectories(path))
             {
@@ -38,7 +39,7 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                byte[] imageData = System.IO.File.ReadAllBytes(@$"./wwwroot/images/{location.Replace('*', '/')}");
+                byte[] imageData = System.IO.File.ReadAllBytes(@$"{GlobalValues.ImagesFolder}/{location.Replace('*', '/')}");
                 return new FileContentResult(imageData, "image/jpg");
             }
             catch (Exception ex)

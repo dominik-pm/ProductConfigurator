@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.Controllers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.Controllers;
 using Model;
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Layout;
@@ -111,7 +112,7 @@ namespace BackendProductConfigurator.MediaProducers
             XImage image;
             try
             {
-                image = XImage.FromFile($"../images/{imgLoc.Replace('*', '/')}");
+                image = XImage.FromFile($"{GlobalValues.ImagesFolder}/{imgLoc.Replace('*', '/')}");
             }
             catch
             {

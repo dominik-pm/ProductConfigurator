@@ -18,5 +18,7 @@ namespace BackendProductConfigurator.App_Code
         public static bool Secure { get; set; }
         public static int[] Ports { get; set; } = { 7129, 5129 };
         public static int MinutesBetweenFetches { get; set; }
+        public static string EmailServer { get; set; }
+        public static string ImagesFolder { get; set; }
     }
 }
