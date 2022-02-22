@@ -1,4 +1,5 @@
-﻿using FluentEmail.Core;
+﻿using BackendProductConfigurator.App_Code;
+using FluentEmail.Core;
 using FluentEmail.Razor;
 using FluentEmail.Smtp;
 using Model;
@@ -16,7 +17,7 @@ namespace BackendProductConfigurator.MediaProducers
         {
             Sender = new SmtpSender(() => new SmtpClient("localhost")
             {
-                EnableSsl = false, //Zum Testen ausschalten
+                EnableSsl = GlobalValues.Secure,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 Port = 25
             }
@@ -35,17 +36,17 @@ namespace BackendProductConfigurator.MediaProducers
                     template.AppendLine("<p></ul>erhalten.</p>");
                     break;
 
-                case EValidationResult.PriceInvalid:
-                    template.AppendLine("<p>unglücklicherweise ist uns ein Fehler bei der Preisberechnung unterlaufen.</p>");
-                    template.AppendLine("<p>Wir bitten um Verständnis. Versuchen Sie es noch einmal. Wenn der Fehler wieder vorkommt:</p>");
-                    template.AppendLine("<h5>Kontaktieren Sie den Kundensupport</h5>");
-                    break;
+                //case EValidationResult.PriceInvalid:
+                //    template.AppendLine("<p>unglücklicherweise ist uns ein Fehler bei der Preisberechnung unterlaufen.</p>");
+                //    template.AppendLine("<p>Wir bitten um Verständnis. Versuchen Sie es noch einmal. Wenn der Fehler wieder vorkommt:</p>");
+                //    template.AppendLine("<h5>Kontaktieren Sie den Kundensupport</h5>");
+                //    break;
 
-                case EValidationResult.ConfigurationInvalid:
-                    template.AppendLine("<p>unglücklicherweise ist Ihnen ein Fehler bei der Konfiguration unterlaufen.</p>");
-                    template.AppendLine("<p>Bitte versuchen Sie noch einmal eine Konfiguration zu bestellen. Wenn der Fehler wieder vorkommt:</p>");
-                    template.AppendLine("<h5>Kontaktieren Sie den Kundensupport</h5>");
-                    break;
+                //case EValidationResult.ConfigurationInvalid:
+                //    template.AppendLine("<p>unglücklicherweise ist Ihnen ein Fehler bei der Konfiguration unterlaufen.</p>");
+                //    template.AppendLine("<p>Bitte versuchen Sie noch einmal eine Konfiguration zu bestellen. Wenn der Fehler wieder vorkommt:</p>");
+                //    template.AppendLine("<h5>Kontaktieren Sie den Kundensupport</h5>");
+                //    break;
             }
         }
 
@@ -64,12 +65,23 @@ namespace BackendProductConfigurator.MediaProducers
         {
             InitiateSender();
             InitiateRendering(validationResult);
-            var email = Email
-                .From("noreply@test-fuchs.com")
-                .To(account.UserEmail)
-                .Subject(product.ConfigurationName)
-                .UsingTemplate(Template.ToString(), product)
-                .Send();
+            while(true)
+            {
+                try
+                {
+                    var email = Email
+                    .From("noreply@test-fuchs.com")
+                    .To(account.UserEmail)
+                    .Subject(product.ConfigurationName)
+                    .UsingTemplate(Template.ToString(), product)
+                    .Send();
+                    break;
+                }
+                catch
+                {
+                    Thread.Sleep(5 * 60 * 1000);
+                }
+            }
         }
     }
 }
