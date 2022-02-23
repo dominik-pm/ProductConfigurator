@@ -4,6 +4,7 @@ using FluentEmail.Razor;
 using FluentEmail.Smtp;
 using Model;
 using Model.Enumerators;
+using Model.Wrapper;
 using System.Net.Mail;
 using System.Text;
 
@@ -30,9 +31,9 @@ namespace BackendProductConfigurator.MediaProducers
             {
                 case EValidationResult.ValidationPassed:
                     template.AppendLine("<p>wir haben ihre Bestellung des Produkts</p>");
-                    template.AppendLine("<h1>@Model.ConfigurationName</h1>");
+                    template.AppendLine("<h1>@Model.ConfiguredProduct.ConfigurationName</h1>");
                     template.AppendLine("mit folgenden Optionen:<ul>");
-                    template.AppendLine("@foreach(var option in @Model.Options) { <li>@option</li> } ");
+                    template.AppendLine("@foreach(var option in @Model.Options) { <li>@option.Name</li> } ");
                     template.AppendLine("<p></ul>erhalten.</p>");
                     break;
 
@@ -61,7 +62,7 @@ namespace BackendProductConfigurator.MediaProducers
             Email.DefaultRenderer = new RazorRenderer();
         }
 
-        public static void SendEmail(ConfiguredProduct product, EValidationResult validationResult, Account account, List<Option> options)
+        public static void SendEmail(EmailWrapper product, EValidationResult validationResult, Account account)
         {
             InitiateSender();
             InitiateRendering(validationResult);
@@ -72,7 +73,7 @@ namespace BackendProductConfigurator.MediaProducers
                     var email = Email
                     .From("noreply@test-fuchs.com")
                     .To(account.UserEmail)
-                    .Subject(product.ConfigurationName)
+                    .Subject(product.ConfiguredProduct.ConfigurationName)
                     .UsingTemplate(Template.ToString(), product)
                     .Send();
                     break;

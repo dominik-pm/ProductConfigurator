@@ -4,6 +4,7 @@ using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Enumerators;
+using Model.Wrapper;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -36,7 +37,7 @@ namespace BackendProductConfigurator.Controllers
                 {
                     try
                     {
-                        EmailProducer.SendEmail(value, validationResult, ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]), configurator.Options);
+                        EmailProducer.SendEmail(new EmailWrapper { Options = configurator.Options.Where(x => value.Options.Contains(x.Id)).ToList(), ConfiguredProduct = value }, validationResult, ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]));
                     }
                     catch (Exception e) { throw e; }
                 }).Start();

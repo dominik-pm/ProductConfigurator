@@ -8,5 +8,7 @@ namespace Model.Wrapper
 {
     public class EmailWrapper
     {
+        public ConfiguredProduct ConfiguredProduct { get; set; }
+        public List<Option> Options { get; set; }
     }
 }
