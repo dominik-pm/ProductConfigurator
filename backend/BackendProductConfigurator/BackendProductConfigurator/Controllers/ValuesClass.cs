@@ -97,58 +97,58 @@ namespace BackendProductConfigurator.Controllers
                                                       {
                                                           Id = "D150",
                                                           Name = "D150",
-                                                          Description = "Fetter Diesel Motor"
+                                                          Description = "Mittlestarker Diesel Motor"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "DIESEL",
-                                                          Name = "Diesel fuel",
-                                                          Description = "Diesel Motor"
+                                                          Name = "Diesel",
+                                                          Description = "Diesel Treibstoff"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "PETROL",
-                                                          Name = "Benzina",
-                                                          Description = "Geiler Motor"
+                                                          Name = "Benziner",
+                                                          Description = "Benzin"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "D200",
                                                           Name = "D200",
-                                                          Description = "Fetter Diesel Motor"
+                                                          Description = "Starker Diesel Motor"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "D250",
                                                           Name = "D250",
-                                                          Description = "Fetter Diesel Motor"
+                                                          Description = "Sehr starker Diesel Motor"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "RED",
                                                           Name = "Alfa Rosso",
-                                                          Description = "Red like a cherry"
+                                                          Description = "Intensives rot"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "P500",
                                                           Name = "P500",
-                                                          Description = "Very strong engine"
+                                                          Description = "Sehr starker Benzinmotor"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "GREEN",
                                                           Name = "Green demon",
-                                                          Description = "Green like the grinch"
+                                                          Description = "Grün"
                                                       }};
 
             List<string> productImages = new List<string> { "Alfa_159_grey.jpg" };
 
             List<OptionGroup> optionGroups = new List<OptionGroup>
             {
-                new OptionGroup() { Id = "COLOR_GROUP", Name = "Color", Description = "What color you want", OptionIds = new List<string>(){ "RED", "GREEN"}, Required = false },
-                new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "A motor fuel type", Description = "What motor fuel", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = false },
-                new OptionGroup() { Id = "MOTOR_GROUP", Name = "A motor power", Description = "The motor power", OptionIds = new List<string>(){ "D150", "D200", "D250", "P500"}, Required = false }
+                new OptionGroup() { Id = "COLOR_GROUP", Name = "Farbe", Description = "Farbe des Autos", OptionIds = new List<string>(){ "RED", "GREEN"}, Required = false },
+                new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "Treibstoff", Description = "Motortreibstoff", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = false },
+                new OptionGroup() { Id = "MOTOR_GROUP", Name = "Motorstärke", Description = "Die Kraft des Motors", OptionIds = new List<string>(){ "D150", "D200", "D250", "P500"}, Required = false }
             };
 
             List<OptionSection> optionSections = new List<OptionSection>
@@ -176,99 +176,14 @@ namespace BackendProductConfigurator.Controllers
             Configurators["de"].Add(new Configurator()
             {
                 ConfigId = "Alfa",
-                Name = "Neuer Konfigurator",
-                Description = "Sehr cool",
+                Name = "Alfa",
+                Description = "159",
                 Images = productImages,
                 Rules = productDependencies,
                 OptionGroups = optionGroups,
                 Options = options,
                 OptionSections = optionSections}
             );
-
-            List<Option> optionsList = new List<Option>
-            {
-                new Option()
-                {
-                    Id = "Option1",
-                    Name = "Erste Option",
-                    Description = "Ka Ahnung wos des duat"
-                }
-            };
-
-            ConfiguredProduct p1 = new ConfiguredProduct()
-            {
-                ConfigurationName = "Fetter Benz",
-                Options = optionsList.Select(x => x.Id).ToList(),
-                Price=4.2f
-            };
-
-            ConfiguredProduct p2 = new ConfiguredProduct()
-            {
-                ConfigurationName = "Eleganter Alfa Romeo",
-                Options = optionsList.Select(x => x.Id).ToList(),
-                Price = 9.65f
-            };
-
-            ConfiguredProduct p3 = new ConfiguredProduct()
-            {
-                ConfigurationName = "Fetterer Benz",
-                Options = optionsList.Select(x => x.Id).ToList(),
-                Price = 0.8f
-            };
-
-            ConfiguredProducts["de"] = new List<ConfiguredProduct> { p1, p2, p3 };
-
-            Account acc1 = new Account()
-            {
-                UserName = "TEST-FUCHS GmbH",
-                UserEmail = "huh@what.com"
-            };
-
-            Account acc2 = new Account()
-            {
-                UserName = "HTL Krems",
-                UserEmail = "huh@what.com"
-            };
-
-            Account acc3 = new Account()
-            {
-                UserName = "AVIA Station Gmünd",
-                UserEmail = "huh@what.com"
-            };
-
-            Accounts["de"] = new List<Account> { acc1, acc2, acc3 };
-
-            ProductSaveExtended psave1 = new ProductSaveExtended()
-            { 
-                Description = "Saved product",
-                Name = "Alfa 147",
-                Options = options.Select(x => x.Id).Cast<string>().ToList(),
-                SavedName = "Scherzermobil",
-                Status = EStatus.saved.ToString(),
-                User = acc1,
-                ConfigId = "ALFA1"
-            };
-            ProductSaveExtended psave2 = new ProductSaveExtended()
-            {
-                Description = "Saved product",
-                Name = "Alfa 156",
-                Options = options.Select(x => x.Id).Cast<string>().ToList(),
-                SavedName = "Pömmermobil",
-                Status = EStatus.saved.ToString(),
-                User = acc2,
-                ConfigId = "ALFA"
-            };
-            ProductSaveExtended psave3 = new ProductSaveExtended()
-            {
-                Description = "Saved product",
-                Name = "Alfa 166",
-                Options = options.Select(x => x.Id).Cast<string>().ToList(),
-                SavedName = "Leutgeb Toyota",
-                Status = EStatus.saved.ToString(),
-                User = acc3,
-                ConfigId = "BENZ1"
-            };
-            SavedProducts["de"] = new List<ProductSaveExtended> { psave1, psave2, psave3 };
         }
 
         public static Account FillAccountFromToken(string bearerToken)

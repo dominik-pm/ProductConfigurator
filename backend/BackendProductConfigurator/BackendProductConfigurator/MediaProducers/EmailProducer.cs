@@ -78,9 +78,8 @@ namespace BackendProductConfigurator.MediaProducers
                     .Send();
                     break;
                 }
-                catch (Exception e)
+                catch
                 {
-                    throw e;
                     Thread.Sleep(5 * 60 * 1000);
                 }
             }

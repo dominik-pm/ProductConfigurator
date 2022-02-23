@@ -39,7 +39,7 @@ namespace BackendProductConfigurator.Controllers
                     {
                         EmailProducer.SendEmail(new EmailWrapper { Options = configurator.Options.Where(x => value.Options.Contains(x.Id)).ToList(), ConfiguredProduct = value }, validationResult, ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]));
                     }
-                    catch (Exception e) { throw e; }
+                    catch { }
                 }).Start();
                 if(validationResult != EValidationResult.ValidationPassed)
                 {
