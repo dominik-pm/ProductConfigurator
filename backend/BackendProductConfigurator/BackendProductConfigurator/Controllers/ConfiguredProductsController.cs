@@ -36,9 +36,9 @@ namespace BackendProductConfigurator.Controllers
                 {
                     try
                     {
-                        EmailProducer.SendEmail(value, validationResult, ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]));
+                        EmailProducer.SendEmail(value, validationResult, ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]), configurator.Options);
                     }
-                    catch { }
+                    catch (Exception e) { throw e; }
                 }).Start();
                 if(validationResult != EValidationResult.ValidationPassed)
                 {

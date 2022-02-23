@@ -32,7 +32,7 @@ namespace BackendProductConfigurator.MediaProducers
                     template.AppendLine("<p>wir haben ihre Bestellung des Produkts</p>");
                     template.AppendLine("<h1>@Model.ConfigurationName</h1>");
                     template.AppendLine("mit folgenden Optionen:<ul>");
-                    template.AppendLine("@foreach(var option in @Model.Options) { <li>@option.Name</li> } ");
+                    template.AppendLine("@foreach(var option in @Model.Options) { <li>@option</li> } ");
                     template.AppendLine("<p></ul>erhalten.</p>");
                     break;
 
@@ -61,7 +61,7 @@ namespace BackendProductConfigurator.MediaProducers
             Email.DefaultRenderer = new RazorRenderer();
         }
 
-        public static void SendEmail(ConfiguredProduct product, EValidationResult validationResult, Account account)
+        public static void SendEmail(ConfiguredProduct product, EValidationResult validationResult, Account account, List<Option> options)
         {
             InitiateSender();
             InitiateRendering(validationResult);
@@ -77,8 +77,9 @@ namespace BackendProductConfigurator.MediaProducers
                     .Send();
                     break;
                 }
-                catch
+                catch (Exception e)
                 {
+                    throw e;
                     Thread.Sleep(5 * 60 * 1000);
                 }
             }

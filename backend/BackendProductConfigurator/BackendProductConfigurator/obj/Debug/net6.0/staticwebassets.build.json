@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "zXm0LrERz4NWfOiNIQi7r+kRRekWcHu9QM4oiMTmKZg=",
+  "Hash": "MfCNrfNxJPojO+gQxg8RIzcXuITvKKh45aiDb9FXAxE=",
   "Source": "BackendProductConfigurator",
   "BasePath": "_content/BackendProductConfigurator",
   "Mode": "Default",
@@ -32,6 +32,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\Alfa_159_grey.jpg"
+    },
+    {
+      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\Product_Alfa_20220223_145248705.pdf",
+      "SourceId": "BackendProductConfigurator",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "BasePath": "_content/BackendProductConfigurator",
+      "RelativePath": "images/Product_Alfa_20220223_145248705.pdf",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Product_Alfa_20220223_145248705.pdf"
     },
     {
       "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\test\\vw-golf-r-2021.jpg",
