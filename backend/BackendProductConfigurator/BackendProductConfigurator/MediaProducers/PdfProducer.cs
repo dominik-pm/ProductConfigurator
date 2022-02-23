@@ -92,7 +92,7 @@ namespace BackendProductConfigurator.MediaProducers
 
             DateTime dateTime = DateTime.Now;
 
-            StringBuilder saveName = new StringBuilder("./Product");
+            StringBuilder saveName = new StringBuilder($"{GlobalValues.PDFOutput}/Product");
             saveName.Append('_').Append(configId).Append('_');
             saveName.Append(dateTime.Year);
             saveName.Append(dateTime.Month.ToString().PadLeft(2, '0'));

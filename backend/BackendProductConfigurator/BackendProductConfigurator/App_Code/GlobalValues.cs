@@ -20,5 +20,6 @@ namespace BackendProductConfigurator.App_Code
         public static int MinutesBetweenFetches { get; set; }
         public static string EmailServer { get; set; }
         public static string ImagesFolder { get; set; }
+        public static string PDFOutput { get; set; }
     }
 }
