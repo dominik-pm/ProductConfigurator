@@ -10,13 +10,13 @@ namespace BackendProductConfigurator.App_Code
         {
             get
             {
-                return new StringBuilder(serverAddress).Append(':').Append((Secure) ? Ports[0] : Ports[1]).ToString();
+                return new StringBuilder("http").Append((Secure) ? "s://" : "://").Append(serverAddress).Append(':').Append((Secure) ? Ports[0] : Ports[1]).ToString();
             }
             set { serverAddress = value; }
         }
         private static string serverAddress;
         public static bool Secure { get; set; }
-        public static int[] Ports { get; set; } = { 7129, 5129 };
+        public static int[] Ports { get; set; }
         public static int MinutesBetweenFetches { get; set; }
         public static string EmailServer { get; set; }
         public static string ImagesFolder { get; set; }
