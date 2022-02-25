@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj": {}
+    "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj": {}
   },
   "projects": {
-    "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj": {
+    "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
+        "projectUniqueName": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
         "projectName": "Model",
-        "projectPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
+        "projectPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
         "packagesPath": "C:\\Users\\basti\\.nuget\\packages\\",
-        "outputPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\obj\\",
+        "outputPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\basti\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -58,14 +58,14 @@
         }
       }
     },
-    "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj": {
+    "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
+        "projectUniqueName": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
         "projectName": "DatabaseServiceProductConfigurator",
-        "projectPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
+        "projectPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
         "packagesPath": "C:\\Users\\basti\\.nuget\\packages\\",
-        "outputPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\obj\\",
+        "outputPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\basti\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -82,8 +82,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj": {
-                "projectPath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj"
+              "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj": {
+                "projectPath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj"
               }
             }
           }

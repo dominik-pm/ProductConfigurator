@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\publish\</_PublishTargetUrl>
-    <History>True|2022-02-15T17:11:30.4477628Z;True|2022-02-15T18:10:15.5120449+01:00;True|2022-02-13T14:17:10.0591910+01:00;True|2022-02-13T14:17:02.0648200+01:00;True|2022-02-13T10:40:05.0041460+01:00;True|2022-02-13T10:21:47.7121146+01:00;</History>
+    <_PublishTargetUrl>C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\publish\</_PublishTargetUrl>
+    <History>True|2022-02-25T14:28:15.5008308Z;True|2022-02-15T18:11:30.4477628+01:00;True|2022-02-15T18:10:15.5120449+01:00;True|2022-02-13T14:17:10.0591910+01:00;True|2022-02-13T14:17:02.0648200+01:00;True|2022-02-13T10:40:05.0041460+01:00;True|2022-02-13T10:21:47.7121146+01:00;</History>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
   </PropertyGroup>
 </Project>

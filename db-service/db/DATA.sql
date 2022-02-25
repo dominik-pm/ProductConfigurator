@@ -29,7 +29,7 @@ VALUES ('en'),
 
 INSERT IGNORE INTO product_has_language (product_number, language, name, description)
 VALUES ('Golf', 'en', 'Golf', 'its a car, to drive from A to B'),
-       ('Blue', 'en', 'Blue', 'The color blue!'),
+       ('BLUE', 'en', 'Blue', 'The color blue!'),
        ('YELLOW', 'en', 'Yellow', 'The color yellow!'),
        ('GREEN', 'en', 'Green', 'The color green!'),
        ('D150', 'en', '150PS Diesel', 'A Motor!'),
@@ -47,7 +47,7 @@ VALUES ('Golf', 'en', 'Golf', 'its a car, to drive from A to B'),
         'extra driving assistence including cruise control, adaptive cruise control and a lane keeping assistent'),
 
        ('Golf', 'de', 'Golf', 'es ist ein auto zum von A nach B fahren'),
-       ('Blue', 'de', 'Blau', 'Die Farbe blau!'),
+       ('BLUE', 'de', 'Blau', 'Die Farbe blau!'),
        ('YELLOW', 'de', 'Gelb', 'Die Farbe gelb!'),
        ('GREEN', 'de', 'Grün', 'Die Farbe grün!'),
        ('D150', 'de', '150PS Diesel', 'Ein Motor!'),

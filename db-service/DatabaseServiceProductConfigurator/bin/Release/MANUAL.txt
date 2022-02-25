@@ -1,3 +1,0 @@
-Run the "INIT.sql" File on your MySQL Server.
-Change in "appsettings.json" the Connectionstring to the new Database.
-Run "DatabaseServiceProductConfigurator.exe".
