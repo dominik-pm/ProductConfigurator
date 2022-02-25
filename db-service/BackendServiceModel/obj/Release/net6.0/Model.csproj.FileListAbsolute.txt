@@ -34,3 +34,15 @@ C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\BackendServi
 C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.dll
 C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\ref\Model.dll
 C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.pdb
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Release\net6.0\Model.deps.json
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Release\net6.0\Model.dll
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Release\net6.0\ref\Model.dll
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Release\net6.0\Model.pdb
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.csproj.AssemblyReference.cache
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.GeneratedMSBuildEditorConfig.editorconfig
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.AssemblyInfoInputs.cache
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.AssemblyInfo.cs
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.csproj.CoreCompileInputs.cache
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.dll
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\ref\Model.dll
+F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\obj\Release\net6.0\Model.pdb
