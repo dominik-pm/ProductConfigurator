@@ -64,7 +64,7 @@ namespace BackendProductConfigurator.Controllers
                 }
                 catch (Exception)
                 {
-                    configurator = ValuesClass.Configurators["de"].Where(con => con.ConfigId == configId).First();
+                    configurator = ValuesClass.Configurators[ValuesClass.Configurators.Keys.First()].Where(con => con.ConfigId == configId).First();
                 }
                 description = configurator.Description;
                 name = configurator.Name;
