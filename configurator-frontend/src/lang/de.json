@@ -32,7 +32,7 @@
     "saveConfiguration": "Konfiguration Speichern",
     "configurationName": "Name der Konfiguration",
     "resetConfiguration": "Konfiguration Zurücksetzen",
-    "finishConfiguration": "Konfiguration Bestellen",
+    "finishConfiguration": "Konfigurationsangebot Anfordern",
     "resetConfigurationPrompt": "Möchtest du wirklich die Konfiguration zurücksetzen?",
     "deleteConfigurationPrompt": "Möchtest du wirklich diesen Konfigurator löschen? Dieses Produkt kann dann nicht mehr konfiguriert werden!",
 
@@ -47,12 +47,12 @@
     "submit": "Bestätigen",
 
     "savedConfiguration": "Konfiguration gespeichert",
-    "successOrderedConfiguration": "Individuelle Konfiguration wurde bestellt",
+    "successOrderedConfiguration": "Anfrage der individuellen Konfiguration wurde abgesendet",
     "passwordDontMatch": "Passwörter sind unterschiedlich",
     "successfullyRemoved": "Erfolgreich gelöscht",
 
     "savedConfigurations": "Gespeicherte Konfigurationen",
-    "orderedConfigurations": "Bestellte Konfigurationen",
+    "orderedConfigurations": "Angefragte Konfigurationen",
     "allOrderedConfigurations": "Alle bestellten Konfigurationen",
     "createConfiguration": "Konfiguration erstellen",
 
