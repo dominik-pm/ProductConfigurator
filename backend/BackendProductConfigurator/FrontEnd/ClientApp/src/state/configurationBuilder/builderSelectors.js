@@ -42,6 +42,10 @@ export const getBuilderOptionById = createSelector([selectName, selectBuilderOpt
     const option = options.find(o => o.id === optionId)
     return option ? option : null
 })
+export const getBuilderOptionProductNumber = createSelector([selectName, selectBuilderOptions], (optionId, options) => {
+    const option = options.find(o => o.id === optionId)
+    return option ? option.productNumber : ''
+})
 export const getBuilderOptionPrice = createSelector([selectName, selectBuilderPriceList], (optionId, priceList) => {
     const price = priceList[optionId]
     return price ? price : 0
@@ -68,6 +72,10 @@ export const getBuilderGroupById = createSelector([selectName, selectBuilderGrou
     const group = groups.find(g => g.id === groupId)
     return group ? group : null
 })
+export const getBuilderGroupIdByOptionId = createSelector([selectName, selectBuilderGroups, selectBuilderGroupsFromCurrentLanguage], (optionId, groups, groupLangObj) => {
+    const group = groups.find(g => g.optionIds.includes(optionId))
+    return group ? groupLangObj.find(g => g.id === group.id).id : ''
+})
 export const getBuilderGroupNameByOptionId = createSelector([selectName, selectBuilderGroups, selectBuilderGroupsFromCurrentLanguage], (optionId, groups, groupLangObj) => {
     const group = groups.find(g => g.optionIds.includes(optionId))
     return group ? groupLangObj.find(g => g.id === group.id).name : ''
@@ -76,6 +84,10 @@ export const getBuilderGroupRequirementsByGroupId = createSelector([selectName, 
     const groupReq = requirements[groupId]
     return groupReq ? groupReq : []
 })
+// export const getBuilderGroupIsReplacement = createSelector([selectName, select], (groupId, requirements) => {
+//     const groupReq = requirements[groupId]
+//     return groupReq ? groupReq : []
+// })
 
 const getBuilderLanguageObject = createSelector([selectBuilderLanguages, selectCurrentBuilderLanguage], (languages, language) => {
     return languages[language]
@@ -107,6 +119,9 @@ export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFr
 export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.description : 'c')
 
 
+export const extractProductNumberFromBuilderOption = (option) =>    option.productNumber || ''
+export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''
+
 export const extractModelIdFromBuilderModel = (model) =>            model.id || ''
 export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
 export const extractModelOptionsFromBuilderModel = (model) =>       model.optionIds || []
@@ -115,4 +130,3 @@ export const extractOptionsFromBuilderGroup = (group) =>            group.option
 export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''
 
 export const extractGroupsFromBuilderSection = (section) =>         section.optionGroupIds || []
-export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''

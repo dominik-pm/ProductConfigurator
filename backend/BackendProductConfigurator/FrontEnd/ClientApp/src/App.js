@@ -74,7 +74,7 @@ export function getImageSource(image) {
             imageSource = src.default
         }
     } catch (err) {
-        console.log(`image '${image}' no found!`)
+        console.log(`image '${imageSource}' no found!`)
         const src = require(`./assets/img/notfound.jpg`)
         imageSource = src.default
     } finally {

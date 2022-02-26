@@ -83,8 +83,8 @@ namespace BackendProductConfigurator.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        [HttpPut("{id}")]
-        public virtual ActionResult Put(string configId, [FromBody] ConfiguratorPost value)
+        [HttpPut("{configId}")]
+        public ActionResult Put(string configId, [FromBody] ConfiguratorPost value)
         {
             Delete(configId);
             return Post(value);

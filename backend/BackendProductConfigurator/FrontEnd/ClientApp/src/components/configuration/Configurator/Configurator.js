@@ -1,4 +1,4 @@
-import { Delete, Done, RestartAlt, SaveAs } from '@mui/icons-material'
+import { Delete, Done, Edit, RestartAlt, SaveAs } from '@mui/icons-material'
 import { Box, Grid, IconButton, Tooltip, Typography } from '@mui/material'
 import React from 'react'
 import { connect } from 'react-redux'
@@ -28,6 +28,11 @@ import { deleteConfiguration } from '../../../api/configurationAPI'
 function Configurator({ isLoggedIn, configurationName, configurationDescription, configurationImages, configurationId, selectedOptions, isAdmin, price, model, isLoading, resetConfig, editConfig, openConfirm, openInputDialog, openLogInDialog, openAlert, language }) {
 
     const navigate = useNavigate()
+
+    function handleEditClicked() {
+        editConfig(configurationId)
+        navigate('/create')
+    }
 
     function handleDeleteClicked() {
         openConfirm(translate('deleteConfigurationPrompt', language), {}, null, () => {
@@ -127,6 +132,18 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
 
                     <Grid item sx={{paddingTop: 2, justifySelf: 'flex-end'}}>
 
+                        {/* show an edit button if the user is an admin */}
+                        {isAdmin ? 
+                        <Tooltip title={translate('editConfiguration', language)}>
+                            <IconButton 
+                                variant="contained" 
+                                onClick={handleEditClicked}
+                                >
+                                <Edit />
+                            </IconButton>
+                        </Tooltip>
+                        : ''}
+
                         {/* show a delete button if the user is an admin */}
                         {isAdmin ? 
                         <Tooltip title={translate('deleteConfiguration', language)}>
@@ -197,13 +214,6 @@ function Configurator({ isLoggedIn, configurationName, configurationDescription,
             </div>
 
         )
-    }
-
-    function srcset(image, width, height, rows = 1, cols = 1) {
-        return {
-            src: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format`,
-            srcSet: `${image}?w=${width * cols}&h=${height * rows}&fit=crop&auto=format&dpr=2 2x`
-        }
     }
 
     return (

@@ -189,25 +189,25 @@ namespace BackendProductConfigurator.Controllers
         public static Account FillAccountFromToken(string bearerToken)
         {
             Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com", IsAdmin = true };
-            //JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
+            JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
 
-            //bearerToken = bearerToken.Replace("Bearer ", "");
+            bearerToken = bearerToken.Replace("Bearer ", "");
 
-            //foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
-            //{
-            //    switch(claim.Type)
-            //    {
-            //        case ClaimTypes.Name:
-            //            account.UserName = claim.Value;
-            //            break;
-            //        case ClaimTypes.Email:
-            //            account.UserEmail = claim.Value;
-            //            break;
-            //        case "admin":
-            //            account.IsAdmin = Convert.ToBoolean(claim.Value);
-            //            break;
-            //    }
-            //}
+            foreach (Claim claim in jWTService.GetTokenClaims(bearerToken))
+            {
+                switch (claim.Type)
+                {
+                    case "userName":
+                        account.UserName = claim.Value;
+                        break;
+                    case "userEmail":
+                        account.UserEmail = claim.Value;
+                        break;
+                    case "admin":
+                        account.IsAdmin = Convert.ToBoolean(claim.Value);
+                        break;
+                }
+            }
 
             return account;
         }

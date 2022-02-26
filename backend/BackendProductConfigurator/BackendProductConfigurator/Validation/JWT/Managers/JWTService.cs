@@ -76,7 +76,7 @@ namespace BackendProductConfigurator.Validation.JWT.Managers
         }
         private SecurityKey GetSymmetricSecurityKey()
         {
-            byte[] symmerticKey = Encoding.UTF8.GetBytes(SecretKey);
+            byte[] symmerticKey = Convert.FromBase64String(SecretKey);
             return new SymmetricSecurityKey(symmerticKey);
         }
 

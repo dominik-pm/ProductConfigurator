@@ -98,76 +98,91 @@ const configurations = [
                 id: 'BLUE',
                 name: 'Blau',
                 description: 'Blaue Außenfarbe',
+                productNumber: 'CB1'
             },
             {
                 id: 'YELLOW',
                 name: 'Gelb',
                 description: 'Gelbe Außenfarbe',
+                productNumber: 'CB1'
             },
             {
                 id: 'GREEN',
                 name: 'Grün',
                 description: 'Grüne Außenfarbe',
+                productNumber: 'CB1'
             },
             {
                 id: 'DIESEL',
                 name: 'Dieselmotor',
                 description: 'Motor mit Diesel Treibstoff',
+                productNumber: 'CB1'
             },
             {
                 id: 'PETROL',
                 name: 'Benzinmotor',
                 description: 'Motor mit Benzin Treibstoff',
+                productNumber: 'CB1'
             },
             {
                 id: 'D150',
                 name: '150 PS Dieselmotor',
                 description: 'Ein V4 Dieselmotor mit 150 PS',
+                productNumber: 'CB1'
             },
             {
                 id: 'D250',
                 name: '250 PS Diesel Motor',
                 description: 'Ein V6 Dieselmotor mit 250 PS',
+                productNumber: 'CB1'
             },
             {
                 id: 'P220',
                 name: '220 PS Petrol Motor',
                 description: 'Ein V6 Benzinmotor mit 220 PS',
+                productNumber: 'CB1'
             },
             {
                 id: 'P450',
                 name: '450 PS Petrol Motor',
                 description: 'Ein V8 Benzinmotor mit 450 PS',
+                productNumber: 'CB1'
             },
             {
                 id: 'PANORAMAROOF',
                 name: 'Panoramadach',
                 description: 'Panoramadach',
+                productNumber: 'CB1'
             },
             {
                 id: 'PANORAMASMALL',
                 name: 'Panorama Klein',
                 description: 'Ein kleines Glasdach',
+                productNumber: 'CB1'
             },
             {
                 id: 'PANORAMALARGE',
                 name: 'Panorama Groß',
                 description: 'Ein großes Glasdach',
+                productNumber: 'CB1'
             },
             {
                 id: 'HEATED_SEATS',
                 name: 'Sitzheitzung',
                 description: 'Vordersitze sind beheizt',
+                productNumber: 'CB1'
             }, 
             {
                 id:  'HIGH_QUALITY_SOUND_SYSTEM',
                 name: 'Premium Soundsystem',
                 description: 'Premium Soundsystem',
+                productNumber: 'CB1'
             }, 
             {
                 id: 'DRIVE_ASSISTENCE',
                 name: 'Fahrassistenz',
                 description: 'Extra Fahrassistenz inklusive cruise control, adaptive Tempomat und Spurhalteassistent',
+                productNumber: 'CB1'
             }
         ],
         optionSections: [
@@ -427,11 +442,13 @@ const configurations = [
             defaultModel: 'Basic',
             models: [
                 {
+                    id: 'Basic',
                     name: 'Basic',
                     optionIds: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE'],
                     description: "Standardmodell"
                 },
                 {
+                    id: 'Sport',
                     name: 'Sport',
                     optionIds: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM'],
                     description: "Erweitertes Modell mit großer Leistung"

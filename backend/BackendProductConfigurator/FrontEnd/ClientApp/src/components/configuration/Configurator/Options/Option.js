@@ -2,7 +2,6 @@ import React from 'react'
 import { Typography, Box, Button, Tooltip, Zoom } from '@mui/material'
 import { connect } from 'react-redux'
 import { clickedOption } from '../../../../state/configuration/configurationSlice'
-import './Option.css'
 import { getIsOptionSelectable, getIsOptionSelected, getOption, getOptionName, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
@@ -26,7 +25,7 @@ function Option({ optionId, clickedOption, option, selected, price, selectable, 
             <Box >
 
             <Button style={{width: '100%', height: '100%'}} variant={selected ? "contained" : "outlined"} disabled={disabled} onClick={handleClick}>
-                <Box className="Option">
+                <Box>
                     <Typography variant="h4">{option.name}</Typography>
                     <Typography variant="body1">{option.description}</Typography>
                     {price ? 
