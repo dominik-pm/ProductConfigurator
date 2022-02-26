@@ -29,7 +29,7 @@ function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openA
             openAlert(translate('successConfigurationCreated', language), alertTypes.SUCCESS)
             navigate('/')
         }
-    }, [status, navigate, loadingHandled, openAlert])
+    }, [status, navigate, loadingHandled, openAlert, language])
 
     // open alert if there is an error
     useEffect(() => {
@@ -59,7 +59,7 @@ function ConfigurationBuilderView({ isAdmin, status, error, inputLanguage, openA
 
         // clear interval when the component is unmounted
         return () => {clearInterval(saveBuilderInterval)}
-    }, [saveBuilderToStorage])
+    }, [saveBuilderToStorage, autoSave, autoSaveInterval])
 
     const handleFinishClicked = () => {
         openConfirmDialog(translate('createConfiguration', language), {}, null, () => {

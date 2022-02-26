@@ -4,8 +4,7 @@ import { setAcceptLanguage } from '../../api/general'
 import { fetchAvailableImages } from '../../api/productsAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { defaultLang, languageNames } from '../../lang'
-import { selectLanguage } from '../language/languageSelectors'
-import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration, selectBuilderInputLanguage, getBuilderGroupIdByOptionId } from './builderSelectors'
+import { extractGroupsFromBuilderSection, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration, getBuilderGroupIdByOptionId } from './builderSelectors'
 
 
 const initialConfiguration = {

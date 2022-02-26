@@ -151,16 +151,6 @@ function SectionTabs({ sections, getOptionGroupsInSection, optionGroups, openInp
                     </Stack>
                 </TabPanel>
             ))}
-
-            {/* <TabPanel value={value} index={0}>
-                <Typography variant="body1">Item One 1</Typography>
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-                <Typography variant="body1">Item Two</Typography>
-            </TabPanel>
-            <TabPanel value={value} index={2}>
-                <Typography variant="body1">Item Three</Typography>
-            </TabPanel> */}
         </Box>
     )
 }

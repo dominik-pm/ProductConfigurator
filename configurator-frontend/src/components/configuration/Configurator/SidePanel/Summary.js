@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Box } from '@mui/system'
-import { Accordion, AccordionDetails, AccordionSummary, Divider, List, ListItem, ListItemText, ListSubheader, Stack, Typography } from '@mui/material'
+import { Divider, List, ListItem, ListSubheader, Typography } from '@mui/material'
 import PriceListItem from './PriceListItem'
 import { getCurrentPrice, selectBasePrice, selectConfigurationId, selectConfigurationStatus, selectOptionGroups, selectOptions, selectOptionSections } from '../../../../state/configuration/configurationSelectors'
 import { translate } from '../../../../lang'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 import { fetchConfiguration, setSelectedOptions } from '../../../../state/configuration/configurationSlice'
-import { ExpandMoreOutlined } from '@mui/icons-material'
 
 function Summary({ configurationId, selectedOptions, status, loadedConfigurationId, sections, groups, basePrice, currentPrice, fetchConfiguration, setSelectedOptions, language }) {
 

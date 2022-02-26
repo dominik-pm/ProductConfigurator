@@ -1,12 +1,7 @@
 import axios from 'axios'
 
-// export const baseURL = `https://sqrt3.ddns.net:7187`
-export const baseURL = `http://sqrt3.ddns.net:5187`
-// export const baseURL = `https://localhost:7187`
-// export const baseURL = `http://localhost:5187`
-// export const baseURL = ``
-
-export const LOCAL_DATA = true
+export const baseURL = process.env.REACT_APP_BACKEND_URL
+export const LOCAL_DATA = process.env.REACT_APP_PRODUCTION === 'false'
 
 axios.defaults.timeout = 5000
 

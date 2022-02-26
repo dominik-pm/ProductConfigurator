@@ -3,7 +3,6 @@ import { ImageListItem, ImageListItemBar } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { extractDescriptionFromProduct, extractIdFromProduct, extractImagesFromProduct, extractNameFromProduct } from '../../state/product/productSelector'
 import { getImageSource } from '../../App'
-import { baseURL } from '../../api/general'
 
 export default function Product({ product }) {
     const navigate = useNavigate()

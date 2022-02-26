@@ -18,9 +18,7 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
 
     function handleEditClick(id, options) {
         saveConfigurationToStorage(id, options)
-        setTimeout(() => {
-            navigate(`/configurator/${id}`)
-        }, 1000)
+        navigate(`/configurator/${id}`)
     }
 
     function handleDeleteClicked(id, name) {
