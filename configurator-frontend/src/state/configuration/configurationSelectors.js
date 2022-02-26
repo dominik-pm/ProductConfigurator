@@ -42,6 +42,9 @@ export const selectOptionSections = state =>            state.configuration.conf
 export const selectSelectedOptions = state =>           state.configuration.selectedOptions || []
 
 
+export const extractNameFromOption = option =>              option.name
+export const extractProductNumberFromOption = option =>     option.productNumber
+
 export const extractModelIdFromModel = model =>             model.id || null
 export const extractModelNameFromModel = model =>           model.name || ''
 export const extractModelDescriptionFromModel = model =>    model.description || ''

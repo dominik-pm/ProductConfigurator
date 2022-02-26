@@ -64,19 +64,23 @@ const testConfiguration = {
     options: [
         {
             id: 'ALLOY19',
-            groupId: 'WHEELS2'
+            groupId: 'WHEELS2',
+            productNumber: 'TN1'
         },
         {
             id: 'STEEL16',
-            groupId: 'WHEELS2'
+            groupId: 'WHEELS2',
+            productNumber: 'TN1'
         },
         {
             id: 'RED',
-            groupId: 'COLOR_GROUP2'
+            groupId: 'COLOR_GROUP2',
+            productNumber: 'TN1'
         },
         {
             id: 'BLUE222',
-            groupId: 'COLOR_GROUP2'
+            groupId: 'COLOR_GROUP2',
+            productNumber: 'TN1'
         }
     ],
     optionSections: [
@@ -314,7 +318,7 @@ const testConfiguration = {
 }
 
 const initialState = {
-    configuration: initialConfiguration, // testConfiguration
+    configuration: testConfiguration, // initialConfiguration
     currentLanguage: defaultLang,
     availableImages: [],
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
@@ -521,12 +525,17 @@ export const builderSlice = createSlice({
             if (price) state.configuration.rules.priceList[optionId] = price
         },
         changeOptionProperties: (state, action) => {
-            const { optionId, newName, newDescription } = action.payload
+            const { optionId, newName, newDescription, newProductNumber } = action.payload
 
-            const option = state.configuration.languages[state.currentLanguage].options.find(o => o.id === optionId)
+            const langOption = state.configuration.languages[state.currentLanguage].options.find(o => o.id === optionId)
+            if (langOption) {
+                langOption.name = newName || langOption.name
+                langOption.description = newDescription || langOption.description
+            }
+            
+            const option = state.configuration.options.find(o => o.id === optionId)
             if (option) {
-                option.name = newName || option.name
-                option.description = newDescription || option.description
+                option.productNumber = newProductNumber || option.productNumber
             }
         },
         setOptionPrice: (state, action) => {

@@ -4,13 +4,13 @@ import React from 'react'
 import { useState } from 'react'
 import { connect } from 'react-redux'
 import { translate } from '../../../../lang'
-import { getBuilderGroupNameByOptionId, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionRequirementsByOptionId, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
+import { getBuilderGroupNameByOptionId, getBuilderOptionById, getBuilderOptionIncompatibilitiesByOptionId, getBuilderOptionPrice, getBuilderOptionProductNumber, getBuilderOptionRequirementsByOptionId, selectBuilderOptionsFromCurrentLanguage } from '../../../../state/configurationBuilder/builderSelectors'
 import { changeOptionProperties, deleteOption, setOptionIncompatibilities, setOptionPrice, setOptionRequirements } from '../../../../state/configurationBuilder/builderSlice'
 import { confirmDialogOpen } from '../../../../state/confirmationDialog/confirmationSlice'
 import { selectLanguage } from '../../../../state/language/languageSelectors'
 import EditButton from '../EditButton'
 
-function BuilderOption({ optionId, group, option, optionPrice, allOptions, optionReqirements, optionIncompatibilities, getBuilderGroupNameByOptionId, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties, openConfirmDialog }) {
+function BuilderOption({ optionId, group, option, optionPrice, allOptions, productNumber, optionReqirements, optionIncompatibilities, getBuilderGroupNameByOptionId, language, remove, setOptionPrice, setOptionRequirements, setOptionIncompatibilities, changeOptionProperties, openConfirmDialog }) {
 
     const { name, description } = option
 
@@ -78,6 +78,15 @@ function BuilderOption({ optionId, group, option, optionPrice, allOptions, optio
                                 propertyName={translate('optionDescription', language)} 
                                 oldValue={description} 
                                 valueChangedCallback={(newValue) => {changeOptionProperties({optionId, newDescription: newValue})}}
+                            ></EditButton>
+                        </Typography>
+                        <Typography variant="body2">
+                            {productNumber}
+                            <EditButton 
+                                title={`${translate('editOptionProductNumber', language)}`}
+                                propertyName={translate('optionProductNumber', language)} 
+                                oldValue={productNumber} 
+                                valueChangedCallback={(newValue) => {changeOptionProperties({optionId, newProductNumber: newValue})}}
                             ></EditButton>
                         </Typography>
                     </Box>
@@ -151,6 +160,7 @@ const mapStateToProps = (state, ownProps) => ({
     option: getBuilderOptionById(state, ownProps.optionId),
     optionPrice: getBuilderOptionPrice(state, ownProps.optionId),
     allOptions: selectBuilderOptionsFromCurrentLanguage(state),
+    productNumber: getBuilderOptionProductNumber(state, ownProps.optionId),
     optionReqirements: getBuilderOptionRequirementsByOptionId(state, ownProps.optionId),
     optionIncompatibilities: getBuilderOptionIncompatibilitiesByOptionId(state, ownProps.optionId),
     getBuilderGroupNameByOptionId: (optionId) => getBuilderGroupNameByOptionId(state, optionId),

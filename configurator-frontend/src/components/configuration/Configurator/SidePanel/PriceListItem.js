@@ -3,22 +3,25 @@ import { Box } from '@mui/system'
 import React from 'react'
 // import { useSelector } from 'react-redux'
 import { connect } from 'react-redux'
-import { getOption, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
+import { extractNameFromOption, extractProductNumberFromOption, getOption, getOptionPrice } from '../../../../state/configuration/configurationSelectors'
 
 function PriceListItem({state, optionId, name, price}) {
     // console.log('---------')
     // console.log(name + ' rendered new')
     // console.log('---------')
+    let productNumber = ''
 
     if (optionId) {
-        name = getOption(state, optionId).name
+        const option = getOption(state, optionId)
+        name = extractNameFromOption(option)
+        productNumber = extractProductNumberFromOption(option)
         price = getOptionPrice(state, optionId)
     }
     
     return (
         <Box display="flex" justifyContent="space-between" sx={{width: '100%'}}>
             <Typography variant="body2">
-                {name}{/* {{price ? `: ${price}€` : ''}} */}
+                {name}{productNumber ? ` (${productNumber})` : ''}{/* {{price ? `: ${price}€` : ''}} */}
             </Typography>
             {price ? 
             <Typography variant="body2">

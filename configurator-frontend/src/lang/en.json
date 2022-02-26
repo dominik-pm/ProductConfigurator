@@ -82,6 +82,8 @@
     "editOptionName": "Edit Option Name",
     "optionDescription": "Option Description",
     "editOptionDescription": "Edit Option Description",
+    "optionProductNumber": "Product Number",
+    "editOptionProductNumber": "Edit Product Number",
     "groupName": "Group Name",
     "editGroupName": "Edit Group Name",
     "groupDescription": "Group Description",

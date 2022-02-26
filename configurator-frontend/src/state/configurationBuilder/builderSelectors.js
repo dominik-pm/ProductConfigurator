@@ -42,6 +42,10 @@ export const getBuilderOptionById = createSelector([selectName, selectBuilderOpt
     const option = options.find(o => o.id === optionId)
     return option ? option : null
 })
+export const getBuilderOptionProductNumber = createSelector([selectName, selectBuilderOptions], (optionId, options) => {
+    const option = options.find(o => o.id === optionId)
+    return option ? option.productNumber : ''
+})
 export const getBuilderOptionPrice = createSelector([selectName, selectBuilderPriceList], (optionId, priceList) => {
     const price = priceList[optionId]
     return price ? price : 0
@@ -107,6 +111,9 @@ export const getModelNameFromBuilderModel = createSelector([getModelPropertiesFr
 export const getModelDescriptionFromBuilderModel = createSelector([getModelPropertiesFromBuilderModel], (model) => model ? model.description : 'c')
 
 
+export const extractProductNumberFromBuilderOption = (option) =>    option.productNumber || ''
+export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''
+
 export const extractModelIdFromBuilderModel = (model) =>            model.id || ''
 export const extractModelNameFromBuilderModel = (model) =>          model.name || ''
 export const extractModelOptionsFromBuilderModel = (model) =>       model.optionIds || []
@@ -115,4 +122,3 @@ export const extractOptionsFromBuilderGroup = (group) =>            group.option
 export const extractGroupNameFromBuilderGroupId = (group) =>        group.name || ''
 
 export const extractGroupsFromBuilderSection = (section) =>         section.optionGroupIds || []
-export const extractGroupIdFromBuilderOption = (option) =>          option.groupId || ''
