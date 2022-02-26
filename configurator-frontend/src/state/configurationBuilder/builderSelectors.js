@@ -72,6 +72,10 @@ export const getBuilderGroupById = createSelector([selectName, selectBuilderGrou
     const group = groups.find(g => g.id === groupId)
     return group ? group : null
 })
+export const getBuilderGroupIdByOptionId = createSelector([selectName, selectBuilderGroups, selectBuilderGroupsFromCurrentLanguage], (optionId, groups, groupLangObj) => {
+    const group = groups.find(g => g.optionIds.includes(optionId))
+    return group ? groupLangObj.find(g => g.id === group.id).id : ''
+})
 export const getBuilderGroupNameByOptionId = createSelector([selectName, selectBuilderGroups, selectBuilderGroupsFromCurrentLanguage], (optionId, groups, groupLangObj) => {
     const group = groups.find(g => g.optionIds.includes(optionId))
     return group ? groupLangObj.find(g => g.id === group.id).name : ''
@@ -80,6 +84,10 @@ export const getBuilderGroupRequirementsByGroupId = createSelector([selectName, 
     const groupReq = requirements[groupId]
     return groupReq ? groupReq : []
 })
+// export const getBuilderGroupIsReplacement = createSelector([selectName, select], (groupId, requirements) => {
+//     const groupReq = requirements[groupId]
+//     return groupReq ? groupReq : []
+// })
 
 const getBuilderLanguageObject = createSelector([selectBuilderLanguages, selectCurrentBuilderLanguage], (languages, language) => {
     return languages[language]

@@ -442,11 +442,13 @@ const configurations = [
             defaultModel: 'Basic',
             models: [
                 {
+                    id: 'Basic',
                     name: 'Basic',
                     optionIds: ['BLUE', 'DIESEL', 'D150', 'DRIVE_ASSISTENCE'],
                     description: "Standardmodell"
                 },
                 {
+                    id: 'Sport',
                     name: 'Sport',
                     optionIds: ['YELLOW', 'PETROL', 'P220', 'HEATED_SEATS', 'HIGH_QUALITY_SOUND_SYSTEM'],
                     description: "Erweitertes Modell mit großer Leistung"

@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { postConfiguration } from '../../api/configurationAPI'
+import { fetchId, postConfiguration } from '../../api/configurationAPI'
+import { setAcceptLanguage } from '../../api/general'
 import { fetchAvailableImages } from '../../api/productsAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
-import { defaultLang } from '../../lang'
+import { defaultLang, languageNames } from '../../lang'
 import { selectLanguage } from '../language/languageSelectors'
-import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration, selectBuilderInputLanguage } from './builderSelectors'
+import { extractGroupsFromBuilderSection, extractModelNameFromBuilderModel, extractModelOptionsFromBuilderModel, extractOptionsFromBuilderGroup, getBuilderGroupById, getBuilderSectionById, getDoesGroupdExist, getDoesOptionExist, getDoesSectionExist, selectBuilderGroupRequirements, selectBuilderModels, selectBuilderOptionIncompatibilities, selectBuilderOptionRequirements, selectBuilderConfiguration, selectBuilderInputLanguage, getBuilderGroupIdByOptionId } from './builderSelectors'
 
 
 const initialConfiguration = {
@@ -679,17 +680,77 @@ export const builderSlice = createSlice({
             state.configuration = initialConfiguration
         },
         setConfigurationToEdit: (state, action) => {
-            const { configId, images, options, optionSections, optionGroups, rules, language, languagePack } = action.payload
+            const { configId, name, description, images, options, optionSections, optionGroups, rules, language } = action.payload
 
-            state.configuration = initialConfiguration
             state.configuration.configId = configId
             state.configuration.images = images
-            state.configuration.options = options
-            state.configuration.optionSections = optionSections
-            state.configuration.optionGroups = optionGroups
-            // state.configuration.rules = rules
+            state.configuration.options = options.map(o => {
+                return {
+                    id: o.id,
+                    groupId: o.groupId,
+                    productNumber: o.productNumber
+                }
+            })
+            state.configuration.optionSections = optionSections.map(s => {
+                return {
+                    id: s.id,
+                    optionGroupIds: s.optionGroupIds
+                }
+            })
+            state.configuration.optionGroups = optionGroups.map(g => {
+                return {
+                    id: g.id, 
+                    optionIds: g.optionIds,
+                    required: g.required,
+                    replacement: g.replacement
+                }
+            })
             state.currentLanguage = language
-            // state.configuration.languages[state.currentLanguage] = languagePack
+            state.configuration.languages[language] = {
+                name,
+                description,
+                options: options.map(o => {
+                    return {
+                        id: o.id,
+                        name: o.name,
+                        description: o.description,
+                    }
+                }),
+                optionSections: optionSections.map(s => {
+                    return {
+                        id: s.id,
+                        name: s.name,
+                    }
+                }),
+                optionGroups: optionGroups.map(g => {
+                    return {
+                        id: g.id,
+                        name: g.name,
+                        description: g.description
+                    }
+                }),
+                models: rules.models.map(m => {
+                    return {
+                        id: m.id,
+                        name: m.name,
+                        description: m.description
+                    }
+                })
+            }
+            state.configuration.rules = {
+                basePrice: rules.basePrice,
+                defaultModel: rules.defaultModel,
+                models: rules.models.map(m => {
+                    return {
+                        id: m.id,
+                        optionIds: m.optionIds
+                    }
+                }),
+                groupRequirements: rules.groupRequirements,
+                requirements: rules.requirements,
+                incompatibilities: rules.incompatibilities,
+                priceList: rules.priceList
+            }
         },
         loadingStarted: (state) => {
             state.status = 'loading'
@@ -848,20 +909,54 @@ export const changeModelOptions = (modelId, options) => (dispatch) => {
 }
 
 export const editConfiguration = (configId) => async (dispatch, getState) => {
-    // not implemented
+    // reset builder
+    dispatch(resetBuild)
 
-    const c = {
-        configId,
-        images: [],
-        options: [],
-        optionSections: [],
-        optionGroups: [],
-        rules: {}, 
-        language: selectLanguage(getState()), 
-        languagePack: {}
-    }
+    // get configuration for every language
+    Object.values(languageNames).forEach(lang => {
+        setAcceptLanguage(lang)
+        
+        fetchId(configId)
+        .then(config => {
+            console.log('loaded config from language', lang)
+            console.log(config)
+            const c = {
+                ...config,
+                // name: '',
+                // description: '',
+                // images: [],
+                // rules: {}, 
+                configId,
+                options: config.options.map(o => {
+                    return {
+                        ...o,
+                        // id: o.id,
+                        // productNumber: o.productNumber,
+                        groupId: getBuilderGroupIdByOptionId(getState(), o.id)
+                    }
+                }),
+                optionSections: config.optionSections.map(s => {
+                    return {
+                        ...s
+                        // id: s.id, optionGroupIds: s.optionGroupIds
+                    }
+                }),
+                optionGroups: config.optionGroups.map(g => {
+                    return {
+                        ...g,
+                        replacement: Object.keys(config.rules.replacementGroups).find(gId => gId === g.id) ? true : false
+                    }
+                }),
+                language: lang
+            }
+            dispatch(setConfigurationToEdit(c))
+        })
+        .catch(err => {
+            console.log(`Could not get configuration ${configId} with language ${lang}`)
+            console.log(err)
+        })
 
-    dispatch(setConfigurationToEdit(c))
+    })
 }
 
 export const finishConfigurationBuild = () => async (dispatch, getState) => {
