@@ -1,5 +1,6 @@
 ﻿using BackendProductConfigurator.App_Code;
 using BackendProductConfigurator.Validation.JWT.Managers;
+using BackendProductConfigurator.Validation.JWT.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -189,9 +190,14 @@ namespace BackendProductConfigurator.Controllers
 
         public static Account FillAccountFromToken(string bearerToken)
         {
-            Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com", IsAdmin = true };
-            JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
+            Account account = new Account() { UserName = "admin", UserEmail = "configurator-admin@test-fuchs.com", IsAdmin = true };
 
+
+            JWTContainerModel model = JWTContainerModel.GetJWTContainerModel(account.UserName, account.UserEmail, account.IsAdmin);
+
+            JWTService jWTService = new JWTService(model.SecretKey);
+
+            //bearerToken = jWTService.GenerateToken(model);
             bearerToken = bearerToken.Replace("Bearer ", "");
 
             foreach (Claim claim in jWTService.GetTokenClaims(bearerToken))
