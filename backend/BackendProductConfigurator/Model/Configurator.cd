@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Model.Configurator">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAgAAAAAAgAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Configurator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Rules" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.ConfiguratorSlim">
+    <Position X="2.5" Y="2.75" Width="1.5" />
+    <InheritanceLine Type="Model.Indexes.ConfiguratorIndex" FixedToPoint="true">
+      <Path>
+        <Point X="5.125" Y="2.75" />
+        <Point X="5.125" Y="2.375" />
+        <Point X="3.75" Y="2.375" />
+        <Point X="3.75" Y="2.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ConfiguratorSlim.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.175" />
+  </Class>
+  <Class Name="Model.Indexes.ConfiguratorIndex">
+    <Position X="4.25" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indexes\ConfiguratorIndex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="1.07" />
+  </Class>
+  <Class Name="Model.Option">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Option.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Model.OptionGroup">
+    <Position X="6.25" Y="4.5" Width="1.5" />
+    <InheritanceLine Type="Model.OptionGroupBase" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.75" Y="1.188" />
+        <Point X="8.125" Y="1.188" />
+        <Point X="8.125" Y="4.125" />
+        <Point X="7.562" Y="4.125" />
+        <Point X="7.562" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OptionGroup.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Model.OptionGroupBase">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OptionGroupBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.OptionSection">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>OptionSection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Model.RulesExtended">
+    <Position X="0.5" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAgAAAAAAAA=</HashCode>
+      <FileName>RulesExtended.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.Rules">
+    <Position X="2.5" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>BAAAABAAAAACAAABAAAAAAAAAAIAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Rules.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.ModelType">
+    <Position X="4.5" Y="4.5" Width="1.5" />
+    <InheritanceLine Type="Model.Indexes.LanguageIndex" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.5" Y="1.125" />
+        <Point X="6.16" Y="1.125" />
+        <Point X="6.16" Y="4.26" />
+        <Point X="5.812" Y="4.26" />
+        <Point X="5.812" Y="4.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ModelType.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.159" />
+  </Class>
+  <Class Name="Model.Indexes.LanguageIndex">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indexes\LanguageIndex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
