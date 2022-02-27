@@ -1,5 +1,6 @@
 ﻿using BackendProductConfigurator.App_Code;
 using BackendProductConfigurator.Validation.JWT.Managers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Enumerators;

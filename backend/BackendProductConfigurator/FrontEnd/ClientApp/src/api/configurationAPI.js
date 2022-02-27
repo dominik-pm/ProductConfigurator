@@ -19,6 +19,32 @@ export const fetchId = (productId) => {
     })
 }
 
+export const putConfiguration = (configuration) => {
+    return new Promise((resolve, reject) => {
+        if (LOCAL_DATA) {
+            reject('Updating configuration not available in test mode!')
+            return
+        }
+
+        const data = {
+            ...configuration
+        }
+        console.log(data)
+        axios.put(`${baseURL}/configuration/${configuration.configId}`, data)
+        .then(res => {
+            resolve(res.data)
+        })
+        .catch(err => {
+            console.log(err)
+            if (err.data) {
+                reject(err.data)
+            } else {
+                reject('Api unreachable')
+            }
+        })
+    })
+}
+
 export const postConfiguration = (newConfiguration) => {
     return new Promise((resolve, reject) => {
         if (LOCAL_DATA) {
