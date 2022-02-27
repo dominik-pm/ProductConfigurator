@@ -85,22 +85,34 @@ namespace BackendProductConfigurator.Controllers
             Task temp;
             foreach(string language in languages)
             {
-                try
+                string taskLanguage = language;
+                temp = new Task(() =>
                 {
-                    temp = new Task(() =>
+                    Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
+                    t.Start();
+                    if(t.Wait(GlobalValues.TimeOut))
                     {
-                        Configurators[language] = ADBAccess<Configurator>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]).Result;
-                    });
-                    tasks.Add(temp);
-                    temp.Start();
-                    temp = new Task(() =>
+                        Configurators[taskLanguage] = t.Result;
+                    }
+                    else
+                        Configurators[taskLanguage] = new List<Configurator>();
+                });
+                tasks.Add(temp);
+                temp.Start();
+                temp = new Task(() =>
+                {
+                    string taskLanguage = language;
+                    Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
+                    t.Start();
+                    if (t.Wait(GlobalValues.TimeOut))
                     {
-                        SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]).Result;
-                    });
-                    tasks.Add(temp);
-                    temp.Start();
-                }
-                catch { }
+                        SavedProducts[taskLanguage] = t.Result;
+                    }
+                    else
+                        SavedProducts[taskLanguage] = new List<ProductSaveExtended>();
+                });
+                tasks.Add(temp);
+                temp.Start();
             }
             try
             {
