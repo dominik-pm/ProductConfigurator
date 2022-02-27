@@ -99,49 +99,57 @@ namespace BackendProductConfigurator.Controllers
                                                       {
                                                           Id = "D150",
                                                           Name = "D150",
-                                                          Description = "Mittlestarker Diesel Motor"
+                                                          Description = "Mittlestarker Diesel Motor",
+                                                          ProductNumber = "D150"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "DIESEL",
                                                           Name = "Diesel",
-                                                          Description = "Diesel Treibstoff"
+                                                          Description = "Diesel Treibstoff",
+                                                          ProductNumber = "DIESEL"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "PETROL",
                                                           Name = "Benziner",
-                                                          Description = "Benzin"
+                                                          Description = "Benzin",
+                                                          ProductNumber = "PETROL"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "D200",
                                                           Name = "D200",
-                                                          Description = "Starker Diesel Motor"
+                                                          Description = "Starker Diesel Motor",
+                                                          ProductNumber = "D200"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "D250",
                                                           Name = "D250",
-                                                          Description = "Sehr starker Diesel Motor"
+                                                          Description = "Sehr starker Diesel Motor",
+                                                          ProductNumber = "D250"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "RED",
                                                           Name = "Alfa Rosso",
-                                                          Description = "Intensives rot"
+                                                          Description = "Intensives rot",
+                                                          ProductNumber = "RED"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "P500",
                                                           Name = "P500",
-                                                          Description = "Sehr starker Benzinmotor"
+                                                          Description = "Sehr starker Benzinmotor",
+                                                          ProductNumber = "P500"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "GREEN",
                                                           Name = "Green demon",
-                                                          Description = "Grün"
+                                                          Description = "Grün",
+                                                          ProductNumber = "GREEN"
                                                       }};
 
             List<string> productImages = new List<string> { "Alfa_159_grey.jpg" };
