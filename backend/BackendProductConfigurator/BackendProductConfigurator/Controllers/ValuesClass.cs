@@ -38,7 +38,8 @@ namespace BackendProductConfigurator.Controllers
                     SetStaticValues();
                     break;
                 case EValueMode.DatabaseValues:
-                    SetDBValues();
+                    Task task = new Task(SetDBValues);
+                    task.Start();
                     break;
             }
         }
@@ -80,15 +81,34 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void SetDBValues()
         {
+            List<Task> tasks = new List<Task>();
+            Task temp;
             foreach(string language in languages)
             {
                 try
                 {
-                    Configurators[language] = ADBAccess<Configurator>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]).Result;
-
-                    SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+                    temp = new Task(() =>
+                    {
+                        Configurators[language] = ADBAccess<Configurator>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]).Result;
+                    });
+                    tasks.Add(temp);
+                    temp.Start();
+                    temp = new Task(() =>
+                    {
+                        SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]).Result;
+                    });
+                    tasks.Add(temp);
+                    temp.Start();
                 }
                 catch { }
+            }
+            try
+            {
+                Task.WhenAll(tasks.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
