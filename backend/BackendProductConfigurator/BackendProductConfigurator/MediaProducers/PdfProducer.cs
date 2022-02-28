@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.Controllers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.Controllers;
 using Model;
 using PdfSharp.Drawing;
 using PdfSharp.Drawing.Layout;
@@ -26,6 +27,7 @@ namespace BackendProductConfigurator.MediaProducers
             double mediumSpacing = 30;
             double largeSpacing = 50;
             double yPosition = 20;
+            double leftBorder = 0.1;
 
             XFont font = new XFont("Century Gothic", 14);
             XFont headerFont = new XFont("Century Gothic", 40);
@@ -48,15 +50,15 @@ namespace BackendProductConfigurator.MediaProducers
 
             yPosition += DrawImage(gfx, configurator.Images[0], page.Width * 0.25, yPosition, page);
 
-            DrawLine(yPosition, gfx, page);
+            DrawLine(yPosition, leftBorder, gfx, page);
 
             yPosition += smallSpacing;
 
-            PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Basispreis:", configurator.Rules.BasePrice);
+            PrintOption(tf, font, page, page.Width * leftBorder, page.Width * 0.66, yPosition, "Basispreis:", configurator.Rules.BasePrice);
 
             yPosition += smallSpacing;
 
-            DrawLine(yPosition, gfx, page);
+            DrawLine(yPosition, leftBorder, gfx, page);
 
             yPosition += smallSpacing;
 
@@ -64,7 +66,7 @@ namespace BackendProductConfigurator.MediaProducers
             tf.DrawString($"Ausgewählte Optionen:",
                            font,
                            XBrushes.Black,
-                           new XRect(page.Width * 0.2, yPosition, page.Width * 0.6, 20));
+                           new XRect(page.Width * leftBorder, yPosition, page.Width * 0.6, 20));
 
             yPosition += smallSpacing;
             float price;
@@ -79,19 +81,19 @@ namespace BackendProductConfigurator.MediaProducers
                 {
                     price = 0f;
                 }
-                PrintOption(tf, font, page, page.Width * 0.24, page.Width * 0.56, yPosition, $"- {tempOption.Name}", price);
+                PrintOption(tf, font, page, page.Width * (leftBorder + 0.04), page.Width * 0.66, yPosition, $"- {tempOption.Name}", price);
                 yPosition += smallSpacing;
             }
 
-            DrawLine(yPosition, gfx, page);
+            DrawLine(yPosition, leftBorder, gfx, page);
 
             yPosition += smallSpacing;
 
-            PrintOption(tf, font, page, page.Width * 0.2, page.Width * 0.56, yPosition, "Summe:", product.Price);
+            PrintOption(tf, font, page, page.Width * leftBorder, page.Width * 0.66, yPosition, "Summe:", product.Price);
 
             DateTime dateTime = DateTime.Now;
 
-            StringBuilder saveName = new StringBuilder("./Product");
+            StringBuilder saveName = new StringBuilder($"{GlobalValues.PDFOutput}/Product");
             saveName.Append('_').Append(configId).Append('_');
             saveName.Append(dateTime.Year);
             saveName.Append(dateTime.Month.ToString().PadLeft(2, '0'));
@@ -111,7 +113,7 @@ namespace BackendProductConfigurator.MediaProducers
             XImage image;
             try
             {
-                image = XImage.FromFile($"../images/{imgLoc.Replace('*', '/')}");
+                image = XImage.FromFile($"{GlobalValues.ImagesFolder}/{imgLoc.Replace('*', '/')}");
             }
             catch
             {
@@ -129,7 +131,7 @@ namespace BackendProductConfigurator.MediaProducers
             tf.DrawString(leftText,
                        font,
                        XBrushes.Black,
-                       new XRect(x1, y, page.Width * 0.5, 20));
+                       new XRect(x1, y, page.Width * 0.7, 20));
 
             tf.Alignment = XParagraphAlignment.Right;
             tf.DrawString($"{price}€",
@@ -138,11 +140,11 @@ namespace BackendProductConfigurator.MediaProducers
                        new XRect(x2, y, page.Width * 0.2, 20));
             tf.Alignment = XParagraphAlignment.Left;
         }
-        private static void DrawLine(double yPosition, XGraphics gfx, PdfPage page)
+        private static void DrawLine(double yPosition, double leftBorder, XGraphics gfx, PdfPage page)
         {
             gfx.DrawLine(new XPen(XColor.FromArgb(0, 0, 0)),
-                         new XPoint(page.Width * 0.2, yPosition),
-                         new XPoint(page.Width - page.Width * 0.2, yPosition));
+                         new XPoint(page.Width * leftBorder, yPosition),
+                         new XPoint(page.Width - page.Width * leftBorder, yPosition));
         }
     }
 }

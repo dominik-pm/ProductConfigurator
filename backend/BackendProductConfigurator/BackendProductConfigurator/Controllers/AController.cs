@@ -1,12 +1,7 @@
 ﻿using BackendProductConfigurator.App_Code;
-using BackendProductConfigurator.MediaProducers;
-using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
-using Model.Enumerators;
 using Model.Interfaces;
-using Model.Wrapper;
-using System.Net;
 
 namespace BackendProductConfigurator.Controllers
 {
@@ -114,7 +109,6 @@ namespace BackendProductConfigurator.Controllers
     }
     public partial class ConfigurationController : AController<Configurator, string>
     {
-        // POST api/<Controller>
         [Route("/redactedConfigurator")]
         [HttpPost]
         [NonAction]
@@ -122,7 +116,6 @@ namespace BackendProductConfigurator.Controllers
     }
     public partial class SavedConfigsController : AController<ProductSaveExtended, string>
     {
-        // DELETE api/<Controller>/5
         [Route("/redactedSavedConfigsController")]
         [HttpDelete]
         [NonAction]
