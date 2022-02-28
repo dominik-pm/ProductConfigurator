@@ -85,32 +85,22 @@ namespace BackendProductConfigurator.Controllers
             Task temp;
             foreach(string language in languages)
             {
-                string taskLanguage = language;
-                temp = new Task(() =>
+                temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
+                    string taskLanguage = str as string;
                     Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
                     t.Start();
-                    if(t.Wait(GlobalValues.TimeOut))
-                    {
-                        Configurators[taskLanguage] = t.Result;
-                    }
-                    else
-                        Configurators[taskLanguage] = new List<Configurator>();
-                });
+                    Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
+                }), language);
                 tasks.Add(temp);
                 temp.Start();
-                temp = new Task(() =>
+                temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
-                    string taskLanguage = language;
+                    string taskLanguage = str as string;
                     Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
                     t.Start();
-                    if (t.Wait(GlobalValues.TimeOut))
-                    {
-                        SavedProducts[taskLanguage] = t.Result;
-                    }
-                    else
-                        SavedProducts[taskLanguage] = new List<ProductSaveExtended>();
-                });
+                    SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
+                }), language);
                 tasks.Add(temp);
                 temp.Start();
             }
