@@ -221,30 +221,32 @@ namespace BackendProductConfigurator.Controllers
         public static Account FillAccountFromToken(string bearerToken)
         {
             Account account = new Account() { UserName = "admin", UserEmail = "configurator-admin@test-fuchs.com", IsAdmin = true };
-
-
-            JWTContainerModel model = JWTContainerModel.GetJWTContainerModel(account.UserName, account.UserEmail, account.IsAdmin);
-
-            JWTService jWTService = new JWTService(model.SecretKey);
-
-            //bearerToken = jWTService.GenerateToken(model);
-            bearerToken = bearerToken.Replace("Bearer ", "");
-
-            foreach (Claim claim in jWTService.GetTokenClaims(bearerToken))
+            try
             {
-                switch (claim.Type)
-                {
-                    case "userName":
-                        account.UserName = claim.Value;
-                        break;
-                    case "userEmail":
-                        account.UserEmail = claim.Value;
-                        break;
-                    case "admin":
-                        account.IsAdmin = Convert.ToBoolean(claim.Value);
-                        break;
-                }
+                JWTContainerModel model = JWTContainerModel.GetJWTContainerModel(account.UserName, account.UserEmail, account.IsAdmin);
+
+                JWTService jWTService = new JWTService(model.SecretKey);
+
+                //bearerToken = jWTService.GenerateToken(model);
+                //bearerToken = bearerToken.Replace("Bearer ", "");
+
+                //foreach (Claim claim in jWTService.GetTokenClaims(bearerToken))
+                //{
+                //    switch (claim.Type)
+                //    {
+                //        case "userName":
+                //            account.UserName = claim.Value;
+                //            break;
+                //        case "userEmail":
+                //            account.UserEmail = claim.Value;
+                //            break;
+                //        case "admin":
+                //            account.IsAdmin = Convert.ToBoolean(claim.Value);
+                //            break;
+                //    }
+                //}
             }
+            catch { }
 
             return account;
         }
