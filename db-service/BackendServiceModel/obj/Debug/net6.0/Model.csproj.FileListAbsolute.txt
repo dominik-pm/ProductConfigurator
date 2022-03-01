@@ -45,7 +45,6 @@ D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.dll
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\ref\Model.dll
 D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.pdb
-D:\DA\ProductConfigurator\backend\BackendProductConfigurator\Model\obj\Debug\net6.0\Model.csproj.AssemblyReference.cache
 F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Debug\net6.0\Model.deps.json
 F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Debug\net6.0\Model.dll
 F:\repos\5chit\ProductConfigurator\db-service\BackendServiceModel\bin\Debug\net6.0\ref\Model.dll

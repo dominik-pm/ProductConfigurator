@@ -29,6 +29,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             List<Configurator> products = _productService.GetAllConfigurators(lang);
 
+            Console.WriteLine("Product: Get");
             return Ok(products);
         }
 
@@ -42,6 +43,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
             if ( product == null )
                 return NotFound();
 
+            Console.WriteLine("Product: GetById");
             return Ok(product);
         }
 
@@ -52,6 +54,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             _productService.SaveConfigurator(config, lang);
 
+            Console.WriteLine("Product: Post");
             return Ok();
         }
 
@@ -59,6 +62,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         public ActionResult Delete( string id ) {
             _productService.DeleteConfigurator(id);
 
+            Console.WriteLine("Product: Delete");
             return Ok();
         }
 
@@ -69,6 +73,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             _productService.UpdateProduct(product, lang);
 
+            Console.WriteLine("Product: Put");
             return Ok();
         }
 

@@ -35,6 +35,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 LangListProduct = _context.ProductHasLanguages.ToList(),
                 LangListOptionField = _context.OptionFieldHasLanguages.ToList(),
             };
+
             List<ProductsHasProduct> dbProductHasProduct = _context.ProductsHasProducts.ToList();
             List<OptionFieldsHasOptionField> dbOptionFieldHasOptionField = _context.OptionFieldsHasOptionFields.ToList();
             List<Configuration> dbConfigurations = _context.Configurations.ToList();

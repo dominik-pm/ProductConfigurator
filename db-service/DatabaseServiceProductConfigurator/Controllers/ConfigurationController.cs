@@ -28,6 +28,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             List<ProductSaveExtended> toReturn = _configurationService.GetConfigurations(lang);
 
+            Console.WriteLine("Configuration: Get");
             return Ok(toReturn);
         }
 
@@ -38,6 +39,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             ProductSaveExtended? toReturn = _configurationService.GetConfiguredProductById(lang, wrapper);
 
+            Console.WriteLine("Configuration: GetByWrapper");
             if ( toReturn == null )
                 return NotFound();
             return Ok(toReturn);
@@ -50,6 +52,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             _configurationService.SaveConfiguration(config, lang);
 
+            Console.WriteLine("Configuration: Post");
             return Ok();
         }
 
@@ -57,6 +60,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
         public ActionResult Delete( SavedConfigDeleteWrapper wrapper ) {
             _configurationService.DeleteConfiguration(wrapper);
 
+            Console.WriteLine("Configuration: Delete");
             return Ok();
         }
 
@@ -67,6 +71,7 @@ namespace DatabaseServiceProductConfigurator.Controllers {
 
             _configurationService.UpdateConfiguration(config, lang, savedName);
 
+            Console.WriteLine("Configuration: Put");
             return Ok();
         }
 
