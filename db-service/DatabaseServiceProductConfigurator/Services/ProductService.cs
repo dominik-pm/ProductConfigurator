@@ -55,7 +55,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                         Name = infos.Name,
                         Description = infos.Description,
                         Images = ( from pic in dbPictures where pic.ProductNumber == p.ProductNumber select pic.Url ).ToList(),
-                        Options = GetOptionsByProductNumber(p.ProductNumber, lang, thisDbStruct),
+                        Options = GetOptionsByProductNumber(p.ProductNumber, lang, thisDbStruct, products),
                         OptionGroups = GetOptionGroupsByProductNumber(p.ProductNumber, lang, thisDbStruct),
                         OptionSections = GetOptionSectionByProductNumber(p.ProductNumber, lang, thisDbStruct),
                         Rules = depen,
@@ -209,7 +209,7 @@ namespace DatabaseServiceProductConfigurator.Services {
             return optionGroups;
         }
 
-        private List<Option> GetOptionsByProductNumber( string productNumber, string lang, DBStruct thisDb ) {
+        private List<Option> GetOptionsByProductNumber( string productNumber, string lang, DBStruct thisDb, List<Product> products ) {
 
             List<Option> options = new();
 
@@ -245,10 +245,12 @@ namespace DatabaseServiceProductConfigurator.Services {
                 temp.ForEach(
                     opt => {
                         var infos = _languageService.GetProductWithLanguage(opt.ProductNumber, lang, thisDb.LangListProduct);
+                        var p = products.First(p => p.ProductNumber == opt.ProductNumber);
                         toAdd.Add(new Option {
                             Id = opt.ProductNumber,
                             Name = infos.Name,
-                            Description = infos.Description
+                            Description = infos.Description,
+                            ProductNumber  = p.ItemNumber ?? ""
                         });
                     }
                 );
@@ -293,7 +295,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 Product temp = new() {
                     ProductNumber = item.Id,
                     Price = priceAvailable ? price : 0,
-                    Buyable = false
+                    Buyable = false,
+                    ItemNumber = item.ProductNumber
                 };
 
                 OptionProducts.Add(temp);
@@ -759,6 +762,7 @@ namespace DatabaseServiceProductConfigurator.Services {
                 Option theOption = product.Options.Where(o => o.Id == p.ProductNumber).First();
                 product.Rules.PriceList.TryGetValue(p.ProductNumber, out float price);
                 p.Price = price;
+                p.ItemNumber = theOption.ProductNumber;
                 ProductHasLanguage? temp = dbProductHasLanguage.Where(l => p.ProductNumber == l.ProductNumber && l.Language == lang).FirstOrDefault();
                 if ( temp != null ) {
                     temp.Name = theOption.Name;
@@ -787,7 +791,8 @@ namespace DatabaseServiceProductConfigurator.Services {
                 Product toAdd = new() {
                     ProductNumber = item.Id,
                     Price = price,
-                    Buyable = false
+                    Buyable = false,
+                    ItemNumber = item.ProductNumber
                 };
                 toAdd.ProductHasLanguages.Add(
                     new ProductHasLanguage {

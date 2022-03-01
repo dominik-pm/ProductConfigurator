@@ -30,6 +30,15 @@ namespace DatabaseServiceProductConfigurator.Context
         public virtual DbSet<ProductsHasOptionField> ProductsHasOptionFields { get; set; } = null!;
         public virtual DbSet<ProductsHasProduct> ProductsHasProducts { get; set; } = null!;
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseMySql("server=localhost;database=product_configurator;port=3306;user=insy;password=insy", Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.27-mysql"));
+            }
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("utf8_general_ci")
@@ -406,6 +415,10 @@ namespace DatabaseServiceProductConfigurator.Context
                 entity.Property(e => e.BaseModel).HasColumnName("base_model");
 
                 entity.Property(e => e.Buyable).HasColumnName("buyable");
+
+                entity.Property(e => e.ItemNumber)
+                    .HasMaxLength(255)
+                    .HasColumnName("item_number");
 
                 entity.Property(e => e.Price)
                     .HasColumnType("float(12,2)")

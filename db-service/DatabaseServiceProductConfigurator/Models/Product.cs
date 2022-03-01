@@ -20,6 +20,7 @@ namespace DatabaseServiceProductConfigurator.Models
         public float Price { get; set; }
         public bool Buyable { get; set; }
         public int? BaseModel { get; set; }
+        public string? ItemNumber { get; set; }
 
         public virtual Configuration? BaseModelNavigation { get; set; }
         public virtual ICollection<Configuration> Configurations { get; set; }
