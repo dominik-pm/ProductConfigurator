@@ -40,6 +40,7 @@ namespace BackendProductConfigurator.Controllers
                 case EValueMode.DatabaseValues:
                     Task task = new Task(SetDBValues);
                     task.Start();
+                    task.Wait();
                     break;
             }
         }
@@ -87,26 +88,30 @@ namespace BackendProductConfigurator.Controllers
             {
                 temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
-                    string taskLanguage = str as string;
-                    Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
-                    t.Start();
-                    Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
+                    try
+                    {
+                        string taskLanguage = str as string;
+                        Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
+                        Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
+                    }
+                    catch { }
                 }), language);
                 tasks.Add(temp);
-                temp.Start();
                 temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
-                    string taskLanguage = str as string;
-                    Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
-                    t.Start();
-                    SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
+                    try
+                    {
+                        string taskLanguage = str as string;
+                        Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
+                        SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
+                    }
+                    catch { }
                 }), language);
                 tasks.Add(temp);
-                temp.Start();
             }
             try
             {
-                Task.WhenAll(tasks.ToArray());
+                Task.WaitAll(tasks.ToArray());
             }
             catch (Exception ex)
             {
