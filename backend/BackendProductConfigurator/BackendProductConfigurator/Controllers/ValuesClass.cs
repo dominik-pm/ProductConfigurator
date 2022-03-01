@@ -208,19 +208,23 @@ namespace BackendProductConfigurator.Controllers
                                                 { "DIESEL", 150f} }
             };
 
-            Configurators["de"].RemoveAll(x => true);
-
-            Configurators["de"].Add(new Configurator()
+            foreach(string language in languages)
             {
-                ConfigId = "Alfa",
-                Name = "Alfa",
-                Description = "159",
-                Images = productImages,
-                Rules = productDependencies,
-                OptionGroups = optionGroups,
-                Options = options,
-                OptionSections = optionSections}
-            );
+                Configurators[language].RemoveAll(x => true);
+
+                Configurators[language].Add(new Configurator()
+                {
+                    ConfigId = "Alfa",
+                    Name = "Alfa",
+                    Description = "159",
+                    Images = productImages,
+                    Rules = productDependencies,
+                    OptionGroups = optionGroups,
+                    Options = options,
+                    OptionSections = optionSections
+                }
+                );
+            }
         }
 
         public static Account FillAccountFromToken(string bearerToken)
@@ -391,34 +395,44 @@ namespace BackendProductConfigurator.Controllers
         }
         public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator)
         {
-            foreach(Option option in configurator.Options)
+            try
             {
-                option.Id += $"+{configurator.ConfigId}";
-            }
-            foreach(LanguageIndex li in configurator.OptionGroups)
-            {
-                li.Id += $"+{configurator.ConfigId}";
-                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
-            }
-            foreach(OptionSection os in configurator.OptionSections)
-            {
-                os.Id += $"+{configurator.ConfigId}";
-                os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
-            }
-            foreach(LanguageIndex li in configurator.Rules.Models)
-            {
-                li.Id += $"+{configurator.ConfigId}";
-                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
-            }
-            
-            configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);
-            configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
-            configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
-            configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
-            if(configurator.Rules.DefaultModel != "")
-                configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
+                if(!configurator.Options[0].Id.EndsWith($"+{configurator.ConfigId}"))
+                {
+                    foreach (Option option in configurator.Options)
+                    {
+                        option.Id += $"+{configurator.ConfigId}";
+                    }
+                    foreach (LanguageIndex li in configurator.OptionGroups)
+                    {
+                        li.Id += $"+{configurator.ConfigId}";
+                        li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+                    }
+                    foreach (OptionSection os in configurator.OptionSections)
+                    {
+                        os.Id += $"+{configurator.ConfigId}";
+                        os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+                    }
+                    foreach (LanguageIndex li in configurator.Rules.Models)
+                    {
+                        li.Id += $"+{configurator.ConfigId}";
+                        li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+                    }
 
-            configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId);
+                    configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);
+                    configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
+                    configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
+                    configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
+                    if (configurator.Rules.DefaultModel != "")
+                        configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
+
+                    configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             
             return configurator;
         }
