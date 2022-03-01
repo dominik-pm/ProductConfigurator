@@ -10,5 +10,6 @@ namespace Model.Wrapper
     public class IdWrapper : IIndexable
     {
         public string Id { get; set; }
+        public string ProductNumber { get; set; }
     }
 }
