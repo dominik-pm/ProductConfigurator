@@ -972,7 +972,7 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
             dispatch(loadingSucceeded(res))
         })
         .catch(err => {
-            dispatch(loadingFailed(error))
+            dispatch(loadingFailed(err))
         })
         return
     }
