@@ -113,6 +113,11 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         [NonAction]
         public override ActionResult Post([FromBody] Configurator value) { return NoContent(); }
+
+        [Route("/redactedConfigurator")]
+        [HttpPut]
+        [NonAction]
+        public override ActionResult Put(string configId, [FromBody] Configurator value) { return NoContent(); }
     }
     public partial class SavedConfigsController : AController<ProductSaveExtended, string>
     {

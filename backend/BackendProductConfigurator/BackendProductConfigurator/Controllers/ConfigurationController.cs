@@ -95,7 +95,10 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
+                foreach(string language in entities.Keys)
+                {
+                    entities[language].Remove(entities[language].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
+                }
                 ValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
                 return Ok();
             }
