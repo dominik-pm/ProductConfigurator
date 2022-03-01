@@ -277,7 +277,7 @@ namespace BackendProductConfigurator.Controllers
                     Name = languageDict.Value.Name,
                     Description = languageDict.Value.Description,
                     OptionGroups = GetConfiguratorValues<OptionGroup, OptionGroupIndex, DescribedIndex>(configuratorPost.OptionGroups, languageDict.Value, languageDict.Value.OptionGroups),
-                    Options = GetConfiguratorValues<Option, IIndexable, Option>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
+                    Options = GetConfiguratorValues<Option, IIndexable, OptionSlim>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
                     OptionSections = GetConfiguratorValues<OptionSection, LanguageIndexGroup, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections)
                 };
                 temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndex, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
@@ -312,7 +312,7 @@ namespace BackendProductConfigurator.Controllers
                 else if (typeof(T) == typeof(OptionGroup))
                     elements.Add(GenerateValues(element as OptionGroupIndex, currentElement as DescribedIndex) as T);
                 else if (typeof(T) == typeof(Option))
-                    elements.Add(GenerateValues(element as IIndexable, currentElement as Option) as T);
+                    elements.Add(GenerateValues(element as IdWrapper, currentElement as OptionSlim) as T);
                 else if (typeof(T) == typeof(ModelType))
                     elements.Add(GenerateValues(element as LanguageIndex, currentElement as DescribedIndex) as T);
             }
@@ -339,9 +339,15 @@ namespace BackendProductConfigurator.Controllers
                 Required = loopElement.Required
             };
         }
-        private static Option GenerateValues(IIndexable loopElement, Option currentElement)
+        private static Option GenerateValues(IdWrapper loopElement, OptionSlim currentElement)
         {
-            return currentElement;
+            return new Option()
+            {
+                Id = currentElement.Id,
+                Name = currentElement.Name,
+                Description = currentElement.Description,
+                ProductNumber = loopElement.ProductNumber
+            };
         }
         private static ModelType GenerateValues(LanguageIndex loopElement, DescribedIndex currentElement)
         {
