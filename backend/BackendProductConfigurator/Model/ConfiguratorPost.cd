@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Model.ConfiguratorPost">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Rules" Type="Model.Languages.RulesLanguages">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.018" Y="-0.307" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Languages" Type="Model.LanguageVariant" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="0.938" Y="1.925" />
+        <Point X="0.938" Y="2.3" />
+        <Point X="1.562" Y="2.3" />
+        <Point X="1.562" Y="3.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.047" Y="0.55" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="OptionGroups" Type="Model.Indexes.OptionGroupIndex" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.875" Y="1.925" />
+        <Point X="1.875" Y="3.329" />
+        <Point X="3.75" Y="3.329" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAiAAAAAAgAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Wrapper\ConfiguratorPost.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Rules" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Languages" />
+      <Property Name="OptionGroups" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="Model.Indexes.ConfiguratorIndex">
+    <Position X="2.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indexes\ConfiguratorIndex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Model.Languages.RulesLanguages">
+    <Position X="4.25" Y="1" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAgAAAAAAAA=</HashCode>
+      <FileName>Languages\RulesLanguages.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.LanguageVariant">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <AssociationLine Name="OptionGroups" Type="Model.Indexes.DescribedIndex">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.159" Y="0.318" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgAAgAAAgAAAAAAQAAAAAAAAAAAgAAABAAAA=</HashCode>
+      <FileName>LanguageVariant.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="OptionGroups" />
+      <Property Name="OptionSections" />
+      <Property Name="Options" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.117" />
+  </Class>
+  <Class Name="Model.Rules">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>BAAAABAAAAACAAABAAAAAAAAAAIAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Rules.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.Indexes.DescribedIndex">
+    <Position X="2.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indexes\DescribedIndex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="1.169" />
+  </Class>
+  <Class Name="Model.Indexes.NamedIndex">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indexes\NamedIndex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="1.3" />
+  </Class>
+  <Class Name="Model.Option">
+    <Position X="5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Option.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.888" />
+  </Class>
+  <Class Name="Model.Indexes.OptionGroupIndex">
+    <Position X="3.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAE=</HashCode>
+      <FileName>Indexes\OptionGroupIndex.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.OptionGroupBase">
+    <Position X="6" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>OptionGroupBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Model.Indexes.LanguageIndex">
+    <Position X="8" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indexes\LanguageIndex.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

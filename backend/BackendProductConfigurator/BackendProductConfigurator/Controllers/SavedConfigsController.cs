@@ -57,7 +57,15 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 string description, name;
-                Configurator configurator = ValuesClass.Configurators["en"].Where(con => con.ConfigId == configId).First();
+                Configurator configurator;
+                try
+                {
+                    configurator = ValuesClass.Configurators["en"].Where(con => con.ConfigId == configId).First();
+                }
+                catch (Exception)
+                {
+                    configurator = ValuesClass.Configurators[ValuesClass.Configurators.Keys.First()].Where(con => con.ConfigId == configId).First();
+                }
                 description = configurator.Description;
                 name = configurator.Name;
                 ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };

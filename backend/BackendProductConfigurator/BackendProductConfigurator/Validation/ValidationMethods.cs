@@ -69,7 +69,7 @@ namespace BackendProductConfigurator.Validation
             {
                 List<string> modelList = configurator.Rules.Models.Where(x => x.Id == configuredProduct.Model).Select(x => x.OptionIds).First();
 
-                if (modelList.Intersect(configuredProduct.Options).Count() >= modelList.Count())
+                if (modelList.Intersect(configuredProduct.Options).Count() < modelList.Count())
                     return EValidationResult.ModelSelectionInvalid;
             }
             catch

@@ -1,5 +1,7 @@
 ﻿using BackendProductConfigurator.App_Code;
 using BackendProductConfigurator.Validation.JWT.Managers;
+using BackendProductConfigurator.Validation.JWT.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Enumerators;
@@ -36,7 +38,8 @@ namespace BackendProductConfigurator.Controllers
                     SetStaticValues();
                     break;
                 case EValueMode.DatabaseValues:
-                    SetDBValues();
+                    Task task = new Task(SetDBValues);
+                    task.Start();
                     break;
             }
         }
@@ -78,15 +81,36 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void SetDBValues()
         {
+            List<Task> tasks = new List<Task>();
+            Task temp;
             foreach(string language in languages)
             {
-                try
+                temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
-                    Configurators[language] = ADBAccess<Configurator>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]).Result;
-
-                    SavedProducts[language] = ADBAccess<ProductSaveExtended>.GetValues(language, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]).Result;
-                }
-                catch { }
+                    string taskLanguage = str as string;
+                    Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
+                    t.Start();
+                    Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
+                }), language);
+                tasks.Add(temp);
+                temp.Start();
+                temp = Task.Factory.StartNew(new Action<object?>((str) =>
+                {
+                    string taskLanguage = str as string;
+                    Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
+                    t.Start();
+                    SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
+                }), language);
+                tasks.Add(temp);
+                temp.Start();
+            }
+            try
+            {
+                Task.WhenAll(tasks.ToArray());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -97,58 +121,66 @@ namespace BackendProductConfigurator.Controllers
                                                       {
                                                           Id = "D150",
                                                           Name = "D150",
-                                                          Description = "Fetter Diesel Motor"
+                                                          Description = "Mittlestarker Diesel Motor",
+                                                          ProductNumber = "D150"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "DIESEL",
-                                                          Name = "Diesel fuel",
-                                                          Description = "Diesel Motor"
+                                                          Name = "Diesel",
+                                                          Description = "Diesel Treibstoff",
+                                                          ProductNumber = "DIESEL"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "PETROL",
-                                                          Name = "Benzina",
-                                                          Description = "Geiler Motor"
+                                                          Name = "Benziner",
+                                                          Description = "Benzin",
+                                                          ProductNumber = "PETROL"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "D200",
                                                           Name = "D200",
-                                                          Description = "Fetter Diesel Motor"
+                                                          Description = "Starker Diesel Motor",
+                                                          ProductNumber = "D200"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "D250",
                                                           Name = "D250",
-                                                          Description = "Fetter Diesel Motor"
+                                                          Description = "Sehr starker Diesel Motor",
+                                                          ProductNumber = "D250"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "RED",
                                                           Name = "Alfa Rosso",
-                                                          Description = "Red like a cherry"
+                                                          Description = "Intensives rot",
+                                                          ProductNumber = "RED"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "P500",
                                                           Name = "P500",
-                                                          Description = "Very strong engine"
+                                                          Description = "Sehr starker Benzinmotor",
+                                                          ProductNumber = "P500"
                                                       },
                                                       new Option()
                                                       {
                                                           Id = "GREEN",
                                                           Name = "Green demon",
-                                                          Description = "Green like the grinch"
+                                                          Description = "Grün",
+                                                          ProductNumber = "GREEN"
                                                       }};
 
             List<string> productImages = new List<string> { "Alfa_159_grey.jpg" };
 
             List<OptionGroup> optionGroups = new List<OptionGroup>
             {
-                new OptionGroup() { Id = "COLOR_GROUP", Name = "Color", Description = "What color you want", OptionIds = new List<string>(){ "RED", "GREEN"}, Required = false },
-                new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "A motor fuel type", Description = "What motor fuel", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = false },
-                new OptionGroup() { Id = "MOTOR_GROUP", Name = "A motor power", Description = "The motor power", OptionIds = new List<string>(){ "D150", "D200", "D250", "P500"}, Required = false }
+                new OptionGroup() { Id = "COLOR_GROUP", Name = "Farbe", Description = "Farbe des Autos", OptionIds = new List<string>(){ "RED", "GREEN"}, Required = false },
+                new OptionGroup() { Id = "MOTORTYPE_GROUP", Name = "Treibstoff", Description = "Motortreibstoff", OptionIds = new List<string>(){ "DIESEL", "PETROL"}, Required = false },
+                new OptionGroup() { Id = "MOTOR_GROUP", Name = "Motorstärke", Description = "Die Kraft des Motors", OptionIds = new List<string>(){ "D150", "D200", "D250", "P500"}, Required = false }
             };
 
             List<OptionSection> optionSections = new List<OptionSection>
@@ -176,123 +208,45 @@ namespace BackendProductConfigurator.Controllers
             Configurators["de"].Add(new Configurator()
             {
                 ConfigId = "Alfa",
-                Name = "Neuer Konfigurator",
-                Description = "Sehr cool",
+                Name = "Alfa",
+                Description = "159",
                 Images = productImages,
                 Rules = productDependencies,
                 OptionGroups = optionGroups,
                 Options = options,
                 OptionSections = optionSections}
             );
-
-            List<Option> optionsList = new List<Option>
-            {
-                new Option()
-                {
-                    Id = "Option1",
-                    Name = "Erste Option",
-                    Description = "Ka Ahnung wos des duat"
-                }
-            };
-
-            ConfiguredProduct p1 = new ConfiguredProduct()
-            {
-                ConfigurationName = "Fetter Benz",
-                Options = optionsList.Select(x => x.Id).ToList(),
-                Price=4.2f
-            };
-
-            ConfiguredProduct p2 = new ConfiguredProduct()
-            {
-                ConfigurationName = "Eleganter Alfa Romeo",
-                Options = optionsList.Select(x => x.Id).ToList(),
-                Price = 9.65f
-            };
-
-            ConfiguredProduct p3 = new ConfiguredProduct()
-            {
-                ConfigurationName = "Fetterer Benz",
-                Options = optionsList.Select(x => x.Id).ToList(),
-                Price = 0.8f
-            };
-
-            ConfiguredProducts["de"] = new List<ConfiguredProduct> { p1, p2, p3 };
-
-            Account acc1 = new Account()
-            {
-                UserName = "TEST-FUCHS GmbH",
-                UserEmail = "huh@what.com"
-            };
-
-            Account acc2 = new Account()
-            {
-                UserName = "HTL Krems",
-                UserEmail = "huh@what.com"
-            };
-
-            Account acc3 = new Account()
-            {
-                UserName = "AVIA Station Gmünd",
-                UserEmail = "huh@what.com"
-            };
-
-            Accounts["de"] = new List<Account> { acc1, acc2, acc3 };
-
-            ProductSaveExtended psave1 = new ProductSaveExtended()
-            { 
-                Description = "Saved product",
-                Name = "Alfa 147",
-                Options = options.Select(x => x.Id).Cast<string>().ToList(),
-                SavedName = "Scherzermobil",
-                Status = EStatus.saved.ToString(),
-                User = acc1,
-                ConfigId = "ALFA1"
-            };
-            ProductSaveExtended psave2 = new ProductSaveExtended()
-            {
-                Description = "Saved product",
-                Name = "Alfa 156",
-                Options = options.Select(x => x.Id).Cast<string>().ToList(),
-                SavedName = "Pömmermobil",
-                Status = EStatus.saved.ToString(),
-                User = acc2,
-                ConfigId = "ALFA"
-            };
-            ProductSaveExtended psave3 = new ProductSaveExtended()
-            {
-                Description = "Saved product",
-                Name = "Alfa 166",
-                Options = options.Select(x => x.Id).Cast<string>().ToList(),
-                SavedName = "Leutgeb Toyota",
-                Status = EStatus.saved.ToString(),
-                User = acc3,
-                ConfigId = "BENZ1"
-            };
-            SavedProducts["de"] = new List<ProductSaveExtended> { psave1, psave2, psave3 };
         }
 
         public static Account FillAccountFromToken(string bearerToken)
         {
-            Account account = new Account() { UserName = "testUser", UserEmail = "test@user.com", IsAdmin = true };
-            //JWTService jWTService = new JWTService("c2plaDkzdWhBVWhpdW9zZGg5ODhob2lBdWgz");
+            Account account = new Account() { UserName = "admin", UserEmail = "configurator-admin@test-fuchs.com", IsAdmin = true };
+            try
+            {
+                JWTContainerModel model = JWTContainerModel.GetJWTContainerModel(account.UserName, account.UserEmail, account.IsAdmin);
 
-            //bearerToken = bearerToken.Replace("Bearer ", "");
+                JWTService jWTService = new JWTService(model.SecretKey);
 
-            //foreach(Claim claim in jWTService.GetTokenClaims(bearerToken))
-            //{
-            //    switch(claim.Type)
-            //    {
-            //        case ClaimTypes.Name:
-            //            account.UserName = claim.Value;
-            //            break;
-            //        case ClaimTypes.Email:
-            //            account.UserEmail = claim.Value;
-            //            break;
-            //        case "admin":
-            //            account.IsAdmin = Convert.ToBoolean(claim.Value);
-            //            break;
-            //    }
-            //}
+                //bearerToken = jWTService.GenerateToken(model);
+                //bearerToken = bearerToken.Replace("Bearer ", "");
+
+                //foreach (Claim claim in jWTService.GetTokenClaims(bearerToken))
+                //{
+                //    switch (claim.Type)
+                //    {
+                //        case "userName":
+                //            account.UserName = claim.Value;
+                //            break;
+                //        case "userEmail":
+                //            account.UserEmail = claim.Value;
+                //            break;
+                //        case "admin":
+                //            account.IsAdmin = Convert.ToBoolean(claim.Value);
+                //            break;
+                //    }
+                //}
+            }
+            catch { }
 
             return account;
         }
