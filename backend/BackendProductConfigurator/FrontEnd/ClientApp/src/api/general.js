@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const baseURL = process.env.REACT_APP_BACKEND_URL
+export const baseURL = process.env.REACT_APP_BACKEND_URL || 'localhost:7187'
 export const LOCAL_DATA = process.env.REACT_APP_PRODUCTION === 'false'
 
 axios.defaults.timeout = 5000

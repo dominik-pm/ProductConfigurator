@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.MediaProducers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.MediaProducers;
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -53,9 +54,6 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 Dictionary<string, Configurator> configurators = ValuesClass.GenerateConfigurator(value);
-                Configurator configurator;
-
-                configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
 
                 foreach(KeyValuePair<string, Configurator> configDict in configurators)
                 {
@@ -66,16 +64,22 @@ namespace BackendProductConfigurator.Controllers
                     }
                 }
 
-                AddConfigurator(configurator, configurators.Keys.First());
-                ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
-                configurators.Remove(configurators.Keys.First());
-
-                foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                Task task = Task.Factory.StartNew(() =>
                 {
-                    Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
-                    AddConfigurator(temp, configDict.Key);
-                    ValuesClass.PutValue<Configurator>(temp, configDict.Key);
-                }
+                    Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
+
+                    AddConfigurator(configurator, configurators.Keys.First());
+                    ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
+                    configurators.Remove(configurators.Keys.First());
+
+                    foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                    {
+                        Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
+                        AddConfigurator(temp, configDict.Key);
+                        ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                    }
+                });
+                task.Wait(GlobalValues.TimeOut);
                 return Ok();
             }
             catch (Exception ex)

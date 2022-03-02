@@ -15,7 +15,7 @@ function ModelSelector({ models, selectedModel }) {
 
                 {models.map((model, index) => (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                        <ModelButton model={model} isSelected={model.name === selectedModel}></ModelButton>
+                        <ModelButton model={model} isSelected={model.id === selectedModel}></ModelButton>
                     </Grid>
                 ))}
 
@@ -38,7 +38,7 @@ function ModelSelector({ models, selectedModel }) {
                 >
                     {models.map((model, index) => (
                         <Box key={index} width="80vw">
-                            <ModelButton model={model} isSelected={model.name === selectedModel}></ModelButton>
+                            <ModelButton model={model} isSelected={model.id === selectedModel}></ModelButton>
                         </Box>
                     ))}
 
