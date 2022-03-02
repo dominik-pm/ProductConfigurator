@@ -40,23 +40,31 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
 
                 <Typography variant="h3">{translate('models', language)}</Typography>
 
-                <Box sx={{ minWidth: 120 }}>
-                    <FormControl variant='standard' 
-                        fullWidth
-                    >
-                        <InputLabel id="select-default-model-label">{translate('defaultModel', language)}</InputLabel>
-                        <Select
-                            labelId='select-default-model-label'
-                            value={selectedDefaultModel}
-                            autoWidth
-                            label="Default Model"
-                            onChange={handleSetDefaultModel}
+                <Box display="flex">
+                    <Tooltip title="Add Model">
+                        <IconButton sx={{marginRight: 2}} onClick={handleAddModel}>
+                            <Add />
+                        </IconButton>
+                    </Tooltip>
+
+                    <Box sx={{ minWidth: 120 }}>
+                        <FormControl variant='standard' 
+                            fullWidth
                             >
-                            {models.map((model, index) => (
-                                <MenuItem key={index} value={model.id}>{model.id}</MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                            <InputLabel id="select-default-model-label">{translate('defaultModel', language)}</InputLabel>
+                            <Select
+                                labelId='select-default-model-label'
+                                value={selectedDefaultModel}
+                                autoWidth
+                                label="Default Model"
+                                onChange={handleSetDefaultModel}
+                                >
+                                {models.map((model, index) => (
+                                    <MenuItem key={index} value={model.id}>{model.id}</MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
                 </Box>
             </Grid>
 
@@ -65,14 +73,6 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
                 {models.map((model, index) => (
                     <Model key={index} model={model} isSelected={model.id === selectedDefaultModel}></Model>
                 ))}
-
-                <Box>
-                    <Tooltip title="Add Model">
-                        <IconButton onClick={handleAddModel}>
-                            <Add />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
 
             </Grid>
         </Box>

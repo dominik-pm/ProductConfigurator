@@ -9,10 +9,8 @@ import { selectBuilderAvailableImages, selectBuilderImages } from '../../../stat
 function ImageSelect({ selectedImages, allImages, loadImages, setImages, language }) {
 
     useEffect(() => {
-        if (allImages.length === 0) {
-            loadImages()
-        }
-    }, [allImages, loadImages])
+        loadImages()
+    }, [loadImages])
     
 
     function handleChangeImageSelection(event) {

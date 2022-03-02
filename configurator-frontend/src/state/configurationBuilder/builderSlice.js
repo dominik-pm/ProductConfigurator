@@ -318,7 +318,7 @@ const testConfiguration = {
 }
 
 const initialState = {
-    configuration: testConfiguration, // initialConfiguration
+    configuration: initialConfiguration, // testConfiguration
     currentLanguage: defaultLang,
     availableImages: [],
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
@@ -660,14 +660,24 @@ export const builderSlice = createSlice({
             const description = action.payload
 
             state.configuration.languages[state.currentLanguage].description = description
+
+            // also set the description to the other langs if its empty
+            for (const lang in state.configuration.languages) {
+                if (!state.configuration.languages[lang].description) {
+                    state.configuration.languages[lang].description = description
+                }
+            }
         },
         setName: (state, action) => {
-            const name = action.payload
+            const name = action.payload.replace('*', '')
 
             state.configuration.languages[state.currentLanguage].name = name
-            if (!state.configuration.languages[defaultLang].name) {
-                // also set the name to the default lang if its empty
-                state.configuration.languages[defaultLang].name = name
+
+            // also set the name to the other langs if its empty
+            for (const lang in state.configuration.languages) {
+                if (!state.configuration.languages[lang].name) {
+                    state.configuration.languages[lang].name = name
+                }
             }
         },
         changeInputLanguage: (state, action) => {
