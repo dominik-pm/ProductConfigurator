@@ -21,8 +21,6 @@ namespace BackendProductConfigurator.Controllers
         public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
         public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
 
-        private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
-
         private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
             {typeof(ProductSaveExtended), "/db/configuration"},
@@ -84,7 +82,7 @@ namespace BackendProductConfigurator.Controllers
         {
             List<Task> tasks = new List<Task>();
             Task temp;
-            foreach(string language in languages)
+            foreach(string language in GlobalValues.Languages)
             {
                 temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
@@ -208,7 +206,7 @@ namespace BackendProductConfigurator.Controllers
                                                 { "DIESEL", 150f} }
             };
 
-            foreach(string language in languages)
+            foreach(string language in GlobalValues.Languages)
             {
                 Configurators[language].RemoveAll(x => true);
 
@@ -376,7 +374,7 @@ namespace BackendProductConfigurator.Controllers
         {
             StringBuilder sb = new StringBuilder(languageVariant.Name);
             List<string> configIds = new List<string>();
-            foreach (string language in languages)
+            foreach (string language in GlobalValues.Languages)
             {
                 configIds.AddRange(ValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
             }

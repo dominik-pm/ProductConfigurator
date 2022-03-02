@@ -12,7 +12,7 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(ValuesClass.Configurators["de"].Count == 0 || DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes > GlobalValues.MinutesBetweenFetches)
+            if(ValuesClass.Configurators[ValuesClass.Configurators.Keys.First()].Count == 0 || DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes > GlobalValues.MinutesBetweenFetches)
             {
                 ValuesClass.SetValues();
                 ValuesClass.LastDBFetch = DateTime.Now;
