@@ -1793,24 +1793,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Tobias\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\tobia\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
+      "projectUniqueName": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
       "projectName": "BackendProductConfigurator",
-      "projectPath": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
-      "packagesPath": "C:\\Users\\Tobias\\.nuget\\packages\\",
-      "outputPath": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\obj\\",
+      "projectPath": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\BackendProductConfigurator.csproj",
+      "packagesPath": "C:\\Users\\tobia\\.nuget\\packages\\",
+      "outputPath": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Tobias\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\tobia\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1824,8 +1819,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\Model\\Model.csproj": {
-              "projectPath": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\Model\\Model.csproj"
+            "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\Model\\Model.csproj": {
+              "projectPath": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\Model\\Model.csproj"
             }
           }
         }
@@ -1887,7 +1882,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.200-preview.21617.4\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   },

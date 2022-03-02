@@ -44,38 +44,44 @@ namespace BackendProductConfigurator.Controllers
         }
         public static void PostValue<T>(T value, string language) where T : class
         {
-            try
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
             {
-                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                try
+                {
                     ADBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
         public static void PutValue<T>(T value, string language) where T : class
         {
-            try
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
             {
-                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                try
+                {
                     ADBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
         public static void DeleteValue<T>(string language, T identifier) where T : class
         {
-            try
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
             {
-                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
+                try
+                {
                     ADBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
         }
         public static void SetDBValues()
