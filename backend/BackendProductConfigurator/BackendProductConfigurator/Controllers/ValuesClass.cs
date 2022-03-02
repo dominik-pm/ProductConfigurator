@@ -380,10 +380,8 @@ namespace BackendProductConfigurator.Controllers
         {
             StringBuilder sb = new StringBuilder(languageVariant.Name);
             List<string> configIds = new List<string>();
-            foreach (string language in GlobalValues.Languages)
-            {
-                configIds.AddRange(ValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
-            }
+
+            configIds.AddRange(ValuesClass.Configurators[GlobalValues.Languages.First()].Select(x => x.ConfigId).ToList());
 
             sb.Replace(' ', '_');
 
