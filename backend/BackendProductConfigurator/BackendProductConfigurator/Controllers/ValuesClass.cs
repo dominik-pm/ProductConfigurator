@@ -390,9 +390,9 @@ namespace BackendProductConfigurator.Controllers
             int i = 1;
             while (configIds.Contains(sb.ToString()))
             {
-                if (sb.ToString().Contains('#'))
-                    sb.Remove(sb.ToString().IndexOf('#'), 5);
-                sb.Append('#').Append(i++.ToString().PadLeft(4, '0'));
+                if (sb.ToString().Contains('*'))
+                    sb.Remove(sb.ToString().IndexOf('*'), 5);
+                sb.Append('*').Append(i++.ToString().PadLeft(4, '0'));
             }
 
             return sb.ToString();
