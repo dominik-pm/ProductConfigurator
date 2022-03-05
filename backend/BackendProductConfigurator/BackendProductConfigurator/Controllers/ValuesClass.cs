@@ -16,10 +16,10 @@ namespace BackendProductConfigurator.Controllers
     public static class ValuesClass
     {
         public static DateTime LastDBFetch;
-        public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
-        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
-        public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
-        public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
+        public static Dictionary<string, List<Configurator>> Configurators { get; set; } = CreateLists<Configurator>(true);
+        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = CreateLists<ConfiguredProduct>(true);
+        public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = CreateLists<ProductSaveExtended>(false);
+        public static Dictionary<string, List<Account>> Accounts { get; set; } = CreateLists<Account>(false);
 
         private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
@@ -455,6 +455,20 @@ namespace BackendProductConfigurator.Controllers
                 temp.Add($"{dic.Key}+{configId}", dic.Value);
             }
             return temp;
+        }
+        private static Dictionary<string, List<T>> CreateLists<T>(bool isMultiLanguage)
+        {
+            Dictionary<string, List<T>> dict = new Dictionary<string, List<T>>();
+            if (isMultiLanguage)
+            {
+                foreach (string language in GlobalValues.Languages)
+                {
+                    dict.Add(language, new List<T>());
+                }
+            }
+            else
+                dict.Add("NaL", new List<T>()); //NaL Not a Language
+            return dict;
         }
     }
 }
