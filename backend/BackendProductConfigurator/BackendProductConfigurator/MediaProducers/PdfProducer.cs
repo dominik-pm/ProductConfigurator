@@ -14,7 +14,6 @@ namespace BackendProductConfigurator.MediaProducers
         {
             try
             {
-
                 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
             }
             catch (Exception ex)
