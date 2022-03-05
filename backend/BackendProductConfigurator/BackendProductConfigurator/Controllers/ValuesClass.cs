@@ -467,7 +467,7 @@ namespace BackendProductConfigurator.Controllers
                 }
             }
             else
-                dict.Add("NaL", new List<T>()); //NaL Not a Language
+                dict.Add("NaL", new List<T>()); //NaL => Not a Language
             return dict;
         }
     }
