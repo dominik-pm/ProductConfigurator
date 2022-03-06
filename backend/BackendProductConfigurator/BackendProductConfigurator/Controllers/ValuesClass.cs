@@ -48,7 +48,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    ADBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
+                    DBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
                 }
                 catch (Exception ex)
                 {
@@ -62,7 +62,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    ADBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
+                    DBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
                 }
                 catch (Exception ex)
                 {
@@ -76,7 +76,7 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    ADBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
+                    DBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
                 }
                 catch (Exception ex)
                 {
@@ -95,7 +95,7 @@ namespace BackendProductConfigurator.Controllers
                     try
                     {
                         string taskLanguage = str as string;
-                        Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
+                        Task<List<Configurator>> t = DBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
                         Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
                     }
                     catch { }
@@ -106,7 +106,7 @@ namespace BackendProductConfigurator.Controllers
                     try
                     {
                         string taskLanguage = str as string;
-                        Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
+                        Task<List<ProductSaveExtended>> t = DBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
                         SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
                     }
                     catch { }

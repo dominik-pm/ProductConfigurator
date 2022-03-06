@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BackendProductConfigurator.Controllers
 {
-    public static class ADBAccess<T> where T : class
+    public static class DBAccess<T> where T : class
     {
         public static async Task<List<T>> GetValues(string language, string address, string api)
         {
