@@ -26,7 +26,7 @@ namespace BackendProductConfigurator.Controllers
             List<string> images = Directory.GetFiles(path, "*.jpg").ToList();
             images.AddRange(Directory.GetFiles(path, "*.png").ToList());
             images.AddRange(Directory.GetFiles(path, "*.jpeg").ToList());
-            images = images.Select(name => name.Replace(@$"{GlobalValues.ImagesFolder}\", "").Replace('/', '*').Replace('\\', '*')).ToList();
+            images = images.Select(name => name.Replace($"{GlobalValues.ImagesFolder}\\", "").Replace('/', '*').Replace('\\', '*')).ToList();
 
             foreach(var folder in Directory.GetDirectories(path))
             {

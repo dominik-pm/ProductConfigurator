@@ -12,8 +12,9 @@ import { logout } from '../../state/user/userSlice'
 import { inputDialogOpen } from '../../state/inputDialog/inputDialogSlice'
 import LoginButton from './LoginButton'
 import RegisterButton from './RegisterButton'
+import { fetchProducts } from '../../state/product/productSlice'
 
-function Header({ language, isLoggedIn, isAdmin, username, logout }) {
+function Header({ language, isLoggedIn, isAdmin, username, logout, fetchProducts }) {
 
     const navigate = useNavigate()
 
@@ -34,6 +35,11 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
             window.removeEventListener('resize', () => setResponsiveness())
         }
     }, [])
+
+    const handleHomePressed = () => {
+        navigate('/')
+        fetchProducts()
+    }
 
     const userButtons = (
         <>
@@ -80,7 +86,7 @@ function Header({ language, isLoggedIn, isAdmin, username, logout }) {
 
     const homeButton = (
         <>
-            <IconButton onClick={() => navigate('/')}>
+            <IconButton onClick={handleHomePressed}>
                 <Home sx={{color: 'white'}} />
             </IconButton>
         </>
@@ -284,7 +290,8 @@ const mapStateToProps = (state) => ({
 })
 const mapDispatchToProps = {
     openInputDialog: inputDialogOpen,
-    logout: logout
+    logout: logout,
+    fetchProducts: fetchProducts
 }
 export default connect(
     mapStateToProps,

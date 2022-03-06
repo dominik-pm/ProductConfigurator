@@ -318,7 +318,7 @@ const testConfiguration = {
 }
 
 const initialState = {
-    configuration: initialConfiguration, // testConfiguration
+    configuration: testConfiguration, // initialConfiguration
     currentLanguage: defaultLang,
     availableImages: [],
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'

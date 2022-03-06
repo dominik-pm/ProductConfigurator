@@ -71,6 +71,19 @@ export const fetchAllOrderedConfigurations = () => {
 export const requestRegister = (username, email, password) => {
     return new Promise((resolve, reject) => {
         reject('Not implemented')
+
+        // return new Promise((resolve, reject) => {
+        //     axios.post(`https://test-fuchs.com/api/auth/register`, {username, email, password})
+        //     .then(res => {
+        //         // dont expect a token, if the client has to login after registering
+        //         const token = res.data.token
+        //         const user = jwt.decode(token)
+        //         resolve({token, user})
+        //     })
+        //     .catch(err => {
+        //         reject('User already exists!')
+        //     })
+        // })
     })
 }
 
@@ -78,7 +91,7 @@ export const requestLogin = (username, password) => {
     return loginTest(username, password)
 
     // return new Promise((resolve, reject) => {
-    //     axios.post('/api/auth', {username, password})
+    //     axios.post(`https://test-fuchs.com/api/auth`, {username, password})
     //     .then(res => {
     //         const token = res.data.token
     //         const user = jwt.decode(token)
@@ -123,7 +136,7 @@ function fetchConfigsTest() {
     return new Promise((resolve, reject) => {
         const data = [
             {
-                savedName: "Testspeicher",
+                savedName: "Sport Extra",
                 status: "saved", // or "ordered"
                 date: new Date(1644407751516).toISOString(),
                 configId: '0',
@@ -166,26 +179,38 @@ function fetchOrderedConfigsTest() {
     return new Promise((resolve, reject) => {
         const data = [
             {
-                savedName: "TestOrderedConfig",
-                userName: "admin",
-                userEmail: "configurator-admin@test-fuchs.com",
-                date: new Date().toISOString(),
+                savedName: "Persönliche Konfiguration 1",
+                user: {
+                    userName: "admin",
+                    userEmail: "configurator-admin@test-fuchs.com"
+                },
+                date: new Date(1644407751516).toISOString(),
                 configId: '0',
-                name: "Car",
-                description: "This is a car",
+                name: "Auto",
+                description: "Das Auto der nächsten Generation",
                 options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
-            },
-            {
-                savedName: "TestOrderedConfig2",
-                userName: "admin",
-                userEmail: "configurator-admin@test-fuchs.com",
-                status: "ordered",
-                date: new Date().toISOString(),
-                configId: '0',
-                name: "Car",
-                description: "This is a car",
-                options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
             }
+            // {
+            //     savedName: "TestOrderedConfig",
+            //     userName: "admin",
+            //     userEmail: "configurator-admin@test-fuchs.com",
+            //     date: new Date().toISOString(),
+            //     configId: '0',
+            //     name: "Car",
+            //     description: "This is a car",
+            //     options: ['YELLOW', 'DIESEL', 'D150', 'PANORAMAROOF', 'PANORAMASMALL']
+            // },
+            // {
+            //     savedName: "TestOrderedConfig2",
+            //     userName: "admin",
+            //     userEmail: "configurator-admin@test-fuchs.com",
+            //     status: "ordered",
+            //     date: new Date().toISOString(),
+            //     configId: '0',
+            //     name: "Car",
+            //     description: "This is a car",
+            //     options: ['BLUE', 'PETROL', 'P220', 'HEATED_SEATS']
+            // }
         ]
         resolve(data)
     })
