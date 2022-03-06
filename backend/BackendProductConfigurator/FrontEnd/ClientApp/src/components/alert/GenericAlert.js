@@ -23,7 +23,7 @@ function GenericAlert({ isOpen, alert, close }) {
     })
 
     const renderAlert = () => {
-        // dont fire an alert, if the alert is not open, there is no alert data or the alert is already visible
+        // dont fire an alert if the alert is not open, there is no alert data or the alert is already visible
         if (!isOpen)            return
         if (!alert)             return
         if (Toast.isVisible())  return
