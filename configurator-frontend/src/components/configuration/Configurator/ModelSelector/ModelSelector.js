@@ -2,10 +2,12 @@ import { Grid, Stack, Typography, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { connect } from 'react-redux'
+import { translate } from '../../../../lang'
 import { selectModels, selectSelectedModel } from '../../../../state/configuration/configurationSelectors'
+import { selectLanguage } from '../../../../state/language/languageSelectors'
 import ModelButton from './ModelButton'
 
-function ModelSelector({ models, selectedModel }) {
+function ModelSelector({ models, selectedModel, language }) {
 
     const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('sm'))
 
@@ -53,7 +55,7 @@ function ModelSelector({ models, selectedModel }) {
 
     return (
         <Box marginBottom={4}>
-            <Typography variant="h3">Models</Typography>
+            <Typography variant="h3">{translate('models', language)}</Typography>
 
             {isDesktop ? 
                 modelSelectGridLayout()
@@ -67,6 +69,7 @@ function ModelSelector({ models, selectedModel }) {
 const mapStateToProps = (state) => ({
     models: selectModels(state),
     selectedModel: selectSelectedModel(state),
+    language: selectLanguage(state)
 })
 const mapDispatchToProps = {
 

@@ -68,12 +68,10 @@ function ConfigurationList({ configurations, openConfirm, isOrdered = false, isA
                                 : ''}
                             </Box>
 
-                            <Typography variant="body2">{name}</Typography>
-
-                            <Typography variant="body2">{new Date(date).toLocaleTimeString()}</Typography>
+                            <Typography variant="body2">{new Date(date).toLocaleTimeString()}, {new Date(date).toLocaleDateString()}</Typography>
 
                             {isAdminView ? 
-                            <Typography variant="body2">From: {username}</Typography>
+                            <Typography variant="body2">{translate('from', language)}: {username}</Typography>
                             : ''}
                         </Box>
                     )

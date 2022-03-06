@@ -55,11 +55,12 @@
     "orderedConfigurations": "Angefragte Konfigurationen",
     "allOrderedConfigurations": "Alle bestellten Konfigurationen",
     "createConfiguration": "Konfiguration erstellen",
+    "from": "Von",
 
     "createNewConfiguration": "Neue Konfiguration erstellen",
     "deleteConfiguration": "Konfiguration löschen",
     "editConfiguration": "Konfiguration bearbeiten",
-    "productProperties": "Produkt Eigenschaften",
+    "productProperties": "Produkteigenschaften",
     "images": "Bilder",
     "productImages": "Produktbilder",
     "finishBuild": "Neue Konfiguration fertigstellen",

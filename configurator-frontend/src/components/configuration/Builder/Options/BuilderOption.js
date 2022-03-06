@@ -92,15 +92,18 @@ function BuilderOption({ optionId, group, option, optionPrice, allOptions, produ
                     </Box>
 
                     {/* Actions */}
-                    <Tooltip title={`${translate('remove', language)} '${name}'`}>
-                        <IconButton onClick={handleDelete}>
-                            <Delete />
-                        </IconButton>
-                    </Tooltip>
+                    <Box>
+                        <Tooltip title={`${translate('remove', language)} '${name}'`}>
+                            <IconButton onClick={handleDelete}>
+                                <Delete />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
                 </Box>
             </Grid>
 
             <Grid item container justifyContent="center">
+                {/* Input Fields */}
                 <FormControl sx={{ m: 1, width: 300 }}>
                     <TextField 
                         fullWidth
