@@ -398,7 +398,7 @@ namespace BackendProductConfigurator.Controllers
 
             return sb.ToString();
         }
-        public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator)
+        public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator, string oldConfigId)
         {
             try
             {

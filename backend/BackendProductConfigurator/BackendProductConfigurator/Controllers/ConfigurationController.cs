@@ -48,8 +48,13 @@ namespace BackendProductConfigurator.Controllers
             return entities[GetAccLang(Request)].Cast<ConfiguratorSlim>().ToList();
         }
 
-        [HttpPost]
         public ActionResult Post([FromBody] ConfiguratorPost value)
+        {
+            return Post(value, "");
+        }
+
+        [HttpPost]
+        public ActionResult Post([FromBody] ConfiguratorPost value, string oldConfigId)
         {
             try
             {
@@ -68,7 +73,7 @@ namespace BackendProductConfigurator.Controllers
                 {
                     try
                     {
-                        Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
+                        Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First(), oldConfigId);
 
                         AddConfigurator(configurator, configurators.Keys.First());
                         ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
@@ -95,7 +100,7 @@ namespace BackendProductConfigurator.Controllers
         public ActionResult Put(string configId, [FromBody] ConfiguratorPost value)
         {
             Delete(configId);
-            return Post(value);
+            return Post(value, configId);
         }
         [HttpDelete("{id}")]
         public override ActionResult Delete(string id)
