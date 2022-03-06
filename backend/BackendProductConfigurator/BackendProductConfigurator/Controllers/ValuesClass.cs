@@ -38,7 +38,7 @@ namespace BackendProductConfigurator.Controllers
                 case EValueMode.DatabaseValues:
                     Task task = new Task(SetDBValues);
                     task.Start();
-                    task.Wait();
+                    task.Wait(GlobalValues.TimeOut);
                     break;
             }
         }
@@ -96,7 +96,8 @@ namespace BackendProductConfigurator.Controllers
                     {
                         string taskLanguage = str as string;
                         Task<List<Configurator>> t = DBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
-                        Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
+                        t.Wait();
+                        Configurators[taskLanguage] = t.Result;
                     }
                     catch { }
                 }), language);
@@ -107,7 +108,9 @@ namespace BackendProductConfigurator.Controllers
                     {
                         string taskLanguage = str as string;
                         Task<List<ProductSaveExtended>> t = DBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
-                        SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
+                        SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : SavedProducts[taskLanguage];
+                        t.Wait();
+                        SavedProducts[taskLanguage] = t.Result;
                     }
                     catch { }
                 }), language);

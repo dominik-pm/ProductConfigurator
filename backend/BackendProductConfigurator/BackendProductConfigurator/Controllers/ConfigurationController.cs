@@ -66,18 +66,22 @@ namespace BackendProductConfigurator.Controllers
 
                 Task task = Task.Factory.StartNew(() =>
                 {
-                    Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
-
-                    AddConfigurator(configurator, configurators.Keys.First());
-                    ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
-                    configurators.Remove(configurators.Keys.First());
-
-                    foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                    try
                     {
-                        Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
-                        AddConfigurator(temp, configDict.Key);
-                        ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                        Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
+
+                        AddConfigurator(configurator, configurators.Keys.First());
+                        ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
+                        configurators.Remove(configurators.Keys.First());
+
+                        foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                        {
+                            Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
+                            AddConfigurator(temp, configDict.Key);
+                            ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                        }
                     }
+                    catch { }
                 });
                 task.Wait(GlobalValues.TimeOut);
                 return Ok();
