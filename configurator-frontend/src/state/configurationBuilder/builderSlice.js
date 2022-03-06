@@ -484,11 +484,12 @@ export const builderSlice = createSlice({
             if (section) section.optionGroupIds = section.optionGroupIds.filter(g => g !== groupId)
         },
         addOption: (state, action) => {
-            const { groupId, optionId, name, description, price } = action.payload
+            const { groupId, optionId, name, description, productNumber, price } = action.payload
 
             // add option to options list
             state.configuration.options.push({
                 id: optionId,
+                productNumber: productNumber,
                 // name: name,
                 // description: description,
                 groupId: groupId
@@ -863,7 +864,7 @@ export const deleteOptionGroup = (groupId, sectionId) => (dispatch, getState) =>
     dispatch(removeOptionGroup({groupId, sectionId}))
 }
 
-export const createOption = (groupId, name, description, price = 0) => (dispatch, getState) => {
+export const createOption = (groupId, name, description, productNumber, price = 0) => (dispatch, getState) => {
     const optionId = `${name}_${groupId}`.replace(' ', '_')
 
     // check if option doesn't already exist
@@ -872,7 +873,7 @@ export const createOption = (groupId, name, description, price = 0) => (dispatch
         return false
     }
 
-    dispatch(addOption({groupId, optionId, name, description, price}))
+    dispatch(addOption({groupId, optionId, name, description, productNumber, price}))
     return true
 }
 export const deleteOption = (groupId, name) => (dispatch, getState) => {
