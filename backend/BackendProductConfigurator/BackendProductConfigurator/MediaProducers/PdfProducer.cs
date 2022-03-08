@@ -92,6 +92,13 @@ namespace BackendProductConfigurator.MediaProducers
                     }
                     PrintOption(tf, font, page, page.Width * (leftBorder + 0.04), page.Width * 0.66, yPosition, $"- {tempOption.ProductNumber}", price);
                     yPosition += smallSpacing;
+                    if(yPosition >= page.Height * 0.8)
+                    {
+                        yPosition = 40;
+                        page = document.AddPage();
+                        gfx = XGraphics.FromPdfPage(page);
+                        tf = new XTextFormatter(gfx);
+                    }
                 }
 
                 DrawLine(yPosition, leftBorder, gfx, page);

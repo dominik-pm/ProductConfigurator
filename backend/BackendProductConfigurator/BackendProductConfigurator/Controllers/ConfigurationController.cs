@@ -48,12 +48,12 @@ namespace BackendProductConfigurator.Controllers
             return entities[GetAccLang(Request)].Cast<ConfiguratorSlim>().ToList();
         }
 
+        [HttpPost]
         public ActionResult Post([FromBody] ConfiguratorPost value)
         {
             return Post(value, "");
         }
 
-        [HttpPost]
         public ActionResult Post([FromBody] ConfiguratorPost value, string oldConfigId)
         {
             try
