@@ -439,8 +439,8 @@ namespace BackendProductConfigurator.Controllers
                     if (configurator.Rules.DefaultModel != "")
                     {
                         if (oldConfigId != "")
-                            configurator.Rules.DefaultModel = configurator.Rules.DefaultModel.Replace($"+{oldConfigId}", string.Empty);
-                        configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
+                            configurator.Rules.DefaultModel = configurator.Rules.DefaultModel.Replace($"_model+{oldConfigId}", "_model");
+                        configurator.Rules.DefaultModel += $"_model+{configurator.ConfigId}";
                     }
 
                     configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId, oldConfigId, "option");
