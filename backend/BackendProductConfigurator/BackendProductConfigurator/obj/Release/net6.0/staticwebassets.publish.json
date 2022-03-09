@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "x7yINYIDleYbrwFF7jprZ3CFr+k1zWDfJ+PyQ8CMs+8=",
+  "Hash": "FIH8trPxj5sGWg2OZx2YZnAcC3xFr7t10H1li6JoFqc=",
   "Source": "BackendProductConfigurator",
   "BasePath": "_content/BackendProductConfigurator",
   "Mode": "Default",
@@ -34,12 +34,12 @@
       "OriginalItemSpec": "wwwroot\\images\\Alfa_159_grey.jpg"
     },
     {
-      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\Product_Alfa_20220223_145248705.pdf",
+      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\HGPU-Mainline.jpg",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
-      "RelativePath": "images/Product_Alfa_20220223_145248705.pdf",
+      "RelativePath": "images/HGPU-Mainline.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -48,7 +48,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\Product_Alfa_20220223_145248705.pdf"
+      "OriginalItemSpec": "wwwroot\\images\\HGPU-Mainline.jpg"
     },
     {
       "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\test\\vw-golf-r-2021.jpg",

@@ -90,7 +90,7 @@ namespace BackendProductConfigurator.MediaProducers
                     {
                         price = 0f;
                     }
-                    PrintOption(tf, font, page, page.Width * (leftBorder + 0.04), page.Width * 0.66, yPosition, $"- {tempOption.ProductNumber}", price);
+                    PrintOption(tf, font, page, page.Width * (leftBorder + 0.04), page.Width * 0.66, yPosition, $"- {tempOption.Name} ({tempOption.ProductNumber})", price);
                     yPosition += smallSpacing;
                     if(yPosition >= page.Height * 0.8)
                     {
