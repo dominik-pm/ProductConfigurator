@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "hpwT5Zq0/YsOY3eMpXi2QkqQkFsbZsiZu6AhWCSi3Vs=",
+  "Hash": "1bZ6usb9NcgH/SCvmksbsEqQP3rXFZOzPrmakCb6F3I=",
   "Source": "BackendProductConfigurator",
   "BasePath": "_content/BackendProductConfigurator",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "BackendProductConfigurator\\wwwroot",
       "Source": "BackendProductConfigurator",
-      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\Alfa_159_grey.jpg",
+      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\Alfa_159_grey.jpg",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "images/Alfa_159_grey.jpg",
       "AssetKind": "All",
@@ -34,12 +34,12 @@
       "OriginalItemSpec": "wwwroot\\images\\Alfa_159_grey.jpg"
     },
     {
-      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\PNG.png",
+      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\HGPU-Mainline.jpg",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
-      "RelativePath": "images/PNG.png",
+      "RelativePath": "images/HGPU-Mainline.jpg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -48,13 +48,13 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\PNG.png"
+      "OriginalItemSpec": "wwwroot\\images\\HGPU-Mainline.jpg"
     },
     {
-      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\test\\vw-golf-r-2021.jpg",
+      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\test\\vw-golf-r-2021.jpg",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "images/test/vw-golf-r-2021.jpg",
       "AssetKind": "All",
@@ -68,10 +68,10 @@
       "OriginalItemSpec": "wwwroot\\images\\test\\vw-golf-r-2021.jpg"
     },
     {
-      "Identity": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\vw-golf-r-2021.jpg",
+      "Identity": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\images\\vw-golf-r-2021.jpg",
       "SourceId": "BackendProductConfigurator",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\Schule\\DA\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
+      "ContentRoot": "D:\\DA\\ProductConfigurator\\backend\\BackendProductConfigurator\\BackendProductConfigurator\\wwwroot\\",
       "BasePath": "_content/BackendProductConfigurator",
       "RelativePath": "images/vw-golf-r-2021.jpg",
       "AssetKind": "All",

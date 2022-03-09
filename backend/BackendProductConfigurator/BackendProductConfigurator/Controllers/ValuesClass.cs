@@ -402,43 +402,48 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                if(!configurator.Options[0].Id.EndsWith($"+{oldConfigId}"))
+                if (!configurator.Options[0].Id.EndsWith($"+{oldConfigId}"))
                 {
                     foreach (Option option in configurator.Options)
                     {
-                        option.Id = option.Id.Replace($"+{oldConfigId}", string.Empty);
-                        option.Id += $"+{configurator.ConfigId}";
+                        if(oldConfigId != "")
+                            option.Id = option.Id.Replace($"_option+{oldConfigId}", string.Empty);
+                        option.Id += $"_option+{configurator.ConfigId}";
                     }
                     foreach (LanguageIndex li in configurator.OptionGroups)
                     {
-                        li.Id = li.Id.Replace($"+{oldConfigId}", string.Empty);
-                        li.Id += $"+{configurator.ConfigId}";
-                        li.OptionIds = li.OptionIds.Select(x => x = x.Replace($"+{oldConfigId}", string.Empty)).Select(x => x += $"+{configurator.ConfigId}").ToList();
+                        if (oldConfigId != "")
+                            li.Id = li.Id.Replace($"_og+{oldConfigId}", string.Empty);
+                        li.Id += $"_og+{configurator.ConfigId}";
+                        li.OptionIds = li.OptionIds.Select(x => x = (oldConfigId != "") ? x.Replace($"_og+{oldConfigId}", string.Empty) : x).Select(x => x += $"_og+{configurator.ConfigId}").ToList();
                     }
                     foreach (OptionSection os in configurator.OptionSections)
                     {
-                        os.Id = os.Id.Replace($"+{oldConfigId}", string.Empty);
-                        os.Id += $"+{configurator.ConfigId}";
-                        os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
+                        if (oldConfigId != "")
+                            os.Id = os.Id.Replace($"_os+{oldConfigId}", string.Empty);
+                        os.Id += $"_os+{configurator.ConfigId}";
+                        os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"_os+{configurator.ConfigId}").ToList();
                     }
                     foreach (LanguageIndex li in configurator.Rules.Models)
                     {
-                        li.Id = li.Id.Replace($"+{oldConfigId}", string.Empty);
-                        li.Id += $"+{configurator.ConfigId}";
-                        li.OptionIds = li.OptionIds.Select(x => x = x.Replace($"+{oldConfigId}", string.Empty)).Select(x => x += $"+{configurator.ConfigId}").ToList();
+                        if (oldConfigId != "")
+                            li.Id = li.Id.Replace($"_model+{oldConfigId}", string.Empty);
+                        li.Id += $"_model+{configurator.ConfigId}";
+                        li.OptionIds = li.OptionIds.Select(x => x = (oldConfigId != "") ? x.Replace($"_model+{oldConfigId}", string.Empty) : x).Select(x => x += $"_model+{configurator.ConfigId}").ToList();
                     }
 
-                    configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId, oldConfigId);
-                    configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId, oldConfigId);
-                    configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId, oldConfigId);
-                    configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId, oldConfigId);
+                    configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId, oldConfigId, "option");
+                    configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId, oldConfigId, "option");
+                    configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId, oldConfigId, "option");
+                    configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId, oldConfigId, "og");
                     if (configurator.Rules.DefaultModel != "")
                     {
-                        configurator.Rules.DefaultModel = configurator.Rules.DefaultModel.Replace($"+{oldConfigId}", string.Empty);
+                        if (oldConfigId != "")
+                            configurator.Rules.DefaultModel = configurator.Rules.DefaultModel.Replace($"+{oldConfigId}", string.Empty);
                         configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
                     }
 
-                    configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId, oldConfigId);
+                    configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId, oldConfigId, "option");
                 }
             }
             catch (Exception ex)
@@ -448,21 +453,21 @@ namespace BackendProductConfigurator.Controllers
             
             return configurator;
         }
-        private static Dictionary<string, List<string>> AdaptIdsInDictionarys(Dictionary<string, List<string>> dictionary, string configId, string oldConfigId)
+        private static Dictionary<string, List<string>> AdaptIdsInDictionarys(Dictionary<string, List<string>> dictionary, string configId, string oldConfigId, string appendage)
         {
             Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
             foreach (KeyValuePair<string, List<string>> dic in dictionary)
             {
-                temp.Add($"{dic.Key.Replace($"{oldConfigId}", "")}+{configId}", dic.Value.Select(x => x = x.Replace($"{oldConfigId}", "") + $"+{configId}").ToList());
+                temp.Add($"{((oldConfigId != "") ? dic.Key.Replace($"{oldConfigId}", "") : dic.Key)}_{appendage}+{configId}", dic.Value.Select(x => x = (oldConfigId != "") ? x.Replace($"+{oldConfigId}", string.Empty) : x + $"_{appendage}+{configId}").ToList());
             }
             return temp;
         }
-        private static Dictionary<string, float> AdaptIdsInDictionarys(Dictionary<string, float> dictionary, string configId, string oldConfigId)
+        private static Dictionary<string, float> AdaptIdsInDictionarys(Dictionary<string, float> dictionary, string configId, string oldConfigId, string appendage)
         {
             Dictionary<string, float> temp = new Dictionary<string, float>();
             foreach (KeyValuePair<string, float> dic in dictionary)
             {
-                temp.Add($"{dic.Key.Replace($"{oldConfigId}", "")}+{configId}", dic.Value);
+                temp.Add($"{((oldConfigId != "") ? dic.Key.Replace($"{oldConfigId}", "") : dic.Key)}_{appendage}+{configId}", dic.Value);
             }
             return temp;
         }

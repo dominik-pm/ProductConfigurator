@@ -54,6 +54,7 @@ namespace BackendProductConfigurator.Controllers
             return Post(value, "");
         }
 
+        [NonAction]
         public ActionResult Post([FromBody] ConfiguratorPost value, string oldConfigId)
         {
             try
@@ -69,27 +70,29 @@ namespace BackendProductConfigurator.Controllers
                     }
                 }
 
-                Task task = Task.Factory.StartNew(() =>
+                Task task = Task.Factory.StartNew(new Action<object?>((obj) =>
                 {
                     try
                     {
-                        Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First(), oldConfigId);
+                        Dictionary<string, Configurator> configuratorsList = obj as Dictionary<string, Configurator>;
+                        Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configuratorsList.Values.First(), oldConfigId);
 
-                        AddConfigurator(configurator, configurators.Keys.First());
-                        ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
-                        configurators.Remove(configurators.Keys.First());
+                        AddConfigurator(configurator, configuratorsList.Keys.First());
+                        ValuesClass.PostValue<Configurator>(configurator, configuratorsList.Keys.First());
+                        configuratorsList.Remove(configuratorsList.Keys.First());
 
-                        foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                        foreach (KeyValuePair<string, Configurator> configDict in configuratorsList)
                         {
                             Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value, oldConfigId);
                             AddConfigurator(temp, configDict.Key);
                             ValuesClass.PutValue<Configurator>(temp, configDict.Key);
                         }
                     }
-                    catch { }
-                });
+                    catch (Exception ex)
+                    { throw ex; }
+                }), configurators);
                 task.Wait(GlobalValues.TimeOut);
-                return Ok();
+                return Ok("du komischa");
             }
             catch (Exception ex)
             {
