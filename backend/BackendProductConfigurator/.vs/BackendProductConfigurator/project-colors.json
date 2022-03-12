@@ -15,7 +15,32 @@
       "ProjectGuid": "74b86fe5-8f1e-49a4-a179-ec8c2b9cd9e9",
       "DisplayName": "BackendProductConfigurator",
       "ColorIndex": 1
+    },
+    "b33d8c63-1287-4c28-a73f-013441790e5a": {
+      "ProjectGuid": "b33d8c63-1287-4c28-a73f-013441790e5a",
+      "DisplayName": "FrontendProductConfigurator",
+      "ColorIndex": 2
+    },
+    "b27fde7a-9bf5-420f-910d-7827ef82471d": {
+      "ProjectGuid": "b27fde7a-9bf5-420f-910d-7827ef82471d",
+      "DisplayName": "FrontEnd",
+      "ColorIndex": 3
+    },
+    "cb615d5e-2f25-4e2b-98a7-48d624a3dcf1": {
+      "ProjectGuid": "cb615d5e-2f25-4e2b-98a7-48d624a3dcf1",
+      "DisplayName": "FrontEnd",
+      "ColorIndex": 4
+    },
+    "7e4d66f0-aa35-4940-87b3-532d9782958f": {
+      "ProjectGuid": "7e4d66f0-aa35-4940-87b3-532d9782958f",
+      "DisplayName": "FrontEnd",
+      "ColorIndex": 5
+    },
+    "d01e656a-562b-4b95-8048-430b3fe3ac1d": {
+      "ProjectGuid": "d01e656a-562b-4b95-8048-430b3fe3ac1d",
+      "DisplayName": "FrontEnd",
+      "ColorIndex": 6
     }
   },
-  "NextColorIndex": 2
+  "NextColorIndex": 7
 }
