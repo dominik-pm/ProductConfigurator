@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DatabaseServiceProductConfigurator.Models.Account">
+    <Position X="0.75" Y="0.75" Width="1.5" />
+    <Members>
+      <Property Name="Bookings" Hidden="true" />
+      <Property Name="Configurations" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACBgAAAAAQAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Account.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.Booking">
+    <Position X="3.5" Y="0.75" Width="1.5" />
+    <Members>
+      <Property Name="AccountId" Hidden="true" />
+      <Property Name="ConfigId" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAgAAAAAAAhAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>Models\Booking.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Config" />
+      <Property Name="Account" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.Configuration">
+    <Position X="7" Y="1.25" Width="2.75" />
+    <Members>
+      <Property Name="AccountId" Hidden="true" />
+      <Property Name="Bookings" Hidden="true" />
+      <Property Name="ConfigurationHasOptionFields" Hidden="true" />
+      <Property Name="ConfigurationsHasLanguages" Hidden="true" />
+      <Property Name="ProductNumber" Hidden="true" />
+      <Property Name="Products" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAAAAAiAAAIAAAAAAAACJAQAAEAAAAEQ=</HashCode>
+      <FileName>Models\Configuration.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Account" />
+      <Property Name="ProductNumberNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.ConfigurationHasOptionField">
+    <Position X="12.25" Y="1.5" Width="2" />
+    <Members>
+      <Property Name="ConfigId" Hidden="true" />
+      <Property Name="InverseParent" Hidden="true" />
+      <Property Name="OptionFieldId" Hidden="true" />
+      <Property Name="ParentConfigId" Hidden="true" />
+      <Property Name="ParentOptionFieldId" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAgAAAAAQQBAgQAAAAAAAAAAAAAABEAAAAAA=</HashCode>
+      <FileName>Models\ConfigurationHasOptionField.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Config" />
+      <Property Name="Parent" />
+      <Property Name="ProductNumbers" />
+      <Property Name="OptionField" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.ConfigurationsHasLanguage">
+    <Position X="9.75" Y="5.25" Width="2.25" />
+    <Members>
+      <Property Name="Configuration" Hidden="true" />
+      <Property Name="Language" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BAAAAAAACQAgAAAAAAAAAAQAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Models\ConfigurationsHasLanguage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ConfigurationNavigation" />
+      <Property Name="LanguageNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.EDependencyType">
+    <Position X="3.75" Y="12" Width="3" />
+    <Members>
+      <Property Name="OptionFieldsHasOptionFields" Hidden="true" />
+      <Property Name="ProductsHasOptionFields" Hidden="true" />
+      <Property Name="ProductsHasProducts" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAQAAEAAAQAA=</HashCode>
+      <FileName>Models\EDependencyType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.ELanguage">
+    <Position X="9.25" Y="7.75" Width="2.25" />
+    <Members>
+      <Property Name="ConfigurationsHasLanguages" Hidden="true" />
+      <Property Name="OptionFieldHasLanguages" Hidden="true" />
+      <Property Name="ProductHasLanguages" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAACACAAAAAAAACEAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ELanguage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.EOptionType">
+    <Position X="14.25" Y="12.75" Width="1.5" />
+    <Members>
+      <Property Name="OptionFields" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <FileName>Models\EOptionType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.OptionField">
+    <Position X="12.5" Y="10" Width="3.75" />
+    <Members>
+      <Property Name="ConfigurationHasOptionFields" Hidden="true" />
+      <Property Name="OptionFieldHasLanguages" Hidden="true" />
+      <Property Name="OptionFieldsHasOptionFieldBaseNavigations" Hidden="true" />
+      <Property Name="OptionFieldsHasOptionFieldOptionFieldNavigations" Hidden="true" />
+      <Property Name="ProductsHasOptionFields" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAACAAAEAAAAAAAAAAAABAAAAAAAAIQAAEAAAAgA=</HashCode>
+      <FileName>Models\OptionField.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TypeNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.OptionFieldHasLanguage">
+    <Position X="12.25" Y="7.5" Width="2.75" />
+    <Members>
+      <Property Name="Language" Hidden="true" />
+      <Property Name="OptionFieldId" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BAAAAAEACAAgAAAQAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\OptionFieldHasLanguage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LanguageNavigation" />
+      <Property Name="OptionField" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.OptionFieldsHasOptionField">
+    <Position X="16" Y="14.25" Width="2.25" />
+    <Members>
+      <Property Name="Base" Hidden="true" />
+      <Property Name="DependencyType" Hidden="true" />
+      <Property Name="OptionField" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAQAACQIAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Models\OptionFieldsHasOptionField.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BaseNavigation" />
+      <Property Name="DependencyTypeNavigation" />
+      <Property Name="OptionFieldNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.Picture">
+    <Position X="2.25" Y="7.5" Width="2.25" />
+    <Members>
+      <Property Name="ProductNumber" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAACACQAAAAAAAAA=</HashCode>
+      <FileName>Models\Picture.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProductNumberNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.ProductHasLanguage">
+    <Position X="5" Y="9" Width="2.25" />
+    <Members>
+      <Property Name="Language" Hidden="true" />
+      <Property Name="ProductNumber" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>BAAAAAAACAAgAAAAAAAAAAQAAAAAAACAAQAAAAAAAAA=</HashCode>
+      <FileName>Models\ProductHasLanguage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="LanguageNavigation" />
+      <Property Name="ProductNumberNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.ProductsHasOptionField">
+    <Position X="8" Y="11" Width="2.5" />
+    <Members>
+      <Property Name="DependencyType" Hidden="true" />
+      <Property Name="OptionFields" Hidden="true" />
+      <Property Name="ProductNumber" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAQAAAQIAAQAAAAAACAAQAAAAAAAAA=</HashCode>
+      <FileName>Models\ProductsHasOptionField.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DependencyTypeNavigation" />
+      <Property Name="OptionFieldsNavigation" />
+      <Property Name="ProductNumberNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.ProductsHasProduct">
+    <Position X="0.5" Y="4.5" Width="2.25" />
+    <Members>
+      <Property Name="BaseProduct" Hidden="true" />
+      <Property Name="DependencyType" Hidden="true" />
+      <Property Name="OptionProduct" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAAAgAAAAAAAAQIAAgAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ProductsHasProduct.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BaseProductNavigation" />
+      <Property Name="DependencyTypeNavigation" />
+      <Property Name="OptionProductNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="DatabaseServiceProductConfigurator.Models.Product">
+    <Position X="4.75" Y="4.5" Width="3.25" />
+    <Members>
+      <Property Name="ConfigurationHasOptionFields" Hidden="true" />
+      <Property Name="Configurations" Hidden="true" />
+      <Property Name="Pictures" Hidden="true" />
+      <Property Name="ProductHasLanguages" Hidden="true" />
+      <Property Name="ProductsHasOptionFields" Hidden="true" />
+      <Property Name="ProductsHasProductBaseProductNavigations" Hidden="true" />
+      <Property Name="ProductsHasProductOptionProductNavigations" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAQAAgAEAQBAAAAAAAEAQACQAAAAAAAACQAAEAAAAAA=</HashCode>
+      <FileName>Models\Product.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BaseModelNavigation" />
+    </ShowAsAssociation>
+  </Class>
+  <Interface Name="System.Collections.Generic.ICollection&lt;T&gt;" Collapsed="true">
+    <Position X="6" Y="4.5" Width="2" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

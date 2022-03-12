@@ -4,7 +4,6 @@ F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\DatabaseServiceProductConfigurator.deps.json
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\DatabaseServiceProductConfigurator.runtimeconfig.json
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\DatabaseServiceProductConfigurator.dll
-F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\ref\DatabaseServiceProductConfigurator.dll
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\DatabaseServiceProductConfigurator.pdb
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\Humanizer.dll
 F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\bin\Release\net6.0\Microsoft.EntityFrameworkCore.dll
@@ -72,3 +71,4 @@ C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\DatabaseServ
 C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Release\net6.0\ref\DatabaseServiceProductConfigurator.dll
 C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Release\net6.0\DatabaseServiceProductConfigurator.pdb
 C:\Users\basti\Documents\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Release\net6.0\DatabaseServiceProductConfigurator.genruntimeconfig.cache
+F:\repos\5chit\ProductConfigurator\db-service\DatabaseServiceProductConfigurator\obj\Release\net6.0\refint\DatabaseServiceProductConfigurator.dll
