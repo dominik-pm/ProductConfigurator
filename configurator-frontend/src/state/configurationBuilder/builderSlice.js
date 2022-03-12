@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId, postConfiguration, putConfiguration } from '../../api/configurationAPI'
-import { setAcceptLanguage } from '../../api/general'
+import { LOCAL_DATA, setAcceptLanguage } from '../../api/general'
 import { fetchAvailableImages } from '../../api/productsAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { defaultLang, languageNames } from '../../lang'
@@ -318,7 +318,7 @@ const testConfiguration = {
 }
 
 const initialState = {
-    configuration: testConfiguration, // initialConfiguration
+    configuration: LOCAL_DATA ? testConfiguration : initialConfiguration,
     currentLanguage: defaultLang,
     availableImages: [],
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
@@ -974,7 +974,7 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
     let configuration = selectBuilderConfiguration(getState())
     
-    writeToLocalStorage(configuration, 'builderBackup')
+    //writeToLocalStorage(configuration, 'builderBackup')
 
     // call put configuration (not post new one), when there is a config id set
     if (configuration.configId) {

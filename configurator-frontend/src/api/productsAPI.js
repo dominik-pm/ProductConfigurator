@@ -35,6 +35,7 @@ export const fetchAll = () => {
             if (!res.data) {
                 console.log('no response data')
                 resolve([])
+                return
             }
             console.log(res.data)
             resolve(res.data)
