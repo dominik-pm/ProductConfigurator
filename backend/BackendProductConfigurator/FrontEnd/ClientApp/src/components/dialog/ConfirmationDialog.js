@@ -19,11 +19,13 @@ function ConfirmationOptionSelect({ isOpen, message, content, optionsToSelect, o
     if (!optionsToSelect) optionsToSelect = []
     if (!optionsToRemove) optionsToRemove = []
 
-    function handleClose() {
+    function handleClose(e) {
+        e.preventDefault()
         cancel()
     }
 
-    function handleConfirm() {
+    function handleConfirm(e) {
+        e.preventDefault()
         confirm()
     }
 

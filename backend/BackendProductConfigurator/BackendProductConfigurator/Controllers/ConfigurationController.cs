@@ -89,7 +89,7 @@ namespace BackendProductConfigurator.Controllers
                         }
                     }
                     catch (Exception ex)
-                    { throw ex; }
+                    {  }
                 }), configurators);
                 task.Wait(GlobalValues.TimeOut);
                 return Ok();

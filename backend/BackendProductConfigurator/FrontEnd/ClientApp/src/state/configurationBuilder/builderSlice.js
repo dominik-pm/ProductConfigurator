@@ -974,7 +974,7 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
     let configuration = selectBuilderConfiguration(getState())
     
-    writeToLocalStorage(initialConfiguration, 'builder')
+    writeToLocalStorage(configuration, 'builderBackup')
 
     // call put configuration (not post new one), when there is a config id set
     if (configuration.configId) {
@@ -995,6 +995,8 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
     .catch(error => {
         dispatch(loadingFailed(error))
     })
+
+    writeToLocalStorage(initialConfiguration, 'builder')
 }
 
 
