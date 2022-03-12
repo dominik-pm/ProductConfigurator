@@ -70,7 +70,7 @@ namespace BackendProductConfigurator.Controllers
                     }
                 }
 
-                Task task = Task.Factory.StartNew(new Action<object?>((obj) =>
+                Task<ActionResult> task = Task<ActionResult>.Factory.StartNew(new Func<object?, ActionResult>((obj) =>
                 {
                     try
                     {
@@ -83,16 +83,30 @@ namespace BackendProductConfigurator.Controllers
 
                         foreach (KeyValuePair<string, Configurator> configDict in configuratorsList)
                         {
-                            Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value, oldConfigId);
-                            AddConfigurator(temp, configDict.Key);
-                            ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                            try
+                            {
+                                Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value, oldConfigId);
+                                AddConfigurator(temp, configDict.Key);
+                                ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                            }
+                            catch (Exception ex)
+                            {
+                                return BadRequest(ex.Message);
+                            }
                         }
+                        return Ok();
                     }
                     catch (Exception ex)
-                    {  }
+                    { 
+                        return BadRequest(ex.Message);
+                    }
                 }), configurators);
-                task.Wait(GlobalValues.TimeOut);
-                return Ok();
+                if(task.Wait(GlobalValues.TimeOut))
+                {
+                    return task.Result;
+                }
+                else
+                    return Ok();
             }
             catch (Exception ex)
             {
