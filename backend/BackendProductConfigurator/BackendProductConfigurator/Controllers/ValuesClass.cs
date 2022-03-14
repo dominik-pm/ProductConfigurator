@@ -48,11 +48,11 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    DBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
+                    DBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    throw ex;
+                    throw;
                 }
             }
         }
@@ -62,11 +62,11 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    DBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
+                    DBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    throw ex;
+                    throw;
                 }
             }
         }
@@ -76,11 +76,11 @@ namespace BackendProductConfigurator.Controllers
             {
                 try
                 {
-                    DBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
+                    DBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier).Wait();
                 }
-                catch (Exception ex)
+                catch (Exception e)
                 {
-                    throw ex;
+                    throw;
                 }
             }
         }

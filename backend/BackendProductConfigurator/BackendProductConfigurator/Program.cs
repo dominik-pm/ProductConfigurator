@@ -1,4 +1,5 @@
 using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.MiddleWare;
 using Microsoft.Extensions.FileProviders;
 using Model.Enumerators;
 
@@ -26,6 +27,8 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+
 app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
@@ -36,6 +39,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ErrorHandler>();
 
 GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
 GlobalValues.Ports = builder.Configuration.GetSection("DBPorts").Get<List<int>>().ToArray();
