@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { fetchId } from '../../api/configurationAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { confirmDialogOpen } from '../confirmationDialog/confirmationSlice'
-import { extractModelNameFromModel, extractModelOptionsFromModel, getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectModels, selectSelectedOptions } from './configurationSelectors'
+import { extractModelIdFromModel, extractModelOptionsFromModel, getDependentOptionsDeselect, getDependentOptionsSelect, getIsOptionSelected, getModelOptions, getOptionName, getOptionReplacementGroup, selectConfigurationId, selectDefaultModel, selectModels, selectSelectedOptions } from './configurationSelectors'
 
 // const openDialog = useConfirmationDialog.open
 
@@ -19,8 +19,9 @@ export const configurationSlice = createSlice({
     initialState,
     reducers: {
         selectOption: (state, action) => {
+            // console.log(first)
             if (!state.selectedOptions.includes(action.payload)) {
-                // console.log('selecting option', action.payload)
+                console.log('selecting option', action.payload)
                 state.selectedOptions.push(action.payload)
             }
         },
@@ -96,7 +97,7 @@ const checkModel = () => (dispatch, getState) => {
         const modelOptions = extractModelOptionsFromModel(model)
         if (modelOptions) {
             if (sameMembers(modelOptions, selectedOptions)) {
-                dispatch(setModel(extractModelNameFromModel(model)))
+                dispatch(setModel(extractModelIdFromModel(model)))
                 return
             }
         }

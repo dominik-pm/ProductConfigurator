@@ -1,4 +1,5 @@
-﻿using BackendProductConfigurator.MediaProducers;
+﻿using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.MediaProducers;
 using BackendProductConfigurator.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Model;
@@ -50,12 +51,15 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         public ActionResult Post([FromBody] ConfiguratorPost value)
         {
+            return Post(value, "");
+        }
+
+        [NonAction]
+        public ActionResult Post([FromBody] ConfiguratorPost value, string oldConfigId)
+        {
             try
             {
                 Dictionary<string, Configurator> configurators = ValuesClass.GenerateConfigurator(value);
-                Configurator configurator;
-
-                configurator = ValuesClass.AdaptConfiguratorsOptionIds(configurators.Values.First());
 
                 foreach(KeyValuePair<string, Configurator> configDict in configurators)
                 {
@@ -66,17 +70,43 @@ namespace BackendProductConfigurator.Controllers
                     }
                 }
 
-                AddConfigurator(configurator, configurators.Keys.First());
-                ValuesClass.PostValue<Configurator>(configurator, configurators.Keys.First());
-                configurators.Remove(configurators.Keys.First());
-
-                foreach (KeyValuePair<string, Configurator> configDict in configurators)
+                Task<ActionResult> task = Task<ActionResult>.Factory.StartNew(new Func<object?, ActionResult>((obj) =>
                 {
-                    Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value);
-                    AddConfigurator(temp, configDict.Key);
-                    ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                    try
+                    {
+                        Dictionary<string, Configurator> configuratorsList = obj as Dictionary<string, Configurator>;
+                        Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configuratorsList.Values.First(), oldConfigId);
+
+                        AddConfigurator(configurator, configuratorsList.Keys.First());
+                        ValuesClass.PostValue<Configurator>(configurator, configuratorsList.Keys.First());
+                        configuratorsList.Remove(configuratorsList.Keys.First());
+
+                        foreach (KeyValuePair<string, Configurator> configDict in configuratorsList)
+                        {
+                            try
+                            {
+                                Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value, oldConfigId);
+                                AddConfigurator(temp, configDict.Key);
+                                ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                            }
+                            catch (Exception ex)
+                            {
+                                return BadRequest(ex.Message);
+                            }
+                        }
+                        return Ok();
+                    }
+                    catch (Exception ex)
+                    { 
+                        return BadRequest(ex.Message);
+                    }
+                }), configurators);
+                if(task.Wait(GlobalValues.TimeOut))
+                {
+                    return task.Result;
                 }
-                return Ok();
+                else
+                    return Ok();
             }
             catch (Exception ex)
             {
@@ -87,7 +117,7 @@ namespace BackendProductConfigurator.Controllers
         public ActionResult Put(string configId, [FromBody] ConfiguratorPost value)
         {
             Delete(configId);
-            return Post(value);
+            return Post(value, configId);
         }
         [HttpDelete("{id}")]
         public override ActionResult Delete(string id)
@@ -95,7 +125,10 @@ namespace BackendProductConfigurator.Controllers
             try
             {
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-                entities[GetAccLang(Request)].Remove(entities[GetAccLang(Request)].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
+                foreach(string language in entities.Keys)
+                {
+                    entities[language].Remove(entities[language].Where(entity => (entity as IConfigId).ConfigId.Equals(id)).First());
+                }
                 ValuesClass.DeleteValue<ConfigurationDeleteWrapper>(GetAccLang(Request), new ConfigurationDeleteWrapper() { ConfigId = id });
                 return Ok();
             }

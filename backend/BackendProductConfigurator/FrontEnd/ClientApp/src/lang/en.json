@@ -55,6 +55,7 @@
     "orderedConfigurations": "Requested Configurations",
     "allOrderedConfigurations": "All Ordered Configurations",
     "createConfiguration": "Create Configuration",
+    "from": "From",
 
     "createNewConfiguration": "Create a new Configuration",
     "deleteConfiguration": "Delete Configuration",

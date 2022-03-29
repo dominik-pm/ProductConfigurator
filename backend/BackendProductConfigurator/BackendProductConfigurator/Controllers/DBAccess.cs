@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BackendProductConfigurator.Controllers
 {
-    public static class ADBAccess<T> where T : class
+    public static class DBAccess<T> where T : class
     {
         public static async Task<List<T>> GetValues(string language, string address, string api)
         {
@@ -15,9 +15,9 @@ namespace BackendProductConfigurator.Controllers
 
                 return await Http.GetFromJsonAsync<List<T>>($"{address}{api}");
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw;
             }
         }
         public static async Task PutValue(string language, string address, string api, T value)
@@ -31,12 +31,12 @@ namespace BackendProductConfigurator.Controllers
                     throw new Exception("Put failed");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw;
             }
         }
-        public static async void PostValue(string language, string address, string api, T value)
+        public static async Task PostValue(string language, string address, string api, T value)
         {
             try
             {
@@ -47,9 +47,9 @@ namespace BackendProductConfigurator.Controllers
                     throw new Exception("Post failed");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw;
             }
         }
         public static async Task DeleteValue(string language, string address, string api, T identifier)
@@ -74,9 +74,9 @@ namespace BackendProductConfigurator.Controllers
                     throw new Exception("Deletion failed");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw;
             }
         }
         private static HttpClient GenerateHttpClient(string language)
@@ -101,9 +101,9 @@ namespace BackendProductConfigurator.Controllers
 
                 return Http;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw ex;
+                throw;
             }
         }
     }

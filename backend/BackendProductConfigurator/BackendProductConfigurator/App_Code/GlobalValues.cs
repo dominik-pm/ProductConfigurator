@@ -22,5 +22,6 @@ namespace BackendProductConfigurator.App_Code
         public static string ImagesFolder { get; set; }
         public static string PDFOutput { get; set; }
         public static int TimeOut { get; set; }
+        public static string[] Languages { get; set; }
     }
 }

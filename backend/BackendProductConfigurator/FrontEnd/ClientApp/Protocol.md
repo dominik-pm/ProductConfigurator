@@ -731,7 +731,7 @@ function ProductView({ products, status, error, fetchProducts, language }) {
     }
     
     return (
-        redner()
+        render()
     )
 }
 

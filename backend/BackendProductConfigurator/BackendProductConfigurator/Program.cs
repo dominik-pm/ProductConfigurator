@@ -1,4 +1,5 @@
 using BackendProductConfigurator.App_Code;
+using BackendProductConfigurator.MiddleWare;
 using Microsoft.Extensions.FileProviders;
 using Model.Enumerators;
 
@@ -27,6 +28,9 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+
+app.UseHttpsRedirection();
+
 app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
@@ -36,8 +40,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandler>();
+
 GlobalValues.ServerAddress = builder.Configuration.GetValue<string>("ServerAddress");
 GlobalValues.Ports = builder.Configuration.GetSection("DBPorts").Get<List<int>>().ToArray();
+GlobalValues.Languages = builder.Configuration.GetSection("Languages").Get<List<string>>().ToArray();
 GlobalValues.EmailServer = builder.Configuration.GetValue<string>("EmailServerAddress");
 GlobalValues.ImagesFolder = builder.Configuration.GetValue<string>("ImagesFolder");
 GlobalValues.PDFOutput = builder.Configuration.GetValue<string>("PdfOutput");

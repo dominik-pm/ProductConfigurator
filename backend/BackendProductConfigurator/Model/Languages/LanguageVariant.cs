@@ -1,6 +1,7 @@
 ﻿using Model.Indexes;
 using Model.Interfaces;
 using Model.Languages;
+using Model.Wrapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Model
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public List<Option> Options { get; set; }
+        public List<OptionSlim> Options { get; set; }
         public List<NamedIndex> OptionSections { get; set; }
         public List<DescribedIndex> OptionGroups { get; set; }
         public List<DescribedIndex> Models { get; set; }

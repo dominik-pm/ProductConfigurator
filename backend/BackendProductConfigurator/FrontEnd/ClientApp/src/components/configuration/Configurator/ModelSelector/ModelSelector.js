@@ -2,10 +2,12 @@ import { Grid, Stack, Typography, useMediaQuery } from '@mui/material'
 import { Box } from '@mui/system'
 import React from 'react'
 import { connect } from 'react-redux'
+import { translate } from '../../../../lang'
 import { selectModels, selectSelectedModel } from '../../../../state/configuration/configurationSelectors'
+import { selectLanguage } from '../../../../state/language/languageSelectors'
 import ModelButton from './ModelButton'
 
-function ModelSelector({ models, selectedModel }) {
+function ModelSelector({ models, selectedModel, language }) {
 
     const isDesktop = useMediaQuery((theme) => theme.breakpoints.up('sm'))
 
@@ -15,7 +17,7 @@ function ModelSelector({ models, selectedModel }) {
 
                 {models.map((model, index) => (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                        <ModelButton model={model} isSelected={model.name === selectedModel}></ModelButton>
+                        <ModelButton model={model} isSelected={model.id === selectedModel}></ModelButton>
                     </Grid>
                 ))}
 
@@ -38,7 +40,7 @@ function ModelSelector({ models, selectedModel }) {
                 >
                     {models.map((model, index) => (
                         <Box key={index} width="80vw">
-                            <ModelButton model={model} isSelected={model.name === selectedModel}></ModelButton>
+                            <ModelButton model={model} isSelected={model.id === selectedModel}></ModelButton>
                         </Box>
                     ))}
 
@@ -53,7 +55,7 @@ function ModelSelector({ models, selectedModel }) {
 
     return (
         <Box marginBottom={4}>
-            <Typography variant="h3">Models</Typography>
+            <Typography variant="h3">{translate('models', language)}</Typography>
 
             {isDesktop ? 
                 modelSelectGridLayout()
@@ -67,6 +69,7 @@ function ModelSelector({ models, selectedModel }) {
 const mapStateToProps = (state) => ({
     models: selectModels(state),
     selectedModel: selectSelectedModel(state),
+    language: selectLanguage(state)
 })
 const mapDispatchToProps = {
 

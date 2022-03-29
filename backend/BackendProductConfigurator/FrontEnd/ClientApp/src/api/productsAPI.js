@@ -50,8 +50,8 @@ export const postOrderConfiguredProduct = (configurationId, name, selectedOption
     return new Promise((resolve, reject) => {
 
         if (LOCAL_DATA) {
-            reject('Ordering not available in test mode!')
-            // resolve()
+            // reject('Konfiguration ungültig!')
+            resolve()
         }
         
 

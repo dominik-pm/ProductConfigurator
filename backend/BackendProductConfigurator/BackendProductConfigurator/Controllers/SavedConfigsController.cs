@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BackendProductConfigurator.App_Code;
+using Microsoft.AspNetCore.Mvc;
 using Model;
 using Model.Enumerators;
 using Model.Wrapper;
@@ -23,7 +24,7 @@ namespace BackendProductConfigurator.Controllers
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
                 if (account.IsAdmin)
-                    return entities["en"].Where(x => x.Status == "ordered").ToList();
+                    return entities["NaL"].Where(x => x.Status == "ordered").ToList();
 
                 throw new Exception("User from JWT is not an admin");
             }
@@ -42,7 +43,7 @@ namespace BackendProductConfigurator.Controllers
                 Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
                 Response.Headers.AcceptLanguage = Request.Headers.AcceptLanguage;
-                return entities["en"].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
+                return entities["NaL"].Where(x => x.User.IsSameUser(account)).Cast<ProductSave>().ToList();
             }
             catch (Exception ex)
             {
@@ -64,13 +65,13 @@ namespace BackendProductConfigurator.Controllers
                 }
                 catch (Exception)
                 {
-                    configurator = ValuesClass.Configurators[ValuesClass.Configurators.Keys.First()].Where(con => con.ConfigId == configId).First();
+                    configurator = ValuesClass.Configurators[GlobalValues.Languages.First()].Where(con => con.ConfigId == configId).First();
                 }
                 description = configurator.Description;
                 name = configurator.Name;
                 ProductSaveExtended temp = new ProductSaveExtended() { ConfigId = configId, Date = DateTime.Now, Description = description, Name = name, Options = value.Options, SavedName = value.SavedName, Status = EStatus.saved.ToString(), User = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]) };
-                entities["en"].Add(temp);
-                ValuesClass.PostValue(temp, "en");
+                entities["NaL"].Add(temp);
+                ValuesClass.PostValue(temp, "NaL");
                 return Ok();
             }
             catch (Exception ex)
@@ -84,8 +85,8 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                entities["en"].Add(value);
-                ValuesClass.PostValue<ProductSaveExtended>(value, "en");
+                entities["NaL"].Add(value);
+                ValuesClass.PostValue<ProductSaveExtended>(value, "NaL");
                 return Ok();
             }
             catch (Exception ex)
@@ -102,8 +103,8 @@ namespace BackendProductConfigurator.Controllers
             {
                 Account account = ValuesClass.FillAccountFromToken(Request.Headers["Authorization"]);
 
-                entities["en"].Remove(entities["en"].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
-                ValuesClass.DeleteValue<SavedConfigWrapper>("en", new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
+                entities["NaL"].Remove(entities["NaL"].Where(entity => entity.ConfigId == id && entity.SavedName == requestBody.SavedName).First());
+                ValuesClass.DeleteValue<SavedConfigWrapper>("NaL", new SavedConfigDeleteWrapper() { ConfigId = id, SavedName = requestBody.SavedName, UserEmail = account.UserEmail });
                 return Ok();
             }
             catch (Exception ex)

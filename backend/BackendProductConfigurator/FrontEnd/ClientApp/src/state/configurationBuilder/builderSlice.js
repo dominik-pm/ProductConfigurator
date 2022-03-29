@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchId, postConfiguration, putConfiguration } from '../../api/configurationAPI'
-import { setAcceptLanguage } from '../../api/general'
+import { LOCAL_DATA, setAcceptLanguage } from '../../api/general'
 import { fetchAvailableImages } from '../../api/productsAPI'
 import { readFromLocalStorage, writeToLocalStorage } from '../../App'
 import { defaultLang, languageNames } from '../../lang'
@@ -318,7 +318,7 @@ const testConfiguration = {
 }
 
 const initialState = {
-    configuration: testConfiguration, // initialConfiguration
+    configuration: LOCAL_DATA ? testConfiguration : initialConfiguration,
     currentLanguage: defaultLang,
     availableImages: [],
     status: 'idle', // | 'loading' | 'succeeded' | 'failed'
@@ -484,11 +484,12 @@ export const builderSlice = createSlice({
             if (section) section.optionGroupIds = section.optionGroupIds.filter(g => g !== groupId)
         },
         addOption: (state, action) => {
-            const { groupId, optionId, name, description, price } = action.payload
+            const { groupId, optionId, name, description, productNumber, price } = action.payload
 
             // add option to options list
             state.configuration.options.push({
                 id: optionId,
+                productNumber: productNumber,
                 // name: name,
                 // description: description,
                 groupId: groupId
@@ -660,14 +661,24 @@ export const builderSlice = createSlice({
             const description = action.payload
 
             state.configuration.languages[state.currentLanguage].description = description
+
+            // also set the description to the other langs if its empty
+            for (const lang in state.configuration.languages) {
+                if (!state.configuration.languages[lang].description) {
+                    state.configuration.languages[lang].description = description
+                }
+            }
         },
         setName: (state, action) => {
-            const name = action.payload
+            const name = action.payload.replace('*', '')
 
             state.configuration.languages[state.currentLanguage].name = name
-            if (!state.configuration.languages[defaultLang].name) {
-                // also set the name to the default lang if its empty
-                state.configuration.languages[defaultLang].name = name
+
+            // also set the name to the other langs if its empty
+            for (const lang in state.configuration.languages) {
+                if (!state.configuration.languages[lang].name) {
+                    state.configuration.languages[lang].name = name
+                }
             }
         },
         changeInputLanguage: (state, action) => {
@@ -853,7 +864,7 @@ export const deleteOptionGroup = (groupId, sectionId) => (dispatch, getState) =>
     dispatch(removeOptionGroup({groupId, sectionId}))
 }
 
-export const createOption = (groupId, name, description, price = 0) => (dispatch, getState) => {
+export const createOption = (groupId, name, description, productNumber, price = 0) => (dispatch, getState) => {
     const optionId = `${name}_${groupId}`.replace(' ', '_')
 
     // check if option doesn't already exist
@@ -862,7 +873,7 @@ export const createOption = (groupId, name, description, price = 0) => (dispatch
         return false
     }
 
-    dispatch(addOption({groupId, optionId, name, description, price}))
+    dispatch(addOption({groupId, optionId, name, description, productNumber, price}))
     return true
 }
 export const deleteOption = (groupId, name) => (dispatch, getState) => {
@@ -963,7 +974,7 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
 
     let configuration = selectBuilderConfiguration(getState())
     
-    writeToLocalStorage(initialConfiguration, 'builder')
+    writeToLocalStorage(configuration, 'builderBackup')
 
     // call put configuration (not post new one), when there is a config id set
     if (configuration.configId) {
@@ -984,6 +995,8 @@ export const finishConfigurationBuild = () => async (dispatch, getState) => {
     .catch(error => {
         dispatch(loadingFailed(error))
     })
+
+    writeToLocalStorage(initialConfiguration, 'builder')
 }
 
 
