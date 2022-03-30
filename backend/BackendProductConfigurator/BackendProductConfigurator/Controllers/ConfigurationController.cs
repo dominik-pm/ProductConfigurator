@@ -78,7 +78,11 @@ namespace BackendProductConfigurator.Controllers
                         Dictionary<string, Configurator> configuratorsList = obj as Dictionary<string, Configurator>;
                         Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configuratorsList.Values.First(), oldConfigId);
 
-                        AddConfigurator(configurator, configuratorsList.Keys.First());
+                        foreach(KeyValuePair<string, Configurator> configDict in configuratorsList)
+                        {
+                            AddConfigurator(configDict.Value, configDict.Key);
+                        }
+
                         ValuesClass.PostValue<Configurator>(configurator, configuratorsList.Keys.First());
                         configuratorsList.Remove(configuratorsList.Keys.First());
 
@@ -90,7 +94,6 @@ namespace BackendProductConfigurator.Controllers
                                 {
                                     KeyValuePair<string, Configurator> objPair = (KeyValuePair<string, Configurator>)confObj;
                                     Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(objPair.Value, oldConfigId);
-                                    AddConfigurator(temp, objPair.Key);
                                     ValuesClass.PutValue<Configurator>(temp, configDict.Key);
                                     return Ok();
                                 }
