@@ -8,8 +8,6 @@ export const fetchId = (productId) => {
 
     return new Promise((resolve, reject) => {
         axios.get(`${baseURL}/configuration/${productId}`)
-        
-        // axios.get(`${baseURL}/configuration/Golf`)
         .then(res => {
             resolve(res.data)
         })
