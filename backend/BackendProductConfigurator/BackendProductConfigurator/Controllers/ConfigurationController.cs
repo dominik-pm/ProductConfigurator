@@ -74,6 +74,7 @@ namespace BackendProductConfigurator.Controllers
                 {
                     try
                     {
+                        List<Task> tasks = new List<Task>();
                         Dictionary<string, Configurator> configuratorsList = obj as Dictionary<string, Configurator>;
                         Configurator configurator = ValuesClass.AdaptConfiguratorsOptionIds(configuratorsList.Values.First(), oldConfigId);
 
@@ -83,16 +84,27 @@ namespace BackendProductConfigurator.Controllers
 
                         foreach (KeyValuePair<string, Configurator> configDict in configuratorsList)
                         {
-                            try
+                            tasks.Add(Task<ActionResult>.Factory.StartNew(new Func<object?, ActionResult>((confObj) =>
                             {
-                                Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(configDict.Value, oldConfigId);
-                                AddConfigurator(temp, configDict.Key);
-                                ValuesClass.PutValue<Configurator>(temp, configDict.Key);
-                            }
-                            catch (Exception ex)
-                            {
-                                return BadRequest(ex.Message);
-                            }
+                                try
+                                {
+                                    KeyValuePair<string, Configurator> objPair = (KeyValuePair<string, Configurator>)confObj;
+                                    Configurator temp = ValuesClass.AdaptConfiguratorsOptionIds(objPair.Value, oldConfigId);
+                                    AddConfigurator(temp, objPair.Key);
+                                    ValuesClass.PutValue<Configurator>(temp, configDict.Key);
+                                    return Ok();
+                                }
+                                catch (Exception ex)
+                                {
+                                    return BadRequest(ex.Message);
+                                }
+                            }), configDict));
+                        }
+                        Task.WhenAll(tasks);
+                        foreach(Task<ActionResult> task in tasks)
+                        {
+                            if (task.Result != Ok())
+                                throw new Exception("Error while uploading");
                         }
                         return Ok();
                     }
