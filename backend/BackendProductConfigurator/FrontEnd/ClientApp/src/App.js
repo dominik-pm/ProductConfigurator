@@ -89,7 +89,7 @@ export function writeToLocalStorage(data, key) {
         // console.log('Saved to storage!')
         // console.log(data)
     } catch(err) {
-        console.log('Can not save the to local storage!')
+        console.log('Can not save the data to local storage!', data)
         console.log(err)
     }
 }
@@ -99,7 +99,7 @@ export function readFromLocalStorage(key) {
     try {
         data = JSON.parse(localStorage.getItem(key))
     } catch(err) {
-        console.log('Can not load from local storage!')
+        console.log(`Can not load ${key} from local storage!`)
         console.log(err)
     }
 

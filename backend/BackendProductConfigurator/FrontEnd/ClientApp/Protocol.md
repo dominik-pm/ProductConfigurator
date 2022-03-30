@@ -596,7 +596,6 @@ export const builderSlice = createSlice({
         },
         addOption: (state, action) => {
             console.log('adding option...')
-            // TODO: optionname_optiongroup_configid
         },
         resetBuild: (state, action) => {
             state.configuration = {}
