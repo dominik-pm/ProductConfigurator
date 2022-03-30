@@ -70,7 +70,7 @@ export function getImageSource(image) {
         imageSource = path
         
         if (LOCAL_DATA) {
-            const src = require(path)
+            const src = require(`${imageSource}`)
             imageSource = src.default
         }
     } catch (err) {

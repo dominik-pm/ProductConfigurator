@@ -21,9 +21,10 @@ function OptionGroup({group, name, description, sectionId, allGroups, groupRequi
         const data = {
             optionName: {name: translate('optionName', language), value: '' },
             optionDescription: {name: translate('optionDescription', language), value: ''},
+            optionProductNumber: {name: translate('productNumber', language), value: ''}
         }
         openInputDialog(translate('newOption', language), data, (data) => {
-            const success = createOption(id, data.optionName.value, data.optionDescription.value)
+            const success = createOption(id, data.optionName.value, data.optionDescription.value, data.optionProductNumber.value)
             if (!success) {
                 openAlert('Option already exists!', alertTypes.ERROR)
             }

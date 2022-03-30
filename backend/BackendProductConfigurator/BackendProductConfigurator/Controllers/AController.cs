@@ -12,7 +12,7 @@ namespace BackendProductConfigurator.Controllers
 
         public AController()
         {
-            if(ValuesClass.Configurators["de"].Count == 0 || DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes > GlobalValues.MinutesBetweenFetches)
+            if(DateTime.Now.Subtract(ValuesClass.LastDBFetch).TotalMinutes >= GlobalValues.MinutesBetweenFetches)
             {
                 ValuesClass.SetValues();
                 ValuesClass.LastDBFetch = DateTime.Now;
@@ -87,12 +87,20 @@ namespace BackendProductConfigurator.Controllers
         {
             try
             {
-                if (request.Headers.AcceptLanguage.ToString().Contains('-'))
-                    return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
+                if(request.Headers.AcceptLanguage.ToString().Length > 0)
+                {
+                    if (request.Headers.AcceptLanguage.ToString().Contains('-'))
+                        return request.Headers.AcceptLanguage.ToString().Split(",")[0].Trim('{').Split('-')[0];
+                    else
+                        return request.Headers.AcceptLanguage.ToString();
+                }
                 else
-                    return request.Headers.AcceptLanguage.ToString();
+                    return GlobalValues.Languages.First();
             }
-            catch { return "en"; }
+            catch
+            {
+                return GlobalValues.Languages.First();
+            }
         }
     }
 
@@ -113,6 +121,11 @@ namespace BackendProductConfigurator.Controllers
         [HttpPost]
         [NonAction]
         public override ActionResult Post([FromBody] Configurator value) { return NoContent(); }
+
+        [Route("/redactedConfigurator")]
+        [HttpPut]
+        [NonAction]
+        public override ActionResult Put(string configId, [FromBody] Configurator value) { return NoContent(); }
     }
     public partial class SavedConfigsController : AController<ProductSaveExtended, string>
     {

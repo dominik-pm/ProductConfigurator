@@ -16,12 +16,10 @@ namespace BackendProductConfigurator.Controllers
     public static class ValuesClass
     {
         public static DateTime LastDBFetch;
-        public static Dictionary<string, List<Configurator>> Configurators { get; set; } = new Dictionary<string, List<Configurator>>() { { "de", new List<Configurator>() }, { "en", new List<Configurator>() }, { "fr", new List<Configurator>() } };
-        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = new Dictionary<string, List<ConfiguredProduct>>() { { "de", new List<ConfiguredProduct>() }, { "en", new List<ConfiguredProduct>() }, { "fr", new List<ConfiguredProduct>() } };
-        public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = new Dictionary<string, List<ProductSaveExtended>>() { { "de", new List<ProductSaveExtended>() }, { "en", new List<ProductSaveExtended>() }, { "fr", new List<ProductSaveExtended>() } };
-        public static Dictionary<string, List<Account>> Accounts { get; set; } = new Dictionary<string, List<Account>>() { { "de", new List<Account>() }, { "en", new List<Account>() }, { "fr", new List<Account>() } };
-
-        private static readonly List<string> languages = new List<string>() { "de", "en", "fr" };
+        public static Dictionary<string, List<Configurator>> Configurators { get; set; } = CreateLists<Configurator>(true);
+        public static Dictionary<string, List<ConfiguredProduct>> ConfiguredProducts { get; set; } = CreateLists<ConfiguredProduct>(true);
+        public static Dictionary<string, List<ProductSaveExtended>> SavedProducts { get; set; } = CreateLists<ProductSaveExtended>(false);
+        public static Dictionary<string, List<Account>> Accounts { get; set; } = CreateLists<Account>(false);
 
         private static readonly Dictionary<Type, string> typeApis = new Dictionary<Type, string>
         {
@@ -40,73 +38,87 @@ namespace BackendProductConfigurator.Controllers
                 case EValueMode.DatabaseValues:
                     Task task = new Task(SetDBValues);
                     task.Start();
+                    task.Wait(GlobalValues.TimeOut);
                     break;
             }
         }
         public static void PostValue<T>(T value, string language) where T : class
         {
-            try
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
             {
-                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
-                    ADBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                try
+                {
+                    DBAccess<T>.PostValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
             }
         }
         public static void PutValue<T>(T value, string language) where T : class
         {
-            try
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
             {
-                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
-                    ADBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                try
+                {
+                    DBAccess<T>.PutValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], value).Wait();
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
             }
         }
         public static void DeleteValue<T>(string language, T identifier) where T : class
         {
-            try
+            if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
             {
-                if (GlobalValues.ValueMode == EValueMode.DatabaseValues)
-                    ADBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                try
+                {
+                    DBAccess<T>.DeleteValue(language, GlobalValues.ServerAddress, typeApis[typeof(T)], identifier).Wait();
+                }
+                catch (Exception e)
+                {
+                    throw;
+                }
             }
         }
         public static void SetDBValues()
         {
             List<Task> tasks = new List<Task>();
             Task temp;
-            foreach(string language in languages)
+            foreach(string language in GlobalValues.Languages)
             {
                 temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
-                    string taskLanguage = str as string;
-                    Task<List<Configurator>> t = ADBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
-                    t.Start();
-                    Configurators[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<Configurator>();
+                    try
+                    {
+                        string taskLanguage = str as string;
+                        Task<List<Configurator>> t = DBAccess<Configurator>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(Configurator)]);
+                        t.Wait();
+                        Configurators[taskLanguage] = t.Result;
+                    }
+                    catch { }
                 }), language);
                 tasks.Add(temp);
-                temp.Start();
                 temp = Task.Factory.StartNew(new Action<object?>((str) =>
                 {
-                    string taskLanguage = str as string;
-                    Task<List<ProductSaveExtended>> t = ADBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
-                    t.Start();
-                    SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : new List<ProductSaveExtended>();
+                    try
+                    {
+                        string taskLanguage = str as string;
+                        Task<List<ProductSaveExtended>> t = DBAccess<ProductSaveExtended>.GetValues(taskLanguage, GlobalValues.ServerAddress, typeApis[typeof(ProductSaveExtended)]);
+                        SavedProducts[taskLanguage] = t.Wait(GlobalValues.TimeOut) ? t.Result : SavedProducts[taskLanguage];
+                        t.Wait();
+                        SavedProducts[taskLanguage] = t.Result;
+                    }
+                    catch { }
                 }), language);
                 tasks.Add(temp);
-                temp.Start();
             }
             try
             {
-                Task.WhenAll(tasks.ToArray());
+                Task.WaitAll(tasks.ToArray());
             }
             catch (Exception ex)
             {
@@ -203,19 +215,23 @@ namespace BackendProductConfigurator.Controllers
                                                 { "DIESEL", 150f} }
             };
 
-            Configurators["de"].RemoveAll(x => true);
-
-            Configurators["de"].Add(new Configurator()
+            foreach(string language in GlobalValues.Languages)
             {
-                ConfigId = "Alfa",
-                Name = "Alfa",
-                Description = "159",
-                Images = productImages,
-                Rules = productDependencies,
-                OptionGroups = optionGroups,
-                Options = options,
-                OptionSections = optionSections}
-            );
+                Configurators[language].RemoveAll(x => true);
+
+                Configurators[language].Add(new Configurator()
+                {
+                    ConfigId = "Alfa",
+                    Name = "Alfa",
+                    Description = "159",
+                    Images = productImages,
+                    Rules = productDependencies,
+                    OptionGroups = optionGroups,
+                    Options = options,
+                    OptionSections = optionSections
+                }
+                );
+            }
         }
 
         public static Account FillAccountFromToken(string bearerToken)
@@ -272,7 +288,7 @@ namespace BackendProductConfigurator.Controllers
                     Name = languageDict.Value.Name,
                     Description = languageDict.Value.Description,
                     OptionGroups = GetConfiguratorValues<OptionGroup, OptionGroupIndex, DescribedIndex>(configuratorPost.OptionGroups, languageDict.Value, languageDict.Value.OptionGroups),
-                    Options = GetConfiguratorValues<Option, IIndexable, Option>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
+                    Options = GetConfiguratorValues<Option, IIndexable, OptionSlim>(configuratorPost.Options.Cast<IIndexable>().ToList(), languageDict.Value, languageDict.Value.Options),
                     OptionSections = GetConfiguratorValues<OptionSection, LanguageIndexGroup, NamedIndex>(configuratorPost.OptionSections, languageDict.Value, languageDict.Value.OptionSections)
                 };
                 temp.Rules.Models = GetConfiguratorValues<ModelType, LanguageIndex, DescribedIndex>(configuratorPost.Rules.Models, languageDict.Value, languageDict.Value.Models);
@@ -307,7 +323,7 @@ namespace BackendProductConfigurator.Controllers
                 else if (typeof(T) == typeof(OptionGroup))
                     elements.Add(GenerateValues(element as OptionGroupIndex, currentElement as DescribedIndex) as T);
                 else if (typeof(T) == typeof(Option))
-                    elements.Add(GenerateValues(element as IIndexable, currentElement as Option) as T);
+                    elements.Add(GenerateValues(element as IdWrapper, currentElement as OptionSlim) as T);
                 else if (typeof(T) == typeof(ModelType))
                     elements.Add(GenerateValues(element as LanguageIndex, currentElement as DescribedIndex) as T);
             }
@@ -334,9 +350,15 @@ namespace BackendProductConfigurator.Controllers
                 Required = loopElement.Required
             };
         }
-        private static Option GenerateValues(IIndexable loopElement, Option currentElement)
+        private static Option GenerateValues(IdWrapper loopElement, OptionSlim currentElement)
         {
-            return currentElement;
+            return new Option()
+            {
+                Id = currentElement.Id,
+                Name = currentElement.Name,
+                Description = currentElement.Description,
+                ProductNumber = loopElement.ProductNumber
+            };
         }
         private static ModelType GenerateValues(LanguageIndex loopElement, DescribedIndex currentElement)
         {
@@ -361,73 +383,107 @@ namespace BackendProductConfigurator.Controllers
         {
             StringBuilder sb = new StringBuilder(languageVariant.Name);
             List<string> configIds = new List<string>();
-            foreach (string language in languages)
-            {
-                configIds.AddRange(ValuesClass.Configurators[language].Select(x => x.ConfigId).ToList());
-            }
+
+            configIds.AddRange(ValuesClass.Configurators[GlobalValues.Languages.First()].Select(x => x.ConfigId).ToList());
 
             sb.Replace(' ', '_');
 
             int i = 1;
             while (configIds.Contains(sb.ToString()))
             {
-                if (sb.ToString().Contains('#'))
-                    sb.Remove(sb.ToString().IndexOf('#'), 5);
-                sb.Append('#').Append(i++.ToString().PadLeft(4, '0'));
+                if (sb.ToString().Contains('*'))
+                    sb.Remove(sb.ToString().IndexOf('*'), 5);
+                sb.Append('*').Append(i++.ToString().PadLeft(4, '0'));
             }
 
             return sb.ToString();
         }
-        public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator)
+        public static Configurator AdaptConfiguratorsOptionIds(Configurator configurator, string oldConfigId)
         {
-            foreach(Option option in configurator.Options)
+            try
             {
-                option.Id += $"+{configurator.ConfigId}";
-            }
-            foreach(LanguageIndex li in configurator.OptionGroups)
-            {
-                li.Id += $"+{configurator.ConfigId}";
-                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
-            }
-            foreach(OptionSection os in configurator.OptionSections)
-            {
-                os.Id += $"+{configurator.ConfigId}";
-                os.OptionGroupIds = os.OptionGroupIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
-            }
-            foreach(LanguageIndex li in configurator.Rules.Models)
-            {
-                li.Id += $"+{configurator.ConfigId}";
-                li.OptionIds = li.OptionIds.Select(x => x += $"+{configurator.ConfigId}").ToList();
-            }
-            
-            configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId);
-            configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId);
-            configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId);
-            configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId);
-            if(configurator.Rules.DefaultModel != "")
-                configurator.Rules.DefaultModel += $"+{configurator.ConfigId}";
+                if (!configurator.Options[0].Id.EndsWith($"+{oldConfigId}"))
+                {
+                    foreach (Option option in configurator.Options)
+                    {
+                        if(oldConfigId != "")
+                            option.Id = option.Id.Replace($"_option+{oldConfigId}", string.Empty);
+                        option.Id += $"_option+{configurator.ConfigId}";
+                    }
+                    foreach (LanguageIndex li in configurator.OptionGroups)
+                    {
+                        if (oldConfigId != "")
+                            li.Id = li.Id.Replace($"_og+{oldConfigId}", string.Empty);
+                        li.Id += $"_og+{configurator.ConfigId}";
+                        li.OptionIds = li.OptionIds.Select(x => x = (oldConfigId != "") ? x.Replace($"_option+{oldConfigId}", string.Empty) : x).Select(x => x += $"_option+{configurator.ConfigId}").ToList();
+                    }
+                    foreach (OptionSection os in configurator.OptionSections)
+                    {
+                        if (oldConfigId != "")
+                            os.Id = os.Id.Replace($"_os+{oldConfigId}", string.Empty);
+                        os.Id += $"_os+{configurator.ConfigId}";
+                        os.OptionGroupIds = os.OptionGroupIds.Select(x => x = (oldConfigId != "") ? x.Replace($"_og+{oldConfigId}", string.Empty) : x).Select(x => x += $"_og+{configurator.ConfigId}").ToList();
+                    }
+                    foreach (LanguageIndex li in configurator.Rules.Models)
+                    {
+                        if (oldConfigId != "")
+                            li.Id = li.Id.Replace($"_model+{oldConfigId}", string.Empty);
+                        li.Id += $"_model+{configurator.ConfigId}";
+                        li.OptionIds = li.OptionIds.Select(x => x = (oldConfigId != "") ? x.Replace($"_option+{oldConfigId}", string.Empty) : x).Select(x => x += $"_option+{configurator.ConfigId}").ToList();
+                    }
 
-            configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId);
+                    configurator.Rules.ReplacementGroups = AdaptIdsInDictionarys(configurator.Rules.ReplacementGroups, configurator.ConfigId, oldConfigId, "option");
+                    configurator.Rules.Requirements = AdaptIdsInDictionarys(configurator.Rules.Requirements, configurator.ConfigId, oldConfigId, "option");
+                    configurator.Rules.Incompatibilities = AdaptIdsInDictionarys(configurator.Rules.Incompatibilities, configurator.ConfigId, oldConfigId, "option");
+                    configurator.Rules.GroupRequirements = AdaptIdsInDictionarys(configurator.Rules.GroupRequirements, configurator.ConfigId, oldConfigId, "og");
+                    if (configurator.Rules.DefaultModel != "")
+                    {
+                        if (oldConfigId != "")
+                            configurator.Rules.DefaultModel = configurator.Rules.DefaultModel.Replace($"_model+{oldConfigId}", "_model");
+                        configurator.Rules.DefaultModel += $"_model+{configurator.ConfigId}";
+                    }
+
+                    configurator.Rules.PriceList = AdaptIdsInDictionarys(configurator.Rules.PriceList, configurator.ConfigId, oldConfigId, "option");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
             
             return configurator;
         }
-        private static Dictionary<string, List<string>> AdaptIdsInDictionarys(Dictionary<string, List<string>> dictionary, string configId)
+        private static Dictionary<string, List<string>> AdaptIdsInDictionarys(Dictionary<string, List<string>> dictionary, string configId, string oldConfigId, string appendage)
         {
             Dictionary<string, List<string>> temp = new Dictionary<string, List<string>>();
             foreach (KeyValuePair<string, List<string>> dic in dictionary)
             {
-                temp.Add($"{dic.Key}+{configId}", dic.Value.Select(x => x += $"+{configId}").ToList());
+                temp.Add($"{((oldConfigId != "") ? dic.Key.Replace($"_{appendage}+{oldConfigId}", "") : dic.Key)}_{appendage}+{configId}", dic.Value.Select(x => x = (oldConfigId != "") ? x.Replace($"_{appendage}+{oldConfigId}", string.Empty) : x + $"_{appendage}+{configId}").ToList());
             }
             return temp;
         }
-        private static Dictionary<string, float> AdaptIdsInDictionarys(Dictionary<string, float> dictionary, string configId)
+        private static Dictionary<string, float> AdaptIdsInDictionarys(Dictionary<string, float> dictionary, string configId, string oldConfigId, string appendage)
         {
             Dictionary<string, float> temp = new Dictionary<string, float>();
             foreach (KeyValuePair<string, float> dic in dictionary)
             {
-                temp.Add($"{dic.Key}+{configId}", dic.Value);
+                temp.Add($"{((oldConfigId != "") ? dic.Key.Replace($"_{appendage}+{oldConfigId}", "") : dic.Key)}_{appendage}+{configId}", dic.Value);
             }
             return temp;
+        }
+        private static Dictionary<string, List<T>> CreateLists<T>(bool isMultiLanguage)
+        {
+            Dictionary<string, List<T>> dict = new Dictionary<string, List<T>>();
+            if (isMultiLanguage)
+            {
+                foreach (string language in GlobalValues.Languages)
+                {
+                    dict.Add(language, new List<T>());
+                }
+            }
+            else
+                dict.Add("NaL", new List<T>()); //NaL => Not a Language
+            return dict;
         }
     }
 }

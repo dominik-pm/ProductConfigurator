@@ -2,6 +2,13 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="Model.ConfiguratorPost">
     <Position X="0.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="OptionGroups" Type="Model.Indexes.OptionGroupIndex" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="1.875" Y="1.925" />
+        <Point X="1.875" Y="3.329" />
+        <Point X="3.75" Y="3.329" />
+      </Path>
+    </AssociationLine>
     <AssociationLine Name="Rules" Type="Model.Languages.RulesLanguages">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="0.018" Y="-0.307" />
@@ -18,13 +25,6 @@
         <Position X="0.047" Y="0.55" />
       </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="OptionGroups" Type="Model.Indexes.OptionGroupIndex" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="1.875" Y="1.925" />
-        <Point X="1.875" Y="3.329" />
-        <Point X="3.75" Y="3.329" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AgAAAAAAiAAAAAAgAAAAAAAAAAAAAAAAAAAAAABAAAA=</HashCode>
       <FileName>Wrapper\ConfiguratorPost.cs</FileName>
@@ -33,8 +33,8 @@
       <Property Name="Rules" />
     </ShowAsAssociation>
     <ShowAsCollectionAssociation>
-      <Property Name="Languages" />
       <Property Name="OptionGroups" />
+      <Property Name="Languages" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="Model.Indexes.ConfiguratorIndex">
@@ -64,9 +64,8 @@
       <FileName>LanguageVariant.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="OptionGroups" />
       <Property Name="OptionSections" />
-      <Property Name="Options" />
+      <Property Name="OptionGroups" />
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.117" />
   </Class>
@@ -96,10 +95,9 @@
   <Class Name="Model.Option">
     <Position X="5" Y="5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAgAAAAAAAAAAQAAAAAAAAAAQAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
       <FileName>Option.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.888" />
   </Class>
   <Class Name="Model.Indexes.OptionGroupIndex">
     <Position X="3.75" Y="3" Width="1.5" />

@@ -34,9 +34,9 @@ function ModelButton({ model, isSelected = false, disabled = false, selectedOpti
     return (
         <ButtonBase 
             sx={{width: '100%', height: '100%'}}
-            onMouseLeave={() => handleHover(false)} 
+            onMouseLeave={() => handleHover(false)}
             onMouseOver={() => handleHover(true)}
-            onClick={handleClick} 
+            onClick={handleClick}
         >
             <Box padding={2} sx={{ width: '100%', border: border }}>
                 

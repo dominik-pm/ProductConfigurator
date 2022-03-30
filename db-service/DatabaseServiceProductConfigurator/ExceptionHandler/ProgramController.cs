@@ -9,7 +9,17 @@ namespace DatabaseServiceProductConfigurator.ExceptionHandler {
 
         [Route("/error")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult HandleError() => Problem();
+        public IActionResult HandleError() {
+
+            var exceptionHandlerFeature =
+                HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+
+
+            Console.WriteLine(exceptionHandlerFeature.Error.StackTrace);
+            Console.WriteLine(exceptionHandlerFeature.Error.Message);
+
+            return Problem();
+        }
 
         [Route("/error-development")]
         [ApiExplorerSettings(IgnoreApi = true)]
@@ -20,6 +30,9 @@ namespace DatabaseServiceProductConfigurator.ExceptionHandler {
 
             var exceptionHandlerFeature =
                 HttpContext.Features.Get<IExceptionHandlerFeature>()!;
+
+            Console.WriteLine(exceptionHandlerFeature.Error.StackTrace);
+            Console.WriteLine(exceptionHandlerFeature.Error.Message);
 
             return Problem(
                 detail: exceptionHandlerFeature.Error.StackTrace,

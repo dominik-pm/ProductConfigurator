@@ -23,11 +23,14 @@ function InputDialog({ isOpen, dialogTitle, inputData, cancel, confirm, setInput
         }))
     }
     
-    function handleClose() {
+    function handleClose(e) {
+        e.preventDefault()
         cancel()
     }
 
-    function handleConfirm() {
+    function handleConfirm(e) {
+        e.preventDefault()
+
         // check if every field has an input
         let valid = true
         for (const key in localData) {

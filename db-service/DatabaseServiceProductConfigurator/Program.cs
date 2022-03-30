@@ -2,8 +2,13 @@ using DatabaseServiceProductConfigurator.Context;
 using DatabaseServiceProductConfigurator.ExceptionHandler;
 using DatabaseServiceProductConfigurator.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Logging
+
+builder.Logging.AddConsole();
 
 // CORS
 
@@ -22,8 +27,10 @@ builder.Services.AddCors(options => {
 string activeDb = builder.Configuration.GetValue<string>("activeDB");
 string connectionString = builder.Configuration.GetConnectionString(activeDb);
 
-builder.Services.AddDbContext<ConfiguratorContext>(options => 
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+builder.Services.AddDbContext<ConfiguratorContext>(options => {
+        options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+        options.ConfigureWarnings(c => c.Log((RelationalEventId.CommandExecuting, LogLevel.Debug)));
+    }
 );
 
 // Services
@@ -37,6 +44,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddControllers(options => {
     options.Filters.Add<HttpResponseExceptionFilter>();
 });
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
