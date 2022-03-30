@@ -61,7 +61,7 @@ function ModelSelector({ models, selectedDefaultModel, setDefaultModel, createMo
                                 >
                                 {models.map((model, index) => (
                                     <MenuItem key={index} value={model.id}>{model.id}</MenuItem>
-                                    ))}
+                                ))}
                             </Select>
                         </FormControl>
                     </Box>

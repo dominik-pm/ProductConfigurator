@@ -6,7 +6,6 @@ const initialState = {
     message: '',
     data: {}
 }
-
 export const confirmationSlice = createSlice({
     name: 'confirmation',
     initialState,

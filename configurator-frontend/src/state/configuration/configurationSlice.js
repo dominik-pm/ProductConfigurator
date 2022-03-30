@@ -128,11 +128,11 @@ export const saveConfigurationToStorage = (id, options) => {
 
     let newConfiguration = configurations.find(c => c.id === id)
     if (newConfiguration) {
-        // configuration is already saved -> updated values
+        // configuration is already saved -> update values
         newConfiguration.options = options
     } else {
         // add the new configuration to the array
-        newConfiguration = {id, options}
+        newConfiguration = { id, options }
         configurations.push(newConfiguration)
     }
 
