@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "1CHlsMPSORtPlMaHDw3KuTMpK79pvJFZjDAZ5U7PJms0Ieunh1i8z88i7GptxqE15AMw9u2NQa8DpU6Mo6q7Tg==",
+  "dgSpecHash": "sLSyVkTFpcDBZt2CSs9ouj9zYFKfinn1LRk/pYtr7GwifNic8T0KevDIrVYqxPk06QIplGBXCwCRBfbRlWxNdw==",
   "success": true,
-  "projectFilePath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
+  "projectFilePath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\BackendServiceModel\\Model.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
