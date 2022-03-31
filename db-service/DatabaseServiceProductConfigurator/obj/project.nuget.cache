@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "J2hEyAgl06A6UK162A9zcz0qHHkQosJZe00Uhsm/sLwu4Z4k/4EEB///0n7FiRxP1Xv2DrH8+sOboG7/cExUyQ==",
+  "dgSpecHash": "WyPPONp5LPkLasP1bjRIW2SLmStV5OhEMITPWFz/NFN263uHPOw053CxW1khN0we1qqccuv2TdzbfbIvY6XVUg==",
   "success": true,
-  "projectFilePath": "F:\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
+  "projectFilePath": "C:\\Users\\basti\\Documents\\repos\\5chit\\ProductConfigurator\\db-service\\DatabaseServiceProductConfigurator\\DatabaseServiceProductConfigurator.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\basti\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\basti\\.nuget\\packages\\microsoft.entityframeworkcore\\6.0.1\\microsoft.entityframeworkcore.6.0.1.nupkg.sha512",
